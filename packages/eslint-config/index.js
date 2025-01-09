@@ -1,6 +1,6 @@
 module.exports = {
-  extends: 'eslint-config-universe',
-  // do some additional things with it
+  extends: ['eslint-config-universe', 'plugin:editorconfig/recommended'],
+  plugins: ['editorconfig'],
   rules: {
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
   },
