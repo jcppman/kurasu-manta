@@ -2,13 +2,20 @@ import { generateAPIUrl } from '@/utils/url';
 import { useChat } from '@ai-sdk/react';
 import { fetch as expoFetch } from 'expo/fetch';
 import { View, TextInput, ScrollView, Text, SafeAreaView } from 'react-native';
+import QuizCard from "@/components/QuizCard";
 
 export default function App() {
   const { messages, error, handleInputChange, input, handleSubmit } = useChat({
     fetch: expoFetch as unknown as typeof globalThis.fetch,
     api: generateAPIUrl('/chat'),
     onError: error => {
-      console.error(error);
+      debugger;
+      console.error(error.message);
+    },
+    onToolCall: ({ toolCall }) => {
+      if (toolCall.toolName === 'showQuiz') {
+        return 'shown';
+      }
     },
   });
 
@@ -30,6 +37,19 @@ export default function App() {
               <View>
                 <Text style={{ fontWeight: 700 }}>{m.role}</Text>
                 <Text>{m.content}</Text>
+                {m.toolInvocations?.map(tool => {
+                  const { toolCallId, toolName, args } = tool;
+                  switch (toolName) {
+                    case 'showQuiz':
+                      return <QuizCard key={toolCallId} quiz={args} />;
+                    default:
+                      return (
+                        <Text key={toolCallId}>
+                          Name: {toolName}, Result: {JSON.stringify(args)}
+                        </Text>
+                      );
+                  }
+                })}
               </View>
             </View>
           ))}

@@ -20,7 +20,8 @@ const bodyParserConfig = defineConfig({
    * Config for the JSON parser
    */
   json: {
-    convertEmptyStringsToNull: true,
+    // Critical for using vercel's ai sdk. This conversion will fail the Zod type checking.
+    convertEmptyStringsToNull: false,
     types: [
       'application/json',
       'application/json-patch+json',

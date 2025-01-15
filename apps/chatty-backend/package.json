@@ -56,8 +56,9 @@
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.5.1",
     "@ai-sdk/openai": "^1.0.15",
+    "@repo/chatty-schema": "workspace:^",
     "@vinejs/vine": "^3.0.0",
-    "ai": "^4.0.30",
+    "ai": "^4.0.36",
     "luxon": "^3.5.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2"
