@@ -1,4 +1,5 @@
 import { openai } from '@ai-sdk/openai'
+import logger from '@adonisjs/core/services/logger'
 import { streamText, tool } from 'ai'
 import type { HttpContext } from '@adonisjs/core/http'
 import { showQuizParameters, showSentenceExplanationParameters } from '@repo/chatty-schema/chat'
@@ -19,28 +20,37 @@ export default class ChatsController {
   public async index() {}
   public async chat({ request, response }: HttpContext) {
     const messages = request.input('messages')
-    const result = streamText({
-      model: openai('gpt-4o'),
-      system: CHAT_PROMPT,
-      tools: {
-        showQuiz: tool({
-          description: 'generate quiz question and answer for the user to practice',
-          parameters: showQuizParameters,
-        }),
-        showSentenceExplanation: tool({
-          description: 'Show sentence explanation. It contains annotations like furigana for kanji',
-          parameters: showSentenceExplanationParameters,
-        }),
-      },
-      maxSteps: 10,
-      messages,
-    })
-
-    response.relayHeaders()
-    result.pipeDataStreamToResponse(response.response, {
-      getErrorMessage() {
-        return 'Error streaming messages'
-      },
-    })
+    try {
+      const result = streamText({
+        model: openai('gpt-4o'),
+        system: CHAT_PROMPT,
+        tools: {
+          showQuiz: tool({
+            description: 'generate quiz question and answer for the user to practice',
+            parameters: showQuizParameters,
+          }),
+          showSentenceExplanation: tool({
+            description: 'Show sentence explanation. It contains annotations like furigana for kanji',
+            parameters: showSentenceExplanationParameters,
+          }),
+        },
+        maxSteps: 10,
+        messages,
+      })
+      response.relayHeaders()
+      result.pipeDataStreamToResponse(response.response, {
+        getErrorMessage(err) {
+          if (err instanceof Error) {
+            logger.error(err.message)
+          } else {
+            logger.error(err)
+          }
+          return 'Something went wrong :('
+        },
+      })
+    } catch (err) {
+      logger.error(err)
+      response.status(500).send('Something went wrong :(')
+    }
   }
 }
