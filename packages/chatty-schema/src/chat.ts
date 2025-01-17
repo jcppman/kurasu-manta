@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const showQuizParameters = z.object({
   question: z.string(),
   answer: z.string(),
-});
+})
 
-export type ShowQuizParameters = z.infer<typeof showQuizParameters>;
+export type ShowQuizParameters = z.infer<typeof showQuizParameters>
 
 export const showSentenceExplanationParameters = z.object({
   sentence: z.string(),
@@ -17,6 +17,6 @@ export const showSentenceExplanationParameters = z.object({
       label: z.string(),
     })
   ),
-});
+})
 
-export type ShowSentenceExplanationParameters = z.infer<typeof showSentenceExplanationParameters>;
+export type ShowSentenceExplanationParameters = z.infer<typeof showSentenceExplanationParameters>

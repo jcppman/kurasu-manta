@@ -3,23 +3,19 @@
   "name": "@repo/monorepo",
   "scripts": {
     "dev": "turbo dev",
-    "lint": "turbo lint",
-    "lint-fix": "turbo lint-fix",
+    "lint": "biome check",
+    "lint-fix": "biome check --fix",
     "test": "turbo test",
     "build": "turbo build"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "turbo": "^2.3.3",
-    "typescript": "^5.3.3",
-    "eslint-plugin-editorconfig": "^3.0.0"
+    "typescript": "^5.3.3"
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@babel/*",
-        "expo-modules-*",
-        "typescript"
-      ]
+      "ignoreMissing": ["@babel/*", "expo-modules-*", "typescript"]
     },
     "overrides": {
       "strtok3": "8.0.1"

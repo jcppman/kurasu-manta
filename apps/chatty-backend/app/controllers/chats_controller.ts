@@ -1,8 +1,8 @@
-import { openai } from '@ai-sdk/openai'
-import logger from '@adonisjs/core/services/logger'
-import { streamText, tool } from 'ai'
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
+import { openai } from '@ai-sdk/openai'
 import { showQuizParameters, showSentenceExplanationParameters } from '@repo/chatty-schema/chat'
+import { streamText, tool } from 'ai'
 
 const CHAT_PROMPT = `You are a Japanese language teacher who help students learn Japanese.
 You can answer questions about the Japanese language, help with grammar, vocabulary, and more.
@@ -30,7 +30,8 @@ export default class ChatsController {
             parameters: showQuizParameters,
           }),
           showSentenceExplanation: tool({
-            description: 'Show sentence explanation. It contains annotations like furigana for kanji',
+            description:
+              'Show sentence explanation. It contains annotations like furigana for kanji',
             parameters: showSentenceExplanationParameters,
           }),
         },
