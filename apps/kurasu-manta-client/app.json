@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "chatty",
-    "slug": "chatty",
+    "name": "kurasu-manta",
+    "displayName": "kurasu-manta",
+    "slug": "kurasu-manta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,13 +10,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kurasumanta.client"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kurasumanta.client"
     },
     "web": {
       "bundler": "metro",
@@ -32,10 +35,19 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "65069915-35ff-40cf-91f6-d32619847733"
+      }
     }
   }
 }

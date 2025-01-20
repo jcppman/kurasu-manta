@@ -1,8 +1,8 @@
 {
-  "name": "@repo/chatty-schema",
+  "name": "@repo/kurasu-manta-schema",
   "version": "1.0.0",
   "type": "module",
-  "description": "Chatty schema",
+  "description": "Kurasu Manta schema",
   "exports": {
     "./chat": "./src/chat.ts"
   },

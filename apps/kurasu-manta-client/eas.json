@@ -1,5 +1,7 @@
 {
   "cli": {
+    "appVersionSource": "remote",
+    "version": "14.4.1",
     "promptToConfigurePushNotifications": false
   },
   "build": {

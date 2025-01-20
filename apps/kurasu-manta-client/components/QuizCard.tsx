@@ -1,4 +1,4 @@
-import type { ShowQuizParameters } from '@repo/chatty-schema/chat'
+import type { ShowQuizParameters } from '@repo/kurasu-manta-schema/chat'
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 

@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 import { openai } from '@ai-sdk/openai'
-import { showQuizParameters, showSentenceExplanationParameters } from '@repo/chatty-schema/chat'
+import { showQuizParameters, showSentenceExplanationParameters } from '@repo/kurasu-manta-schema/chat'
 import { streamText, tool } from 'ai'
 
 const CHAT_PROMPT = `You are a Japanese language teacher who help students learn Japanese.

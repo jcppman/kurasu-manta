@@ -4,7 +4,7 @@ import { z } from 'zod'
 export default createEnv({
   clientPrefix: 'EXPO_PUBLIC',
   client: {
-    EXPO_PUBLIC_CHATTY_API_URL: z.string(),
+    EXPO_PUBLIC_MANTA_API_URL: z.string(),
   },
   runtimeEnv: process.env,
 })

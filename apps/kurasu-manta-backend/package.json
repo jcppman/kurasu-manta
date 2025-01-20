@@ -1,5 +1,5 @@
 {
-  "name": "chatty-backend",
+  "name": "kurasu-manta-backend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -52,7 +52,7 @@
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.5.1",
     "@ai-sdk/openai": "^1.0.15",
-    "@repo/chatty-schema": "workspace:^",
+    "@repo/kurasu-manta-schema": "workspace:^",
     "@vinejs/vine": "^3.0.0",
     "ai": "^4.0.36",
     "luxon": "^3.5.0",
