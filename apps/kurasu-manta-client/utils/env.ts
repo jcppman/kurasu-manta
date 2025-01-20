@@ -6,5 +6,7 @@ export default createEnv({
   client: {
     EXPO_PUBLIC_MANTA_API_URL: z.string(),
   },
-  runtimeEnv: process.env,
+  runtimeEnvStrict: {
+    EXPO_PUBLIC_MANTA_API_URL: process.env.EXPO_PUBLIC_MANTA_API_URL,
+  },
 })
