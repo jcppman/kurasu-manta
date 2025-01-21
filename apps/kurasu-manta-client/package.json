@@ -3,7 +3,6 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "build:web": "expo export --output-dir ./build --platform web",
     "build": "expo export --output-dir ./build --platform all",
     "dev": "expo start",
     "reset-project": "node ./scripts/reset-project.js",

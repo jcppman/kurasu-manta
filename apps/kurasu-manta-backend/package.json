@@ -10,8 +10,7 @@
     "dev": "node ace serve --hmr",
     "test": "node ace test",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
-    "pre-deploy": "ls && cd build && pnpm i -p"
+    "typecheck": "tsc --noEmit"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
