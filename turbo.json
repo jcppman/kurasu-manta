@@ -12,6 +12,9 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "build/**", "node_modules/.cache/metro/**"]
     },
+    "pre-deploy": {
+      "dependsOn": ["build"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
