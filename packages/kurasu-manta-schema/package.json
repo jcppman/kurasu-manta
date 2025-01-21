@@ -9,6 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "jit-package": "echo 'Just in time package'"
+  },
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4"
   },

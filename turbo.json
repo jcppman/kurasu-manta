@@ -10,18 +10,22 @@
       "inputs": ["**/*.{ts,tsx,js,jsx}"]
     },
     "kurasu-manta-client#build:web": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^jit-package"],
       "outputs": ["build/**", "node_modules/.cache/metro/**"],
       "env": ["EXPO_PUBLIC_*"]
     },
     "kurasu-manta-client#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^jit-package"],
       "outputs": ["build/**", "node_modules/.cache/metro/**"],
       "env": ["EXPO_PUBLIC_*"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^jit-package"],
       "outputs": ["build/**"]
+    },
+    "jit-package": {
+      "dependsOn": ["^build", "^jit-package"],
+      "outputs": ["./**"]
     },
     "pre-deploy": {
       "dependsOn": ["build"]
