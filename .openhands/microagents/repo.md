@@ -1,24 +1,34 @@
-# Repository Information
-
-## Project Overview
+---
+name: repo
+type: repo
+agent: CodeActAgent
+---
 This is a monorepo for the Kurasu Manta project, built using pnpm workspace and Turborepo. The project consists of a EXPO based mobile/web client application and a backend server.
 
-## Structure
+## General Setup:
+To set up the entire repo, run `pnpm install` in the root directory.
+Before pushing any changes, ensure that any lint errors or test errors have been fixed:
 
-### Apps
+* Run `pnpm lint` to check and fix code style issues
+* Run `pnpm test` to run all tests
+* Run `pnpm build` to ensure the project builds correctly
+
+## Repository Structure
+Apps:
 - `kurasu-manta-client`: A React Native/Expo mobile application
-  - Has testing setup with Jest
+  - Testing: Uses Jest for unit and integration tests
+  - Run tests: `pnpm test` in the client directory
 
 - `kurasu-manta-backend`: An AdonisJS backend server
-  - Implements authentication system
-  - Uses PostgreSQL database
-  - Includes migrations for users and access tokens
+  - Authentication system with PostgreSQL database
+  - Database migrations for users and access tokens
+  - Testing: Run tests in the backend directory
 
-### Packages
+Packages:
 - `kurasu-manta-schema`: Shared TypeScript schema definitions
   - Contains chat-related type definitions
 
-## Tech Stack
+## Tech Stack and Tools
 - Package Manager: pnpm (v9.15.4)
 - Build System: Turborepo
 - Code Quality:
@@ -27,20 +37,9 @@ This is a monorepo for the Kurasu Manta project, built using pnpm workspace and 
   - Husky for git hooks
   - Lefthook for workflow automation
 
-## Development Commands
-- `pnpm install`: Install dependencies
-- `pnpm dev`: Start development servers for all apps
-- `pnpm lint`: Run code analysis
-- `pnpm test`: Run tests
-- `pnpm build`: Build all apps and packages for production
-
 ## Environment Setup
-The project uses environment variables for configuration. Each app has its own environment configuration:
+Each app has its own environment configuration:
 - Backend: Uses AdonisJS .env setup
 - Client: Uses Expo's built-in .env support
 
-## Notes
-- The project follows a monorepo structure for better code sharing and development workflow
-- Uses Biome for consistent code formatting across the project
-- Implements proper TypeScript configurations for type safety
-- Has testing infrastructure set up with Jest
+Before running the project, ensure all environment variables are properly set in each app's respective .env file.
