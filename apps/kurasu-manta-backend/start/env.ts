@@ -23,11 +23,20 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring database connection
   |----------------------------------------------------------
   */
+
+  // default is 'postgres'
+  DB_CONNECTION: Env.schema.enum.optional(['sqlite', 'postgres']),
+
   DB_HOST: Env.schema.string(),
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
   DB_DATABASE: Env.schema.string(),
+
+  /*
+    SQLITE specific
+   */
+  DB_FILE: Env.schema.string.optional(),
 
   /*
    Business related
