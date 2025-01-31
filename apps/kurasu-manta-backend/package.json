@@ -10,7 +10,7 @@
     "start": "nest start -b swc",
     "dev": "nest start --watch -b swc --env-file .env.local",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node build/main",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

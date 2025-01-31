@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./build",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
