@@ -3,7 +3,7 @@
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", ".expo", ".expo-shared", "build", "dist"]
+    "ignore": ["node_modules", ".expo", ".expo-shared", "build", "dist", ".turbo"]
   },
   "formatter": {
     "enabled": true,
@@ -30,5 +30,42 @@
       "attributePosition": "auto",
       "bracketSpacing": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["apps/kurasu-manta-client/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off",
+            "useKeyWithClickEvents": "off",
+            "useButtonType": "off",
+            "useAltText": "off"
+          },
+          "correctness": {
+            "useExhaustiveDependencies": "off"
+          },
+          "style": {
+            "useSelfClosingElements": "off",
+            "noUnusedTemplateLiteral": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["apps/kurasu-manta-backend/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      },
+      "javascript": {
+        "parser": {
+          "unsafeParameterDecoratorsEnabled": true
+        }
+      }
+    }
+  ]
 }
