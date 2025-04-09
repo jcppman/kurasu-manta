@@ -3,17 +3,32 @@
   "version": "1.0.0",
   "description": "Kurasu Manta schema",
   "exports": {
-    "./chat": {
-      "types": "./build/chat.d.ts",
-      "require": "./build/chat.js",
-      "import": "./build/chat.js"
+    "./zod/*": {
+      "types": "./build/zod/*.d.ts",
+      "require": "./build/zod/*.js",
+      "import": "./build/zod/*.js"
+    },
+    "./drizzle/*": {
+      "types": "./build/drizzle/*.d.ts",
+      "require": "./build/drizzle/*.js",
+      "import": "./build/drizzle/*.js"
+    },
+    "./mappers/*": {
+      "types": "./build/mappers/*.d.ts",
+      "require": "./build/mappers/*.js",
+      "import": "./build/mappers/*.js"
+    },
+    "./repository/*": {
+      "types": "./build/repository/*.d.ts",
+      "require": "./build/repository/*.js",
+      "import": "./build/repository/*.js"
     }
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "tsc --emitDeclarationOnly --declaration && tsup"
+    "build": "tsup"
   },
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4",
@@ -21,6 +36,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "drizzle-orm": "^0.30.5",
     "zod": "^3.24.1"
   }
 }
