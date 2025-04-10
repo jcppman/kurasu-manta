@@ -1,13 +1,13 @@
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import type { knowledgePointsTable } from '@/drizzle/schema'
 import type { Annotation } from '@/zod/annotation'
-import type { Grammar, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
+import type { CreateKnowledgePoint, Grammar, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { LocalizedText } from '@/zod/localized-text'
 
 /**
  * Maps a Zod KnowledgePoint to a Drizzle knowledgePointsTable insert object
  */
-export function mapKnowledgePointToDrizzle(knowledgePoint: KnowledgePoint) {
+export function mapCreateKnowledgePointToDrizzle(knowledgePoint: CreateKnowledgePoint) {
   const baseData = {
     type: knowledgePoint.type,
     content: knowledgePoint.content,
@@ -35,6 +35,12 @@ export function mapKnowledgePointToDrizzle(knowledgePoint: KnowledgePoint) {
     typeSpecificData,
   }
 }
+export function mapKnowledgePointToDrizzle(knowledgePoint: KnowledgePoint) {
+  return {
+    id: knowledgePoint.id,
+    ...mapCreateKnowledgePointToDrizzle(knowledgePoint),
+  }
+}
 
 /**
  * Maps a Drizzle knowledgePointsTable row to a Zod KnowledgePoint
@@ -44,6 +50,7 @@ export function mapDrizzleToKnowledgePoint(
 ): KnowledgePoint {
   const { type, content, explanation, typeSpecificData } = row
   const baseData = {
+    id: row.id,
     lesson: 0, // This will be set from the lesson relationship
     content,
     explanation: explanation as LocalizedText,

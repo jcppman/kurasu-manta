@@ -4,6 +4,7 @@ import { annotationSchema } from './annotation'
 import { localizedText } from './localized-text'
 
 export const baseKnowledgePointSchema = z.object({
+  id: z.number().optional(),
   lesson: z.number(),
   content: z.string(),
   explanation: localizedText,
@@ -23,6 +24,7 @@ export const grammarSchema = baseKnowledgePointSchema.extend({
 
 export const knowledgePointSchema = z.discriminatedUnion('type', [vocabularySchema, grammarSchema])
 
-export type KnowledgePoint = z.infer<typeof knowledgePointSchema>
+export type CreateKnowledgePoint = z.infer<typeof knowledgePointSchema>
+export type KnowledgePoint = z.infer<typeof knowledgePointSchema> & { id: number }
 export type Vocabulary = z.infer<typeof vocabularySchema>
 export type Grammar = z.infer<typeof grammarSchema>

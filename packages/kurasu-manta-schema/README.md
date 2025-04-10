@@ -10,6 +10,7 @@ The package is organized into the following directories:
 - `drizzle/`: Drizzle ORM schemas for database access
 - `mappers/`: Mappers between Zod and Drizzle schemas
 - `repository/`: Repository classes for data access
+- `service/`: Service classes for business logic and orchestration
 
 ## Usage
 
@@ -60,6 +61,19 @@ const knowledgePoints = await knowledgeRepo.getAll()
 const lesson = await lessonRepo.getById(1)
 ```
 
+### Services
+
+```typescript
+import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'
+
+// Create service
+const courseContentService = new CourseContentService(db)
+
+// Use service
+const lessonsWithContent = await courseContentService.getAllLessonsWithContent()
+const lessonWithContent = await courseContentService.getLessonWithContent(1)
+```
+
 ## Type Safety
 
 This package ensures type safety throughout the application by:
@@ -68,3 +82,4 @@ This package ensures type safety throughout the application by:
 2. Using Drizzle for type-safe database access
 3. Providing mappers between domain objects and database rows
 4. Offering repositories with type-safe methods
+5. Implementing services for business logic and orchestration

@@ -22,21 +22,34 @@
       "types": "./build/repository/*.d.ts",
       "require": "./build/repository/*.js",
       "import": "./build/repository/*.js"
+    },
+    "./service/*": {
+      "types": "./build/service/*.d.ts",
+      "require": "./build/service/*.js",
+      "import": "./build/service/*.js"
     }
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "test": "tsx --test 'src/**/*.test.ts' 'tests/**/*.test.ts'",
+    "test:unit": "tsx --test 'src/**/*.test.ts'",
+    "test:integration": "tsx --test 'tests/integration/**/*.test.ts'"
   },
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4",
+    "@types/lodash": "^4.17.16",
+    "drizzle-kit": "^0.30.6",
     "tsup": "^8.3.6",
+    "tsx": "^4.7.1",
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "drizzle-orm": "^0.30.5",
+    "@libsql/client": "^0.15.2",
+    "drizzle-orm": "^0.41.0",
+    "lodash": "^4.17.21",
     "zod": "^3.24.1"
   }
 }

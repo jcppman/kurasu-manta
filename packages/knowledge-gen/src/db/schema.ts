@@ -1,24 +1,32 @@
-import type { KnowledgePointType } from '@/common/types'
-import type { LocalizedText } from '@/zod/localized-text'
+import type { Annotation } from '@/types/knowledge-point'
 import { relations } from 'drizzle-orm'
 import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
-import { jsonField } from './utils'
+import { jsonField, jsonFieldOptional } from './utils'
 
 /**
- * Re-export knowledge point types for backward compatibility
+ * Knowledge point types as const object
  */
-export { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
+export const KNOWLEDGE_POINT_TYPES = {
+  VOCABULARY: 'vocabulary',
+  GRAMMAR: 'grammar',
+  CONJUGATION: 'conjugation',
+} as const
 
 /**
- * Lessons table - represents a lesson
+ * Knowledge point type as a union type
+ */
+export type KnowledgePointType = (typeof KNOWLEDGE_POINT_TYPES)[keyof typeof KNOWLEDGE_POINT_TYPES]
+
+/**
+ * Lessons table - represents a lesson from the textbook
  */
 export const lessonsTable = sqliteTable('lessons', {
   id: int().primaryKey({ autoIncrement: true }),
-  // Lesson number
-  number: int().notNull().unique(),
+  // Lesson number in the textbook (e.g., Lesson 1, Lesson 2)
+  sequenceNumber: int().notNull().unique(),
   // Title of the lesson
-  title: text(),
-  // Description of the lesson
+  title: text().notNull(),
+  // Description or summary of the lesson
   description: text(),
   // Creation timestamp
   createdAt: text()
@@ -31,21 +39,22 @@ export const lessonsTable = sqliteTable('lessons', {
 })
 
 /**
- * Knowledge points table - core content
- * Following the heterogeneous data approach with JSON fields for type-specific data
+ * Knowledge points table - core content of the system
  */
 export const knowledgePointsTable = sqliteTable('knowledge_points', {
   id: int().primaryKey({ autoIncrement: true }),
-  // Type of knowledge point (vocabulary or grammar)
+  // Type of knowledge point
   type: text().notNull().$type<KnowledgePointType>(),
   // Content in Japanese
   content: text().notNull(),
-  // Explanation of the knowledge point (localized)
-  explanation: jsonField<LocalizedText>('explanation'),
-  // Type-specific data stored in JSON fields
-  // For vocabulary: pos, annotations, examples
-  // For grammar: examples
-  typeSpecificData: jsonField<Record<string, unknown>>('typeSpecificData'),
+  // Translation in target language (e.g., English, Chinese)
+  translation: text().notNull(),
+  // Explanation of the knowledge point
+  explanation: text(),
+  // Examples of usage
+  examples: jsonFieldOptional<string[]>('json'), // Using JSON transformer
+  // Annotations for content (e.g., furigana, word type, conjugation type)
+  annotations: jsonField<Annotation[]>('json'), // Using JSON transformer
   // Creation timestamp
   createdAt: text()
     .notNull()
@@ -58,6 +67,8 @@ export const knowledgePointsTable = sqliteTable('knowledge_points', {
 
 /**
  * Lesson to Knowledge Point relationship (many-to-many)
+ * This allows knowledge points to be associated with multiple lessons
+ * and lessons to contain multiple knowledge points
  */
 export const lessonKnowledgePointsTable = sqliteTable(
   'lesson_knowledge_points',
@@ -73,7 +84,11 @@ export const lessonKnowledgePointsTable = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date().toISOString()),
   },
-  (table) => [primaryKey({ columns: [table.lessonId, table.knowledgePointId] })]
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.lessonId, table.knowledgePointId] }),
+    }
+  }
 )
 
 /**

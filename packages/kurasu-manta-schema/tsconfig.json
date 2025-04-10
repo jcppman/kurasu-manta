@@ -1,14 +1,14 @@
 {
-  "extends": "@total-typescript/tsconfig/tsc/no-dom/library-monorepo",
+  "extends": "@total-typescript/tsconfig/bundler/no-dom",
   "compilerOptions": {
     "composite": false,
     "outDir": "build",
-    "rootDir": "src",
+    "rootDir": ".",
     "verbatimModuleSyntax": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests/**/*"]
 }

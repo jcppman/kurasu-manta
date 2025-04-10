@@ -1,1 +1,1 @@
-read `AI.md` for everything AI needs to know about this project
+read `AI.md` for project descriptions

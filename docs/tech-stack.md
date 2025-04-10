@@ -23,6 +23,7 @@
 - Drizzle schema for type-safe DB access
 - Zod validation for heterogeneous data structures
 - Repository pattern for DB abstraction
+- Service layer for business logic and orchestration
 - Type mapping layer for domain/database conversion
 
 ## Content Pipeline

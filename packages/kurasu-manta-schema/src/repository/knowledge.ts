@@ -1,7 +1,12 @@
 import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/drizzle/schema'
+import type * as schema from '@/drizzle/schema'
 import { optionalResult, requireResult } from '@/drizzle/utils'
-import { mapDrizzleToKnowledgePoint, mapKnowledgePointToDrizzle } from '@/mappers/knowledge'
-import type { KnowledgePoint } from '@/zod/knowledge'
+import {
+  mapCreateKnowledgePointToDrizzle,
+  mapDrizzleToKnowledgePoint,
+  mapKnowledgePointToDrizzle,
+} from '@/mappers/knowledge'
+import type { CreateKnowledgePoint, KnowledgePoint } from '@/zod/knowledge'
 import { and, eq } from 'drizzle-orm'
 import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
@@ -10,7 +15,7 @@ import type { LibSQLDatabase } from 'drizzle-orm/libsql'
  * This provides a clean API for accessing knowledge points from the database
  */
 export class KnowledgeRepository {
-  constructor(private db: LibSQLDatabase) {}
+  constructor(private db: LibSQLDatabase<typeof schema>) {}
 
   /**
    * Get all knowledge points
@@ -55,8 +60,8 @@ export class KnowledgeRepository {
   /**
    * Create a new knowledge point
    */
-  async create(knowledgePoint: KnowledgePoint): Promise<KnowledgePoint> {
-    const data = mapKnowledgePointToDrizzle(knowledgePoint)
+  async create(knowledgePoint: CreateKnowledgePoint): Promise<KnowledgePoint> {
+    const data = mapCreateKnowledgePointToDrizzle(knowledgePoint)
     const result = await this.db.insert(knowledgePointsTable).values(data).returning()
     return requireResult(result, mapDrizzleToKnowledgePoint)
   }
@@ -94,7 +99,10 @@ export class KnowledgeRepository {
   /**
    * Associate a knowledge point with a lesson
    */
-  async associateWithLesson(knowledgePointId: number, lessonId: number): Promise<void> {
+  async associateWithLesson(knowledgePointId?: number, lessonId?: number): Promise<void> {
+    if (typeof knowledgePointId !== 'number' || typeof lessonId !== 'number') {
+      throw new Error('knowledgePointId and lessonId must be numbers')
+    }
     await this.db
       .insert(lessonKnowledgePointsTable)
       .values({

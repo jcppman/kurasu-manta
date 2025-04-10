@@ -12,6 +12,8 @@ kurasu-manta-schema/
 ├── zod/         # Data validation
 ├── drizzle/     # DB schema with JSON for type-specific data
 ├── mappers/     # Type mapping between layers
+├── repository/  # Data access layer
+├── service/     # Business logic layer
 └── index.ts     # Unified exports
 ```
 
@@ -32,6 +34,16 @@ kurasu-manta-schema/
 - Extract/insert type-specific fields
 - Handle validation with proper typing
 - Maintain type safety across boundaries
+
+### 5. Repository Pattern
+- Abstract database access
+- Provide type-safe CRUD operations
+- Handle data mapping between layers
+
+### 6. Service Layer
+- Orchestrate operations across repositories
+- Implement business logic
+- Provide higher-level domain operations
 
 ## Data Flow
 

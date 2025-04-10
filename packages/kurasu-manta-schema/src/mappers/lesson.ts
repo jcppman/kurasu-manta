@@ -1,23 +1,21 @@
 import type { lessonsTable } from '@/drizzle/schema'
-
-/**
- * Interface for Lesson domain object
- */
-export interface Lesson {
-  id?: number
-  number: number
-  title: string
-  description?: string
-}
+import type { CreateLesson, Lesson } from '@/zod/lesson'
 
 /**
  * Maps a Lesson domain object to a Drizzle lessonsTable insert object
  */
-export function mapLessonToDrizzle(lesson: Lesson) {
+export function mapCreateLessonToDrizzle(lesson: CreateLesson) {
   return {
+    id: lesson.id,
     number: lesson.number,
     title: lesson.title,
     description: lesson.description,
+  }
+}
+export function mapLessonToDrizzle(lesson: Lesson) {
+  return {
+    ...mapCreateLessonToDrizzle(lesson),
+    id: lesson.id,
   }
 }
 
@@ -28,7 +26,7 @@ export function mapDrizzleToLesson(row: typeof lessonsTable.$inferSelect): Lesso
   return {
     id: row.id,
     number: row.number,
-    title: row.title,
+    title: row.title ?? undefined,
     description: row.description ?? undefined,
   }
 }

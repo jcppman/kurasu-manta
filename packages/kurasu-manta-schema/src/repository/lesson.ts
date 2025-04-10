@@ -1,15 +1,16 @@
 import { lessonKnowledgePointsTable, lessonsTable } from '@/drizzle/schema'
+import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
-import { type Lesson, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mappers/lesson'
+import { mapCreateLessonToDrizzle, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mappers/lesson'
+import type { CreateLesson, Lesson } from '@/zod/lesson'
 import { eq } from 'drizzle-orm'
-import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
  * Repository for lessons
  * This provides a clean API for accessing lessons from the database
  */
 export class LessonRepository {
-  constructor(private db: LibSQLDatabase) {}
+  constructor(private db: Db) {}
 
   /**
    * Get all lessons
@@ -36,10 +37,24 @@ export class LessonRepository {
   }
 
   /**
+   * Check if a lesson exists by number
+   * This is more efficient than getByNumber when you only need to check existence
+   */
+  async existsByNumber(number: number): Promise<boolean> {
+    const result = await this.db
+      .select({ id: lessonsTable.id })
+      .from(lessonsTable)
+      .where(eq(lessonsTable.number, number))
+      .limit(1)
+
+    return result.length > 0
+  }
+
+  /**
    * Create a new lesson
    */
-  async create(lesson: Lesson): Promise<Lesson> {
-    const data = mapLessonToDrizzle(lesson)
+  async create(lesson: CreateLesson): Promise<Lesson> {
+    const data = mapCreateLessonToDrizzle(lesson)
     const result = await this.db.insert(lessonsTable).values(data).returning()
     return requireResult(
       result,

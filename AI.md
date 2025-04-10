@@ -1,8 +1,8 @@
 # LangLearn: Technical Design Knowledge Base
 
 ## Index
-- **Technology Stack** - [.ai/tech-stack.md](.ai/tech-stack): Core technologies and implementation approach
-- **Type-Safe Data Design** - [.ai/type-safe-data.md](.ai/type-safe-data): Detailed implementation patterns for type safety
+- **Technology Stack** - [docs/tech-stack.md](.ai/tech-stack): Core technologies and implementation approach
+- **Type-Safe Data Design** - [docs/type-safe-data.md](.ai/type-safe-data): Detailed implementation patterns for type safety
 
 ## Core Architecture
 ```
