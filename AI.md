@@ -6,7 +6,7 @@
 
 ## Core Architecture
 ```
-Content Generation (Inngest) → SQLite (Drizzle) → React Native (expo-sqlite)
+Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-sqlite)
 ```
 - End-to-end type-safe architecture with shared schema
 - Support for heterogeneous knowledge types
@@ -21,9 +21,8 @@ Content Generation (Inngest) → SQLite (Drizzle) → React Native (expo-sqlite)
 - JSON fields for type-specific data
 - Pre-populated SQLite database bundled with app
 
-### Task Orchestration: Inngest
-- Event-driven content generation workflow
-- Cacheable steps with version flags
+### Task Orchestration: Knowledge-gen
+- content generation workflow
 - TypeScript-native for type safety
 
 ### Type Safety Stack

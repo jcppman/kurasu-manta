@@ -1,3 +1,5 @@
+import { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
+import type { PaginatedResult, PaginationParams } from '@/common/types'
 import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/drizzle/schema'
 import type * as schema from '@/drizzle/schema'
 import { optionalResult, requireResult } from '@/drizzle/utils'
@@ -5,9 +7,9 @@ import {
   mapCreateKnowledgePointToDrizzle,
   mapDrizzleToKnowledgePoint,
   mapKnowledgePointToDrizzle,
-} from '@/mappers/knowledge'
+} from '@/mapper/knowledge'
 import type { CreateKnowledgePoint, KnowledgePoint } from '@/zod/knowledge'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
@@ -124,5 +126,105 @@ export class KnowledgeRepository {
           eq(lessonKnowledgePointsTable.lessonId, lessonId)
         )
       )
+  }
+
+  /**
+   * Get knowledge points by conditions with pagination
+   * @param conditions Filtering conditions
+   * @param pagination Pagination parameters
+   * @returns Paginated result of knowledge points
+   */
+  async getByConditions(
+    conditions: {
+      lessonId?: number
+      type?: KnowledgePointType
+      hasAudio?: boolean
+    },
+    pagination: PaginationParams = { page: 1, limit: 20 }
+  ): Promise<PaginatedResult<KnowledgePoint>> {
+    // Set default pagination values
+    const page = pagination.page || 1
+    const limit = pagination.limit || 20
+    const offset = (page - 1) * limit
+
+    // Build the where conditions
+    const whereConditions = []
+
+    // Filter by lesson ID if provided
+    if (conditions.lessonId !== undefined) {
+      // We need to use a subquery to filter by lesson ID
+      const subquery = this.db
+        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
+        .from(lessonKnowledgePointsTable)
+        .where(eq(lessonKnowledgePointsTable.lessonId, conditions.lessonId))
+        .as('lesson_knowledge_points_subquery')
+
+      whereConditions.push(
+        sql`${knowledgePointsTable.id} IN (SELECT ${subquery.knowledgePointId} FROM ${subquery})`
+      )
+    }
+
+    // Filter by type if provided
+    if (conditions.type !== undefined) {
+      whereConditions.push(eq(knowledgePointsTable.type, conditions.type))
+    }
+
+    // Filter by hasAudio if provided (only applicable for vocabularies)
+    if (conditions.hasAudio !== undefined) {
+      if (conditions.hasAudio) {
+        // For hasAudio=true, we need to check if the audio field exists in typeSpecificData
+        whereConditions.push(
+          sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NOT NULL`
+        )
+      } else {
+        // For hasAudio=false, we need to check if the audio field doesn't exist or is null
+        whereConditions.push(
+          sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND (json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NULL OR json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') = '')`
+        )
+      }
+    }
+
+    // Combine all conditions with AND
+    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined
+
+    // Get total count for pagination
+    const countResult = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(knowledgePointsTable)
+      .where(whereClause)
+
+    const total = countResult[0]?.count || 0
+
+    // Get the paginated results
+    const rows = await this.db
+      .select()
+      .from(knowledgePointsTable)
+      .where(whereClause)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(knowledgePointsTable.id)
+
+    // Map the results
+    const items = rows.map(mapDrizzleToKnowledgePoint)
+
+    // If we filtered by lessonId, set the lesson property for each knowledge point
+    if (conditions.lessonId !== undefined) {
+      for (const item of items) {
+        item.lesson = conditions.lessonId
+      }
+    }
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(total / limit)
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    }
   }
 }

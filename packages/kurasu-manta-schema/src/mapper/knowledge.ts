@@ -19,6 +19,7 @@ export function mapCreateKnowledgePointToDrizzle(knowledgePoint: CreateKnowledge
   if (knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY) {
     const vocabulary = knowledgePoint as Vocabulary
     typeSpecificData = {
+      audio: vocabulary.audio,
       pos: vocabulary.pos,
       annotations: vocabulary.annotations,
       examples: vocabulary.examples,
@@ -62,6 +63,7 @@ export function mapDrizzleToKnowledgePoint(
       ...baseData,
       type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
       pos: vocData.pos as string,
+      audio: vocData.audio as string | undefined,
       annotations: vocData.annotations as Annotation[],
       examples: vocData.examples as string[],
     }

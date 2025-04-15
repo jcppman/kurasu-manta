@@ -45,7 +45,7 @@ export const knowledgePointsTable = sqliteTable('knowledge_points', {
   // Type-specific data stored in JSON fields
   // For vocabulary: pos, annotations, examples
   // For grammar: examples
-  typeSpecificData: jsonField<Record<string, unknown>>('typeSpecificData'),
+  typeSpecificData: jsonField<Record<string, unknown>>('type_specific_data'),
   // Creation timestamp
   createdAt: text()
     .notNull()

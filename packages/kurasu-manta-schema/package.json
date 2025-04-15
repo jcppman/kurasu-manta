@@ -6,27 +6,27 @@
     "./zod/*": {
       "types": "./build/zod/*.d.ts",
       "require": "./build/zod/*.js",
-      "import": "./build/zod/*.js"
+      "import": "./build/zod/*.mjs"
     },
     "./drizzle/*": {
       "types": "./build/drizzle/*.d.ts",
       "require": "./build/drizzle/*.js",
-      "import": "./build/drizzle/*.js"
+      "import": "./build/drizzle/*.mjs"
     },
-    "./mappers/*": {
-      "types": "./build/mappers/*.d.ts",
-      "require": "./build/mappers/*.js",
-      "import": "./build/mappers/*.js"
+    "./mapper/*": {
+      "types": "./build/mapper/*.d.ts",
+      "require": "./build/mapper/*.js",
+      "import": "./build/mapper/*.mjs"
     },
     "./repository/*": {
       "types": "./build/repository/*.d.ts",
       "require": "./build/repository/*.js",
-      "import": "./build/repository/*.js"
+      "import": "./build/repository/*.mjs"
     },
     "./service/*": {
       "types": "./build/service/*.d.ts",
       "require": "./build/service/*.js",
-      "import": "./build/service/*.js"
+      "import": "./build/service/*.mjs"
     }
   },
   "keywords": [],

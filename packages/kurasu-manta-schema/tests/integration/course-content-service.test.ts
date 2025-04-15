@@ -378,4 +378,158 @@ test('CourseContentService', async (t) => {
       assert.strictEqual(result, true, 'Should return true when nothing to remove')
     })
   })
+
+  // Tests for getVocabulariesByConditions
+  await t.test('getVocabulariesByConditions', async (t) => {
+    await t.test('should retrieve vocabularies by lesson ID with pagination', async () => {
+      // Create a lesson
+      const lesson = await lessonRepo.create(createLesson(12))
+
+      // Create vocabulary points
+      const vocPoint1 = await knowledgeRepo.create(createVocabularyPoint(12, '語彙1'))
+      const vocPoint2 = await knowledgeRepo.create(createVocabularyPoint(12, '語彙2'))
+      const vocPoint3 = await knowledgeRepo.create(createVocabularyPoint(12, '語彙3'))
+
+      // Create a grammar point (should not be returned)
+      const grammarPoint = await knowledgeRepo.create(createGrammarPoint(12, '文法'))
+
+      // Associate all points with the lesson
+      await knowledgeRepo.associateWithLesson(vocPoint1.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(vocPoint2.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(vocPoint3.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
+
+      // Get vocabularies with pagination (limit 2, page 1)
+      const result1 = await courseContentService.getVocabulariesByConditions(
+        { lessonId: lesson.id },
+        { page: 1, limit: 2 }
+      )
+
+      // Assertions for first page
+      assert.strictEqual(result1.items.length, 2, 'Should return 2 items on first page')
+      assert.strictEqual(result1.total, 3, 'Total count should be 3')
+      assert.strictEqual(result1.page, 1, 'Current page should be 1')
+      assert.strictEqual(result1.limit, 2, 'Limit should be 2')
+      assert.strictEqual(result1.totalPages, 2, 'Total pages should be 2')
+      assert.strictEqual(result1.hasNextPage, true, 'Should have next page')
+      assert.strictEqual(result1.hasPrevPage, false, 'Should not have previous page')
+
+      // Verify all returned items are vocabularies
+      for (const item of result1.items) {
+        assert.strictEqual(item.type, KNOWLEDGE_POINT_TYPES.VOCABULARY, 'Item should be vocabulary')
+      }
+
+      // Get vocabularies with pagination (limit 2, page 2)
+      const result2 = await courseContentService.getVocabulariesByConditions(
+        { lessonId: lesson.id },
+        { page: 2, limit: 2 }
+      )
+
+      // Assertions for second page
+      assert.strictEqual(result2.items.length, 1, 'Should return 1 item on second page')
+      assert.strictEqual(result2.page, 2, 'Current page should be 2')
+      assert.strictEqual(result2.hasNextPage, false, 'Should not have next page')
+      assert.strictEqual(result2.hasPrevPage, true, 'Should have previous page')
+    })
+
+    await t.test('should retrieve vocabularies with audio', async () => {
+      // Create vocabulary points with and without audio
+      const vocWithAudio1 = await knowledgeRepo.create({
+        ...createVocabularyPoint(13, '音声あり1'),
+        audio: 'audio1.mp3',
+      })
+      const vocWithAudio2 = await knowledgeRepo.create({
+        ...createVocabularyPoint(13, '音声あり2'),
+        audio: 'audio2.mp3',
+      })
+      const vocWithoutAudio = await knowledgeRepo.create(createVocabularyPoint(13, '音声なし'))
+
+      // Create a lesson and associate all points
+      const lesson = await lessonRepo.create(createLesson(13))
+      await knowledgeRepo.associateWithLesson(vocWithAudio1.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(vocWithAudio2.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(vocWithoutAudio.id, lesson.id)
+
+      // Get vocabularies with audio
+      const result = await courseContentService.getVocabulariesByConditions({ hasAudio: true })
+
+      // Assertions
+      assert.strictEqual(result.items.length, 2, 'Should return 2 items with audio')
+      assert.strictEqual(result.total, 2, 'Total count should be 2')
+
+      // Verify all returned items have audio
+      for (const item of result.items) {
+        assert.ok(item.audio, 'Item should have audio')
+      }
+
+      // Get vocabularies without audio
+      const resultWithoutAudio = await courseContentService.getVocabulariesByConditions({
+        hasAudio: false,
+      })
+
+      // Assertions
+      assert.strictEqual(resultWithoutAudio.items.length, 1, 'Should return 1 item without audio')
+      assert.strictEqual(resultWithoutAudio.total, 1, 'Total count should be 1')
+
+      // Verify returned item has no audio
+      for (const item of resultWithoutAudio.items) {
+        assert.strictEqual(item.audio, undefined, 'Item should not have audio')
+      }
+    })
+
+    await t.test('should combine multiple conditions', async () => {
+      // Create a lesson
+      const lesson = await lessonRepo.create(createLesson(14))
+
+      // Create vocabulary points with and without audio in this lesson
+      const vocWithAudio = await knowledgeRepo.create({
+        ...createVocabularyPoint(14, '条件テスト1'),
+        audio: 'test-audio.mp3',
+      })
+      const vocWithoutAudio = await knowledgeRepo.create(createVocabularyPoint(14, '条件テスト2'))
+
+      // Create vocabulary in another lesson with audio
+      const otherLesson = await lessonRepo.create(createLesson(15))
+      const otherVocWithAudio = await knowledgeRepo.create({
+        ...createVocabularyPoint(15, '別レッスン'),
+        audio: 'other-audio.mp3',
+      })
+
+      // Associate points with their lessons
+      await knowledgeRepo.associateWithLesson(vocWithAudio.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(vocWithoutAudio.id, lesson.id)
+      await knowledgeRepo.associateWithLesson(otherVocWithAudio.id, otherLesson.id)
+
+      // Get vocabularies with combined conditions: from lesson 14 with audio
+      const result = await courseContentService.getVocabulariesByConditions({
+        lessonId: lesson.id,
+        hasAudio: true,
+      })
+
+      // Assertions
+      assert.strictEqual(result.items.length, 1, 'Should return 1 item matching both conditions')
+      assert.strictEqual(result.total, 1, 'Total count should be 1')
+      // Check if we have items before accessing them
+      assert.strictEqual(
+        result.items[0]?.content,
+        '条件テスト1',
+        'Should return the correct vocabulary'
+      )
+      assert.ok(result.items[0].audio, 'Item should have audio')
+    })
+
+    await t.test('should return empty result when no vocabularies match conditions', async () => {
+      // Get vocabularies with non-existent lesson ID
+      const result = await courseContentService.getVocabulariesByConditions({
+        lessonId: 999,
+      })
+
+      // Assertions
+      assert.strictEqual(result.items.length, 0, 'Should return empty array')
+      assert.strictEqual(result.total, 0, 'Total count should be 0')
+      assert.strictEqual(result.totalPages, 0, 'Total pages should be 0')
+      assert.strictEqual(result.hasNextPage, false, 'Should not have next page')
+      assert.strictEqual(result.hasPrevPage, false, 'Should not have previous page')
+    })
+  })
 })

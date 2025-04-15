@@ -1,7 +1,7 @@
 import { lessonKnowledgePointsTable, lessonsTable } from '@/drizzle/schema'
 import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
-import { mapCreateLessonToDrizzle, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mappers/lesson'
+import { mapCreateLessonToDrizzle, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mapper/lesson'
 import type { CreateLesson, Lesson } from '@/zod/lesson'
 import { eq } from 'drizzle-orm'
 

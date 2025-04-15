@@ -1,7 +1,9 @@
+import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
+import type { PaginatedResult, PaginationParams } from '@/common/types'
 import type { Db } from '@/drizzle/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
-import type { CreateKnowledgePoint, KnowledgePoint } from '@/zod/knowledge'
+import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { Lesson } from '@/zod/lesson'
 import { groupBy, isEmpty, isNumber, map, toPairs } from 'lodash'
 
@@ -148,6 +150,40 @@ export class CourseContentService {
     } catch (error) {
       console.error('Error removing knowledge points from lesson:', error)
       return false
+    }
+  }
+
+  /**
+   * Get vocabularies by conditions with pagination
+   * @param conditions Filtering conditions
+   * @param pagination Pagination parameters
+   * @returns Paginated result of vocabularies
+   */
+  async getVocabulariesByConditions(
+    conditions: {
+      lessonId?: number
+      hasAudio?: boolean
+    },
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<Vocabulary>> {
+    // Use the repository method with the VOCABULARY type added to conditions
+    const result = await this.knowledgeRepository.getByConditions(
+      {
+        ...conditions,
+        type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
+      },
+      pagination
+    )
+
+    // Filter the results to only include vocabularies
+    // This is a type safety measure, as the repository should already filter by type
+    const vocabularies = result.items.filter(
+      (item): item is Vocabulary => item.type === KNOWLEDGE_POINT_TYPES.VOCABULARY
+    )
+
+    return {
+      ...result,
+      items: vocabularies,
     }
   }
 }

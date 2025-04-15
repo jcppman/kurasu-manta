@@ -1,5 +1,12 @@
-if (!process.env.DB_FILE_NAME) {
-  throw new Error('DB_FILE_NAME not specified')
-}
+import { z } from 'zod'
 
-export const DB_FILE_NAME = process.env.DB_FILE_NAME
+const envSchema = z.object({
+  DB_DIR: z.string(),
+  DB_FILE_NAME: z.string(),
+  OPENAI_API_KEY: z.string(),
+})
+
+const env = envSchema.parse(process.env)
+
+export default env
+export const { DB_DIR, DB_FILE_NAME, OPENAI_API_KEY } = env
