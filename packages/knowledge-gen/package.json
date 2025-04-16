@@ -8,7 +8,8 @@
     "dev": "dotenvx run -f .env.local -- tsx watch index.ts | pino-pretty",
     "dev:debug": "dotenvx run -f .env.local -- tsx watch --inspect-brk index.ts",
     "db:push": "dotenvx run -f .env.local -- drizzle-kit push",
-    "db:generate": "dotenvx run -f .env.local -- drizzle-kit generate"
+    "db:generate": "dotenvx run -f .env.local -- drizzle-kit generate",
+    "test": "tsx --test '**/*.test.ts'"
   },
   "keywords": [],
   "author": "",
@@ -20,13 +21,14 @@
     "tsx": "^4.19.3"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.2.11",
     "@ai-sdk/openai": "^1.1.0",
     "@dotenvx/dotenvx": "^1.39.0",
     "@google-cloud/text-to-speech": "^6.0.1",
     "@libsql/client": "^0.15.2",
     "@repo/kurasu-manta-schema": "workspace:^",
     "@types/shelljs": "^0.8.15",
-    "ai": "^4.1.0",
+    "ai": "4.3.6",
     "drizzle-orm": "^0.41.0",
     "lodash": "^4.17.21",
     "pino": "^9.6.0",

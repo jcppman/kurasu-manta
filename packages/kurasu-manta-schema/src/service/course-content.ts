@@ -1,5 +1,6 @@
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import type { PaginatedResult, PaginationParams } from '@/common/types'
+import { mergeWithPartialFiltered } from '@/common/utils'
 import type { Db } from '@/drizzle/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
@@ -185,5 +186,40 @@ export class CourseContentService {
       ...result,
       items: vocabularies,
     }
+  }
+
+  async getVocabularyById(id: number): Promise<Vocabulary | null> {
+    const vocabulary = await this.knowledgeRepository.getById(id)
+    if (!vocabulary || vocabulary.type !== KNOWLEDGE_POINT_TYPES.VOCABULARY) {
+      return null
+    }
+    return vocabulary
+  }
+
+  /**
+   * update knowledge point
+   */
+  async partialUpdateKnowledgePoint(
+    id: number,
+    knowledgePoint: Partial<KnowledgePoint>
+  ): Promise<KnowledgePoint | null> {
+    // get the knowledge point by ID
+    const existingKnowledgePoint = await this.knowledgeRepository.getById(id)
+    if (!existingKnowledgePoint) {
+      return null
+    }
+
+    const updatedKnowledgePoint = await this.knowledgeRepository.update(
+      id,
+      mergeWithPartialFiltered(existingKnowledgePoint, knowledgePoint)
+    )
+
+    // Check if the update was successful
+    if (!updatedKnowledgePoint) {
+      throw new Error(`Failed to update vocabulary with ID ${id}`)
+    }
+
+    // Return the updated vocabulary
+    return updatedKnowledgePoint
   }
 }

@@ -1,12 +1,13 @@
+import { writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import { AUDIO_DIR, DB_DIR } from '@/constants'
 import initDb from '@/db'
-import { DB_DIR } from '@/env'
 import { logger } from '@/utils'
 import type { WorkflowRunConfig } from '@/workflow/types'
 import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'
 import sh from 'shelljs'
 import { type MinaVocabulary, getData } from './data'
-import { findPosOfVocabulary } from './service/language'
+import { findPosOfVocabulary, generateAudio } from './service/language'
 
 export default async function run(
   config?: WorkflowRunConfig<'init' | 'createLesson' | 'generateAudio'>
@@ -103,17 +104,40 @@ export default async function run(
 
   async function generateVocabularyAudioClips() {
     logger.info('Creating audio...')
+
     // get vocabularies that has no audio clips
-    const vocabularies = await courseContentService.getVocabulariesByConditions(
+    const { items } = await courseContentService.getVocabulariesByConditions(
       {
         hasAudio: false,
       },
       {
         page: 1,
-        limit: 20,
+        limit: 100,
       }
     )
 
-    console.log(vocabularies)
+    for (const voc of items) {
+      const { sha1, content } = await generateAudio({
+        content: voc.content,
+        annotations: voc.annotations,
+      })
+      logger.info(`Created audio for ${voc.content}`)
+
+      const dir = join(AUDIO_DIR, sha1.slice(0, 2))
+      const filename = `${sha1}.mp3`
+
+      logger.info(`Saving it to ${dir} as ${filename}`)
+
+      // save audio to file system
+      sh.mkdir('-p', dir)
+
+      writeFileSync(join(dir, filename), content)
+
+      // update database
+      await courseContentService.partialUpdateKnowledgePoint(voc.id, {
+        audio: sha1,
+      })
+      logger.info(`Updated audio for ${voc.content} in database`)
+    }
   }
 }

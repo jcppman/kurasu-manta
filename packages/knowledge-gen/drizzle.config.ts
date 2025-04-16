@@ -1,4 +1,4 @@
-import { DB_FILE_NAME } from '@/env'
+import { DB_FILE_NAME } from '@/constants'
 import { defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
