@@ -1,17 +1,21 @@
 # LangLearn: Technical Design Knowledge Base
 
 ## Index
-- **Technology Stack** - [docs/tech-stack.md](.ai/tech-stack): Core technologies and implementation approach
-- **Type-Safe Data Design** - [docs/type-safe-data.md](.ai/type-safe-data): Detailed implementation patterns for type safety
+- **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack): Core technologies and implementation approach
+- **Type-Safe Data Design** - [.claude/type-safe-data.md](.claude/type-safe-data): Detailed implementation patterns for type safety
+- **Task Orchestration** - [packages/task-queue](packages/task-queue): Local SQLite-based task queue system
 
 ## Core Architecture
 ```
 Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-sqlite)
+                    ↓
+               Task Queue (local orchestration)
 ```
 - End-to-end type-safe architecture with shared schema
 - Support for heterogeneous knowledge types
 - Multilingual content via LocalizedText
 - Offline-first design with bundled database
+- Local task orchestration with SQLite-based job queue
 
 ## Technology Choices
 
@@ -21,9 +25,12 @@ Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-s
 - JSON fields for type-specific data
 - Pre-populated SQLite database bundled with app
 
-### Task Orchestration: Knowledge-gen
-- content generation workflow
+### Task Orchestration: @repo/task-queue
+- Local SQLite-based job queue
 - TypeScript-native for type safety
+- Task chaining and workflow support
+- Built-in retry logic and error handling
+- Integrates with existing Drizzle schema
 
 ### Type Safety Stack
 - Zod: Domain model validation
@@ -33,6 +40,51 @@ Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-s
 - Repository: Abstract database implementation
 
 ## Key Patterns
+
+### Task Queue Features
+- **Type-Safe Tasks**: Full TypeScript support with Zod payload validation
+- **Job Persistence**: All jobs stored in SQLite with full audit trail
+- **Task Chaining**: Tasks can trigger other tasks via `context.enqueue()`
+- **Workflow Grouping**: Related tasks grouped with `workflowId`
+- **Priority Queues**: Higher priority jobs processed first
+- **Retry Logic**: Automatic retries with exponential backoff
+- **Error Handling**: Comprehensive error logging and failure tracking
+- **Worker Management**: Configurable concurrency and polling
+
+### Task Queue Integration
+```typescript
+// Define type-safe tasks
+const generateExamplesTask: TaskDefinition<{
+  knowledgePointId: string
+  count: number
+}> = {
+  name: 'generate-examples',
+  handler: async (payload, context) => {
+    // Generate content
+    const examples = await generateExamples(payload)
+    
+    // Chain to next task
+    await context.enqueue('process-sentences', {
+      examples
+    })
+  },
+  schema: z.object({
+    knowledgePointId: z.string(),
+    count: z.number().min(1).max(20)
+  })
+}
+
+// Register and run
+taskQueue.define(generateExamplesTask)
+await taskQueue.start()
+
+// Trigger workflows
+await taskQueue.enqueue({
+  name: 'generate-examples',
+  payload: { knowledgePointId: 'jp-particle-wa', count: 5 },
+  options: { workflowId: 'content-batch-1', priority: 10 }
+})
+```
 
 ### Heterogeneous Data Approach
 - Base schema with universal properties
@@ -67,9 +119,10 @@ The architecture supports extending to other domains beyond language learning:
 
 ## Content Pipeline
 1. Seed knowledge ETL into SQLite with Drizzle
-2. Generate examples with AI for knowledge points
-3. Process sentences (annotations, explanations, audio)
-4. Bundle database for mobile distribution
+2. **Task Queue**: Generate examples with AI for knowledge points
+3. **Task Queue**: Process sentences (annotations, explanations, audio)
+4. **Task Queue**: Generate audio files and metadata
+5. Bundle database for mobile distribution
 
 ## Database Bundling
 1. Generate complete SQLite on server

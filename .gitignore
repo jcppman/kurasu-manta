@@ -69,5 +69,4 @@ xcuserdata
 # Temp
 tmp/
 
-.env.local
-.env.*.local
+.env
