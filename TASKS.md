@@ -8,33 +8,39 @@
 - Basic CLI improvements (--resume, --list-resumes)
 - Full backward compatibility maintained
 
-## Next Implementation: Vue-Style Workflow API
+**✅ Vue-Style Workflow API - COMPLETED**
+- Vue-style `defineWorkflow` API with type safety
+- Automatic step dependency validation and ordering
+- Step filtering and conditional execution
+- Timeout configuration and enhanced error handling
+- Full migration of existing minna-jp-1 workflow
+- Backward compatibility maintained
 
 ### Implementation Tasks
 
-#### Task 1: Create Vue-style definition API
-- [ ] Create `src/workflow-api.ts` with `defineWorkflow` function
-- [ ] Implement `WorkflowContext` interface with `defineStep` method
-- [ ] Create type-safe workflow definition types
-- [ ] Add step metadata support (description, dependencies)
+#### Task 1: Create Vue-style definition API ✅
+- [x] Create `src/workflow-api.ts` with `defineWorkflow` function
+- [x] Implement `WorkflowContext` interface with `defineStep` method
+- [x] Create type-safe workflow definition types
+- [x] Add step metadata support (description, dependencies)
 
-#### Task 2: Update WorkflowEngine integration  
-- [ ] Update `WorkflowEngine` to accept workflow definitions
-- [ ] Add automatic step discovery from definitions
-- [ ] Implement step filtering based on configuration
-- [ ] Maintain state persistence compatibility
+#### Task 2: Update WorkflowEngine integration ✅
+- [x] Update `WorkflowEngine` to accept workflow definitions
+- [x] Add automatic step discovery from definitions
+- [x] Implement step filtering based on configuration
+- [x] Maintain state persistence compatibility
 
-#### Task 3: Migrate existing workflow
-- [ ] Convert `minna-jp-1/index.ts` to use `defineWorkflow`
-- [ ] Add step descriptions and metadata
-- [ ] Test complete workflow with new API
-- [ ] Ensure state persistence works with new format
+#### Task 3: Migrate existing workflow ✅
+- [x] Convert `minna-jp-1/index.ts` to use `defineWorkflow`
+- [x] Add step descriptions and metadata
+- [x] Test complete workflow with new API
+- [x] Ensure state persistence works with new format
 
-#### Task 4: Enhanced features
-- [ ] Add step dependency validation
-- [ ] Implement conditional step execution
-- [ ] Add step timeout configuration
-- [ ] Create workflow validation system
+#### Task 4: Enhanced features ✅
+- [x] Add step dependency validation
+- [x] Implement conditional step execution
+- [x] Add step timeout configuration
+- [x] Create workflow validation system
 
 ## Vue-Style API Design
 

@@ -3,9 +3,10 @@ import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
 import { logger } from '@/utils'
 import { and, desc, eq } from 'drizzle-orm'
 import type { Logger } from 'pino'
+import type { WorkflowDefinition } from './workflow-api'
+import { getStepsInDependencyOrder } from './workflow-api'
 
 export type WorkflowStatus = 'started' | 'running' | 'completed' | 'failed' | 'paused'
-export type StepStatus = 'pending' | 'running' | 'completed' | 'failed' | 'skipped'
 
 export interface StepContext {
   updateProgress(percent: number, message?: string): Promise<void>
@@ -14,7 +15,8 @@ export interface StepContext {
   logger: Logger
 }
 
-export interface WorkflowStep {
+// Legacy interface for internal use only
+interface WorkflowStep {
   name: string
   handler: (context: StepContext) => Promise<void>
 }
@@ -33,7 +35,6 @@ export interface WorkflowResume {
 export class WorkflowEngine {
   private db = initDb()
   private runId: number | null = null
-  private currentStepId: number | null = null
 
   async start(
     workflowName: string,
@@ -118,7 +119,7 @@ export class WorkflowEngine {
       return
     }
 
-    this.currentStepId = step.id
+    // Track current step for this execution
 
     // Update workflow status to running
     await this.db
@@ -218,6 +219,111 @@ export class WorkflowEngine {
       .where(eq(workflowRunsTable.id, this.runId))
 
     logger.info(`Workflow ${this.runId} completed successfully`)
+  }
+
+  /**
+   * Run a complete workflow definition with optional step filtering
+   */
+  async runWorkflow(
+    workflowDefinition: WorkflowDefinition,
+    options: {
+      steps?: Record<string, boolean>
+      resumeId?: number
+    } = {}
+  ): Promise<void> {
+    const { steps: stepConfig = {}, resumeId } = options
+
+    // Filter steps based on configuration
+    const filteredSteps = workflowDefinition.steps.filter((step) => {
+      // If step config is provided, use it; otherwise include all steps
+      return stepConfig[step.name] !== false
+    })
+
+    // Sort steps in dependency order
+    const orderedSteps = getStepsInDependencyOrder(filteredSteps)
+
+    // Validate dependencies are satisfied for filtered steps
+    const availableSteps = new Set(orderedSteps.map((s) => s.name))
+    for (const step of orderedSteps) {
+      const missingDeps = (step.definition.dependencies || []).filter(
+        (dep) => !availableSteps.has(dep)
+      )
+      if (missingDeps.length > 0) {
+        throw new Error(
+          `Step '${step.name}' has dependencies [${missingDeps.join(', ')}] that are not included in the execution plan`
+        )
+      }
+    }
+
+    // Convert to legacy WorkflowStep format for existing engine
+    const workflowSteps = orderedSteps.map((step) => ({
+      name: step.name,
+      handler: step.definition.handler,
+    }))
+
+    // Start or resume workflow
+    if (resumeId) {
+      await this.resume(resumeId)
+    } else {
+      await this.start(workflowDefinition.name, workflowSteps)
+    }
+
+    // Execute steps with timeout support
+    for (const step of orderedSteps) {
+      try {
+        if (step.definition.timeout) {
+          await this.executeStepWithTimeout(
+            step.name,
+            step.definition.handler,
+            step.definition.timeout
+          )
+        } else {
+          await this.executeStep(step.name, step.definition.handler)
+        }
+      } catch (error) {
+        logger.error(`Workflow failed at step '${step.name}': ${error}`)
+        throw error
+      }
+    }
+
+    await this.complete()
+    logger.info(`Workflow '${workflowDefinition.name}' completed successfully`)
+  }
+
+  /**
+   * Execute a step with timeout support
+   */
+  private async executeStepWithTimeout(
+    stepName: string,
+    handler: (context: StepContext) => Promise<void>,
+    timeoutMs: number
+  ): Promise<void> {
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Step '${stepName}' timed out after ${timeoutMs}ms`))
+      }, timeoutMs)
+    })
+
+    await Promise.race([this.executeStep(stepName, handler), timeoutPromise])
+  }
+
+  /**
+   * Get workflow definition metadata
+   */
+  getWorkflowInfo(workflowDefinition: WorkflowDefinition): {
+    name: string
+    totalSteps: number
+    stepNames: string[]
+    dependencies: Record<string, string[]>
+  } {
+    return {
+      name: workflowDefinition.name,
+      totalSteps: workflowDefinition.steps.length,
+      stepNames: workflowDefinition.steps.map((s) => s.name),
+      dependencies: Object.fromEntries(
+        workflowDefinition.steps.map((s) => [s.name, s.definition.dependencies || []])
+      ),
+    }
   }
 
   async getAvailableResumes(): Promise<WorkflowResume[]> {

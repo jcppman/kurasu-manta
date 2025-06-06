@@ -1,6 +1,6 @@
 import { WorkflowEngine } from './src/workflow-engine'
 import { logger } from './utils'
-import run from './workflow/minna-jp-1'
+import { workflowDefinition as minnaJp1 } from './workflow/minna-jp-1'
 
 async function main() {
   const args = process.argv.slice(2)
@@ -39,24 +39,17 @@ async function main() {
 
   if (resumeId) {
     logger.info(`Attempting to resume workflow with ID: ${resumeId}`)
-    // For now, just show the workflow info - actual resume logic would need to be implemented
-    // in the workflow itself based on the stored state
     const engine = new WorkflowEngine()
-    await engine.resume(resumeId)
-    logger.info(
-      'Resume functionality is partially implemented. Full resume requires workflow-specific logic.'
-    )
+
+    // Use new workflow API for resume
+    await engine.runWorkflow(minnaJp1, { resumeId })
+    logger.info('Workflow resumed and completed successfully')
     return
   }
 
-  // Default workflow execution
-  await run({
-    steps: {
-      init: false,
-      createLesson: false,
-      generateAudio: true,
-    },
-  })
+  // Default workflow execution using new API
+  const engine = new WorkflowEngine()
+  await engine.runWorkflow(minnaJp1)
 
   logger.info('Workflow completed successfully.')
 }
