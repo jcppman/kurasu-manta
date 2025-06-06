@@ -5,7 +5,7 @@ import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
 import { CourseContentService } from '@/service/course-content'
-import { isNumber } from 'lodash'
+import { isNumber } from 'lodash-es'
 import { createInMemoryDb } from '../utils/db'
 
 test('CourseContentService', async (t) => {

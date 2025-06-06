@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "r": "dotenvx run -f .env -- tsx index.ts | pino-pretty",
-    "dev": "dotenvx run -f .env -- tsx watch index.ts | pino-pretty",
-    "dev:debug": "dotenvx run -f .env -- tsx watch --inspect-brk index.ts",
     "db:push": "dotenvx run -f .env -- drizzle-kit push",
     "db:generate": "dotenvx run -f .env -- drizzle-kit generate",
     "test": "tsx --test '**/*.test.ts'"

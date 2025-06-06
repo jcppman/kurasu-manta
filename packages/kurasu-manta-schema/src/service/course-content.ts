@@ -6,7 +6,7 @@ import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
 import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { Lesson } from '@/zod/lesson'
-import { groupBy, isEmpty, isNumber, map, toPairs } from 'lodash'
+import { groupBy, isEmpty, isNumber, map, toPairs } from 'lodash-es'
 
 /**
  * Interface for a lesson with its associated knowledge points

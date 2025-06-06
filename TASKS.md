@@ -1,4 +1,4 @@
-# Knowledge-Gen Workflow Improvements
+# Knowledge-Gen Next.js Dashboard Implementation
 
 ## Current Status
 
@@ -16,31 +16,55 @@
 - Full migration of existing minna-jp-1 workflow
 - Backward compatibility maintained
 
-### Implementation Tasks
+**🔄 Phase 2: Next.js Dashboard - IN PROGRESS**
+- Modern web interface for workflow management
+- Real-time progress tracking and monitoring
+- Visual workflow designer and configuration
+- Enhanced user experience with shadcn/ui components
 
-#### Task 1: Create Vue-style definition API ✅
-- [x] Create `src/workflow-api.ts` with `defineWorkflow` function
-- [x] Implement `WorkflowContext` interface with `defineStep` method
-- [x] Create type-safe workflow definition types
-- [x] Add step metadata support (description, dependencies)
+### Next.js Dashboard Implementation Tasks
 
-#### Task 2: Update WorkflowEngine integration ✅
-- [x] Update `WorkflowEngine` to accept workflow definitions
-- [x] Add automatic step discovery from definitions
-- [x] Implement step filtering based on configuration
-- [x] Maintain state persistence compatibility
+#### Task 1: Project Setup and Structure 🔄
+- [ ] Create `apps/dashboard` directory with Next.js 15 project
+- [ ] Configure TypeScript, Tailwind CSS, and ESLint
+- [ ] Install and configure shadcn/ui component library
+- [ ] Set up project configuration and routing structure
+- [ ] Add dashboard to workspace and build configurations
 
-#### Task 3: Migrate existing workflow ✅
-- [x] Convert `minna-jp-1/index.ts` to use `defineWorkflow`
-- [x] Add step descriptions and metadata
-- [x] Test complete workflow with new API
-- [x] Ensure state persistence works with new format
+#### Task 2: Core Dashboard Foundation 📋
+- [ ] Create main dashboard layout with navigation
+- [ ] Implement workflow listing and management pages
+- [ ] Set up database integration with existing SQLite + Drizzle
+- [ ] Create API routes for workflow operations
+- [ ] Implement basic workflow execution controls
 
-#### Task 4: Enhanced features ✅
-- [x] Add step dependency validation
-- [x] Implement conditional step execution
-- [x] Add step timeout configuration
-- [x] Create workflow validation system
+#### Task 3: Workflow Management Interface 🎯
+- [ ] Build workflow selection and configuration UI
+- [ ] Create step configuration interface with checkboxes
+- [ ] Implement workflow creation and editing forms
+- [ ] Add workflow metadata management (name, description, tags)
+- [ ] Integrate with existing WorkflowEngine for execution
+
+#### Task 4: Real-time Progress Tracking 📊
+- [ ] Implement WebSocket/SSE for real-time updates
+- [ ] Create progress visualization components
+- [ ] Build step-by-step progress indicators
+- [ ] Add interactive controls (pause/resume/stop)
+- [ ] Implement error handling and recovery UI
+
+#### Task 5: Workflow History and Analytics 📈
+- [ ] Create workflow run history dashboard
+- [ ] Implement filtering and search functionality
+- [ ] Build performance analytics and metrics
+- [ ] Add export functionality for workflow data
+- [ ] Create detailed run logs and debugging interface
+
+#### Task 6: Enhanced User Experience 🎨
+- [ ] Implement responsive design for mobile/tablet
+- [ ] Add dark/light theme support
+- [ ] Create workflow templates and favorites
+- [ ] Build notification system for workflow events
+- [ ] Add keyboard shortcuts and accessibility features
 
 ## Vue-Style API Design
 
