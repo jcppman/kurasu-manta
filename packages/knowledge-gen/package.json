@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "r": "dotenvx run -f .env.local -- tsx index.ts | pino-pretty",
-    "dev": "dotenvx run -f .env.local -- tsx watch index.ts | pino-pretty",
-    "dev:debug": "dotenvx run -f .env.local -- tsx watch --inspect-brk index.ts",
-    "db:push": "dotenvx run -f .env.local -- drizzle-kit push",
-    "db:generate": "dotenvx run -f .env.local -- drizzle-kit generate",
+    "r": "dotenvx run -f .env -- tsx index.ts | pino-pretty",
+    "dev": "dotenvx run -f .env -- tsx watch index.ts | pino-pretty",
+    "dev:debug": "dotenvx run -f .env -- tsx watch --inspect-brk index.ts",
+    "db:push": "dotenvx run -f .env -- drizzle-kit push",
+    "db:generate": "dotenvx run -f .env -- drizzle-kit generate",
     "test": "tsx --test '**/*.test.ts'"
   },
   "keywords": [],

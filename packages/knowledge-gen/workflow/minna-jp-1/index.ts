@@ -2,6 +2,7 @@ import { writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { AUDIO_DIR, DB_DIR } from '@/constants'
 import initDb from '@/db'
+import { type StepContext, WorkflowEngine, type WorkflowStep } from '@/src/workflow-engine'
 import { logger } from '@/utils'
 import type { WorkflowRunConfig } from '@/workflow/types'
 import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'
@@ -20,48 +21,81 @@ export default async function run(
     },
   }
 
-  // remove db and create table
+  const engine = new WorkflowEngine()
+
+  // Define workflow steps
+  const workflowSteps: WorkflowStep[] = []
+
   if (steps.init) {
-    await resetDatabase()
+    workflowSteps.push({
+      name: 'init',
+      handler: async (context) => {
+        context.logger.info('Initializing database...')
+        await resetDatabase()
+        context.logger.info('Database initialization completed')
+      },
+    })
   }
 
-  const db = initDb()
-  const courseContentService = new CourseContentService(db)
-
-  // create lesson and text context
   if (steps.createLesson) {
-    const data = getData()
-    // group by lesson
-    const groupedData = data.reduce((acc, item) => {
-      const lesson = item.lesson
-      acc.set(lesson, acc.get(lesson) ?? [])
+    workflowSteps.push({
+      name: 'createLesson',
+      handler: async (context) => {
+        context.logger.info('Creating lessons...')
+        const data = getData()
 
-      acc.get(lesson)?.push(item)
-      return acc
-    }, new Map<number, MinaVocabulary[]>())
+        // Group by lesson
+        const groupedData = data.reduce((acc, item) => {
+          const lesson = item.lesson
+          acc.set(lesson, acc.get(lesson) ?? [])
+          acc.get(lesson)?.push(item)
+          return acc
+        }, new Map<number, MinaVocabulary[]>())
 
-    const lesson1 = groupedData.get(1)
-    if (!lesson1) {
-      throw new Error('Lesson 1 not found')
-    }
-    for (const lessonVocabularies of groupedData.values()) {
-      const lesson = lessonVocabularies[0]?.lesson ?? Number.POSITIVE_INFINITY
-      if (lesson > 25) {
-        // skip lesson 26 and above
-        continue
-      }
-      await createLesson(lessonVocabularies[0]?.lesson ?? 0, lessonVocabularies)
-    }
+        const totalLessons = Array.from(groupedData.keys()).filter((lesson) => lesson <= 25).length
+        let completedLessons = 0
+
+        for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
+          if (lessonNumber > 25) {
+            continue // skip lesson 26 and above
+          }
+
+          context.logger.info(`Processing lesson ${lessonNumber}...`)
+          await createLesson(lessonNumber, lessonVocabularies)
+
+          completedLessons++
+          const progress = Math.round((completedLessons / totalLessons) * 100)
+          await context.updateProgress(progress, `Processed lesson ${lessonNumber}`)
+        }
+
+        context.logger.info('All lessons created successfully')
+      },
+    })
   }
 
-  // generate audio
   if (steps.generateAudio) {
-    await generateVocabularyAudioClips()
+    workflowSteps.push({
+      name: 'generateAudio',
+      handler: async (context) => {
+        context.logger.info('Generating audio clips...')
+        await generateVocabularyAudioClips(context)
+        context.logger.info('Audio generation completed')
+      },
+    })
   }
+
+  // Start workflow
+  const runId = await engine.start('minna-jp-1', workflowSteps, { steps })
+
+  // Execute steps
+  for (const step of workflowSteps) {
+    await engine.executeStep(step.name, step.handler)
+  }
+
+  await engine.complete()
+  logger.info(`Workflow minna-jp-1 completed with run ID: ${runId}`)
 
   async function resetDatabase() {
-    logger.info('Initializing database...')
-
     const projectDir = resolve(__dirname, '..', '..')
     const pwd = sh.pwd()
     const dbDir = join(projectDir, DB_DIR)
@@ -75,14 +109,12 @@ export default async function run(
   }
 
   async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
-    logger.info(
-      `Creating content for lesson ${lessonNumber}, ${vocabularies.length} vocabularies...`
-    )
+    const db = initDb()
+    const courseContentService = new CourseContentService(db)
 
     const noPos = vocabularies.filter((v) => !v.pos)
     for (const voc of noPos) {
       const pos = await findPosOfVocabulary(voc)
-      logger.info(`Found pos for ${voc.content}: ${pos}`)
       voc.pos = pos
     }
 
@@ -102,8 +134,9 @@ export default async function run(
     )
   }
 
-  async function generateVocabularyAudioClips() {
-    logger.info('Creating audio...')
+  async function generateVocabularyAudioClips(context: StepContext) {
+    const db = initDb()
+    const courseContentService = new CourseContentService(db)
 
     // get vocabularies that has no audio clips
     const { items } = await courseContentService.getVocabulariesByConditions(
@@ -116,28 +149,33 @@ export default async function run(
       }
     )
 
+    let processedCount = 0
+    const totalItems = items.length
+
     for (const voc of items) {
       const { sha1, content } = await generateAudio({
         content: voc.content,
         annotations: voc.annotations,
       })
-      logger.info(`Created audio for ${voc.content}`)
 
       const dir = join(AUDIO_DIR, sha1.slice(0, 2))
       const filename = `${sha1}.mp3`
 
-      logger.info(`Saving it to ${dir} as ${filename}`)
-
       // save audio to file system
       sh.mkdir('-p', dir)
-
       writeFileSync(join(dir, filename), content)
 
       // update database
       await courseContentService.partialUpdateKnowledgePoint(voc.id, {
         audio: sha1,
       })
-      logger.info(`Updated audio for ${voc.content} in database`)
+
+      processedCount++
+      const progress = Math.round((processedCount / totalItems) * 100)
+      await context.updateProgress(
+        progress,
+        `Generated audio for "${voc.content}" (${processedCount}/${totalItems})`
+      )
     }
   }
 }
