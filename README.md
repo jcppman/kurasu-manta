@@ -62,15 +62,8 @@ pnpm dev
 ### App-Specific Commands
 
 #### General Commands
-- `pnpm dev:kurasu-manta-client` - Start the mobile/web client development server
-- `pnpm dev:kurasu-manta-backend` - Start the backend development server
+- `pnpm --filter kurasu-manta-client dev` - Start the mobile/web client development server
 - `pnpm build:kurasu-manta-client` - Build the mobile/web client for production
-- `pnpm build:kurasu-manta-backend` - Build the backend for production
-
-#### Backend (NestJS)
-- Run backend: `pnpm --filter kurasu-manta-backend dev`
-- Test backend: `pnpm --filter kurasu-manta-backend test`
-- Test single file: `pnpm --filter kurasu-manta-backend test -- path/to/test.spec.ts`
 
 #### Frontend (Expo)
 - Run frontend: `pnpm --filter kurasu-manta-client dev`
@@ -86,11 +79,6 @@ This is a monorepo managed with PNPM workspaces. The main folders are:
   - Provides daily practice exercises for language learners
   - Allows users to track their progress through textbook lessons
   - Built with Expo for cross-platform compatibility
-
-- `apps/kurasu-manta-backend` - Backend server
-  - Provides API endpoints for the client application
-  - Handles AI-powered chat functionality for language learning assistance
-
 ### Packages
 
 - `packages/kurasu-manta-schema` - Shared TypeScript schema definitions
