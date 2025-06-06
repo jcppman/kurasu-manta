@@ -2,19 +2,15 @@
 
 ## Current Status
 
-**✅ Phase 1: State Persistence Foundation - COMPLETED**
-- Workflow state tracking with SQLite tables
-- WorkflowEngine class with progress reporting
-- Basic CLI improvements (--resume, --list-resumes)
-- Full backward compatibility maintained
-
-**✅ Vue-Style Workflow API - COMPLETED**
+**✅ Phase 1: Core Workflow Infrastructure - COMPLETED**
+- Workflow state tracking with SQLite tables (workflow-schema.ts)
+- WorkflowEngine class with progress reporting and resume capability
 - Vue-style `defineWorkflow` API with type safety
 - Automatic step dependency validation and ordering
 - Step filtering and conditional execution
 - Timeout configuration and enhanced error handling
-- Full migration of existing minna-jp-1 workflow
-- Backward compatibility maintained
+- Full migration of existing minna-jp-1 workflow to new API
+- Database integration with Drizzle + SQLite
 
 **🔄 Phase 2: Next.js Dashboard - IN PROGRESS**
 - Modern web interface for workflow management
@@ -25,11 +21,11 @@
 ### Next.js Dashboard Implementation Tasks
 
 #### Task 1: Project Setup and Structure 🔄
-- [ ] Create `apps/dashboard` directory with Next.js 15 project
-- [ ] Configure TypeScript, Tailwind CSS, and ESLint
+- [x] Create `apps/dashboard` directory with Next.js 15 project
+- [x] Configure TypeScript, Tailwind CSS, and ESLint
 - [ ] Install and configure shadcn/ui component library
-- [ ] Set up project configuration and routing structure
-- [ ] Add dashboard to workspace and build configurations
+- [x] Set up project configuration and routing structure
+- [x] Add dashboard to workspace and build configurations
 
 #### Task 2: Core Dashboard Foundation 📋
 - [ ] Create main dashboard layout with navigation
@@ -168,27 +164,13 @@ await engine.runWorkflow(workflowDefinition, {
 6. **Vue-Style**: Familiar composition API pattern for developers
 7. **Extensible**: Easy to add new step properties and features
 
-## Future Phases (After Vue-Style API)
-
-### Phase 2: Interactive CLI with Ink
-- Setup Ink infrastructure for React-like CLI components
-- Build workflow selection UI with interactive menus
-- Step configuration interface with checkboxes
-- Integration with WorkflowEngine for execution
-
-### Phase 3: Live Progress Display
-- Real-time progress tracking components with Ink
-- Overall workflow and step-by-step progress bars
-- Interactive controls (pause/resume/quit)
-- Enhanced error display with recovery options
-
 ## Current Implementation Status
 
-### ✅ Completed (Phase 1)
+### ✅ Core Infrastructure Complete
 
 **Workflow State Persistence Schema**: 
-- Created `packages/knowledge-gen/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables
-- Full type safety with Drizzle schema definitions
+- `packages/knowledge-gen/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables
+- Full type safety with Drizzle schema definitions  
 - JSON fields for flexible context and step data storage
 
 **WorkflowEngine Class**:
@@ -199,50 +181,55 @@ await engine.runWorkflow(workflowDefinition, {
 - Resume functionality for interrupted workflows
 - Error handling and failure tracking
 
-**Enhanced Workflow Integration**:
-- Modified `packages/knowledge-gen/workflow/minna-jp-1/index.ts` to use WorkflowEngine
-- Added progress tracking for lesson creation and audio generation
-- Maintained backward compatibility with existing step configuration
-- Type-safe step handlers with context
+**Vue-Style Workflow API**:
+- Complete implementation in `packages/knowledge-gen/src/workflow-api.ts`
+- Type-safe `defineWorkflow` with dependency validation
+- Automatic step ordering and circular dependency detection
+- Integration with WorkflowEngine
 
-**Basic CLI Enhancements**:
-- Modified `packages/knowledge-gen/index.ts` to support command line arguments
-- Added `--list-resumes` to show available workflows to resume
-- Added `--resume <id>` to resume specific workflow runs
-- Better error handling and logging
+**Workflow Implementation**:
+- `packages/knowledge-gen/workflow/minna-jp-1/index.ts` fully migrated to new API
+- All steps using `defineWorkflow` pattern with dependencies
+- Progress tracking for lesson creation and audio generation
 
-### Current Capabilities
-- Workflows can be interrupted and their state is preserved in SQLite
-- Real-time progress tracking during workflow execution
-- Step-level granular progress reporting
-- CLI commands to list and resume interrupted workflows
-- Full backward compatibility with existing manual step configuration
+### ❌ Missing Components
 
-### CLI Usage
-```bash
-# Normal execution (unchanged)
-pnpm r
+**CLI Interface**: 
+- Main entry point `packages/knowledge-gen/index.ts` has been deleted
+- No command-line interface for workflow execution or management
+- Engine functions as library only, requires programmatic usage
 
-# List available workflows to resume  
-pnpm r -- --list-resumes
+### Current Usage (Programmatic Only)
 
-# Resume specific workflow by ID
-pnpm r -- --resume 123
+```typescript
+// No CLI - must import and use directly
+import { WorkflowEngine } from './src/workflow-engine'
+import workflowDefinition from './workflow/minna-jp-1'
+
+const engine = new WorkflowEngine()
+await engine.runWorkflow(workflowDefinition, {
+  steps: {
+    init: false,
+    createLesson: true, 
+    generateAudio: true
+  }
+})
 ```
 
-## Project Structure
+## Actual Project Structure
 
 ```
 packages/knowledge-gen/
 ├── src/
-│   ├── workflow-engine.ts         # ✅ State persistence engine
-│   └── workflow-api.ts           # 🔄 NEXT: Vue-style API
+│   ├── workflow-engine.ts         # ✅ Complete with state persistence
+│   └── workflow-api.ts           # ✅ Vue-style API implemented
 ├── workflow/
-│   ├── types.ts                  # Current workflow types
 │   └── minna-jp-1/
-│       └── index.ts              # 🔄 NEXT: Convert to defineWorkflow
+│       └── index.ts              # ✅ Migrated to defineWorkflow
 ├── db/
-│   ├── schema.ts                 # Main schema exports
+│   ├── index.ts                  # ✅ Database connection
+│   ├── schema.ts                 # ✅ Main schema exports
 │   └── workflow-schema.ts        # ✅ Workflow state tables
-└── index.ts                      # ✅ CLI with resume support
+├── constants.ts                  # ✅ Environment configuration
+└── utils.ts                      # ✅ Logger utilities
 ```
