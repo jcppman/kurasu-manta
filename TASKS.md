@@ -46,14 +46,12 @@ The Knowledge Admin is a unified Next.js application that serves as the content 
   - [x] Update import paths and dependencies
   - [x] Remove packages/knowledge-gen package
 
-#### Task 2: Core Knowledge Admin Foundation 📋
-- [ ] Create main knowledge admin layout with navigation
-- [ ] Implement workflow listing and management pages
-- [ ] Set up database integration with merged SQLite + Drizzle code
-- [ ] Create API routes for workflow operations
-- [ ] Implement basic workflow execution controls
-- [ ] Add knowledge point CRUD interfaces
-- [ ] Create content seed management pages
+#### Task 2: Core Knowledge Admin Foundation ✅
+- [x] Create main knowledge admin layout with navigation
+- [x] Implement workflow listing and management pages
+- [x] Set up database integration with merged SQLite + Drizzle code
+- [x] Create API routes for workflow operations
+- [x] Implement basic workflow execution controls
 
 #### Task 3: Workflow Management Interface 🎯
 - [ ] Build workflow selection and configuration UI

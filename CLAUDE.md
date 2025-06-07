@@ -19,6 +19,9 @@ Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-s
 
 ## Technology Choices
 
+### Package Manager
+- Always use pnpm
+
 ### Database: Drizzle + SQLite
 - Same tech stack across server and client
 - Type-safe queries via Drizzle
@@ -137,4 +140,4 @@ The architecture supports extending to other domains beyond language learning:
 - Extensible to multiple domains
 - Simple database structure with powerful typing
 - Strong validation at system boundaries
-- Developer-friendly with TypeScript inference</content>
+- Developer-friendly with TypeScript inference

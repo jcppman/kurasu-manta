@@ -1,3 +1,4 @@
+import 'server-only'
 import { resolve } from 'node:path'
 import { z } from 'zod'
 
@@ -13,4 +14,4 @@ const constants = envSchema.parse(process.env)
 export const AUDIO_DIR = resolve(constants.DB_DIR, 'audio')
 
 export default constants
-export const { DB_DIR, DB_FILE_NAME, LOG_LEVEL } = constants
+export const { DB_DIR, DB_FILE_NAME, OPENAI_API_KEY, LOG_LEVEL } = constants

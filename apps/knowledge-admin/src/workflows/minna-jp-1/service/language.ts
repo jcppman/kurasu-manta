@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto'
-import { logger } from '@/utils'
-import type { MinaVocabulary } from '@/workflow/minna-jp-1/data'
-import { toFullFurigana } from '@/workflow/minna-jp-1/utils'
+import { logger } from '@/lib/server/utils'
 import { openai } from '@ai-sdk/openai'
 import textToSpeech from '@google-cloud/text-to-speech'
 import type { Annotation } from '@repo/kurasu-manta-schema/zod/annotation'
 import { generateObject } from 'ai'
 import { z } from 'zod'
+import type { MinaVocabulary } from '../data'
+import { toFullFurigana } from '../utils'
 
 export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> {
   const ret = await generateObject({

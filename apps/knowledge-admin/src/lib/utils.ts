@@ -1,5 +1,6 @@
-import pino from 'pino'
-import { LOG_LEVEL } from './constants'
-export const logger = pino({
-  level: LOG_LEVEL || 'info',
-})
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}

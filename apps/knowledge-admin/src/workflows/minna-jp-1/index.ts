@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import initDb from '@/db'
-import { AUDIO_DIR, DB_DIR } from '@/lib/constants'
+import { AUDIO_DIR, DB_DIR } from '@/lib/server/constants'
 import { defineWorkflow } from '@/lib/workflow-api'
 import type { StepContext } from '@/lib/workflow-engine'
 import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'

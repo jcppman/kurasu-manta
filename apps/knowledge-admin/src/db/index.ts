@@ -1,4 +1,4 @@
-import { DB_FILE_NAME } from '@/lib/constants'
+import { DB_FILE_NAME } from '@/lib/server/constants'
 import { drizzle } from 'drizzle-orm/libsql'
 import * as schema from './schema'
 
