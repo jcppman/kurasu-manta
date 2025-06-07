@@ -1,8 +1,19 @@
-# Knowledge-Gen Next.js Dashboard Implementation
+# Knowledge Admin Implementation
+
+## Project Overview
+
+The Knowledge Admin is a unified Next.js application that serves as the content management and generation system for Kurasu Manta. This application will merge the existing `packages/knowledge-gen` package into `apps/knowledge-admin`, creating a comprehensive platform for:
+
+- **Content Generation**: AI-powered workflows to generate knowledge content for mobile/web apps
+- **Knowledge Point Management**: CRUD operations for knowledge points and learning materials
+- **Workflow Orchestration**: Visual interface for managing content generation workflows
+- **Content Review**: Tools for reviewing and editing generated content before distribution
+
+**Migration Goal**: After completion, `packages/knowledge-gen` will be fully integrated into `apps/knowledge-admin` and the separate package will be removed.
 
 ## Current Status
 
-**✅ Phase 1: Core Workflow Infrastructure - COMPLETED**
+**✅ Phase 1: Core Workflow Infrastructure - COMPLETED** (in packages/knowledge-gen)
 - Workflow state tracking with SQLite tables (workflow-schema.ts)
 - WorkflowEngine class with progress reporting and resume capability
 - Vue-style `defineWorkflow` API with type safety
@@ -12,27 +23,37 @@
 - Full migration of existing minna-jp-1 workflow to new API
 - Database integration with Drizzle + SQLite
 
-**🔄 Phase 2: Next.js Dashboard - IN PROGRESS**
+**🔄 Phase 2: Knowledge Admin Integration - IN PROGRESS**
+- Merge packages/knowledge-gen into apps/knowledge-admin
 - Modern web interface for workflow management
 - Real-time progress tracking and monitoring
 - Visual workflow designer and configuration
 - Enhanced user experience with shadcn/ui components
+- CRUD interfaces for knowledge points and seeds
 
-### Next.js Dashboard Implementation Tasks
+### Next.js Knowledge Admin Implementation Tasks
 
-#### Task 1: Project Setup and Structure 🔄
-- [x] Create `apps/dashboard` directory with Next.js 15 project
+#### Task 1: Project Setup and Migration ✅
+- [x] Create `apps/knowledge-admin` directory with Next.js 15 project
 - [x] Configure TypeScript, Tailwind CSS, and ESLint
-- [ ] Install and configure shadcn/ui component library
+- [x] Install and configure shadcn/ui component library
 - [x] Set up project configuration and routing structure
-- [x] Add dashboard to workspace and build configurations
+- [x] Add knowledge-admin to workspace and build configurations
+- [x] **Merge packages/knowledge-gen into apps/knowledge-admin**
+  - [x] Move workflow engine and API code
+  - [x] Move database schemas and migrations
+  - [x] Move existing workflows (minna-jp-1)
+  - [x] Update import paths and dependencies
+  - [x] Remove packages/knowledge-gen package
 
-#### Task 2: Core Dashboard Foundation 📋
-- [ ] Create main dashboard layout with navigation
+#### Task 2: Core Knowledge Admin Foundation 📋
+- [ ] Create main knowledge admin layout with navigation
 - [ ] Implement workflow listing and management pages
-- [ ] Set up database integration with existing SQLite + Drizzle
+- [ ] Set up database integration with merged SQLite + Drizzle code
 - [ ] Create API routes for workflow operations
 - [ ] Implement basic workflow execution controls
+- [ ] Add knowledge point CRUD interfaces
+- [ ] Create content seed management pages
 
 #### Task 3: Workflow Management Interface 🎯
 - [ ] Build workflow selection and configuration UI
@@ -49,25 +70,18 @@
 - [ ] Implement error handling and recovery UI
 
 #### Task 5: Workflow History and Analytics 📈
-- [ ] Create workflow run history dashboard
+- [ ] Create workflow run history interface
 - [ ] Implement filtering and search functionality
 - [ ] Build performance analytics and metrics
 - [ ] Add export functionality for workflow data
 - [ ] Create detailed run logs and debugging interface
-
-#### Task 6: Enhanced User Experience 🎨
-- [ ] Implement responsive design for mobile/tablet
-- [ ] Add dark/light theme support
-- [ ] Create workflow templates and favorites
-- [ ] Build notification system for workflow events
-- [ ] Add keyboard shortcuts and accessibility features
 
 ## Vue-Style API Design
 
 ### New Workflow Definition Format
 
 ```typescript
-// packages/knowledge-gen/workflow/minna-jp-1/index.ts
+// apps/knowledge-admin/src/workflows/minna-jp-1/index.ts (after migration)
 export default defineWorkflow('minna-jp-1', ({ defineStep }) => {
   defineStep('init', {
     description: 'Initialize database and reset content',
@@ -141,8 +155,8 @@ function defineWorkflow(
 ### Enhanced Workflow Execution
 
 ```typescript
-// Usage in main entry point
-import workflowDefinition from './workflow/minna-jp-1'
+// Usage in knowledge admin
+import workflowDefinition from './workflows/minna-jp-1'
 
 const engine = new WorkflowEngine()
 await engine.runWorkflow(workflowDefinition, {
@@ -169,12 +183,12 @@ await engine.runWorkflow(workflowDefinition, {
 ### ✅ Core Infrastructure Complete
 
 **Workflow State Persistence Schema**: 
-- `packages/knowledge-gen/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables
+- `packages/knowledge-gen/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables → **TO BE MIGRATED**
 - Full type safety with Drizzle schema definitions  
 - JSON fields for flexible context and step data storage
 
 **WorkflowEngine Class**:
-- Core engine in `packages/knowledge-gen/src/workflow-engine.ts`
+- Core engine in `packages/knowledge-gen/src/workflow-engine.ts` → **TO BE MIGRATED**
 - State tracking for workflow runs and individual steps
 - Progress reporting with `StepContext` interface
 - Checkpoint saving and loading capabilities
@@ -182,29 +196,28 @@ await engine.runWorkflow(workflowDefinition, {
 - Error handling and failure tracking
 
 **Vue-Style Workflow API**:
-- Complete implementation in `packages/knowledge-gen/src/workflow-api.ts`
+- Complete implementation in `packages/knowledge-gen/src/workflow-api.ts` → **TO BE MIGRATED**
 - Type-safe `defineWorkflow` with dependency validation
 - Automatic step ordering and circular dependency detection
 - Integration with WorkflowEngine
 
 **Workflow Implementation**:
-- `packages/knowledge-gen/workflow/minna-jp-1/index.ts` fully migrated to new API
+- `packages/knowledge-gen/workflow/minna-jp-1/index.ts` → **TO BE MIGRATED**
 - All steps using `defineWorkflow` pattern with dependencies
 - Progress tracking for lesson creation and audio generation
 
-### ❌ Missing Components
-
-**CLI Interface**: 
-- Main entry point `packages/knowledge-gen/index.ts` has been deleted
-- No command-line interface for workflow execution or management
-- Engine functions as library only, requires programmatic usage
-
-### Current Usage (Programmatic Only)
+### Future Usage (Post-Migration)
 
 ```typescript
-// No CLI - must import and use directly
-import { WorkflowEngine } from './src/workflow-engine'
-import workflowDefinition from './workflow/minna-jp-1'
+// Web interface with API routes
+// GET /api/workflows - List available workflows
+// POST /api/workflows/run - Execute workflow with configuration
+// GET /api/workflows/{id}/status - Get real-time progress
+// PATCH /api/workflows/{id} - Pause/resume/stop workflow
+
+// Programmatic usage within knowledge admin
+import { WorkflowEngine } from '@/lib/workflow-engine'
+import workflowDefinition from '@/workflows/minna-jp-1'
 
 const engine = new WorkflowEngine()
 await engine.runWorkflow(workflowDefinition, {
@@ -216,20 +229,45 @@ await engine.runWorkflow(workflowDefinition, {
 })
 ```
 
-## Actual Project Structure
+## Migration Plan: packages/knowledge-gen → apps/knowledge-admin
 
+### Current Structure (TO BE MIGRATED)
 ```
 packages/knowledge-gen/
 ├── src/
-│   ├── workflow-engine.ts         # ✅ Complete with state persistence
-│   └── workflow-api.ts           # ✅ Vue-style API implemented
+│   ├── workflow-engine.ts         # ✅ Complete → apps/knowledge-admin/src/lib/workflow-engine.ts
+│   └── workflow-api.ts           # ✅ Complete → apps/knowledge-admin/src/lib/workflow-api.ts
 ├── workflow/
 │   └── minna-jp-1/
-│       └── index.ts              # ✅ Migrated to defineWorkflow
+│       └── index.ts              # ✅ Complete → apps/knowledge-admin/src/workflows/minna-jp-1/index.ts
 ├── db/
-│   ├── index.ts                  # ✅ Database connection
-│   ├── schema.ts                 # ✅ Main schema exports
-│   └── workflow-schema.ts        # ✅ Workflow state tables
-├── constants.ts                  # ✅ Environment configuration
-└── utils.ts                      # ✅ Logger utilities
+│   ├── index.ts                  # ✅ Complete → apps/knowledge-admin/src/db/index.ts
+│   ├── schema.ts                 # ✅ Complete → apps/knowledge-admin/src/db/schema.ts
+│   └── workflow-schema.ts        # ✅ Complete → apps/knowledge-admin/src/db/workflow-schema.ts
+├── constants.ts                  # ✅ Complete → apps/knowledge-admin/src/lib/constants.ts
+└── utils.ts                      # ✅ Complete → apps/knowledge-admin/src/lib/utils.ts
+```
+
+### Target Structure (POST-MIGRATION)
+```
+apps/knowledge-admin/
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── api/workflows/        # Workflow API routes
+│   │   ├── workflows/            # Workflow management pages
+│   │   └── knowledge/            # Knowledge point CRUD pages
+│   ├── lib/
+│   │   ├── workflow-engine.ts    # ← Migrated from packages/knowledge-gen
+│   │   ├── workflow-api.ts       # ← Migrated from packages/knowledge-gen
+│   │   ├── constants.ts          # ← Migrated from packages/knowledge-gen
+│   │   └── utils.ts              # ← Migrated from packages/knowledge-gen
+│   ├── db/
+│   │   ├── index.ts              # ← Migrated from packages/knowledge-gen
+│   │   ├── schema.ts             # ← Migrated from packages/knowledge-gen
+│   │   └── workflow-schema.ts    # ← Migrated from packages/knowledge-gen
+│   ├── workflows/
+│   │   └── minna-jp-1/
+│   │       └── index.ts          # ← Migrated from packages/knowledge-gen
+│   └── components/               # React components for UI
+└── package.json                  # Updated dependencies
 ```

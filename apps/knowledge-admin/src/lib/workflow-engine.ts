@@ -1,6 +1,6 @@
 import initDb from '@/db'
 import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
-import { logger } from '@/utils'
+import { logger } from '@/lib/utils'
 import { and, desc, eq } from 'drizzle-orm'
 import type { Logger } from 'pino'
 import type { WorkflowDefinition } from './workflow-api'
