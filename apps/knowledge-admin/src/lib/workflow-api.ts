@@ -236,3 +236,86 @@ export function getStepsInDependencyOrder(steps: WorkflowStepWithName[]): Workfl
 
   return result
 }
+
+/**
+ * Get all recursive dependencies for a given step
+ * @param stepName - Name of the step to analyze
+ * @param steps - All workflow steps
+ * @returns Array of step names that this step depends on (directly or indirectly)
+ */
+export function getAllDependencies(stepName: string, steps: WorkflowStepWithName[]): string[] {
+  const stepMap = new Map<string, string[]>()
+
+  // Build dependency map
+  for (const step of steps) {
+    stepMap.set(step.name, step.definition.dependencies || [])
+  }
+
+  const visited = new Set<string>()
+  const result: string[] = []
+
+  function collectDependencies(currentStep: string) {
+    if (visited.has(currentStep)) {
+      return // Avoid cycles
+    }
+
+    visited.add(currentStep)
+    const deps = stepMap.get(currentStep) || []
+
+    for (const dep of deps) {
+      if (!result.includes(dep)) {
+        result.push(dep)
+      }
+      collectDependencies(dep)
+    }
+  }
+
+  collectDependencies(stepName)
+  return result
+}
+
+/**
+ * Get all recursive dependents for a given step
+ * @param stepName - Name of the step to analyze
+ * @param steps - All workflow steps
+ * @returns Array of step names that depend on this step (directly or indirectly)
+ */
+export function getAllDependents(stepName: string, steps: WorkflowStepWithName[]): string[] {
+  const dependentMap = new Map<string, string[]>()
+
+  // Build reverse dependency map (who depends on whom)
+  for (const step of steps) {
+    const deps = step.definition.dependencies || []
+    for (const dep of deps) {
+      if (!dependentMap.has(dep)) {
+        dependentMap.set(dep, [])
+      }
+      const dependents = dependentMap.get(dep)
+      if (dependents) {
+        dependents.push(step.name)
+      }
+    }
+  }
+
+  const visited = new Set<string>()
+  const result: string[] = []
+
+  function collectDependents(currentStep: string) {
+    if (visited.has(currentStep)) {
+      return // Avoid cycles
+    }
+
+    visited.add(currentStep)
+    const dependents = dependentMap.get(currentStep) || []
+
+    for (const dependent of dependents) {
+      if (!result.includes(dependent)) {
+        result.push(dependent)
+      }
+      collectDependents(dependent)
+    }
+  }
+
+  collectDependents(stepName)
+  return result
+}

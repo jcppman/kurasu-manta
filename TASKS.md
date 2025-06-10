@@ -68,19 +68,76 @@ The Knowledge Admin is a unified Next.js application that serves as the content 
   - [x] Update API routes to return discovered workflow definitions
   - [x] Keep database only for execution tracking (`workflowRunsTable`, `workflowStepsTable`)
 
-#### Task 4: Real-time Progress Tracking 📊
-- [ ] Implement WebSocket/SSE for real-time updates
+#### Task 4: Workflow management and progress Tracking 📊
 - [ ] Create progress visualization components
 - [ ] Build step-by-step progress indicators
-- [ ] Add interactive controls (pause/resume/stop)
-- [ ] Implement error handling and recovery UI
-
-#### Task 5: Workflow History and Analytics 📈
+- [ ] Add interactive controls (stop task)
+- [ ] Implement error handling
 - [ ] Create workflow run history interface
-- [ ] Implement filtering and search functionality
-- [ ] Build performance analytics and metrics
-- [ ] Add export functionality for workflow data
-- [ ] Create detailed run logs and debugging interface
+- [ ] Create detailed run logs interface
+
+#### Task 5: Enhanced Recursive Task Selection in Workflow Detail Page
+**Goal**: Enhance the existing step selection logic in the execution panel to provide more sophisticated recursive dependency management with improved user experience.
+
+**Current State Analysis**:
+- ✅ Basic dependency management exists in `execution-panel.tsx`
+- ✅ Enabling a step automatically enables its direct dependencies  
+- ✅ Disabling a step automatically disables direct dependent steps
+- ✅ Visual "Missing deps" indicators for validation
+- ❌ **Limitation**: Only handles direct dependencies, not recursive chains
+- ❌ **Limitation**: No bulk selection operations or dependency visualization
+
+**Enhancement Requirements**:
+
+1. **Recursive Dependency Resolution** (Core Enhancement):
+   - Extend current `handleStepConfigChange` to handle **nested dependency chains**
+   - When enabling step C (depends on B, which depends on A), automatically enable A → B → C
+   - When disabling step A, automatically disable all downstream dependents (B → C → etc.)
+
+2. **Smart Selection Operations**:   
+   - Add "Select All Dependencies" button for a step (recursive upward)
+   - Add "Clear All Dependents" for bulk deselection (recursive downward)
+
+**Implementation Approach**:
+
+1. **Enhance Dependency Resolution Logic** (`execution-panel.tsx`):
+   ```typescript
+   // Current: Only direct dependencies
+   if (enabled && step?.dependencies) {
+     for (const dep of step.dependencies) {
+       newConfig[dep] = true
+     }
+   }
+   
+   // Enhanced: Recursive dependency resolution
+   const enableDependenciesRecursively = (stepName: string) => {
+     // Implement recursive traversal up dependency chain
+   }
+   ```
+
+2. **Add Dependency Analysis Utilities** (`lib/workflow-api.ts`):
+   - `getAllDependencies(stepName)` - Get all recursive dependencies
+   - `getAllDependents(stepName)` - Get all recursive dependents  
+
+3. **Add Smart Selection UI** (`execution-panel.tsx`):
+   - Add "Select All Dependencies" button for each step
+   - Add "Clear All Dependents" button for each step
+   - Integrate buttons with existing step interface
+
+4. **Preserve Existing Functionality**:
+   - Keep current dependency validation and error handling
+   - Maintain existing execution flow and engine integration
+   - Ensure backward compatibility with current workflow definitions
+
+**Files to Modify**:
+- `src/components/workflows/execution-panel.tsx` - Main enhancement target
+- `src/lib/workflow-api.ts` - Add dependency analysis utilities  
+
+**Success Criteria**:
+- Recursive dependency chains work correctly in both directions
+- Smart selection buttons function properly for all dependency scenarios
+- No performance degradation with complex workflows  
+- All existing workflows continue to function without changes
 
 ## Code-Defined Workflow Architecture
 

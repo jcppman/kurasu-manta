@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DeleteWorkflowButton } from '@/components/workflows/delete-workflow-button'
 import { ExecutionPanel } from '@/components/workflows/execution-panel'
+import { WorkflowRunHistory } from '@/components/workflows/workflow-run-history'
+import type { WorkflowStepWithName } from '@/lib/workflow-api'
 import { CheckCircle, Clock, Play, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -15,6 +17,7 @@ interface WorkflowStep {
   description: string
   dependencies: string[]
   status: string
+  timeout?: number
 }
 
 interface Workflow {
@@ -143,60 +146,28 @@ export default async function WorkflowDetailPage({ params }: WorkflowDetailPageP
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <ExecutionPanel workflowId={workflow.id} steps={workflow.steps} />
+        <ExecutionPanel
+          workflowId={workflow.id}
+          steps={workflow.steps.map(
+            (step): WorkflowStepWithName => ({
+              name: step.name,
+              definition: {
+                description: step.description,
+                dependencies: step.dependencies,
+                timeout: step.timeout,
+                handler: async () => {}, // Not used in UI
+              },
+            })
+          )}
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Execution History</CardTitle>
-            <CardDescription>Recent workflow executions and their results</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {workflow.recentRuns && workflow.recentRuns.length > 0 ? (
-              <div className="space-y-3">
-                {workflow.recentRuns.map((run) => (
-                  <div
-                    key={run.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant={
-                            run.status === 'completed'
-                              ? 'default'
-                              : run.status === 'failed'
-                                ? 'destructive'
-                                : run.status === 'running'
-                                  ? 'secondary'
-                                  : 'outline'
-                          }
-                        >
-                          {run.status}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">Run #{run.id}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{new Date(run.createdAt).toLocaleString()}</span>
-                        <span>•</span>
-                        <span>
-                          {run.completedSteps}/{run.totalSteps} steps
-                        </span>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                      View Details
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No execution history</p>
-                <p className="text-sm">Previous runs will appear here</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <WorkflowRunHistory
+          runs={(workflow.recentRuns || []).map((run) => ({
+            ...run,
+            status: run.status as 'running' | 'completed' | 'failed' | 'paused',
+          }))}
+          workflowId={workflow.id}
+        />
       </div>
     </div>
   )
