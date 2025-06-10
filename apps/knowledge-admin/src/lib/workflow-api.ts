@@ -33,6 +33,16 @@ export interface WorkflowStepWithName {
 }
 
 /**
+ * Workflow metadata
+ */
+export interface WorkflowMetadata {
+  description?: string
+  tags?: string[]
+  version?: string
+  author?: string
+}
+
+/**
  * Complete workflow definition
  */
 export interface WorkflowDefinition {
@@ -40,6 +50,8 @@ export interface WorkflowDefinition {
   name: string
   /** All steps defined in this workflow */
   steps: WorkflowStepWithName[]
+  /** Optional metadata */
+  metadata?: WorkflowMetadata
 }
 
 /**
@@ -79,12 +91,17 @@ export interface WorkflowContext {
  *       await processData()
  *     }
  *   })
+ * }, {
+ *   description: 'Example workflow for processing data',
+ *   tags: ['data', 'processing'],
+ *   version: '1.0.0'
  * })
  * ```
  */
 export function defineWorkflow(
   name: string,
-  defineFn: (context: WorkflowContext) => void
+  defineFn: (context: WorkflowContext) => void,
+  metadata?: WorkflowMetadata
 ): WorkflowDefinition {
   const steps: WorkflowStepWithName[] = []
   const stepNames = new Set<string>()
@@ -135,6 +152,7 @@ export function defineWorkflow(
   return {
     name,
     steps,
+    metadata,
   }
 }
 

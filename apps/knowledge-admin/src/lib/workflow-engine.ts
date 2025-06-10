@@ -45,6 +45,7 @@ export class WorkflowEngine {
     const [workflowRun] = await this.db
       .insert(workflowRunsTable)
       .values({
+        workflowId: workflowName,
         workflowName,
         status: 'started',
         totalSteps: steps.length,
@@ -230,7 +231,7 @@ export class WorkflowEngine {
       steps?: Record<string, boolean>
       resumeId?: number
     } = {}
-  ): Promise<void> {
+  ): Promise<number> {
     const { steps: stepConfig = {}, resumeId } = options
 
     // Filter steps based on configuration
@@ -288,6 +289,12 @@ export class WorkflowEngine {
 
     await this.complete()
     logger.info(`Workflow '${workflowDefinition.name}' completed successfully`)
+
+    if (!this.runId) {
+      throw new Error('Run ID not available')
+    }
+
+    return this.runId
   }
 
   /**

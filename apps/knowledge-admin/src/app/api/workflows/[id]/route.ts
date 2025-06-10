@@ -1,6 +1,7 @@
 import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
 import { getDatabase } from '@/lib/db'
-import { workflowDefinition } from '@/workflows/minna-jp-1'
+import { WorkflowEngine } from '@/lib/workflow-engine'
+import { getWorkflowRegistry } from '@/lib/workflow-registry'
 import { eq } from 'drizzle-orm'
 import { type NextRequest, NextResponse } from 'next/server'
 
@@ -10,12 +11,15 @@ interface Context {
   }>
 }
 
-export async function GET(request: NextRequest, { params }: Context) {
+export async function GET(_request: NextRequest, { params }: Context) {
   try {
     const { id } = await params
+    const registry = getWorkflowRegistry()
+    await registry.discoverWorkflows()
 
-    // For now, only support the minna-jp-1 workflow
-    if (id !== workflowDefinition.name) {
+    // Check if workflow exists
+    const workflowDefinition = registry.getWorkflow(id)
+    if (!workflowDefinition) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
     }
 
@@ -25,24 +29,26 @@ export async function GET(request: NextRequest, { params }: Context) {
     const recentRuns = await db
       .select()
       .from(workflowRunsTable)
-      .where(eq(workflowRunsTable.workflowName, id))
+      .where(eq(workflowRunsTable.workflowId, id))
       .orderBy(workflowRunsTable.createdAt)
       .limit(5)
 
     const workflow = {
       id: workflowDefinition.name,
-      name: 'Minna no Nihongo JP-1',
-      description:
-        'Generate lessons and audio for Japanese vocabulary from Minna no Nihongo textbook',
+      name: workflowDefinition.name,
+      description: workflowDefinition.metadata?.description || workflowDefinition.name,
       steps: workflowDefinition.steps.map((step) => ({
         name: step.name,
         description: step.definition.description,
         dependencies: step.definition.dependencies || [],
+        timeout: step.definition.timeout,
         status: 'ready',
       })),
       status: 'ready',
       lastRun: recentRuns[0]?.createdAt || null,
-      createdAt: '2024-01-01',
+      tags: workflowDefinition.metadata?.tags || [],
+      version: workflowDefinition.metadata?.version,
+      author: workflowDefinition.metadata?.author,
       recentRuns,
     }
 
@@ -58,23 +64,33 @@ export async function POST(request: NextRequest, { params }: Context) {
     const { id } = await params
     const { action, steps } = await request.json()
 
-    if (id !== workflowDefinition.name) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
-    }
-
     if (action === 'execute') {
-      // TODO: Actually execute the workflow using WorkflowEngine
-      // This is where we would:
-      // 1. Import and initialize WorkflowEngine
-      // 2. Call engine.runWorkflow(workflowDefinition, { steps })
-      // 3. Return the run ID for progress tracking
+      const registry = getWorkflowRegistry()
+      await registry.discoverWorkflows()
 
-      return NextResponse.json({
-        message: 'Workflow execution started',
-        workflowId: id,
-        steps: steps || {},
-        runId: `run_${Date.now()}`,
-      })
+      // Check if workflow exists
+      const workflowDefinition = registry.getWorkflow(id)
+      if (!workflowDefinition) {
+        return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
+      }
+
+      try {
+        const engine = new WorkflowEngine()
+
+        // For now, execute the workflow synchronously
+        // In production, you'd want to run this in a worker/queue
+        const runId = await engine.runWorkflow(workflowDefinition, { steps })
+
+        return NextResponse.json({
+          message: 'Workflow execution completed',
+          workflowId: id,
+          steps: steps || {},
+          runId: `run_${runId}`,
+        })
+      } catch (error) {
+        console.error('Failed to execute workflow:', error)
+        return NextResponse.json({ error: 'Failed to execute workflow' }, { status: 500 })
+      }
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
@@ -82,4 +98,24 @@ export async function POST(request: NextRequest, { params }: Context) {
     console.error('Failed to execute workflow action:', error)
     return NextResponse.json({ error: 'Failed to execute workflow action' }, { status: 500 })
   }
+}
+
+export async function PUT(request: NextRequest, { params }: Context) {
+  const { id } = await params
+
+  // Code-defined workflows cannot be edited via API
+  return NextResponse.json(
+    { error: 'Code-defined workflows cannot be edited via API. Please modify the source code.' },
+    { status: 403 }
+  )
+}
+
+export async function DELETE(request: NextRequest, { params }: Context) {
+  const { id } = await params
+
+  // Code-defined workflows cannot be deleted via API
+  return NextResponse.json(
+    { error: 'Code-defined workflows cannot be deleted via API. Please remove the source code.' },
+    { status: 403 }
+  )
 }

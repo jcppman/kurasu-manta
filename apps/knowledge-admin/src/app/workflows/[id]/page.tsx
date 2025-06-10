@@ -1,10 +1,39 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { DeleteWorkflowButton } from '@/components/workflows/delete-workflow-button'
 import { ExecutionPanel } from '@/components/workflows/execution-panel'
-import { CheckCircle, Clock, Play } from 'lucide-react'
+import { CheckCircle, Clock, Play, Settings } from 'lucide-react'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
+// Force dynamic rendering for this page since it fetches data
+export const dynamic = 'force-dynamic'
+
+interface WorkflowStep {
+  name: string
+  description: string
+  dependencies: string[]
+  status: string
+}
+
+interface Workflow {
+  id: string
+  name: string
+  description: string
+  steps: WorkflowStep[]
+  status: string
+  lastRun: string | null
+  createdAt: string
+  tags?: string[]
+  recentRuns?: Array<{
+    id: number
+    status: string
+    createdAt: string
+    completedSteps: number
+    totalSteps: number
+  }>
+}
 
 interface WorkflowDetailPageProps {
   params: Promise<{
@@ -12,45 +41,33 @@ interface WorkflowDetailPageProps {
   }>
 }
 
-export default async function WorkflowDetailPage({ params }: WorkflowDetailPageProps) {
-  // This will eventually come from the database/API
-  const getWorkflow = (id: string) => {
-    if (id === 'minna-jp-1') {
-      return {
-        id: 'minna-jp-1',
-        name: 'Minna no Nihongo JP-1',
-        description:
-          'Generate lessons and audio for Japanese vocabulary from Minna no Nihongo textbook',
-        steps: [
-          {
-            name: 'init',
-            description: 'Initialize database and reset content',
-            dependencies: [],
-            status: 'ready',
-          },
-          {
-            name: 'createLesson',
-            description: 'Process vocabulary data and create lessons',
-            dependencies: ['init'],
-            status: 'ready',
-          },
-          {
-            name: 'generateAudio',
-            description: 'Generate TTS audio files for vocabulary',
-            dependencies: ['createLesson'],
-            status: 'ready',
-          },
-        ],
-        status: 'ready',
-        lastRun: null,
-        createdAt: '2024-01-01',
+async function getWorkflow(id: string): Promise<Workflow | null> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/workflows/${id}`,
+      {
+        cache: 'no-store',
       }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null
+      }
+      throw new Error('Failed to fetch workflow')
     }
+
+    const data = await response.json()
+    return data.workflow
+  } catch (error) {
+    console.error('Error fetching workflow:', error)
     return null
   }
+}
 
+export default async function WorkflowDetailPage({ params }: WorkflowDetailPageProps) {
   const { id } = await params
-  const workflow = getWorkflow(id)
+  const workflow = await getWorkflow(id)
 
   if (!workflow) {
     notFound()
@@ -62,9 +79,28 @@ export default async function WorkflowDetailPage({ params }: WorkflowDetailPageP
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{workflow.name}</h2>
           <p className="text-muted-foreground">{workflow.description}</p>
+          {workflow.tags && workflow.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {workflow.tags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">Configure</Button>
+          <Button variant="outline" asChild>
+            <Link href={`/workflows/${workflow.id}/edit`}>
+              <Settings className="mr-2 h-4 w-4" />
+              Edit
+            </Link>
+          </Button>
+          <DeleteWorkflowButton
+            workflowId={workflow.id}
+            workflowName={workflow.name}
+            isBuiltIn={true}
+          />
           <Button>
             <Play className="mr-2 h-4 w-4" />
             Execute Workflow
@@ -161,10 +197,50 @@ export default async function WorkflowDetailPage({ params }: WorkflowDetailPageP
             <CardDescription>Recent workflow executions and their results</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8 text-muted-foreground">
-              <p>No execution history</p>
-              <p className="text-sm">Previous runs will appear here</p>
-            </div>
+            {workflow.recentRuns && workflow.recentRuns.length > 0 ? (
+              <div className="space-y-3">
+                {workflow.recentRuns.map((run) => (
+                  <div
+                    key={run.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={
+                            run.status === 'completed'
+                              ? 'default'
+                              : run.status === 'failed'
+                                ? 'destructive'
+                                : run.status === 'running'
+                                  ? 'secondary'
+                                  : 'outline'
+                          }
+                        >
+                          {run.status}
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">Run #{run.id}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>{new Date(run.createdAt).toLocaleString()}</span>
+                        <span>•</span>
+                        <span>
+                          {run.completedSteps}/{run.totalSteps} steps
+                        </span>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      View Details
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No execution history</p>
+                <p className="text-sm">Previous runs will appear here</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

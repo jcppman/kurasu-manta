@@ -95,60 +95,69 @@ async function generateVocabularyAudioClips(context: StepContext) {
 }
 
 // New workflow definition using defineWorkflow API
-export const workflowDefinition = defineWorkflow('minna-jp-1', ({ defineStep }) => {
-  defineStep('init', {
-    description: 'Initialize database and reset content',
-    dependencies: [],
-    handler: async (context) => {
-      context.logger.info('Initializing database...')
-      await resetDatabase()
-      context.logger.info('Database initialization completed')
-    },
-  })
+export const workflowDefinition = defineWorkflow(
+  'minna-jp-1',
+  ({ defineStep }) => {
+    defineStep('init', {
+      description: 'Initialize database and reset content',
+      dependencies: [],
+      handler: async (context) => {
+        context.logger.info('Initializing database...')
+        await resetDatabase()
+        context.logger.info('Database initialization completed')
+      },
+    })
 
-  defineStep('createLesson', {
-    description: 'Process vocabulary data and create lessons',
-    dependencies: ['init'],
-    handler: async (context) => {
-      context.logger.info('Creating lessons...')
-      const data = getData()
+    defineStep('createLesson', {
+      description: 'Process vocabulary data and create lessons',
+      dependencies: ['init'],
+      handler: async (context) => {
+        context.logger.info('Creating lessons...')
+        const data = getData()
 
-      // Group by lesson
-      const groupedData = data.reduce((acc, item) => {
-        const lesson = item.lesson
-        acc.set(lesson, acc.get(lesson) ?? [])
-        acc.get(lesson)?.push(item)
-        return acc
-      }, new Map<number, MinaVocabulary[]>())
+        // Group by lesson
+        const groupedData = data.reduce((acc, item) => {
+          const lesson = item.lesson
+          acc.set(lesson, acc.get(lesson) ?? [])
+          acc.get(lesson)?.push(item)
+          return acc
+        }, new Map<number, MinaVocabulary[]>())
 
-      const totalLessons = Array.from(groupedData.keys()).filter((lesson) => lesson <= 25).length
-      let completedLessons = 0
+        const totalLessons = Array.from(groupedData.keys()).filter((lesson) => lesson <= 25).length
+        let completedLessons = 0
 
-      for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
-        if (lessonNumber > 25) {
-          continue // skip lesson 26 and above
+        for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
+          if (lessonNumber > 25) {
+            continue // skip lesson 26 and above
+          }
+
+          context.logger.info(`Processing lesson ${lessonNumber}...`)
+          await createLesson(lessonNumber, lessonVocabularies)
+
+          completedLessons++
+          const progress = Math.round((completedLessons / totalLessons) * 100)
+          await context.updateProgress(progress, `Processed lesson ${lessonNumber}`)
         }
 
-        context.logger.info(`Processing lesson ${lessonNumber}...`)
-        await createLesson(lessonNumber, lessonVocabularies)
+        context.logger.info('All lessons created successfully')
+      },
+    })
 
-        completedLessons++
-        const progress = Math.round((completedLessons / totalLessons) * 100)
-        await context.updateProgress(progress, `Processed lesson ${lessonNumber}`)
-      }
-
-      context.logger.info('All lessons created successfully')
-    },
-  })
-
-  defineStep('generateAudio', {
-    description: 'Generate TTS audio files for vocabulary',
-    dependencies: ['createLesson'],
-    timeout: 300000, // 5 minutes timeout for audio generation
-    handler: async (context) => {
-      context.logger.info('Generating audio clips...')
-      await generateVocabularyAudioClips(context)
-      context.logger.info('Audio generation completed')
-    },
-  })
-})
+    defineStep('generateAudio', {
+      description: 'Generate TTS audio files for vocabulary',
+      dependencies: ['createLesson'],
+      timeout: 300000, // 5 minutes timeout for audio generation
+      handler: async (context) => {
+        context.logger.info('Generating audio clips...')
+        await generateVocabularyAudioClips(context)
+        context.logger.info('Audio generation completed')
+      },
+    })
+  },
+  {
+    description: 'Minna no Nihongo 1 vocabulary processing workflow',
+    tags: ['minna', 'vocabulary', 'japanese', 'language-learning'],
+    version: '1.0.0',
+    author: 'Kurasu Manta',
+  }
+)

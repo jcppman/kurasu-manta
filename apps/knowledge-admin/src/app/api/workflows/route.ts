@@ -1,11 +1,15 @@
 import { workflowRunsTable } from '@/db/workflow-schema'
 import { getDatabase } from '@/lib/db'
-import { workflowDefinition } from '@/workflows/minna-jp-1'
+import { getWorkflowRegistry } from '@/lib/workflow-registry'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
   try {
     const db = getDatabase()
+    const registry = getWorkflowRegistry()
+
+    // Ensure workflows are discovered
+    await registry.discoverWorkflows()
 
     // Get recent workflow runs
     const recentRuns = await db
@@ -14,25 +18,24 @@ export async function GET() {
       .orderBy(workflowRunsTable.createdAt)
       .limit(10)
 
-    // For now, return the hardcoded workflow definition
-    // In the future, this could come from a workflows registry
-    const workflows = [
-      {
-        id: workflowDefinition.name,
-        name: 'Minna no Nihongo JP-1',
-        description:
-          'Generate lessons and audio for Japanese vocabulary from Minna no Nihongo textbook',
-        steps: workflowDefinition.steps.map((step) => ({
-          name: step.name,
-          description: step.definition.description,
-          dependencies: step.definition.dependencies || [],
-        })),
-        status: 'ready',
-        lastRun:
-          recentRuns.find((run) => run.workflowName === workflowDefinition.name)?.createdAt || null,
-        createdAt: '2024-01-01',
-      },
-    ]
+    // Return discovered workflows
+    const discoveredWorkflows = registry.getAllWorkflows()
+    const workflows = discoveredWorkflows.map((workflow) => ({
+      id: workflow.name,
+      name: workflow.name,
+      description: workflow.metadata?.description || workflow.name,
+      steps: workflow.steps.map((step) => ({
+        name: step.name,
+        description: step.definition.description,
+        dependencies: step.definition.dependencies || [],
+        timeout: step.definition.timeout,
+      })),
+      status: 'ready',
+      lastRun: recentRuns.find((run) => run.workflowId === workflow.name)?.createdAt || null,
+      tags: workflow.metadata?.tags || [],
+      version: workflow.metadata?.version,
+      author: workflow.metadata?.author,
+    }))
 
     return NextResponse.json({ workflows, recentRuns })
   } catch (error) {
@@ -49,8 +52,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'workflowId is required' }, { status: 400 })
     }
 
-    // For now, just validate that the workflow exists
-    if (workflowId !== workflowDefinition.name) {
+    const registry = getWorkflowRegistry()
+    await registry.discoverWorkflows()
+
+    // Check if workflow exists
+    if (!registry.hasWorkflow(workflowId)) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
     }
 
@@ -69,7 +75,7 @@ export async function POST(request: NextRequest) {
       runId: `run_${Date.now()}`,
     })
   } catch (error) {
-    console.error('Failed to execute workflow:', error)
-    return NextResponse.json({ error: 'Failed to execute workflow' }, { status: 500 })
+    console.error('Failed to process workflow request:', error)
+    return NextResponse.json({ error: 'Failed to process workflow request' }, { status: 500 })
   }
 }

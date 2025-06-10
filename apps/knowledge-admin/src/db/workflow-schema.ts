@@ -2,12 +2,16 @@ import { jsonField } from '@repo/kurasu-manta-schema/drizzle/utils'
 import { relations } from 'drizzle-orm'
 import { int, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
+// NOTE: workflowsTable removed - workflows are now code-defined, not database-stored
+
 /**
  * Workflow runs table - tracks workflow execution state
  */
 export const workflowRunsTable = sqliteTable('workflow_runs', {
   id: int().primaryKey({ autoIncrement: true }),
-  // Name of the workflow
+  // Reference to the workflow definition (code-defined workflow name)
+  workflowId: text().notNull(),
+  // Name of the workflow (for compatibility)
   workflowName: text().notNull(),
   // Current status
   status: text().notNull().$type<'started' | 'running' | 'completed' | 'failed' | 'paused'>(),

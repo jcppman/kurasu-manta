@@ -36,10 +36,29 @@ export function ExecutionPanel({ workflowId, steps }: ExecutionPanelProps) {
   })
 
   const handleStepConfigChange = (stepName: string, enabled: boolean) => {
-    setStepConfig((prev) => ({
-      ...prev,
-      [stepName]: enabled,
-    }))
+    setStepConfig((prev) => {
+      const newConfig = { ...prev, [stepName]: enabled }
+
+      // If disabling a step, also disable dependent steps
+      if (!enabled) {
+        const dependentSteps = steps.filter((step) => step.dependencies.includes(stepName))
+        for (const dependentStep of dependentSteps) {
+          newConfig[dependentStep.name] = false
+        }
+      }
+
+      // If enabling a step, also enable its dependencies
+      if (enabled) {
+        const step = steps.find((s) => s.name === stepName)
+        if (step?.dependencies) {
+          for (const dep of step.dependencies) {
+            newConfig[dep] = true
+          }
+        }
+      }
+
+      return newConfig
+    })
   }
 
   const handleExecute = async () => {
@@ -53,7 +72,15 @@ export function ExecutionPanel({ workflowId, steps }: ExecutionPanelProps) {
   const enabledSteps = Object.entries(stepConfig)
     .filter(([_, enabled]) => enabled)
     .map(([name]) => name)
-  const canExecute = enabledSteps.length > 0 && state.status === 'idle'
+
+  // Check for dependency validation
+  const invalidSteps = steps.filter((step) => {
+    const isEnabled = stepConfig[step.name]
+    const hasMissingDependencies = step.dependencies.some((dep) => !stepConfig[dep])
+    return isEnabled && hasMissingDependencies
+  })
+
+  const canExecute = enabledSteps.length > 0 && state.status === 'idle' && invalidSteps.length === 0
 
   return (
     <Card>
@@ -110,35 +137,71 @@ export function ExecutionPanel({ workflowId, steps }: ExecutionPanelProps) {
         <div className="space-y-3">
           <h4 className="text-sm font-medium">Steps to Execute</h4>
           <div className="space-y-2">
-            {steps.map((step) => (
-              <div key={step.name} className="flex items-start space-x-3 p-3 border rounded-lg">
-                <Checkbox
-                  id={step.name}
-                  checked={stepConfig[step.name] || false}
-                  onCheckedChange={(checked) => handleStepConfigChange(step.name, checked === true)}
-                  disabled={state.status === 'running'}
-                />
-                <div className="flex-1 space-y-1">
-                  <label
-                    htmlFor={step.name}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {step.name}
-                  </label>
-                  <p className="text-xs text-muted-foreground">{step.description}</p>
-                  {step.dependencies.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs text-muted-foreground">Depends on:</span>
-                      {step.dependencies.map((dep) => (
-                        <Badge key={dep} variant="outline" className="text-xs">
-                          {dep}
+            {steps.map((step) => {
+              const isEnabled = stepConfig[step.name] || false
+              const hasMissingDependencies = step.dependencies.some((dep) => !stepConfig[dep])
+              const isValid = !isEnabled || !hasMissingDependencies
+
+              return (
+                <div
+                  key={step.name}
+                  className={`flex items-start space-x-3 p-3 border rounded-lg transition-colors ${
+                    !isValid
+                      ? 'border-destructive/50 bg-destructive/5'
+                      : isEnabled
+                        ? 'border-primary/50 bg-primary/5'
+                        : ''
+                  }`}
+                >
+                  <Checkbox
+                    id={step.name}
+                    checked={isEnabled}
+                    onCheckedChange={(checked) =>
+                      handleStepConfigChange(step.name, checked === true)
+                    }
+                    disabled={state.status === 'running'}
+                  />
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <label
+                        htmlFor={step.name}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {step.name}
+                      </label>
+                      {isEnabled && !isValid && (
+                        <Badge variant="destructive" className="text-xs">
+                          Missing deps
                         </Badge>
-                      ))}
+                      )}
+                      {isEnabled && isValid && (
+                        <Badge variant="default" className="text-xs">
+                          Ready
+                        </Badge>
+                      )}
                     </div>
-                  )}
+                    <p className="text-xs text-muted-foreground">{step.description}</p>
+                    {step.dependencies.length > 0 && (
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <span className="text-xs text-muted-foreground">Depends on:</span>
+                        {step.dependencies.map((dep) => {
+                          const depEnabled = stepConfig[dep]
+                          return (
+                            <Badge
+                              key={dep}
+                              variant={depEnabled ? 'default' : 'outline'}
+                              className={`text-xs ${!depEnabled && isEnabled ? 'border-destructive text-destructive' : ''}`}
+                            >
+                              {dep}
+                            </Badge>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
@@ -190,8 +253,28 @@ export function ExecutionPanel({ workflowId, steps }: ExecutionPanelProps) {
         </div>
 
         {/* Summary */}
-        <div className="text-xs text-muted-foreground">
-          {enabledSteps.length} of {steps.length} steps selected for execution
+        <div className="space-y-2">
+          <div className="text-xs text-muted-foreground">
+            {enabledSteps.length} of {steps.length} steps selected for execution
+          </div>
+
+          {invalidSteps.length > 0 && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs">
+                Steps with missing dependencies: {invalidSteps.map((s) => s.name).join(', ')}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {enabledSteps.length === 0 && (
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs">
+                Please select at least one step to execute
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </CardContent>
     </Card>
