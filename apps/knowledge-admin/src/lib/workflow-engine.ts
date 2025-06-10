@@ -1,4 +1,4 @@
-import initDb from '@/db'
+import db from '@/db'
 import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
 import { logger } from '@/lib/server/utils'
 import { and, desc, eq } from 'drizzle-orm'
@@ -33,7 +33,6 @@ export interface WorkflowResume {
 }
 
 export class WorkflowEngine {
-  private db = initDb()
   private runId: number | null = null
 
   async start(
@@ -42,7 +41,7 @@ export class WorkflowEngine {
     config: Record<string, unknown> = {}
   ): Promise<number> {
     // Create workflow run record
-    const [workflowRun] = await this.db
+    const [workflowRun] = await db
       .insert(workflowRunsTable)
       .values({
         workflowId: workflowName,
@@ -63,7 +62,7 @@ export class WorkflowEngine {
 
     // Create step records
     for (const step of steps) {
-      await this.db.insert(workflowStepsTable).values({
+      await db.insert(workflowStepsTable).values({
         runId: this.runId,
         stepName: step.name,
         status: 'pending',
@@ -77,7 +76,7 @@ export class WorkflowEngine {
 
   async resume(runId: number): Promise<void> {
     // Verify workflow exists and can be resumed
-    const [workflowRun] = await this.db
+    const [workflowRun] = await db
       .select()
       .from(workflowRunsTable)
       .where(eq(workflowRunsTable.id, runId))
@@ -103,7 +102,7 @@ export class WorkflowEngine {
     }
 
     // Find the step record
-    const [step] = await this.db
+    const [step] = await db
       .select()
       .from(workflowStepsTable)
       .where(
@@ -123,7 +122,7 @@ export class WorkflowEngine {
     // Track current step for this execution
 
     // Update workflow status to running
-    await this.db
+    await db
       .update(workflowRunsTable)
       .set({
         status: 'running',
@@ -133,7 +132,7 @@ export class WorkflowEngine {
       .where(eq(workflowRunsTable.id, this.runId))
 
     // Update step status to running
-    await this.db
+    await db
       .update(workflowStepsTable)
       .set({
         status: 'running',
@@ -163,7 +162,7 @@ export class WorkflowEngine {
 
       // Mark step as completed
       const duration = Date.now() - startTime
-      await this.db
+      await db
         .update(workflowStepsTable)
         .set({
           status: 'completed',
@@ -182,7 +181,7 @@ export class WorkflowEngine {
       const errorMessage = error instanceof Error ? error.message : String(error)
 
       // Mark step as failed
-      await this.db
+      await db
         .update(workflowStepsTable)
         .set({
           status: 'failed',
@@ -193,7 +192,7 @@ export class WorkflowEngine {
         .where(eq(workflowStepsTable.id, step.id))
 
       // Mark workflow as failed
-      await this.db
+      await db
         .update(workflowRunsTable)
         .set({
           status: 'failed',
@@ -211,7 +210,7 @@ export class WorkflowEngine {
       throw new Error('Workflow not started')
     }
 
-    await this.db
+    await db
       .update(workflowRunsTable)
       .set({
         status: 'completed',
@@ -334,7 +333,7 @@ export class WorkflowEngine {
   }
 
   async getAvailableResumes(): Promise<WorkflowResume[]> {
-    const runs = await this.db
+    const runs = await db
       .select({
         id: workflowRunsTable.id,
         workflowName: workflowRunsTable.workflowName,
@@ -363,7 +362,7 @@ export class WorkflowEngine {
     percent: number,
     message?: string
   ): Promise<void> {
-    await this.db
+    await db
       .update(workflowStepsTable)
       .set({
         progress: Math.min(100, Math.max(0, percent)),
@@ -373,7 +372,7 @@ export class WorkflowEngine {
   }
 
   private async saveCheckpoint(stepId: number, data: Record<string, unknown>): Promise<void> {
-    await this.db
+    await db
       .update(workflowStepsTable)
       .set({
         stepData: data,
@@ -382,7 +381,7 @@ export class WorkflowEngine {
   }
 
   private async loadCheckpoint(stepId: number): Promise<Record<string, unknown>> {
-    const [step] = await this.db
+    const [step] = await db
       .select({ stepData: workflowStepsTable.stepData })
       .from(workflowStepsTable)
       .where(eq(workflowStepsTable.id, stepId))
@@ -394,7 +393,7 @@ export class WorkflowEngine {
     if (!this.runId) return
 
     // Count completed steps
-    const [result] = await this.db
+    const [result] = await db
       .select({
         completedCount: workflowStepsTable.id,
       })
@@ -405,7 +404,7 @@ export class WorkflowEngine {
 
     const completedSteps = result?.completedCount || 0
 
-    await this.db
+    await db
       .update(workflowRunsTable)
       .set({
         completedSteps,

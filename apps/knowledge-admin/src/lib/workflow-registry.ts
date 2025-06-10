@@ -24,7 +24,7 @@ export interface WorkflowWithMetadata extends WorkflowDefinition {
  */
 export class WorkflowRegistry {
   private workflows = new Map<string, WorkflowWithMetadata>()
-  private workflowsDir: string
+  private readonly workflowsDir: string
 
   constructor(workflowsDir: string) {
     this.workflowsDir = workflowsDir

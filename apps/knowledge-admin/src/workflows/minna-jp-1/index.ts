@@ -1,36 +1,22 @@
 import { writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
-import initDb from '@/db'
-import { AUDIO_DIR, DB_DIR } from '@/lib/server/constants'
+import { join } from 'node:path'
+import db from '@/db'
+import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/db/schema'
+import { AUDIO_DIR } from '@/lib/server/constants'
 import { defineWorkflow } from '@/lib/workflow-api'
 import type { StepContext } from '@/lib/workflow-engine'
 import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'
+import { eq, inArray } from 'drizzle-orm'
 import sh from 'shelljs'
 import { type MinaVocabulary, getData } from './data'
 import { findPosOfVocabulary, generateAudio } from './service/language'
 
-// Helper functions
-async function resetDatabase() {
-  const projectDir = resolve(__dirname, '..', '..')
-  const pwd = sh.pwd()
-  const dbDir = join(projectDir, DB_DIR)
-
-  sh.rm('-rf', dbDir)
-  sh.mkdir('-p', dbDir)
-  sh.cd(projectDir)
-
-  sh.exec('drizzle-kit push')
-  sh.cd(pwd)
-}
-
 async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
-  const db = initDb()
   const courseContentService = new CourseContentService(db)
 
   const noPos = vocabularies.filter((v) => !v.pos)
   for (const voc of noPos) {
-    const pos = await findPosOfVocabulary(voc)
-    voc.pos = pos
+    voc.pos = await findPosOfVocabulary(voc)
   }
 
   // insert
@@ -50,7 +36,6 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
 }
 
 async function generateVocabularyAudioClips(context: StepContext) {
-  const db = initDb()
   const courseContentService = new CourseContentService(db)
 
   // get vocabularies that has no audio clips
@@ -98,19 +83,48 @@ async function generateVocabularyAudioClips(context: StepContext) {
 export const workflowDefinition = defineWorkflow(
   'minna-jp-1',
   ({ defineStep }) => {
-    defineStep('init', {
-      description: 'Initialize database and reset content',
+    defineStep('Clean vocabularies', {
+      description: 'Drop vocabulary knowledge points',
       dependencies: [],
       handler: async (context) => {
-        context.logger.info('Initializing database...')
-        await resetDatabase()
-        context.logger.info('Database initialization completed')
+        context.logger.info('Resetting database - dropping vocabulary knowledge points...')
+
+        // First, get all vocabulary knowledge point IDs
+        const vocabularyKnowledgePoints = await db
+          .select({ id: knowledgePointsTable.id })
+          .from(knowledgePointsTable)
+          .where(eq(knowledgePointsTable.type, 'vocabulary'))
+
+        const vocabularyIds = vocabularyKnowledgePoints.map((kp) => kp.id)
+
+        if (vocabularyIds.length === 0) {
+          context.logger.info('No vocabulary knowledge points found to delete')
+          await context.updateProgress(100, 'No vocabulary points to delete')
+          return
+        }
+
+        context.logger.info(`Found ${vocabularyIds.length} vocabulary knowledge points to delete`)
+
+        // Delete lesson-knowledge point associations for vocabulary points only
+        await db
+          .delete(lessonKnowledgePointsTable)
+          .where(inArray(lessonKnowledgePointsTable.knowledgePointId, vocabularyIds))
+
+        context.logger.info('Deleted vocabulary lesson associations')
+        await context.updateProgress(50, 'Vocabulary lesson associations cleared')
+
+        // Delete vocabulary knowledge points
+        await db.delete(knowledgePointsTable).where(eq(knowledgePointsTable.type, 'vocabulary'))
+
+        context.logger.info(`Deleted ${vocabularyIds.length} vocabulary knowledge points`)
+
+        context.logger.info('Database reset completed - vocabulary knowledge points dropped')
+        await context.updateProgress(100, 'Vocabulary knowledge points deleted')
       },
     })
-
     defineStep('createLesson', {
       description: 'Process vocabulary data and create lessons',
-      dependencies: ['init'],
+      dependencies: [],
       handler: async (context) => {
         context.logger.info('Creating lessons...')
         const data = getData()
@@ -156,7 +170,7 @@ export const workflowDefinition = defineWorkflow(
   },
   {
     description: 'Minna no Nihongo 1 vocabulary processing workflow',
-    tags: ['minna', 'vocabulary', 'japanese', 'language-learning'],
+    tags: ['minna', 'japanese', 'vocabulary'],
     version: '1.0.0',
     author: 'Kurasu Manta',
   }

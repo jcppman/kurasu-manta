@@ -2,7 +2,7 @@ import { DB_FILE_NAME } from '@/lib/server/constants'
 import { drizzle } from 'drizzle-orm/libsql'
 import * as schema from './schema'
 
-export default function init() {
+const getDbClient = () => {
   const db = drizzle(DB_FILE_NAME, {
     schema,
     casing: 'snake_case',
@@ -10,3 +10,7 @@ export default function init() {
 
   return db
 }
+
+export { getDbClient }
+
+export default getDbClient()

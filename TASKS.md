@@ -53,12 +53,20 @@ The Knowledge Admin is a unified Next.js application that serves as the content 
 - [x] Create API routes for workflow operations
 - [x] Implement basic workflow execution controls
 
-#### Task 3: Workflow Management Interface 🎯
-- [ ] Build workflow selection and configuration UI
-- [ ] Create step configuration interface with checkboxes
-- [ ] Implement workflow creation and editing forms
-- [ ] Add workflow metadata management (name, description, tags)
-- [ ] Integrate with existing WorkflowEngine for execution
+#### Task 3: Workflow Management Interface ✅
+- [x] Build workflow selection and configuration UI
+- [x] Create step configuration interface with checkboxes
+- [x] Integrate with existing WorkflowEngine for execution
+- [x] ~~Implement workflow creation and editing forms~~ **DEPRECATED**
+- [x] ~~Add workflow metadata management (name, description, tags)~~ **DEPRECATED**
+- [x] **COMPLETED: Implement code-defined workflow registry**
+  - [x] Remove database-stored workflow definitions (`workflowsTable`)
+  - [x] Remove workflow CRUD forms and API endpoints  
+  - [x] Create workflow registry that scans `src/workflows/` directory
+  - [x] Auto-discover workflow definitions from TypeScript files
+  - [x] Enhance `defineWorkflow` API to include metadata (description, tags)
+  - [x] Update API routes to return discovered workflow definitions
+  - [x] Keep database only for execution tracking (`workflowRunsTable`, `workflowStepsTable`)
 
 #### Task 4: Real-time Progress Tracking 📊
 - [ ] Implement WebSocket/SSE for real-time updates
@@ -74,9 +82,40 @@ The Knowledge Admin is a unified Next.js application that serves as the content 
 - [ ] Add export functionality for workflow data
 - [ ] Create detailed run logs and debugging interface
 
-## Vue-Style API Design
+## Code-Defined Workflow Architecture
 
-### New Workflow Definition Format
+**Core Principle**: Workflows are **purely defined as code** and discovered at runtime, not stored in database.
+
+### Design Benefits
+1. **Version Control**: Workflow definitions tracked in git with full history
+2. **Type Safety**: Full TypeScript support with compile-time validation  
+3. **Code Review**: Workflow changes go through standard development process
+4. **Testing**: Workflow definitions can be unit tested
+5. **Deployment**: Workflows deployed with application code
+6. **IDE Support**: Full autocomplete, refactoring, and debugging support
+
+### Architecture Overview
+```
+src/workflows/               # Code-defined workflow directory
+├── minna-jp-1/
+│   ├── index.ts            # Main workflow definition
+│   ├── data/               # Workflow-specific data
+│   └── service/            # Workflow-specific services
+├── new-workflow/
+│   └── index.ts            # Another workflow
+└── registry.ts             # Auto-discovery system
+
+Runtime Discovery:
+Code Files → Workflow Registry → API Routes → UI Components
+```
+
+### Database Usage
+- **❌ NOT for**: Workflow definitions, metadata, step configurations
+- **✅ ONLY for**: Execution tracking, run history, progress state, logs
+
+### Vue-Style API Design
+
+### Enhanced Workflow Definition Format
 
 ```typescript
 // apps/knowledge-admin/src/workflows/minna-jp-1/index.ts (after migration)
@@ -181,12 +220,12 @@ await engine.runWorkflow(workflowDefinition, {
 ### ✅ Core Infrastructure Complete
 
 **Workflow State Persistence Schema**: 
-- `packages/knowledge-gen/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables → **TO BE MIGRATED**
+- ✅ **MIGRATED** to `apps/knowledge-admin/src/db/workflow-schema.ts` with `workflow_runs` and `workflow_steps` tables
 - Full type safety with Drizzle schema definitions  
 - JSON fields for flexible context and step data storage
 
 **WorkflowEngine Class**:
-- Core engine in `packages/knowledge-gen/src/workflow-engine.ts` → **TO BE MIGRATED**
+- ✅ **MIGRATED** to `apps/knowledge-admin/src/lib/workflow-engine.ts`
 - State tracking for workflow runs and individual steps
 - Progress reporting with `StepContext` interface
 - Checkpoint saving and loading capabilities
@@ -194,15 +233,22 @@ await engine.runWorkflow(workflowDefinition, {
 - Error handling and failure tracking
 
 **Vue-Style Workflow API**:
-- Complete implementation in `packages/knowledge-gen/src/workflow-api.ts` → **TO BE MIGRATED**
+- ✅ **MIGRATED** to `apps/knowledge-admin/src/lib/workflow-api.ts`
 - Type-safe `defineWorkflow` with dependency validation
 - Automatic step ordering and circular dependency detection
 - Integration with WorkflowEngine
 
+**Code-Defined Workflow Registry**:
+- ✅ **IMPLEMENTED** in `apps/knowledge-admin/src/lib/workflow-registry.ts`
+- Automatic discovery of workflows from `src/workflows/` directory
+- Dynamic loading with support for multiple export formats
+- Full metadata support (description, tags, version, author)
+
 **Workflow Implementation**:
-- `packages/knowledge-gen/workflow/minna-jp-1/index.ts` → **TO BE MIGRATED**
+- ✅ **MIGRATED** to `apps/knowledge-admin/src/workflows/minna-jp-1/index.ts`
 - All steps using `defineWorkflow` pattern with dependencies
 - Progress tracking for lesson creation and audio generation
+- Rich metadata with description, tags, version, and author
 
 ### Future Usage (Post-Migration)
 

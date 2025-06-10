@@ -142,52 +142,6 @@ export default async function WorkflowDetailPage({ params }: WorkflowDetailPageP
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Workflow Steps</CardTitle>
-          <CardDescription>Configure which steps to execute in this workflow run</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {workflow.steps.map((step, index) => (
-            <div key={step.name}>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
-                    <span className="text-sm font-medium">{index + 1}</span>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="font-medium">{step.name}</p>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
-                    {step.dependencies.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Depends on:</span>
-                        {step.dependencies.map((dep) => (
-                          <Badge key={dep} variant="outline" className="text-xs">
-                            {dep}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant={step.status === 'ready' ? 'default' : 'secondary'}>
-                    {step.status === 'ready' && <CheckCircle className="mr-1 h-3 w-3" />}
-                    {step.status === 'pending' && <Clock className="mr-1 h-3 w-3" />}
-                    {step.status}
-                  </Badge>
-                </div>
-              </div>
-              {index < workflow.steps.length - 1 && (
-                <div className="flex justify-center py-2">
-                  <div className="w-px h-4 bg-border" />
-                </div>
-              )}
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
       <div className="grid gap-4 md:grid-cols-2">
         <ExecutionPanel workflowId={workflow.id} steps={workflow.steps} />
 
