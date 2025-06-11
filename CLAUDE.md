@@ -141,3 +141,26 @@ The architecture supports extending to other domains beyond language learning:
 - Simple database structure with powerful typing
 - Strong validation at system boundaries
 - Developer-friendly with TypeScript inference
+
+## Development Workflow: Quality Checks
+
+### Code Quality Verification Process
+When making changes, follow this sequence to ensure code quality:
+
+1. **Type Checking** (if needed):
+   ```bash
+   # Note: This project doesn't have explicit typecheck scripts
+   # Type checking happens during build or via IDE
+   pnpm build  # Includes type checking
+   ```
+
+2. **Lint Checking & Fixing**:
+   ```bash
+   pnpm lint-fix
+   ```
+
+This workflow ensures:
+- Type safety is maintained across the codebase
+- Code style and formatting are consistent
+- Common issues are automatically fixed
+- All quality gates pass before committing changes
