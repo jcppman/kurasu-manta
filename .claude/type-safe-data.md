@@ -8,7 +8,7 @@
 
 ### 1. Shared Schema Package
 ```
-kurasu-manta-schema/
+knowledge-schema/
 ├── zod/         # Data validation
 ├── drizzle/     # DB schema with JSON for type-specific data
 ├── mappers/     # Type mapping between layers

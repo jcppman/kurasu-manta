@@ -1,4 +1,4 @@
-import type { Annotation } from '@repo/kurasu-manta-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 
 export function toFullFurigana(text: string, annotations: Annotation[]): string {
   const result: string[] = []

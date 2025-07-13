@@ -1,5 +1,5 @@
 {
-  "name": "kurasu-manta-client",
+  "name": "@kurasu-manta/mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -20,7 +20,7 @@
     "@expo/vector-icons": "^14.0.4",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
-    "@repo/kurasu-manta-schema": "workspace:^",
+    "@kurasu-manta/knowledge-schema": "workspace:^",
     "@t3-oss/env-core": "^0.11.1",
     "ai": "^4.1.0",
     "expo": "~52.0.27",

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/kurasu-manta-schema",
+  "name": "@kurasu-manta/knowledge-schema",
   "version": "1.0.0",
   "description": "Kurasu Manta schema",
   "exports": {

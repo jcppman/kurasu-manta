@@ -1,6 +1,6 @@
 import { strictEqual } from 'node:assert'
 import test from 'node:test'
-import type { Annotation } from '@repo/kurasu-manta-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import { toFullFurigana } from './utils'
 
 test('annotations out of bounds are ignored gracefully', () => {

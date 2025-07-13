@@ -3,22 +3,19 @@
 ## Index
 - **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack):  Core technologies and implementation approach
 - **Type-Safe Data Design** - [.claude/type-safe-data.md](.claude/type-safe-data): Detailed implementation patterns for type safety
-- **Task Orchestration** - [packages/task-queue](packages/task-queue): Local SQLite-based task queue system
-- **Knowledge Admin Architecture** - [.claude/knowledge-admin-architecture.md](.claude/knowledge-admin-architecture): Complete workflow management system
-- **Workflow System** - [.claude/workflow-system.md](.claude/workflow-system): Code-defined workflow engine and execution
-- **UI Components** - [.claude/ui-components.md](.claude/ui-components): React interface architecture and patterns
+- **Knowledge Admin** - [apps/knowledge-admin](apps/knowledge-admin): Simple TypeScript scripts for content generation
 
 ## Core Architecture
 ```
-Knowledge Admin (Next.js) → Code-Defined Workflows → SQLite (Drizzle) → React Native (expo-sqlite)
-                    ↓                        ↓
-          Content Generation Pipeline    Task Queue (local orchestration)
+Knowledge Admin (TypeScript Scripts) → Content Generation → SQLite (Drizzle) → React Native (expo-sqlite)
+                    ↓                        
+          Direct Business Logic Execution
 ```
 - End-to-end type-safe architecture with shared schema
 - Support for heterogeneous knowledge types
 - Multilingual content via LocalizedText
 - Offline-first design with bundled database
-- Local task orchestration with SQLite-based job queue
+- Simple script-based content generation (no complex orchestration)
 
 ## Technology Choices
 
@@ -31,12 +28,11 @@ Knowledge Admin (Next.js) → Code-Defined Workflows → SQLite (Drizzle) → Re
 - JSON fields for type-specific data
 - Pre-populated SQLite database bundled with app
 
-### Task Orchestration: @repo/task-queue
-- Local SQLite-based job queue
-- TypeScript-native for type safety
-- Task chaining and workflow support
-- Built-in retry logic and error handling
-- Integrates with existing Drizzle schema
+### Content Generation: Direct Script Execution
+- Simple TypeScript scripts for content generation
+- Direct business logic execution without orchestration overhead
+- Type-safe database operations via Drizzle
+- Focused on actual content creation rather than workflow management
 
 ### Type Safety Stack
 - Zod: Domain model validation
@@ -47,76 +43,56 @@ Knowledge Admin (Next.js) → Code-Defined Workflows → SQLite (Drizzle) → Re
 
 ## Knowledge Admin Implementation
 
-### Completed Features
-The Knowledge Admin (`apps/knowledge-admin`) is a fully functional Next.js application providing:
+### Current Approach
+The Knowledge Admin (`apps/knowledge-admin`) focuses on business logic with simple script execution:
 
-- **Code-Defined Workflows**: Vue-style composition API for workflow definitions
-- **Workflow Engine**: Complete execution engine with progress tracking and resumability
-- **Modern UI**: React interface with shadcn/ui components and real-time updates
-- **Dependency Management**: Automatic step ordering and recursive dependency resolution
-- **Execution Tracking**: SQLite-based persistence for workflow runs and progress
-- **Auto-Discovery**: Dynamic workflow loading from filesystem
+- **Direct TypeScript Scripts**: Simple functions that execute content generation logic
+- **Type-Safe Database Operations**: Direct use of Drizzle for database interactions
+- **Content Generation**: AI-powered creation of examples, annotations, and explanations
+- **Audio Processing**: TTS generation and audio file management
+- **Database Population**: Store generated content in SQLite with Drizzle
 
-### Migration Achievement
-Successfully consolidated `packages/knowledge-gen` into `apps/knowledge-admin`:
-- ✅ Unified codebase with improved maintainability
+### Design Philosophy
+After removing the over-engineered workflow engine and dashboard:
+- ✅ Focus on actual business logic rather than orchestration complexity
+- ✅ Simple script-based execution for better maintainability
 - ✅ Enhanced type safety throughout the application
-- ✅ Modern React UI replacing command-line interface
-- ✅ Real-time progress tracking and workflow management
-- ✅ Code-defined workflow architecture for better development experience
+- ✅ Removed UI overhead to focus on content generation
+- ✅ Direct function calls instead of complex workflow management
 
 ### Usage
 ```bash
 cd apps/knowledge-admin
-pnpm dev  # Start development server
-pnpm build  # Build for production
+npx tsx src/workflows/minna-jp-1/index.ts  # Run content generation script directly
 ```
 
 ## Key Patterns
 
-### Task Queue Features
-- **Type-Safe Tasks**: Full TypeScript support with Zod payload validation
-- **Job Persistence**: All jobs stored in SQLite with full audit trail
-- **Task Chaining**: Tasks can trigger other tasks via `context.enqueue()`
-- **Workflow Grouping**: Related tasks grouped with `workflowId`
-- **Priority Queues**: Higher priority jobs processed first
-- **Retry Logic**: Automatic retries with exponential backoff
-- **Error Handling**: Comprehensive error logging and failure tracking
-- **Worker Management**: Configurable concurrency and polling
-
-### Task Queue Integration
+### Content Generation Script Pattern
 ```typescript
-// Define type-safe tasks
-const generateExamplesTask: TaskDefinition<{
-  knowledgePointId: string
-  count: number
-}> = {
-  name: 'generate-examples',
-  handler: async (payload, context) => {
-    // Generate content
-    const examples = await generateExamples(payload)
-    
-    // Chain to next task
-    await context.enqueue('process-sentences', {
-      examples
-    })
-  },
-  schema: z.object({
-    knowledgePointId: z.string(),
-    count: z.number().min(1).max(20)
-  })
+// apps/knowledge-admin/src/workflows/minna-jp-1/index.ts
+export async function execute() {
+  await cleanVocabularies()
+  await createLessons()
+  // await generateVocabularyAudioClips()
 }
 
-// Register and run
-taskQueue.define(generateExamplesTask)
-await taskQueue.start()
-
-// Trigger workflows
-await taskQueue.enqueue({
-  name: 'generate-examples',
-  payload: { knowledgePointId: 'jp-particle-wa', count: 5 },
-  options: { workflowId: 'content-batch-1', priority: 10 }
-})
+async function createLessons() {
+  logger.info('Creating lessons...')
+  const data = getData()
+  
+  // Group by lesson
+  const groupedData = data.reduce((acc, item) => {
+    const lesson = item.lesson
+    acc.set(lesson, acc.get(lesson) ?? [])
+    acc.get(lesson)?.push(item)
+    return acc
+  }, new Map<number, MinaVocabulary[]>())
+  
+  for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
+    await createLesson(lessonNumber, lessonVocabularies)
+  }
+}
 ```
 
 ### Heterogeneous Data Approach
@@ -132,7 +108,7 @@ await taskQueue.enqueue({
 
 ### Shared Schema
 ```
-kurasu-manta-schema/
+knowledge-schema/
 ├── zod/       # Validation schemas
 ├── drizzle/   # DB schema with JSON fields
 ├── mappers/   # Type mapping layer
@@ -151,44 +127,33 @@ The architecture supports extending to other domains beyond language learning:
 3. Maintain type safety through the mapping layer
 
 ## Content Pipeline
-1. **Knowledge Admin**: Define workflows as TypeScript code in `src/workflows/`
-2. **Workflow Engine**: Execute content generation workflows with dependency management
-3. **Content Generation**: AI-powered creation of examples, annotations, and explanations
-4. **Audio Processing**: TTS generation and audio file management
-5. **Database Population**: Store generated content in SQLite with Drizzle
-6. **Bundle Distribution**: Package database for mobile app distribution
+1. **Knowledge Admin**: Simple TypeScript scripts in `src/workflows/`
+2. **Content Generation**: Direct function calls for AI-powered content creation
+3. **Audio Processing**: TTS generation and audio file management
+4. **Database Population**: Store generated content in SQLite with Drizzle
+5. **Bundle Distribution**: Package database for mobile app distribution
 
-### Example Workflow
+### Example Script Structure
 ```typescript
 // apps/knowledge-admin/src/workflows/minna-jp-1/index.ts
-export default defineWorkflow('minna-jp-1', ({ defineStep }) => {
-  defineStep('init', {
-    description: 'Initialize database and reset content',
-    dependencies: [],
-    handler: async (context) => {
-      await resetDatabase()
-      context.logger.info('Database initialized')
-    }
-  })
-  
-  defineStep('createLessons', {
-    description: 'Process vocabulary and create lessons',
-    dependencies: ['init'],
-    handler: async (context) => {
-      await createLessonsFromVocabulary()
-      await context.updateProgress(50, 'Lessons created')
-    }
-  })
-  
-  defineStep('generateAudio', {
-    description: 'Generate TTS audio for vocabulary',
-    dependencies: ['createLessons'], 
-    handler: async (context) => {
-      await generateVocabularyAudio()
-      context.logger.info('Audio generation completed')
-    }
-  })
-})
+export async function execute() {
+  await cleanVocabularies()
+  await createLessons()
+  // await generateVocabularyAudioClips()
+}
+
+// Direct function execution - no complex orchestration
+if (require.main === module) {
+  execute()
+    .then(() => {
+      logger.info('Workflow completed successfully')
+      process.exit(0)
+    })
+    .catch((error) => {
+      logger.error('Workflow failed:', error)
+      process.exit(1)
+    })
+}
 ```
 
 ## Database Bundling
@@ -205,6 +170,9 @@ export default defineWorkflow('minna-jp-1', ({ defineStep }) => {
 - Simple database structure with powerful typing
 - Strong validation at system boundaries
 - Developer-friendly with TypeScript inference
+- **Simplified Architecture**: Focus on business logic without orchestration overhead
+- **Direct Execution**: Scripts run directly without complex workflow management
+- **Better Maintainability**: Reduced complexity makes debugging and modification easier
 
 ## Development Workflow: Quality Checks
 

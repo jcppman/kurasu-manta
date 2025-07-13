@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "gen:jp-1": "dotenvx run -f .env -- tsx src/workflows/minna-jp-1",
+    "gen:jp-1": "dotenvx run -f .env -- tsx src/workflows/minna-jp-1 | pino-pretty",
     "db:push": "dotenvx run -f .env -- drizzle-kit push",
     "db:generate": "dotenvx run -f .env -- drizzle-kit generate",
     "test": "tsx --test '**/*.test.ts'"
@@ -14,7 +14,7 @@
     "@dotenvx/dotenvx": "^1.39.0",
     "@google-cloud/text-to-speech": "^6.0.1",
     "@libsql/client": "^0.15.2",
-    "@repo/kurasu-manta-schema": "workspace:^",
+    "@kurasu-manta/knowledge-schema": "workspace:^",
     "ai": "4.3.6",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",

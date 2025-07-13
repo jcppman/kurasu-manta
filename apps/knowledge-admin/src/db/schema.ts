@@ -1,1 +1,1 @@
-export * from '@repo/kurasu-manta-schema/drizzle/schema'
+export * from '@kurasu-manta/knowledge-schema/drizzle/schema'

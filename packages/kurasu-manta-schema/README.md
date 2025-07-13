@@ -17,9 +17,9 @@ The package is organized into the following directories:
 ### Zod Schemas
 
 ```typescript
-import { knowledgePointSchema, vocabularySchema, grammarSchema } from '@repo/kurasu-manta-schema/zod/knowledge'
-import { annotationSchema } from '@repo/kurasu-manta-schema/zod/annotation'
-import { localizedText } from '@repo/kurasu-manta-schema/zod/localized-text'
+import { knowledgePointSchema, vocabularySchema, grammarSchema } from '@kurasu-manta/knowledge-schema/zod/knowledge'
+import { annotationSchema } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import { localizedText } from '@kurasu-manta/knowledge-schema/zod/localized-text'
 
 // Validate data
 const result = knowledgePointSchema.safeParse(data)
@@ -28,8 +28,8 @@ const result = knowledgePointSchema.safeParse(data)
 ### Drizzle Schemas
 
 ```typescript
-import { knowledgePointsTable, lessonsTable, lessonKnowledgePointsTable } from '@repo/kurasu-manta-schema/drizzle/schema'
-import { jsonField, jsonFieldOptional } from '@repo/kurasu-manta-schema/drizzle/utils'
+import { knowledgePointsTable, lessonsTable, lessonKnowledgePointsTable } from '@kurasu-manta/knowledge-schema/drizzle/schema'
+import { jsonField, jsonFieldOptional } from '@kurasu-manta/knowledge-schema/drizzle/utils'
 
 // Use in Drizzle queries
 const knowledgePoints = await db.select().from(knowledgePointsTable)
@@ -38,8 +38,8 @@ const knowledgePoints = await db.select().from(knowledgePointsTable)
 ### Mappers
 
 ```typescript
-import { mapKnowledgePointToDrizzle, mapDrizzleToKnowledgePoint } from '@repo/kurasu-manta-schema/mappers/knowledge'
-import { mapLessonToDrizzle, mapDrizzleToLesson } from '@repo/kurasu-manta-schema/mappers/lesson'
+import { mapKnowledgePointToDrizzle, mapDrizzleToKnowledgePoint } from '@kurasu-manta/knowledge-schema/mappers/knowledge'
+import { mapLessonToDrizzle, mapDrizzleToLesson } from '@kurasu-manta/knowledge-schema/mappers/lesson'
 
 // Map between domain objects and database rows
 const dbData = mapKnowledgePointToDrizzle(knowledgePoint)
@@ -49,8 +49,8 @@ const domainObject = mapDrizzleToKnowledgePoint(dbRow)
 ### Repositories
 
 ```typescript
-import { KnowledgeRepository } from '@repo/kurasu-manta-schema/repository/knowledge'
-import { LessonRepository } from '@repo/kurasu-manta-schema/repository/lesson'
+import { KnowledgeRepository } from '@kurasu-manta/knowledge-schema/repository/knowledge'
+import { LessonRepository } from '@kurasu-manta/knowledge-schema/repository/lesson'
 
 // Create repositories
 const knowledgeRepo = new KnowledgeRepository(db)
@@ -64,7 +64,7 @@ const lesson = await lessonRepo.getById(1)
 ### Services
 
 ```typescript
-import { CourseContentService } from '@repo/kurasu-manta-schema/service/course-content'
+import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 
 // Create service
 const courseContentService = new CourseContentService(db)

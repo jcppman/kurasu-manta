@@ -79,21 +79,22 @@ This is a monorepo managed with PNPM workspaces. The main folders are:
   - Provides daily practice exercises for language learners
   - Allows users to track their progress through textbook lessons
   - Built with Expo for cross-platform compatibility
+
+- `apps/knowledge-admin` - Simple TypeScript scripts for content generation
+  - Direct script execution for content creation workflows
+  - Focus on business logic without complex orchestration
+  - Generates learning materials from vocabulary and grammar points
 ### Packages
 
-- `packages/kurasu-manta-schema` - Shared TypeScript schema definitions
-  - Contains chat-related type definitions and other shared schemas
-
-- `packages/knowledge-gen` - Knowledge generation system
-  - Generates learning materials from vocabulary and grammar points
-  - Uses AI to create practice exercises aligned with textbook lessons
-  - Stores and manages data for the offline-first mobile application
+- `packages/knowledge-schema` - Shared TypeScript schema definitions
+  - Contains type definitions for knowledge points, lessons, and other shared schemas
+  - End-to-end type safety across all applications
 
 ## 🧩 Technical Stack
 
 - **Frontend**: React Native with Expo
-- **Backend**: NestJS
-- **Database**: SQLite (client-side), PostgreSQL (server-side)
+- **Content Generation**: Simple TypeScript scripts with direct execution
+- **Database**: SQLite (client-side) with Drizzle ORM
 - **AI Integration**: OpenAI for content generation
 - **Build System**: Turborepo with pnpm workspaces
 - **Code Quality**: Biome for linting and formatting

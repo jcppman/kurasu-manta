@@ -1,169 +1,153 @@
-# Workflow System Design
+# Content Generation System Design
 
 ## Core Principles
 
-### Code-Defined Architecture
-Workflows are **source code files**, not database records. This provides:
-- Version control integration
-- Compile-time type checking
-- Standard development workflows (review, testing, CI/CD)
-- IDE support with autocomplete and refactoring
+### Direct Script Execution
+Content generation is handled by **simple TypeScript scripts**, not complex workflow engines. This provides:
+- Direct function calls for better debugging
+- Simplified control flow
+- Standard TypeScript patterns
+- No orchestration overhead
+- Focus on business logic
 
-### Vue-Style Composition API
-Inspired by Vue 3's composition API for familiar, declarative workflow definitions:
+### Business Logic First
+Focus on actual content generation rather than workflow management:
 
 ```typescript
-export default defineWorkflow('workflow-name', ({ defineStep }) => {
-  defineStep('stepName', {
-    description: 'Human-readable step description',
-    dependencies: ['prerequisiteStep'],
-    timeout: 30000, // Optional timeout in ms
-    handler: async (context) => {
-      // Step implementation
-    }
-  })
-})
+// Simple, direct execution pattern
+export async function execute() {
+  await cleanVocabularies()
+  await createLessons()
+  // await generateVocabularyAudioClips()
+}
+
+// Direct execution with standard error handling
+if (require.main === module) {
+  execute()
+    .then(() => logger.info('Completed successfully'))
+    .catch((error) => logger.error('Failed:', error))
+}
 ```
 
 ## Technical Implementation
 
-### Workflow Discovery System
+### Script Structure
 
-**Location**: `src/lib/workflow-registry.ts`
-
-**Process**:
-1. Scans `src/workflows/` directory at runtime
-2. Dynamically imports workflow definition files
-3. Supports multiple export formats (default export, named exports)
-4. Caches discovered workflows in memory
-5. Provides type-safe access to workflow metadata
+**Location**: `src/workflows/[content-type]/`
 
 **Directory Structure**:
 ```
 src/workflows/
-├── minna-jp-1/                 # Workflow directory
-│   ├── index.ts               # Main workflow definition (required)
-│   ├── data/                  # Workflow-specific data files
+├── minna-jp-1/                 # Content generation for Minna Book 1
+│   ├── index.ts               # Main execution script
+│   ├── data/                  # Content-specific data files
 │   │   ├── index.ts          # Data access layer
-│   │   └── vocs.json         # Raw data files
+│   │   └── vocs.json         # Raw vocabulary data
 │   ├── service/               # Business logic services
-│   │   └── language.ts       # Domain-specific services
+│   │   └── language.ts       # Language processing services
 │   └── utils.ts              # Utility functions
 ```
 
-### Workflow Definition API
+### Content Generation Pattern
 
-**Location**: `src/lib/workflow-api.ts`
-
-**Core Types**:
+**Core Script Structure**:
 ```typescript
-interface StepDefinition {
-  description: string           // Human-readable description
-  dependencies?: string[]       // Prerequisites (step names)
-  timeout?: number             // Execution timeout (ms)
-  handler: (context: StepContext) => Promise<void>
+// Main execution function
+export async function execute() {
+  // Step 1: Clean existing data
+  await cleanVocabularies()
+  
+  // Step 2: Generate new content
+  await createLessons()
+  
+  // Step 3: Process audio (optional)
+  // await generateVocabularyAudioClips()
 }
 
-interface WorkflowDefinition {
-  name: string                 // Unique workflow identifier
-  steps: WorkflowStepWithName[] // Ordered steps with dependencies
-  metadata?: WorkflowMetadata   // Optional metadata
-}
-
-interface WorkflowMetadata {
-  description?: string         // Workflow purpose
-  tags?: string[]             // Categorization tags
-  version?: string            // Semantic version
-  author?: string             // Creator information
-}
-```
-
-### Step Execution Context
-
-**Location**: `src/lib/workflow-engine.ts`
-
-**StepContext Interface**:
-```typescript
-interface StepContext {
-  updateProgress(percent: number, message?: string): Promise<void>
-  saveCheckpoint(data: Record<string, unknown>): Promise<void>
-  loadCheckpoint(): Promise<Record<string, unknown>>
-  logger: Logger
-}
-```
-
-**Features**:
-- **Progress Tracking**: Real-time progress updates for UI
-- **Checkpointing**: Save/restore step state for resumability
-- **Logging**: Structured logging with context
-- **Error Handling**: Automatic error capture and reporting
-
-### Dependency Management
-
-**Automatic Ordering**:
-- Steps automatically ordered based on dependency declarations
-- Circular dependency detection prevents infinite loops
-- Missing dependency validation before execution
-
-**Recursive Resolution**:
-- UI supports recursive dependency selection
-- Enabling a step automatically enables all prerequisites
-- Disabling a step automatically disables all dependents
-
-**Implementation Example**:
-```typescript
-defineStep('processAudio', {
-  dependencies: ['createLessons', 'generateContent'],
-  handler: async (context) => {
-    // This step only runs after both dependencies complete
-    await processAudioFiles()
+// Individual business logic functions
+async function createLessons() {
+  logger.info('Creating lessons...')
+  const data = getData()
+  
+  // Group by lesson
+  const groupedData = data.reduce((acc, item) => {
+    const lesson = item.lesson
+    acc.set(lesson, acc.get(lesson) ?? [])
+    acc.get(lesson)?.push(item)
+    return acc
+  }, new Map<number, MinaVocabulary[]>())
+  
+  // Process each lesson
+  for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
+    await createLesson(lessonNumber, lessonVocabularies)
   }
-})
+}
+```
+
+### Service Layer Pattern
+
+**Content Generation Services**:
+```typescript
+// Language processing service
+export async function findPosOfVocabulary(vocabulary: MinaVocabulary): Promise<string> {
+  // AI-powered POS tagging
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: "Determine part of speech for Japanese vocabulary" },
+      { role: "user", content: vocabulary.content }
+    ]
+  })
+  return response.choices[0].message.content
+}
+
+// Audio generation service
+export async function generateAudio(content: AudioGenerationInput): Promise<AudioResult> {
+  const response = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "alloy",
+    input: content.content
+  })
+  
+  const buffer = Buffer.from(await response.arrayBuffer())
+  const sha1 = createHash('sha1').update(buffer).digest('hex')
+  
+  return { sha1, content: buffer }
+}
 ```
 
 ## Database Integration
 
-### Execution Tracking Schema
+### Direct Drizzle Operations
 
-**Location**: `src/db/workflow-schema.ts`
+**No Abstraction Layers**:
+```typescript
+// Direct database operations with type safety
+async function cleanVocabularies() {
+  // Get vocabulary knowledge point IDs
+  const vocabularyKnowledgePoints = await db
+    .select({ id: knowledgePointsTable.id })
+    .from(knowledgePointsTable)
+    .where(eq(knowledgePointsTable.type, 'vocabulary'))
 
-```sql
--- Workflow run instances (not definitions)
-CREATE TABLE workflow_runs (
-  id INTEGER PRIMARY KEY,
-  workflow_id TEXT NOT NULL,        -- References code-defined workflow name
-  workflow_name TEXT NOT NULL,
-  status TEXT NOT NULL,
-  total_steps INTEGER NOT NULL,
-  completed_steps INTEGER DEFAULT 0,
-  current_step TEXT,
-  config TEXT,                      -- JSON: step selection config
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
+  const vocabularyIds = vocabularyKnowledgePoints.map((kp) => kp.id)
 
--- Individual step execution tracking
-CREATE TABLE workflow_steps (
-  id INTEGER PRIMARY KEY,
-  run_id INTEGER NOT NULL,          -- Foreign key to workflow_runs
-  step_name TEXT NOT NULL,
-  status TEXT NOT NULL,
-  progress INTEGER DEFAULT 0,
-  message TEXT,
-  error TEXT,
-  context TEXT,                     -- JSON: step-specific context
-  started_at TEXT,
-  completed_at TEXT,
-  FOREIGN KEY (run_id) REFERENCES workflow_runs(id)
-);
+  // Delete associations
+  await db
+    .delete(lessonKnowledgePointsTable)
+    .where(inArray(lessonKnowledgePointsTable.knowledgePointId, vocabularyIds))
+
+  // Delete knowledge points
+  await db.delete(knowledgePointsTable).where(eq(knowledgePointsTable.type, 'vocabulary'))
+}
 ```
 
 ### Content Schema Integration
 
-Workflows generate content stored in domain-specific tables:
+Content generation directly populates domain-specific tables:
 
 ```typescript
-// Knowledge content created by workflows
+// Knowledge content created by scripts
 export const knowledgePointsTable = pgTable('knowledge_points', {
   id: serial('id').primaryKey(),
   type: text('type').notNull(),                    // vocabulary, grammar, etc.
@@ -174,129 +158,159 @@ export const knowledgePointsTable = pgTable('knowledge_points', {
   metadata: json('metadata'),                      // Type-specific data
 })
 
-// Lesson organization
-export const lessonKnowledgePointsTable = pgTable('lesson_knowledge_points', {
-  id: serial('id').primaryKey(),
-  lessonId: integer('lesson_id').notNull(),
-  knowledgePointId: integer('knowledge_point_id').notNull(),
-  orderInLesson: integer('order_in_lesson').notNull(),
-})
+// Content generation service usage
+async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
+  const courseContentService = new CourseContentService(db)
+  
+  // Direct service call with type safety
+  courseContentService.createKnowledgePointsWithLesson(
+    vocabularies.map((v) => ({
+      lesson: lessonNumber,
+      type: 'vocabulary',
+      content: v.content,
+      annotations: v.annotations,
+      pos: v.pos,
+      explanation: { zhCN: v.translation },
+      examples: [],
+    }))
+  )
+}
 ```
 
-## Workflow Engine Architecture
+## Execution Model
 
-### State Management
+### Simple Sequential Execution
 
-**Lifecycle States**:
-- `started`: Workflow initiated, preparing for execution
-- `running`: Active execution in progress
-- `completed`: All selected steps completed successfully
-- `failed`: Execution stopped due to error
-- `paused`: Manually paused by user
+**No Orchestration Complexity**:
+- Functions execute in order
+- Standard async/await patterns
+- Direct error handling with try/catch
+- Simple logging for progress tracking
+- No dependency management overhead
 
-**Step States**:
-- `pending`: Step not yet started
-- `running`: Step currently executing
-- `completed`: Step finished successfully
-- `failed`: Step encountered error
-- `skipped`: Step bypassed due to configuration
-
-### Execution Flow
-
+**Execution Flow**:
 ```typescript
-class WorkflowEngine {
-  async runWorkflow(
-    definition: WorkflowDefinition,
-    config: { steps: Record<string, boolean> }
-  ): Promise<void> {
-    // 1. Create workflow run record
-    const runId = await this.createWorkflowRun(definition, config)
+// Standard execution pattern
+async function execute() {
+  try {
+    // Step 1: Data cleanup
+    logger.info('Starting data cleanup...')
+    await cleanVocabularies()
+    logger.info('Data cleanup completed')
     
-    // 2. Filter and order steps based on config and dependencies
-    const selectedSteps = this.getSelectedSteps(definition, config)
-    const orderedSteps = getStepsInDependencyOrder(selectedSteps)
+    // Step 2: Content generation
+    logger.info('Starting lesson creation...')
+    await createLessons()
+    logger.info('Lesson creation completed')
     
-    // 3. Execute steps sequentially
-    for (const step of orderedSteps) {
-      await this.executeStep(runId, step)
-    }
+    // Step 3: Optional audio processing
+    // logger.info('Starting audio generation...')
+    // await generateVocabularyAudioClips()
+    // logger.info('Audio generation completed')
     
-    // 4. Mark workflow as completed
-    await this.completeWorkflowRun(runId)
+  } catch (error) {
+    logger.error('Execution failed:', error)
+    throw error
   }
 }
 ```
 
-### Resume Capability
+### Error Handling Strategy
 
-**Checkpoint System**:
-- Each step can save arbitrary checkpoint data
-- Engine tracks step completion state in database
-- Failed workflows can resume from last successful step
-- Context data preserved across resumptions
+**Standard TypeScript Patterns**:
+- Try/catch blocks for error boundaries
+- Detailed error logging
+- Graceful failure with cleanup
+- Process exit codes for script status
 
-**Implementation**:
-```typescript
-// In step handler
-await context.saveCheckpoint({
-  processedFiles: fileList,
-  currentBatch: batchNumber,
-  customState: additionalData
-})
+## Development Workflow
 
-// On resume
-const checkpointData = await context.loadCheckpoint()
-const { processedFiles, currentBatch } = checkpointData
-```
+### Script Development Process
 
-## User Interface Integration
+1. **Create Script Directory**: `src/workflows/[content-type]/`
+2. **Implement Main Function**: `export async function execute()`
+3. **Add Business Logic**: Content generation functions
+4. **Create Services**: Reusable business logic components
+5. **Add Data Layer**: Content-specific data access
+6. **Run Script**: `npx tsx src/workflows/[script]/index.ts`
 
-### Workflow Management UI
+### Content Generation Workflow
 
-**Pages**:
-- `/workflows` - List all discovered workflows
-- `/workflows/[id]` - Workflow detail and execution
-- `/workflows/[id]/edit` - Step configuration (deprecated for code-defined)
-
-**Components**:
-- `execution-panel.tsx` - Step selection and execution controls
-- `workflow-progress.tsx` - Real-time progress visualization
-- `workflow-run-history.tsx` - Historical execution records
-- `workflow-run-logs.tsx` - Detailed execution logs
-
-### Real-Time Features
-
-**Progress Tracking**:
-- WebSocket or polling for real-time updates
-- Step-by-step progress indicators
-- Live log streaming
-- Execution time estimates
-
-**Interactive Controls**:
-- Start/pause/stop workflow execution
-- Step-by-step configuration with dependency validation
-- Bulk selection operations (select all dependencies, clear dependents)
-- Resume interrupted workflows
+1. **Data Preparation**: Load raw content data (JSON, CSV, etc.)
+2. **Data Processing**: Transform and enrich content
+3. **AI Enhancement**: Use AI services for content generation
+4. **Database Population**: Store processed content with Drizzle
+5. **Asset Generation**: Create audio files, images, etc.
+6. **Validation**: Verify generated content integrity
 
 ## Best Practices
 
-### Workflow Design
-1. **Small, Focused Steps**: Each step should have a single responsibility
-2. **Clear Dependencies**: Explicit dependency declarations for proper ordering
-3. **Progress Reporting**: Regular progress updates for long-running operations
-4. **Error Handling**: Graceful error handling with detailed error messages
-5. **Checkpointing**: Save state for resumable operations
-
-### Implementation Patterns
-1. **Service Layer**: Extract business logic into reusable services
-2. **Data Layer**: Separate data access from workflow logic
-3. **Type Safety**: Leverage TypeScript for compile-time validation
-4. **Testing**: Unit test individual steps and integration test workflows
-5. **Documentation**: Rich metadata and inline documentation
+### Script Design
+1. **Single Responsibility**: Each script focuses on one content type
+2. **Clear Functions**: Well-named functions with specific purposes
+3. **Error Handling**: Comprehensive error catching and logging
+4. **Progress Logging**: Regular status updates during execution
+5. **Type Safety**: Full TypeScript usage throughout
 
 ### Performance Considerations
-1. **Async Operations**: Use async/await for I/O operations
-2. **Progress Updates**: Throttle progress updates to avoid UI overload
+1. **Batch Operations**: Process content in batches for efficiency
+2. **Database Connections**: Reuse connections within scripts
 3. **Memory Management**: Process large datasets in chunks
-4. **Database Connections**: Reuse database connections where possible
-5. **Error Recovery**: Implement retry logic for transient failures
+4. **API Rate Limits**: Respect AI service rate limits
+5. **File Operations**: Efficient file system operations
+
+### Maintainability
+1. **Clear Documentation**: Document script purpose and usage
+2. **Service Extraction**: Extract reusable logic into services
+3. **Type Definitions**: Strong typing for all data structures
+4. **Testing**: Unit tests for critical business logic
+5. **Version Control**: Track changes in git with proper commits
+
+## Migration Benefits
+
+### From Complex Workflow Engine to Simple Scripts
+
+**Removed Complexity**:
+- ❌ Workflow engine with state management
+- ❌ Complex dependency resolution
+- ❌ UI dashboard and real-time updates
+- ❌ Database-stored workflow definitions
+- ❌ Step orchestration and progress tracking
+
+**Gained Simplicity**:
+- ✅ Direct function execution
+- ✅ Standard TypeScript patterns
+- ✅ Simple error handling
+- ✅ Easy debugging and modification
+- ✅ Focus on business logic
+
+**Maintained Benefits**:
+- ✅ Full type safety with TypeScript
+- ✅ Content generation capabilities
+- ✅ Database integration with Drizzle
+- ✅ AI service integration
+- ✅ File system operations
+
+## Usage Examples
+
+### Running Content Generation
+```bash
+# Navigate to knowledge admin
+cd apps/knowledge-admin
+
+# Run vocabulary generation for Minna Book 1
+npx tsx src/workflows/minna-jp-1/index.ts
+
+# Run with specific environment
+NODE_ENV=development npx tsx src/workflows/minna-jp-1/index.ts
+```
+
+### Adding New Content Types
+```bash
+# Create new content script
+mkdir src/workflows/grammar-patterns
+touch src/workflows/grammar-patterns/index.ts
+
+# Implement generation logic
+# Follow the same pattern as existing scripts
+```

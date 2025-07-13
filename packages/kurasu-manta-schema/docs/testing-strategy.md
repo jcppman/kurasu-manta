@@ -39,7 +39,7 @@ Integration tests will be organized in a separate `tests` directory and will foc
 ## Test Structure
 
 ```
-packages/kurasu-manta-schema/
+packages/knowledge-schema/
 ├── src/
 │   ├── drizzle/
 │   │   ├── utils.ts

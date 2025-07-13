@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@repo/monorepo",
+  "name": "@kurasu-manta/monorepo",
   "scripts": {
     "dev": "turbo dev",
     "lint": "biome check",

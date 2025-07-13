@@ -41,12 +41,12 @@ importers:
       '@google-cloud/text-to-speech':
         specifier: ^6.0.1
         version: 6.0.1
+      '@kurasu-manta/knowledge-schema':
+        specifier: workspace:^
+        version: link:../../packages/kurasu-manta-schema
       '@libsql/client':
         specifier: ^0.15.2
         version: 0.15.2
-      '@repo/kurasu-manta-schema':
-        specifier: workspace:^
-        version: link:../../packages/kurasu-manta-schema
       ai:
         specifier: 4.3.6
         version: 4.3.6(react@19.1.0)(zod@3.24.1)
@@ -99,15 +99,15 @@ importers:
       '@expo/vector-icons':
         specifier: ^14.0.4
         version: 14.0.4
+      '@kurasu-manta/knowledge-schema':
+        specifier: workspace:^
+        version: link:../../packages/kurasu-manta-schema
       '@react-navigation/bottom-tabs':
         specifier: ^7.2.0
         version: 7.2.0(@react-navigation/native@7.0.14(react-native@0.77.0(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.55)(react@18.2.0))(react@18.2.0))(react-native-safe-area-context@5.1.0(react-native@0.77.0(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.55)(react@18.2.0))(react@18.2.0))(react-native-screens@4.5.0(react-native@0.77.0(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.55)(react@18.2.0))(react@18.2.0))(react-native@0.77.0(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.55)(react@18.2.0))(react@18.2.0)
       '@react-navigation/native':
         specifier: ^7.0.14
         version: 7.0.14(react-native@0.77.0(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.55)(react@18.2.0))(react@18.2.0)
-      '@repo/kurasu-manta-schema':
-        specifier: workspace:^
-        version: link:../../packages/kurasu-manta-schema
       '@t3-oss/env-core':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.3)(zod@3.24.1)

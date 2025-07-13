@@ -2,98 +2,84 @@
 
 ## Overview
 
-The Knowledge Admin is a unified Next.js application that serves as the content management and generation system for Kurasu Manta. It provides a comprehensive platform for AI-powered content generation, workflow orchestration, and knowledge point management.
+The Knowledge Admin is a simplified TypeScript-based content generation system for Kurasu Manta. After removing the over-engineered workflow engine and dashboard, it now focuses on direct script execution for business logic.
 
 ## Core Architecture
 
 ```
-Code-Defined Workflows (src/workflows/) → Workflow Engine → SQLite (Drizzle) → React Interface
+TypeScript Scripts (src/workflows/) → Direct Function Execution → SQLite (Drizzle) → Database Output
                     ↓
                Content Generation Pipeline
 ```
 
-## Key Components
+## Design Philosophy
 
-### 1. Code-Defined Workflow System
-
-**Philosophy**: Workflows are **purely defined as code** and discovered at runtime, not stored in database.
+**Simplicity Over Complexity**: Focus on actual content generation rather than orchestration overhead.
 
 **Benefits**:
-- Version control: Workflow definitions tracked in git
-- Type safety: Full TypeScript support with compile-time validation  
-- Code review: Workflow changes go through standard development process
-- Testing: Workflow definitions can be unit tested
-- IDE support: Full autocomplete, refactoring, and debugging
+- **Direct Execution**: Scripts run directly without complex workflow management
+- **Better Maintainability**: Reduced complexity makes debugging and modification easier
+- **Type Safety**: Full TypeScript support throughout
+- **Business Logic Focus**: No UI overhead, concentrate on content generation
+- **Simple Function Calls**: Direct function invocation instead of complex step orchestration
 
-**Architecture**:
+## Current Structure
+
 ```
-src/workflows/               # Code-defined workflow directory
-├── minna-jp-1/
-│   ├── index.ts            # Main workflow definition
-│   ├── data/               # Workflow-specific data
-│   └── service/            # Workflow-specific services
-├── new-workflow/
-│   └── index.ts            # Another workflow
-└── registry.ts             # Auto-discovery system
+apps/knowledge-admin/
+├── src/
+│   ├── workflows/               # Content generation scripts
+│   │   └── minna-jp-1/
+│   │       ├── index.ts        # Main execution script
+│   │       ├── data/           # Workflow-specific data
+│   │       └── service/        # Business logic services
+│   ├── db/
+│   │   └── schema.ts           # Database schema (Drizzle)
+│   └── lib/
+│       └── server/
+│           └── utils.ts        # Shared utilities
+└── package.json                # Dependencies and scripts
 ```
 
-### 2. Vue-Style Workflow API
+## Key Components
 
-Workflows use a declarative, Vue-inspired composition API:
+### 1. Direct Script Execution
+
+**Philosophy**: Simple TypeScript functions that execute content generation logic directly.
 
 ```typescript
-export default defineWorkflow('minna-jp-1', ({ defineStep }) => {
-  defineStep('init', {
-    description: 'Initialize database and reset content',
-    dependencies: [],
-    handler: async (context) => {
-      context.logger.info('Initializing database...')
-      await resetDatabase()
-    }
-  })
+// apps/knowledge-admin/src/workflows/minna-jp-1/index.ts
+export async function execute() {
+  await cleanVocabularies()
+  await createLessons()
+  // await generateVocabularyAudioClips()
+}
 
-  defineStep('createLesson', {
-    description: 'Process vocabulary data and create lessons',
-    dependencies: ['init'],
-    handler: async (context) => {
-      // Implementation with progress tracking
-      await context.updateProgress(50, 'Processing lessons...')
-    }
-  })
-})
+// Direct execution - no complex orchestration
+if (require.main === module) {
+  execute()
+    .then(() => {
+      logger.info('Workflow completed successfully')
+      process.exit(0)
+    })
+    .catch((error) => {
+      logger.error('Workflow failed:', error)
+      process.exit(1)
+    })
+}
 ```
 
-### 3. Workflow Engine
+### 2. Content Generation Services
 
-**Location**: `src/lib/workflow-engine.ts`
-
-**Features**:
-- State tracking for workflow runs and individual steps
-- Progress reporting with `StepContext` interface  
-- Checkpoint saving and loading capabilities
-- Resume functionality for interrupted workflows
-- Error handling and failure tracking
-- Dependency validation and automatic ordering
-
-### 4. Workflow Registry
-
-**Location**: `src/lib/workflow-registry.ts`
+**Location**: `src/workflows/[workflow-name]/service/`
 
 **Features**:
-- Automatic discovery of workflows from `src/workflows/` directory
-- Dynamic loading with support for multiple export formats
-- Full metadata support (description, tags, version, author)
-- Runtime registration without database storage
+- **Language Processing**: POS tagging, vocabulary analysis
+- **Audio Generation**: TTS for vocabulary pronunciation
+- **AI Integration**: OpenAI for content generation
+- **Database Operations**: Direct Drizzle ORM usage
 
-### 5. Database Schema
-
-**Execution Tracking Only** (not workflow definitions):
-
-```typescript
-// workflow-schema.ts
-export const workflowRunsTable = // Track execution instances
-export const workflowStepsTable = // Track step progress and results
-```
+### 3. Database Schema
 
 **Content Management**:
 ```typescript  
@@ -102,68 +88,73 @@ export const knowledgePointsTable = // Core learning content
 export const lessonKnowledgePointsTable = // Lesson organization
 ```
 
-## Data Flow
-
-1. **Discovery**: Registry scans `src/workflows/` directory for workflow definitions
-2. **Registration**: Workflows loaded into memory with full type safety
-3. **Execution**: Engine runs selected workflows with step filtering
-4. **Tracking**: Progress and results stored in SQLite for monitoring
-5. **UI**: React interface provides real-time progress and controls
+**Simple Data Flow**:
+1. **Script Execution**: Direct TypeScript function calls
+2. **Content Processing**: Business logic with type safety
+3. **Database Storage**: Direct Drizzle operations
+4. **Output**: Generated SQLite database ready for bundling
 
 ## Technology Stack
 
 ### Core Technologies
-- **Next.js 15**: Modern React framework with App Router
 - **TypeScript**: End-to-end type safety
 - **Drizzle ORM**: Type-safe database operations
-- **SQLite**: Local database for development and content generation
-- **shadcn/ui**: Modern React component library
-- **Tailwind CSS**: Utility-first CSS framework
+- **SQLite**: Local database for content generation
+- **tsx**: Direct TypeScript execution
 
 ### Database Architecture
-- **Drizzle + SQLite**: Same tech stack across server and client
-- **Type-safe queries**: Full TypeScript integration
-- **JSON fields**: Flexible storage for workflow context and metadata
-- **Migration support**: Schema versioning and updates
+- **Drizzle + SQLite**: Type-safe queries with TypeScript integration
+- **JSON fields**: Flexible storage for content metadata
+- **Direct Operations**: No abstraction layers, direct database calls
 
-## Development Workflow
+## Usage
 
-### Code Quality Process
-1. **Type Checking**: Happens during build or via IDE
-2. **Lint Checking & Fixing**: `pnpm lint-fix`
-3. **Build Verification**: `pnpm build` (includes type checking)
+### Running Content Generation
+```bash
+cd apps/knowledge-admin
+npx tsx src/workflows/minna-jp-1/index.ts  # Run script directly
+```
 
-### Adding New Workflows
-1. Create directory in `src/workflows/[workflow-name]/`
-2. Implement `index.ts` with `defineWorkflow` pattern
-3. Add workflow-specific services and data in subdirectories
-4. Registry automatically discovers and registers the workflow
-5. UI immediately reflects new workflow availability
+### Development Workflow
+1. **Edit Scripts**: Modify TypeScript files directly
+2. **Type Checking**: Handled by TypeScript compiler
+3. **Execution**: Run scripts with tsx
+4. **Database Output**: Generated SQLite ready for mobile app
 
 ## Key Design Decisions
 
-### Why Code-Defined Workflows?
-- **Maintainability**: Workflows live alongside application code
-- **Type Safety**: Compile-time validation and IDE support
-- **Version Control**: Full git history and code review process
-- **Testing**: Unit testable workflow logic
-- **Deployment**: Workflows deployed with application
+### Why Simple Scripts?
+- **Maintainability**: Easy to understand and modify
+- **Type Safety**: Full TypeScript support without abstraction overhead
+- **Debugging**: Direct function calls make debugging straightforward
+- **Focus**: Concentrate on actual content generation, not orchestration
+- **Performance**: No overhead from complex workflow engines
 
 ### Database Usage Strategy
-- **❌ NOT for**: Workflow definitions, metadata, step configurations
-- **✅ ONLY for**: Execution tracking, run history, progress state, logs
+- **Direct Operations**: Use Drizzle ORM directly for all database interactions
+- **Type Safety**: Leverage TypeScript for compile-time validation
+- **Simple Queries**: Straightforward database operations without abstraction
 
-### Dependency Management
-- Automatic step ordering based on dependencies
-- Circular dependency detection and prevention
-- Recursive dependency resolution for complex workflows
-- Visual validation in UI with "Missing deps" indicators
+### Content Generation Approach
+- **Sequential Execution**: Simple async function calls in order
+- **Error Handling**: Standard try/catch patterns
+- **Logging**: Direct console/logger usage
+- **Progress**: Simple console output for progress tracking
 
 ## Extensibility
 
-The architecture supports:
-- Multiple workflow types and domains
-- Custom step types and handlers
-- Pluggable execution strategies
-- External service integrations
-- Custom UI components for workflow management
+The simplified architecture supports:
+- **Multiple Content Types**: Easy to add new content generation scripts
+- **Type Safety**: Full TypeScript support throughout
+- **Custom Services**: Domain-specific services for different content types
+- **Database Evolution**: Schema changes through Drizzle migrations
+- **AI Integration**: Easy integration with various AI services
+
+## Migration Benefits
+
+After removing the workflow engine and dashboard:
+- ✅ **Simplified Codebase**: Removed thousands of lines of complex orchestration code
+- ✅ **Better Focus**: Concentrate on actual business logic
+- ✅ **Easier Debugging**: Direct function calls make issues easier to trace
+- ✅ **Faster Development**: No need to understand complex workflow abstractions
+- ✅ **Type Safety**: Maintained full TypeScript benefits without overhead
