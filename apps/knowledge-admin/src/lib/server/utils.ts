@@ -1,4 +1,3 @@
-import 'server-only'
 import pino from 'pino'
 import { LOG_LEVEL } from './constants'
 
