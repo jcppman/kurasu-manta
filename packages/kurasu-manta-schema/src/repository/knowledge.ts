@@ -1,6 +1,11 @@
 import { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
 import type { PaginatedResult, PaginationParams } from '@/common/types'
-import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/drizzle/schema'
+import {
+  knowledgePointsTable,
+  lessonKnowledgePointsTable,
+  sentenceKnowledgePointsTable,
+  type sentencesTable,
+} from '@/drizzle/schema'
 import type * as schema from '@/drizzle/schema'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import {
@@ -8,6 +13,7 @@ import {
   mapDrizzleToKnowledgePoint,
   mapKnowledgePointToDrizzle,
 } from '@/mapper/knowledge'
+import { mapDrizzleToSentence } from '@/mapper/sentence'
 import type { CreateKnowledgePoint, KnowledgePoint } from '@/zod/knowledge'
 import { and, eq, sql } from 'drizzle-orm'
 import type { LibSQLDatabase } from 'drizzle-orm/libsql'
@@ -20,6 +26,21 @@ export class KnowledgeRepository {
   constructor(private db: LibSQLDatabase<typeof schema>) {}
 
   /**
+   * Helper method to map knowledge point with sentences from relational query result
+   */
+  private mapKnowledgePointWithSentences(
+    result: {
+      sentenceKnowledgePoints: Array<{ sentence: typeof sentencesTable.$inferSelect }>
+    } & typeof knowledgePointsTable.$inferSelect
+  ): KnowledgePoint {
+    const knowledgePoint = mapDrizzleToKnowledgePoint(result)
+    knowledgePoint.sentences = result.sentenceKnowledgePoints.map((skp) =>
+      mapDrizzleToSentence(skp.sentence)
+    )
+    return knowledgePoint
+  }
+
+  /**
    * Get all knowledge points
    */
   async getAll(): Promise<KnowledgePoint[]> {
@@ -30,7 +51,27 @@ export class KnowledgeRepository {
   /**
    * Get a knowledge point by ID
    */
-  async getById(id: number): Promise<KnowledgePoint | null> {
+  async getById(
+    id: number,
+    options?: { includeSentences?: boolean }
+  ): Promise<KnowledgePoint | null> {
+    if (options?.includeSentences) {
+      const result = await this.db.query.knowledgePointsTable.findFirst({
+        where: eq(knowledgePointsTable.id, id),
+        with: {
+          sentenceKnowledgePoints: {
+            with: {
+              sentence: true,
+            },
+          },
+        },
+      })
+
+      if (!result) return null
+
+      return this.mapKnowledgePointWithSentences(result)
+    }
+
     const rows = await this.db
       .select()
       .from(knowledgePointsTable)
@@ -42,7 +83,38 @@ export class KnowledgeRepository {
   /**
    * Get knowledge points by lesson ID
    */
-  async getByLessonId(lessonId: number): Promise<KnowledgePoint[]> {
+  async getByLessonId(
+    lessonId: number,
+    options?: { includeSentences?: boolean }
+  ): Promise<KnowledgePoint[]> {
+    if (options?.includeSentences) {
+      // First get the knowledge point IDs for this lesson
+      const lessonKnowledgePoints = await this.db
+        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
+        .from(lessonKnowledgePointsTable)
+        .where(eq(lessonKnowledgePointsTable.lessonId, lessonId))
+
+      const knowledgePointIds = lessonKnowledgePoints.map((lkp) => lkp.knowledgePointId)
+
+      if (knowledgePointIds.length === 0) {
+        return []
+      }
+
+      // Use relational query to get knowledge points with sentences
+      const results = await this.db.query.knowledgePointsTable.findMany({
+        where: sql`${knowledgePointsTable.id} IN (${knowledgePointIds.join(',')})`,
+        with: {
+          sentenceKnowledgePoints: {
+            with: {
+              sentence: true,
+            },
+          },
+        },
+      })
+
+      return results.map((result) => this.mapKnowledgePointWithSentences(result))
+    }
+
     const rows = await this.db
       .select({
         knowledgePoint: knowledgePointsTable,
@@ -79,10 +151,6 @@ export class KnowledgeRepository {
       .where(eq(knowledgePointsTable.id, id))
       .returning()
 
-    if (result.length === 0) {
-      return null
-    }
-
     return optionalResult(result, mapDrizzleToKnowledgePoint)
   }
 
@@ -101,10 +169,7 @@ export class KnowledgeRepository {
   /**
    * Associate a knowledge point with a lesson
    */
-  async associateWithLesson(knowledgePointId?: number, lessonId?: number): Promise<void> {
-    if (typeof knowledgePointId !== 'number' || typeof lessonId !== 'number') {
-      throw new Error('knowledgePointId and lessonId must be numbers')
-    }
+  async associateWithLesson(knowledgePointId: number, lessonId: number): Promise<void> {
     await this.db
       .insert(lessonKnowledgePointsTable)
       .values({
@@ -132,6 +197,7 @@ export class KnowledgeRepository {
    * Get knowledge points by conditions with pagination
    * @param conditions Filtering conditions
    * @param pagination Pagination parameters
+   * @param options Additional options
    * @returns Paginated result of knowledge points
    */
   async getByConditions(
@@ -140,52 +206,15 @@ export class KnowledgeRepository {
       type?: KnowledgePointType
       hasAudio?: boolean
     },
-    pagination: PaginationParams = { page: 1, limit: 20 }
+    pagination: PaginationParams = { page: 1, limit: 20 },
+    options?: { includeSentences?: boolean }
   ): Promise<PaginatedResult<KnowledgePoint>> {
     // Set default pagination values
     const page = pagination.page || 1
     const limit = pagination.limit || 20
     const offset = (page - 1) * limit
 
-    // Build the where conditions
-    const whereConditions = []
-
-    // Filter by lesson ID if provided
-    if (conditions.lessonId !== undefined) {
-      // We need to use a subquery to filter by lesson ID
-      const subquery = this.db
-        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
-        .from(lessonKnowledgePointsTable)
-        .where(eq(lessonKnowledgePointsTable.lessonId, conditions.lessonId))
-        .as('lesson_knowledge_points_subquery')
-
-      whereConditions.push(
-        sql`${knowledgePointsTable.id} IN (SELECT ${subquery.knowledgePointId} FROM ${subquery})`
-      )
-    }
-
-    // Filter by type if provided
-    if (conditions.type !== undefined) {
-      whereConditions.push(eq(knowledgePointsTable.type, conditions.type))
-    }
-
-    // Filter by hasAudio if provided (only applicable for vocabularies)
-    if (conditions.hasAudio !== undefined) {
-      if (conditions.hasAudio) {
-        // For hasAudio=true, we need to check if the audio field exists in typeSpecificData
-        whereConditions.push(
-          sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NOT NULL`
-        )
-      } else {
-        // For hasAudio=false, we need to check if the audio field doesn't exist or is null
-        whereConditions.push(
-          sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND (json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NULL OR json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') = '')`
-        )
-      }
-    }
-
-    // Combine all conditions with AND
-    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined
+    const whereClause = this.buildWhereClause(conditions)
 
     // Get total count for pagination
     const countResult = await this.db
@@ -214,6 +243,34 @@ export class KnowledgeRepository {
       }
     }
 
+    // Fetch sentences if requested
+    if (options?.includeSentences && items.length > 0) {
+      // Get knowledge points with sentences using relational query
+      const knowledgePointsWithSentences = await this.db.query.knowledgePointsTable.findMany({
+        where: sql`${knowledgePointsTable.id} IN (${items.map((item) => item.id).join(',')})`,
+        with: {
+          sentenceKnowledgePoints: {
+            with: {
+              sentence: true,
+            },
+          },
+        },
+      })
+
+      // Map sentences to existing items
+      const sentenceMap = new Map()
+      for (const kp of knowledgePointsWithSentences) {
+        sentenceMap.set(
+          kp.id,
+          kp.sentenceKnowledgePoints.map((skp) => mapDrizzleToSentence(skp.sentence))
+        )
+      }
+
+      for (const item of items) {
+        item.sentences = sentenceMap.get(item.id) || []
+      }
+    }
+
     // Calculate pagination metadata
     const totalPages = Math.ceil(total / limit)
 
@@ -226,5 +283,45 @@ export class KnowledgeRepository {
       hasNextPage: page < totalPages,
       hasPrevPage: page > 1,
     }
+  }
+
+  /**
+   * Helper method to build where clause for filtering conditions
+   */
+  private buildWhereClause(conditions: {
+    lessonId?: number
+    type?: KnowledgePointType
+    hasAudio?: boolean
+  }) {
+    const whereConditions = []
+
+    // Filter by lesson ID if provided
+    if (conditions.lessonId !== undefined) {
+      const subquery = this.db
+        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
+        .from(lessonKnowledgePointsTable)
+        .where(eq(lessonKnowledgePointsTable.lessonId, conditions.lessonId))
+        .as('lesson_knowledge_points_subquery')
+
+      whereConditions.push(
+        sql`${knowledgePointsTable.id} IN (SELECT ${subquery.knowledgePointId} FROM ${subquery})`
+      )
+    }
+
+    // Filter by type if provided
+    if (conditions.type !== undefined) {
+      whereConditions.push(eq(knowledgePointsTable.type, conditions.type))
+    }
+
+    // Filter by hasAudio if provided (only applicable for vocabularies)
+    if (conditions.hasAudio !== undefined) {
+      const audioCondition = conditions.hasAudio
+        ? sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NOT NULL`
+        : sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND (json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NULL OR json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') = '')`
+
+      whereConditions.push(audioCondition)
+    }
+
+    return whereConditions.length > 0 ? and(...whereConditions) : undefined
   }
 }

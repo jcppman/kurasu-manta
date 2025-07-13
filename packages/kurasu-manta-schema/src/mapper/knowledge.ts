@@ -22,13 +22,9 @@ export function mapCreateKnowledgePointToDrizzle(knowledgePoint: CreateKnowledge
       audio: vocabulary.audio,
       pos: vocabulary.pos,
       annotations: vocabulary.annotations,
-      examples: vocabulary.examples,
     }
   } else if (knowledgePoint.type === KNOWLEDGE_POINT_TYPES.GRAMMAR) {
-    const grammar = knowledgePoint as Grammar
-    typeSpecificData = {
-      examples: grammar.examples,
-    }
+    typeSpecificData = {}
   }
 
   return {

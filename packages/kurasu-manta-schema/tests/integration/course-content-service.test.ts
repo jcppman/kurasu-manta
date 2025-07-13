@@ -4,7 +4,10 @@ import test from 'node:test'
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
+import { SentenceRepository } from '@/repository/sentence'
 import { CourseContentService } from '@/service/course-content'
+import type { LocalizedText } from '@/zod/localized-text'
+import type { CreateSentence } from '@/zod/sentence'
 import { isNumber } from 'lodash-es'
 import { createInMemoryDb } from '../utils/db'
 
@@ -12,6 +15,7 @@ test('CourseContentService', async (t) => {
   let courseContentService: CourseContentService
   let knowledgeRepo: KnowledgeRepository
   let lessonRepo: LessonRepository
+  let sentenceRepo: SentenceRepository
 
   // Test fixtures
   const createVocabularyPoint = (lessonNumber: number, content: string) => ({
@@ -51,12 +55,24 @@ test('CourseContentService', async (t) => {
     description: `Description for Lesson ${number}`,
   })
 
+  // Test fixtures for sentence integration tests
+  const mockExplanation: LocalizedText = {
+    en: 'This sentence demonstrates vocabulary usage',
+    cn: '这个句子展示词汇用法',
+  }
+
+  const createTestSentence = (content: string): CreateSentence => ({
+    content,
+    explanation: mockExplanation,
+  })
+
   // Setup before each test
   t.beforeEach(async () => {
     const db = await createInMemoryDb()
     courseContentService = new CourseContentService(db)
     knowledgeRepo = new KnowledgeRepository(db)
     lessonRepo = new LessonRepository(db)
+    sentenceRepo = new SentenceRepository(db)
   })
 
   // Tests for getLessonWithContent
@@ -530,6 +546,247 @@ test('CourseContentService', async (t) => {
       assert.strictEqual(result.totalPages, 0, 'Total pages should be 0')
       assert.strictEqual(result.hasNextPage, false, 'Should not have next page')
       assert.strictEqual(result.hasPrevPage, false, 'Should not have previous page')
+    })
+  })
+
+  // Cross-repository Integration Tests
+  await t.test('Cross-repository Integration', async (t) => {
+    await t.test('Cascade deletion behavior', async (t) => {
+      await t.test('should delete sentence associations when sentence is deleted', async () => {
+        // Create entities
+        const sentence = await sentenceRepo.create(createTestSentence('これは削除テストです'))
+        const knowledgePoint = await knowledgeRepo.create(createVocabularyPoint(1, '削除'))
+
+        // Associate them
+        await sentenceRepo.associateWithKnowledgePoint(sentence.id, knowledgePoint.id)
+
+        // Verify association exists
+        const beforeDelete = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
+        assert.strictEqual(beforeDelete.length, 1)
+
+        // Delete sentence
+        await sentenceRepo.delete(sentence.id)
+
+        // Verify knowledge point still exists but association is gone
+        const knowledgePointStillExists = await knowledgeRepo.getById(knowledgePoint.id)
+        assert.ok(knowledgePointStillExists, 'Knowledge point should still exist')
+
+        const sentencesForKnowledgePoint = await sentenceRepo.getByKnowledgePointId(
+          knowledgePoint.id
+        )
+        assert.strictEqual(sentencesForKnowledgePoint.length, 0, 'Association should be deleted')
+      })
+
+      await t.test(
+        'should delete sentence associations when knowledge point is deleted',
+        async () => {
+          // Create entities
+          const sentence = await sentenceRepo.create(createTestSentence('これは削除テストです'))
+          const knowledgePoint = await knowledgeRepo.create(createVocabularyPoint(1, '削除'))
+
+          // Associate them
+          await sentenceRepo.associateWithKnowledgePoint(sentence.id, knowledgePoint.id)
+
+          // Delete knowledge point
+          await knowledgeRepo.delete(knowledgePoint.id)
+
+          // Verify sentence still exists but association is gone
+          const sentenceStillExists = await sentenceRepo.getById(sentence.id)
+          assert.ok(sentenceStillExists, 'Sentence should still exist')
+
+          const knowledgePointsForSentence = await sentenceRepo.getKnowledgePointsBySentenceId(
+            sentence.id
+          )
+          assert.strictEqual(knowledgePointsForSentence.length, 0, 'Association should be deleted')
+        }
+      )
+    })
+
+    await t.test('Complex relationship scenarios', async (t) => {
+      await t.test(
+        'should handle sentences with multiple knowledge points from different lessons',
+        async () => {
+          // Create lessons
+          const lesson1 = await lessonRepo.create(createLesson(1))
+          const lesson2 = await lessonRepo.create(createLesson(2))
+
+          // Create knowledge points in different lessons
+          const vocab1 = await knowledgeRepo.create(createVocabularyPoint(1, '学校'))
+          const vocab2 = await knowledgeRepo.create(createVocabularyPoint(2, '図書館'))
+          const grammar1 = await knowledgeRepo.create(createGrammarPoint(1, 'に行く'))
+
+          // Associate knowledge points with lessons
+          await knowledgeRepo.associateWithLesson(vocab1.id, lesson1.id)
+          await knowledgeRepo.associateWithLesson(vocab2.id, lesson2.id)
+          await knowledgeRepo.associateWithLesson(grammar1.id, lesson1.id)
+
+          // Create sentence that uses knowledge points from both lessons
+          const sentence = await sentenceRepo.create(createTestSentence('私は学校と図書館に行く'))
+
+          // Associate sentence with knowledge points
+          await sentenceRepo.associateWithKnowledgePoint(sentence.id, vocab1.id)
+          await sentenceRepo.associateWithKnowledgePoint(sentence.id, vocab2.id)
+          await sentenceRepo.associateWithKnowledgePoint(sentence.id, grammar1.id)
+
+          // Verify associations
+          const knowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
+          assert.strictEqual(knowledgePoints.length, 3)
+
+          const knowledgePointContents = knowledgePoints.map((kp) => kp.content)
+          assert.ok(knowledgePointContents.includes('学校'))
+          assert.ok(knowledgePointContents.includes('図書館'))
+          assert.ok(knowledgePointContents.includes('に行く'))
+        }
+      )
+
+      await t.test('should handle knowledge points with multiple example sentences', async () => {
+        // Create a knowledge point
+        const knowledgePoint = await knowledgeRepo.create(createVocabularyPoint(1, '食べる'))
+
+        // Create multiple sentences using this knowledge point
+        const sentences = await Promise.all([
+          sentenceRepo.create(createTestSentence('私は朝ご飯を食べる')),
+          sentenceRepo.create(createTestSentence('彼は魚を食べる')),
+          sentenceRepo.create(createTestSentence('猫は魚を食べる')),
+        ])
+
+        // Associate all sentences with the knowledge point
+        for (const sentence of sentences) {
+          await sentenceRepo.associateWithKnowledgePoint(sentence.id, knowledgePoint.id)
+        }
+
+        // Verify all sentences are associated
+        const associatedSentences = await sentenceRepo.getByKnowledgePointId(knowledgePoint.id)
+        assert.strictEqual(associatedSentences.length, 3)
+
+        const sentenceContents = associatedSentences.map((s) => s.content)
+        assert.ok(sentenceContents.includes('私は朝ご飯を食べる'))
+        assert.ok(sentenceContents.includes('彼は魚を食べる'))
+        assert.ok(sentenceContents.includes('猫は魚を食べる'))
+      })
+    })
+
+    await t.test('Integration with CourseContentService', async (t) => {
+      await t.test(
+        'should maintain data integrity when deleting lessons with associated sentences',
+        async () => {
+          // Create lesson with knowledge points
+          const lesson = await lessonRepo.create(createLesson(1))
+          const knowledgePoints = await Promise.all([
+            knowledgeRepo.create(createVocabularyPoint(1, '本')),
+            knowledgeRepo.create(createGrammarPoint(1, 'を読む')),
+          ])
+
+          // Associate knowledge points with lesson
+          for (const kp of knowledgePoints) {
+            await knowledgeRepo.associateWithLesson(kp.id, lesson.id)
+          }
+
+          // Create sentences associated with these knowledge points
+          const sentences = await Promise.all([
+            sentenceRepo.create(createTestSentence('私は本を読む')),
+            sentenceRepo.create(createTestSentence('彼女は本を読む')),
+          ])
+
+          // Associate sentences with knowledge points
+          for (const sentence of sentences) {
+            for (const kp of knowledgePoints) {
+              await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
+            }
+          }
+
+          // Delete lesson with content using CourseContentService
+          const deleteResult = await courseContentService.deleteLessonWithContent(lesson.id)
+          assert.strictEqual(deleteResult, true)
+
+          // Verify knowledge points are deleted
+          for (const kp of knowledgePoints) {
+            const deletedKp = await knowledgeRepo.getById(kp.id)
+            assert.strictEqual(deletedKp, null, 'Knowledge point should be deleted')
+          }
+
+          // Verify sentences still exist (they should not be cascade deleted)
+          for (const sentence of sentences) {
+            const existingSentence = await sentenceRepo.getById(sentence.id)
+            assert.ok(existingSentence, 'Sentence should still exist')
+
+            // But associations should be gone
+            const associatedKps = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
+            assert.strictEqual(
+              associatedKps.length,
+              0,
+              'Sentence should have no associated knowledge points'
+            )
+          }
+        }
+      )
+    })
+
+    await t.test('Bulk operations with getKnowledgePointsForSentences', async () => {
+      // Create multiple sentences and knowledge points
+      const sentences = await Promise.all([
+        sentenceRepo.create(createTestSentence('文1')),
+        sentenceRepo.create(createTestSentence('文2')),
+        sentenceRepo.create(createTestSentence('文3')),
+      ])
+
+      const knowledgePoints = await Promise.all([
+        knowledgeRepo.create(createVocabularyPoint(1, '単語1')),
+        knowledgeRepo.create(createVocabularyPoint(1, '単語2')),
+        knowledgeRepo.create(createGrammarPoint(1, '文法1')),
+      ])
+
+      // Create complex associations
+      // Sentence 1: associated with all knowledge points
+      // Sentence 2: associated with first two knowledge points
+      // Sentence 3: associated with last knowledge point only
+      await sentenceRepo.associateWithKnowledgePoint(sentences[0].id, knowledgePoints[0].id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[0].id, knowledgePoints[1].id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[0].id, knowledgePoints[2].id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentences[1].id, knowledgePoints[0].id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[1].id, knowledgePoints[1].id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentences[2].id, knowledgePoints[2].id)
+
+      // Test bulk retrieval
+      const bulkResult = await sentenceRepo.getKnowledgePointsForSentences(
+        sentences.map((s) => s.id)
+      )
+
+      // Verify results
+      assert.strictEqual(bulkResult.size, 3)
+      assert.strictEqual(bulkResult.get(sentences[0].id)?.length, 3)
+      assert.strictEqual(bulkResult.get(sentences[1].id)?.length, 2)
+      assert.strictEqual(bulkResult.get(sentences[2].id)?.length, 1)
+
+      // Verify specific associations
+      const sentence1Kps = bulkResult.get(sentences[0].id) || []
+      const sentence1Contents = sentence1Kps.map((kp) => kp.content)
+      assert.ok(sentence1Contents.includes('単語1'))
+      assert.ok(sentence1Contents.includes('単語2'))
+      assert.ok(sentence1Contents.includes('文法1'))
+    })
+
+    await t.test('Validation and error handling', async (t) => {
+      await t.test('should handle non-existent associations gracefully', async () => {
+        // Try to dissociate non-existent association
+        await sentenceRepo.dissociateFromKnowledgePoint(999, 999)
+        // Should not throw error
+
+        // Try to get knowledge points for non-existent sentence
+        const result = await sentenceRepo.getKnowledgePointsBySentenceId(999)
+        assert.strictEqual(result.length, 0)
+
+        // Try to get sentences for non-existent knowledge point
+        const sentences = await sentenceRepo.getByKnowledgePointId(999)
+        assert.strictEqual(sentences.length, 0)
+      })
+
+      await t.test('should handle empty arrays in bulk operations', async () => {
+        const result = await sentenceRepo.getKnowledgePointsForSentences([])
+        assert.strictEqual(result.size, 0)
+      })
     })
   })
 })
