@@ -4,6 +4,15 @@ import { relations } from 'drizzle-orm'
 import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { jsonField } from './utils'
 
+const createdAndUpdatedAt = {
+  createdAt: text()
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+  updatedAt: text()
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+}
+
 /**
  * Re-export knowledge point types for backward compatibility
  */
@@ -20,14 +29,7 @@ export const lessonsTable = sqliteTable('lessons', {
   title: text(),
   // Description of the lesson
   description: text(),
-  // Creation timestamp
-  createdAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-  // Last update timestamp
-  updatedAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
+  ...createdAndUpdatedAt,
 })
 
 /**
@@ -46,14 +48,19 @@ export const knowledgePointsTable = sqliteTable('knowledge_points', {
   // For vocabulary: pos, annotations, examples
   // For grammar: examples
   typeSpecificData: jsonField<Record<string, unknown>>('type_specific_data'),
-  // Creation timestamp
-  createdAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-  // Last update timestamp
-  updatedAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
+  ...createdAndUpdatedAt,
+})
+
+/**
+ * Sentence table
+ */
+export const sentencesTable = sqliteTable('sentences', {
+  id: int().primaryKey({ autoIncrement: true }),
+  // Content in Japanese
+  content: text().notNull(),
+  // Explanation of the knowledge point (localized)
+  explanation: jsonField<LocalizedText>('explanation').notNull(),
+  ...createdAndUpdatedAt,
 })
 
 /**
@@ -77,6 +84,26 @@ export const lessonKnowledgePointsTable = sqliteTable(
 )
 
 /**
+ * Sentence to Knowledge Point relationship (many-to-many)
+ */
+export const sentenceKnowledgePointsTable = sqliteTable(
+  'sentence_knowledge_points',
+  {
+    sentenceId: int()
+      .notNull()
+      .references(() => sentencesTable.id, { onDelete: 'cascade' }),
+    knowledgePointId: int()
+      .notNull()
+      .references(() => knowledgePointsTable.id, { onDelete: 'cascade' }),
+    // Creation timestamp
+    createdAt: text()
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (table) => [primaryKey({ columns: [table.sentenceId, table.knowledgePointId] })]
+)
+
+/**
  * Relations for the lessons table
  */
 export const lessonsRelations = relations(lessonsTable, ({ many }) => ({
@@ -88,6 +115,7 @@ export const lessonsRelations = relations(lessonsTable, ({ many }) => ({
  */
 export const knowledgePointsRelations = relations(knowledgePointsTable, ({ many }) => ({
   lessonKnowledgePoints: many(lessonKnowledgePointsTable),
+  sentenceKnowledgePoints: many(sentenceKnowledgePointsTable),
 }))
 
 /**
@@ -103,3 +131,27 @@ export const lessonKnowledgePointsRelations = relations(lessonKnowledgePointsTab
     references: [knowledgePointsTable.id],
   }),
 }))
+
+/**
+ * Relations for the sentences table
+ */
+export const sentencesRelations = relations(sentencesTable, ({ many }) => ({
+  sentenceKnowledgePoints: many(sentenceKnowledgePointsTable),
+}))
+
+/**
+ * Relations for the sentence knowledge points table
+ */
+export const sentenceKnowledgePointsRelations = relations(
+  sentenceKnowledgePointsTable,
+  ({ one }) => ({
+    sentence: one(sentencesTable, {
+      fields: [sentenceKnowledgePointsTable.sentenceId],
+      references: [sentencesTable.id],
+    }),
+    knowledgePoint: one(knowledgePointsTable, {
+      fields: [sentenceKnowledgePointsTable.knowledgePointId],
+      references: [knowledgePointsTable.id],
+    }),
+  })
+)
