@@ -3,7 +3,7 @@ import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
 import { logger } from '@/lib/server/utils'
 import { and, desc, eq } from 'drizzle-orm'
 import type { Logger } from 'pino'
-import type { WorkflowDefinition } from './workflow-api'
+import type { WorkflowDefinitionWithHandler } from './workflow-api'
 import { getStepsInDependencyOrder } from './workflow-api'
 
 export type WorkflowStatus = 'started' | 'running' | 'completed' | 'failed' | 'paused'
@@ -225,7 +225,7 @@ export class WorkflowEngine {
    * Run a complete workflow definition with optional step filtering
    */
   async runWorkflow(
-    workflowDefinition: WorkflowDefinition,
+    workflowDefinition: WorkflowDefinitionWithHandler,
     options: {
       steps?: Record<string, boolean>
       resumeId?: number
@@ -316,7 +316,7 @@ export class WorkflowEngine {
   /**
    * Get workflow definition metadata
    */
-  getWorkflowInfo(workflowDefinition: WorkflowDefinition): {
+  getWorkflowInfo(workflowDefinition: WorkflowDefinitionWithHandler): {
     name: string
     totalSteps: number
     stepNames: string[]

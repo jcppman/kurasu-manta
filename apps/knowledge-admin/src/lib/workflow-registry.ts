@@ -1,6 +1,6 @@
 import { readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-import type { WorkflowDefinition } from './workflow-api'
+import type { WorkflowDefinition, WorkflowDefinitionWithHandler } from './workflow-api'
 
 /**
  * Workflow metadata that can be included in workflow definitions
@@ -13,9 +13,16 @@ export interface WorkflowMetadata {
 }
 
 /**
- * Extended workflow definition with metadata
+ * Extended workflow definition with metadata (serializable, no handlers)
  */
 export interface WorkflowWithMetadata extends WorkflowDefinition {
+  metadata?: WorkflowMetadata
+}
+
+/**
+ * Extended workflow definition with metadata and handlers for execution
+ */
+export interface WorkflowWithMetadataAndHandlers extends WorkflowDefinitionWithHandler {
   metadata?: WorkflowMetadata
 }
 
@@ -24,6 +31,7 @@ export interface WorkflowWithMetadata extends WorkflowDefinition {
  */
 export class WorkflowRegistry {
   private workflows = new Map<string, WorkflowWithMetadata>()
+  private workflowsWithHandlers = new Map<string, WorkflowWithMetadataAndHandlers>()
   private readonly workflowsDir: string
 
   constructor(workflowsDir: string) {
@@ -83,7 +91,7 @@ export class WorkflowRegistry {
       const module = await import(`@/workflows/${name}`)
 
       // Look for workflow definition in various export formats
-      let workflowDefinition: WorkflowDefinition | undefined
+      let workflowDefinition: WorkflowDefinitionWithHandler | undefined
 
       if (module.workflowDefinition) {
         workflowDefinition = module.workflowDefinition
@@ -106,11 +114,27 @@ export class WorkflowRegistry {
       }
 
       if (workflowDefinition && typeof workflowDefinition === 'object') {
-        const workflowWithMetadata: WorkflowWithMetadata = {
+        // Store the full version with handlers
+        const workflowWithHandlers: WorkflowWithMetadataAndHandlers = {
           ...workflowDefinition,
         }
+        this.workflowsWithHandlers.set(workflowDefinition.name, workflowWithHandlers)
 
+        // Store the serializable version (without handlers) for UI/API usage
+        const workflowWithMetadata: WorkflowWithMetadata = {
+          name: workflowDefinition.name,
+          metadata: workflowDefinition.metadata,
+          steps: workflowDefinition.steps.map((step) => ({
+            name: step.name,
+            definition: {
+              description: step.definition.description,
+              dependencies: step.definition.dependencies,
+              timeout: step.definition.timeout,
+            },
+          })),
+        }
         this.workflows.set(workflowDefinition.name, workflowWithMetadata)
+
         console.log(`Loaded workflow: ${workflowDefinition.name} from ${name}`)
       } else {
         console.warn(`No valid workflow definition found in ${dirPath}`)
@@ -128,10 +152,17 @@ export class WorkflowRegistry {
   }
 
   /**
-   * Get a specific workflow by name
+   * Get a specific workflow by name (serializable version without handlers)
    */
   getWorkflow(name: string): WorkflowWithMetadata | undefined {
     return this.workflows.get(name)
+  }
+
+  /**
+   * Get a specific workflow with handlers for execution
+   */
+  getWorkflowForExecution(name: string): WorkflowWithMetadataAndHandlers | undefined {
+    return this.workflowsWithHandlers.get(name)
   }
 
   /**
@@ -153,6 +184,7 @@ export class WorkflowRegistry {
    */
   async refresh(): Promise<void> {
     this.workflows.clear()
+    this.workflowsWithHandlers.clear()
     await this.discoverWorkflows()
   }
 }

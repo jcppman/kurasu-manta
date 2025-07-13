@@ -13,13 +13,15 @@ export interface StepContext {
 /**
  * Definition of a single workflow step
  */
-export interface StepDefinition {
+export interface StepDefinitionBase {
   /** Human-readable description of what this step does */
   description: string
   /** Array of step names that must complete before this step can run */
   dependencies?: string[]
   /** Timeout in milliseconds for step execution */
   timeout?: number
+}
+export interface StepDefinitionWithHandler extends StepDefinitionBase {
   /** The function that executes the step logic */
   handler: (context: StepContext) => Promise<void>
 }
@@ -27,10 +29,11 @@ export interface StepDefinition {
 /**
  * Internal representation of a step with its name
  */
-export interface WorkflowStepWithName {
+export interface WorkflowStepWithName<S extends StepDefinitionBase = StepDefinitionBase> {
   name: string
-  definition: StepDefinition
+  definition: S
 }
+export type WorkflowStepWithHandler = WorkflowStepWithName<StepDefinitionWithHandler>
 
 /**
  * Workflow metadata
@@ -45,14 +48,15 @@ export interface WorkflowMetadata {
 /**
  * Complete workflow definition
  */
-export interface WorkflowDefinition {
+export interface WorkflowDefinition<Step extends WorkflowStepWithName = WorkflowStepWithName> {
   /** Unique name for the workflow */
   name: string
   /** All steps defined in this workflow */
-  steps: WorkflowStepWithName[]
+  steps: Step[]
   /** Optional metadata */
   metadata?: WorkflowMetadata
 }
+export type WorkflowDefinitionWithHandler = WorkflowDefinition<WorkflowStepWithHandler>
 
 /**
  * Context provided to the workflow definition function
@@ -63,7 +67,7 @@ export interface WorkflowContext {
    * @param name - Unique identifier for the step
    * @param definition - Step configuration and handler
    */
-  defineStep(name: string, definition: StepDefinition): void
+  defineStep(name: string, definition: StepDefinitionWithHandler): void
 }
 
 /**
@@ -107,7 +111,7 @@ export function defineWorkflow(
   const stepNames = new Set<string>()
 
   const workflowContext: WorkflowContext = {
-    defineStep(stepName: string, definition: StepDefinition) {
+    defineStep(stepName: string, definition: StepDefinitionWithHandler) {
       // Validate step name uniqueness
       if (stepNames.has(stepName)) {
         throw new Error(`Step '${stepName}' is already defined in workflow '${name}'`)
@@ -205,8 +209,10 @@ function validateNoCycles(steps: WorkflowStepWithName[]): void {
  * Helper function to get steps in dependency order
  * Steps with no dependencies come first, followed by steps whose dependencies are satisfied
  */
-export function getStepsInDependencyOrder(steps: WorkflowStepWithName[]): WorkflowStepWithName[] {
-  const result: WorkflowStepWithName[] = []
+export function getStepsInDependencyOrder<S extends WorkflowStepWithName = WorkflowStepWithName>(
+  steps: S[]
+): S[] {
+  const result: S[] = []
   const completed = new Set<string>()
   const remaining = [...steps]
 

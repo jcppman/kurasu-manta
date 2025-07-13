@@ -1,4 +1,4 @@
-import { workflowRunsTable, workflowStepsTable } from '@/db/workflow-schema'
+import { workflowRunsTable } from '@/db/workflow-schema'
 import { getDatabase } from '@/lib/db'
 import { WorkflowEngine } from '@/lib/workflow-engine'
 import { getWorkflowRegistry } from '@/lib/workflow-registry'
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest, { params }: Context) {
       await registry.discoverWorkflows()
 
       // Check if workflow exists
-      const workflowDefinition = registry.getWorkflow(id)
+      const workflowDefinition = registry.getWorkflowForExecution(id)
       if (!workflowDefinition) {
         return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
       }

@@ -1,15 +1,18 @@
 # LangLearn: Technical Design Knowledge Base
 
 ## Index
-- **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack): Core technologies and implementation approach
+- **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack):  Core technologies and implementation approach
 - **Type-Safe Data Design** - [.claude/type-safe-data.md](.claude/type-safe-data): Detailed implementation patterns for type safety
 - **Task Orchestration** - [packages/task-queue](packages/task-queue): Local SQLite-based task queue system
+- **Knowledge Admin Architecture** - [.claude/knowledge-admin-architecture.md](.claude/knowledge-admin-architecture): Complete workflow management system
+- **Workflow System** - [.claude/workflow-system.md](.claude/workflow-system): Code-defined workflow engine and execution
+- **UI Components** - [.claude/ui-components.md](.claude/ui-components): React interface architecture and patterns
 
 ## Core Architecture
 ```
-Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-sqlite)
-                    ↓
-               Task Queue (local orchestration)
+Knowledge Admin (Next.js) → Code-Defined Workflows → SQLite (Drizzle) → React Native (expo-sqlite)
+                    ↓                        ↓
+          Content Generation Pipeline    Task Queue (local orchestration)
 ```
 - End-to-end type-safe architecture with shared schema
 - Support for heterogeneous knowledge types
@@ -41,6 +44,33 @@ Content Generation (knowledge-gen) → SQLite (Drizzle) → React Native (expo-s
 - TypeScript: Shared types across layers
 - Mappers: Type-safe conversion between layers
 - Repository: Abstract database implementation
+
+## Knowledge Admin Implementation
+
+### Completed Features
+The Knowledge Admin (`apps/knowledge-admin`) is a fully functional Next.js application providing:
+
+- **Code-Defined Workflows**: Vue-style composition API for workflow definitions
+- **Workflow Engine**: Complete execution engine with progress tracking and resumability
+- **Modern UI**: React interface with shadcn/ui components and real-time updates
+- **Dependency Management**: Automatic step ordering and recursive dependency resolution
+- **Execution Tracking**: SQLite-based persistence for workflow runs and progress
+- **Auto-Discovery**: Dynamic workflow loading from filesystem
+
+### Migration Achievement
+Successfully consolidated `packages/knowledge-gen` into `apps/knowledge-admin`:
+- ✅ Unified codebase with improved maintainability
+- ✅ Enhanced type safety throughout the application
+- ✅ Modern React UI replacing command-line interface
+- ✅ Real-time progress tracking and workflow management
+- ✅ Code-defined workflow architecture for better development experience
+
+### Usage
+```bash
+cd apps/knowledge-admin
+pnpm dev  # Start development server
+pnpm build  # Build for production
+```
 
 ## Key Patterns
 
@@ -121,11 +151,45 @@ The architecture supports extending to other domains beyond language learning:
 3. Maintain type safety through the mapping layer
 
 ## Content Pipeline
-1. Seed knowledge ETL into SQLite with Drizzle
-2. **Task Queue**: Generate examples with AI for knowledge points
-3. **Task Queue**: Process sentences (annotations, explanations, audio)
-4. **Task Queue**: Generate audio files and metadata
-5. Bundle database for mobile distribution
+1. **Knowledge Admin**: Define workflows as TypeScript code in `src/workflows/`
+2. **Workflow Engine**: Execute content generation workflows with dependency management
+3. **Content Generation**: AI-powered creation of examples, annotations, and explanations
+4. **Audio Processing**: TTS generation and audio file management
+5. **Database Population**: Store generated content in SQLite with Drizzle
+6. **Bundle Distribution**: Package database for mobile app distribution
+
+### Example Workflow
+```typescript
+// apps/knowledge-admin/src/workflows/minna-jp-1/index.ts
+export default defineWorkflow('minna-jp-1', ({ defineStep }) => {
+  defineStep('init', {
+    description: 'Initialize database and reset content',
+    dependencies: [],
+    handler: async (context) => {
+      await resetDatabase()
+      context.logger.info('Database initialized')
+    }
+  })
+  
+  defineStep('createLessons', {
+    description: 'Process vocabulary and create lessons',
+    dependencies: ['init'],
+    handler: async (context) => {
+      await createLessonsFromVocabulary()
+      await context.updateProgress(50, 'Lessons created')
+    }
+  })
+  
+  defineStep('generateAudio', {
+    description: 'Generate TTS audio for vocabulary',
+    dependencies: ['createLessons'], 
+    handler: async (context) => {
+      await generateVocabularyAudio()
+      context.logger.info('Audio generation completed')
+    }
+  })
+})
+```
 
 ## Database Bundling
 1. Generate complete SQLite on server

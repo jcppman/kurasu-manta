@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DeleteWorkflowButton } from '@/components/workflows/delete-workflow-button'
 import { ExecutionPanel } from '@/components/workflows/execution-panel'
 import { WorkflowRunHistory } from '@/components/workflows/workflow-run-history'
@@ -155,7 +155,6 @@ export default async function WorkflowDetailPage({ params }: WorkflowDetailPageP
                 description: step.description,
                 dependencies: step.dependencies,
                 timeout: step.timeout,
-                handler: async () => {}, // Not used in UI
               },
             })
           )}
