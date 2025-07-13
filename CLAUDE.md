@@ -1,5 +1,8 @@
 # LangLearn: Technical Design Knowledge Base
 
+## Project Structure
+- put unit test file beside the .ts file rather than in test/ folder
+
 ## Index
 - **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack):  Core technologies and implementation approach
 - **Type-Safe Data Design** - [.claude/type-safe-data.md](.claude/type-safe-data): Detailed implementation patterns for type safety
@@ -187,6 +190,7 @@ When making changes, follow this sequence to ensure code quality:
    ```
 
 2. **Lint Checking & Fixing**:
+execute in the root directory:
    ```bash
    pnpm lint-fix
    ```
