@@ -33,7 +33,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "tsup",
+    "build": "tsc && tsup",
     "test": "tsx --test 'src/**/*.test.ts' 'tests/**/*.test.ts'",
     "test:unit": "tsx --test 'src/**/*.test.ts'",
     "test:integration": "tsx --test 'tests/integration/**/*.test.ts'"
