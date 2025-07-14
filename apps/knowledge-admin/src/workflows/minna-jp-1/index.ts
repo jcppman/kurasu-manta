@@ -1,12 +1,19 @@
 import { logger } from '@/lib/server/utils'
 import { generateVocabularyAudioClips } from './services/audio'
-import { cleanVocabularies, createLessons } from './services/data'
+import {
+  cleanGrammar,
+  cleanVocabularies,
+  createGrammarLessons,
+  createVocabularies,
+} from './services/data'
 
 export async function execute() {
+  await cleanGrammar()
+  await createGrammarLessons()
   // biome-ignore lint/correctness/noConstantCondition: <explanation>
   if (false) {
     await cleanVocabularies()
-    await createLessons()
+    await createVocabularies()
     await generateVocabularyAudioClips()
   }
 }

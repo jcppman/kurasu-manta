@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import data from './vocs.json'
+import grammarData from './grammar.json'
+import vocData from './vocs.json'
 
 export const minaVocabularySchema = z.object({
   lesson: z.number().int(),
@@ -15,9 +16,18 @@ export const minaVocabularySchema = z.object({
     })
   ),
 })
+export const minaGrammarSchema = z.object({
+  lesson: z.number().int(),
+  content: z.string(),
+  explanation: z.string(),
+})
 
 export type MinaVocabulary = z.infer<typeof minaVocabularySchema>
+export type MinaGrammar = z.infer<typeof minaGrammarSchema>
 
-export function getData(): MinaVocabulary[] {
-  return data.map((item) => minaVocabularySchema.parse(item))
+export function getVocData(): MinaVocabulary[] {
+  return vocData.map((item) => minaVocabularySchema.parse(item))
+}
+export function getGrammarData(): MinaGrammar[] {
+  return grammarData.map((item) => minaGrammarSchema.parse(item))
 }

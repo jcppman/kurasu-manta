@@ -1,7 +1,12 @@
 import db from '@/db'
 import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/db/schema'
 import { logger } from '@/lib/server/utils'
-import { type MinaVocabulary, getData } from '@/workflows/minna-jp-1/data'
+import {
+  type MinaGrammar,
+  type MinaVocabulary,
+  getGrammarData,
+  getVocData,
+} from '@/workflows/minna-jp-1/data'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 import { eq, inArray } from 'drizzle-orm'
@@ -39,6 +44,39 @@ export async function cleanVocabularies() {
   logger.info('Database reset completed - vocabulary knowledge points dropped')
 }
 
+export async function cleanGrammar() {
+  logger.info('Resetting database - dropping grammar knowledge points...')
+
+  // First, get all grammar knowledge point IDs
+  const grammarKnowledgePoints = await db
+    .select({ id: knowledgePointsTable.id })
+    .from(knowledgePointsTable)
+    .where(eq(knowledgePointsTable.type, 'grammar'))
+
+  const grammarIds = grammarKnowledgePoints.map((kp) => kp.id)
+
+  if (grammarIds.length === 0) {
+    logger.info('No grammar knowledge points found to delete')
+    return
+  }
+
+  logger.info(`Found ${grammarIds.length} grammar knowledge points to delete`)
+
+  // Delete lesson-knowledge point associations for grammar points only
+  await db
+    .delete(lessonKnowledgePointsTable)
+    .where(inArray(lessonKnowledgePointsTable.knowledgePointId, grammarIds))
+
+  logger.info('Deleted grammar lesson associations')
+
+  // Delete grammar knowledge points
+  await db.delete(knowledgePointsTable).where(eq(knowledgePointsTable.type, 'grammar'))
+
+  logger.info(`Deleted ${grammarIds.length} grammar knowledge points`)
+
+  logger.info('Database reset completed - grammar knowledge points dropped')
+}
+
 async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
   const courseContentService = new CourseContentService(db)
 
@@ -63,9 +101,27 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
   )
 }
 
-export async function createLessons() {
+async function createGrammarLesson(lessonNumber: number, grammarItems: MinaGrammar[]) {
+  const courseContentService = new CourseContentService(db)
+
+  // insert
+  return courseContentService.createKnowledgePointsWithLesson(
+    grammarItems.map((g) => ({
+      lesson: lessonNumber,
+      type: 'grammar',
+      content: g.content,
+      annotations: [],
+      explanation: {
+        zhCN: g.explanation,
+      },
+      examples: [],
+    }))
+  )
+}
+
+export async function createVocabularies() {
   logger.info('Creating lessons...')
-  const data = getData()
+  const data = getVocData()
 
   // Group by lesson
   const groupedData = data.reduce((acc, item) => {
@@ -89,4 +145,28 @@ export async function createLessons() {
   }
 
   logger.info('All lessons created successfully')
+}
+
+export async function createGrammarLessons() {
+  logger.info('Creating grammar lessons...')
+  const data = getGrammarData()
+
+  // Group by lesson
+  const groupedData = data.reduce((acc, item) => {
+    const lesson = item.lesson
+    acc.set(lesson, acc.get(lesson) ?? [])
+    acc.get(lesson)?.push(item)
+    return acc
+  }, new Map<number, MinaGrammar[]>())
+
+  let completedLessons = 0
+
+  for (const [lessonNumber, lessonGrammarItems] of groupedData.entries()) {
+    logger.info(`Processing grammar for lesson ${lessonNumber}...`)
+    await createGrammarLesson(lessonNumber, lessonGrammarItems)
+
+    completedLessons++
+  }
+
+  logger.info('All grammar lessons created successfully')
 }
