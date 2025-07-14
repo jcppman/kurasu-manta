@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 
 export function toFullFurigana(text: string, annotations: Annotation[]): string {
@@ -38,4 +39,10 @@ export function toFullFurigana(text: string, annotations: Annotation[]): string 
   }
 
   return result.join('')
+}
+
+export function calculateSHA1(buffer: Uint8Array): string {
+  const hash = createHash('sha1')
+  hash.update(buffer)
+  return hash.digest('hex')
 }

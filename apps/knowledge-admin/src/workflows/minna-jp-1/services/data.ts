@@ -1,14 +1,10 @@
-import { writeFileSync } from 'node:fs'
-import { join } from 'node:path'
 import db from '@/db'
 import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/db/schema'
-import { AUDIO_DIR } from '@/lib/server/constants'
 import { logger } from '@/lib/server/utils'
 import { type MinaVocabulary, getData } from '@/workflows/minna-jp-1/data'
-import { findPosOfVocabulary, generateAudio } from '@/workflows/minna-jp-1/services/language'
+import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 import { eq, inArray } from 'drizzle-orm'
-import sh from 'shelljs'
 
 export async function cleanVocabularies() {
   logger.info('Resetting database - dropping vocabulary knowledge points...')
@@ -93,42 +89,4 @@ export async function createLessons() {
   }
 
   logger.info('All lessons created successfully')
-}
-
-export async function generateVocabularyAudioClips() {
-  const courseContentService = new CourseContentService(db)
-
-  // get vocabularies that has no audio clips
-  const { items } = await courseContentService.getVocabulariesByConditions(
-    {
-      hasAudio: false,
-    },
-    {
-      page: 1,
-      limit: 100,
-    }
-  )
-
-  let processedCount = 0
-
-  for (const voc of items) {
-    const { sha1, content } = await generateAudio({
-      content: voc.content,
-      annotations: voc.annotations,
-    })
-
-    const dir = join(AUDIO_DIR, sha1.slice(0, 2))
-    const filename = `${sha1}.mp3`
-
-    // save audio to file system
-    sh.mkdir('-p', dir)
-    writeFileSync(join(dir, filename), content)
-
-    // update database
-    await courseContentService.partialUpdateKnowledgePoint(voc.id, {
-      audio: sha1,
-    })
-
-    processedCount++
-  }
 }

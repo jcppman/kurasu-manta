@@ -1,41 +1,16 @@
-import { createHash } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import db from '@/db'
+import { AUDIO_DIR } from '@/lib/server/constants'
 import { logger } from '@/lib/server/utils'
+import { calculateSHA1, toFullFurigana } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import textToSpeech from '@google-cloud/text-to-speech'
+import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import { generateObject } from 'ai'
+import sh from 'shelljs'
 import { z } from 'zod'
-import type { MinaVocabulary } from '../data'
-import { toFullFurigana } from '../utils'
-
-export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> {
-  const ret = await generateObject({
-    model: openai('gpt-4o'),
-    prompt: `Given a Japanese word or phrase, your task is to determine its part of speech (POS).
-
-    The answer MUST be one of the following:
-    - '名': noun
-    - '句型': phrase
-    - '搭配': common collocation like subject and verb, longer common phrases is '句型' not '搭配'
-
-    ### examples:
-    エスカレーター => 名
-    〜から来ました => 句型
-    お名前は => 句型
-    どうも => 句型
-    どうもありがとうございます => 句型
-    九時半 => 搭配
-    写真を撮ります => 搭配
-
-    ### The question
-    ${voc.content}
-    `,
-    output: 'enum',
-    enum: ['名', '句型', '搭配'],
-  })
-
-  return ret.object
-}
 
 const client = new textToSpeech.TextToSpeechClient()
 interface GenerateAudioParams {
@@ -43,17 +18,8 @@ interface GenerateAudioParams {
   annotations?: Annotation[]
 }
 
-/*
- * AUDIO
- */
-
 const TTS_PRONOUNCE_ERROR_RISK_THRESHOLD = 0.5
 
-function calculateSHA1(buffer: Uint8Array): string {
-  const hash = createHash('sha1')
-  hash.update(buffer)
-  return hash.digest('hex')
-}
 interface GenerateAudioReturns {
   content: Uint8Array
   sha1: string
@@ -136,5 +102,43 @@ Expected reading: 「${fullReading}」
   return {
     sha1,
     content: audio,
+  }
+}
+
+export async function generateVocabularyAudioClips() {
+  const courseContentService = new CourseContentService(db)
+
+  // get vocabularies that has no audio clips
+  const { items } = await courseContentService.getVocabulariesByConditions(
+    {
+      hasAudio: false,
+    },
+    {
+      page: 1,
+      limit: 100,
+    }
+  )
+
+  let processedCount = 0
+
+  for (const voc of items) {
+    const { sha1, content } = await generateAudio({
+      content: voc.content,
+      annotations: voc.annotations,
+    })
+
+    const dir = join(AUDIO_DIR, sha1.slice(0, 2))
+    const filename = `${sha1}.mp3`
+
+    // save audio to file system
+    sh.mkdir('-p', dir)
+    writeFileSync(join(dir, filename), content)
+
+    // update database
+    await courseContentService.partialUpdateKnowledgePoint(voc.id, {
+      audio: sha1,
+    })
+
+    processedCount++
   }
 }
