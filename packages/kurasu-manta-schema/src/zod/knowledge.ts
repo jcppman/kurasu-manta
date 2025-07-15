@@ -15,13 +15,11 @@ export const createVocabularySchema = baseKnowledgePointSchema.extend({
   type: z.literal(KNOWLEDGE_POINT_TYPES.VOCABULARY),
   pos: z.string(),
   annotations: z.array(annotationSchema),
-  examples: z.array(z.string()),
   audio: z.string().optional(),
 })
 
 export const createGrammarSchema = baseKnowledgePointSchema.extend({
   type: z.literal(KNOWLEDGE_POINT_TYPES.GRAMMAR),
-  examples: z.array(z.string()),
 })
 
 export const createKnowledgePointSchema = z.discriminatedUnion('type', [

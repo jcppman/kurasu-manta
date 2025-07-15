@@ -1,7 +1,7 @@
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import type { knowledgePointsTable } from '@/drizzle/schema'
 import type { Annotation } from '@/zod/annotation'
-import type { CreateKnowledgePoint, Grammar, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
+import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { LocalizedText } from '@/zod/localized-text'
 
 /**
@@ -61,15 +61,12 @@ export function mapDrizzleToKnowledgePoint(
       pos: vocData.pos as string,
       audio: vocData.audio as string | undefined,
       annotations: vocData.annotations as Annotation[],
-      examples: vocData.examples as string[],
     }
   }
 
   // Grammar
-  const grammarData = typeSpecificData as Record<string, unknown>
   return {
     ...baseData,
     type: KNOWLEDGE_POINT_TYPES.GRAMMAR,
-    examples: grammarData.examples as string[],
   }
 }
