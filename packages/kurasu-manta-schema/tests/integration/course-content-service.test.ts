@@ -789,4 +789,100 @@ test('CourseContentService', async (t) => {
       })
     })
   })
+
+  // Tests for getSentenceCountsByKnowledgePointIds
+  await t.test('getSentenceCountsByKnowledgePointIds', async (t) => {
+    await t.test('should return empty map for empty knowledge point IDs', async () => {
+      const result = await courseContentService.getSentenceCountsByKnowledgePointIds([])
+      assert.strictEqual(result.size, 0)
+    })
+
+    await t.test('should return sentence counts for knowledge points', async () => {
+      // Create knowledge points
+      const kp1 = await knowledgeRepo.create(createVocabularyPoint(1, '単語1'))
+      const kp2 = await knowledgeRepo.create(createVocabularyPoint(1, '単語2'))
+      const kp3 = await knowledgeRepo.create(createGrammarPoint(1, '文法1'))
+
+      // Create sentences
+      const sentence1 = await sentenceRepo.create(createTestSentence('文1'))
+      const sentence2 = await sentenceRepo.create(createTestSentence('文2'))
+      const sentence3 = await sentenceRepo.create(createTestSentence('文3'))
+
+      // Associate sentences with knowledge points
+      // kp1: 3 sentences, kp2: 1 sentence, kp3: 0 sentences
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id)
+
+      // Test the service method
+      const result = await courseContentService.getSentenceCountsByKnowledgePointIds([
+        kp1.id,
+        kp2.id,
+        kp3.id,
+      ])
+
+      // Assertions
+      assert.strictEqual(result.size, 3)
+      assert.strictEqual(result.get(kp1.id), 3)
+      assert.strictEqual(result.get(kp2.id), 1)
+      assert.strictEqual(result.get(kp3.id), 0)
+    })
+
+    await t.test('should handle non-existent knowledge point IDs', async () => {
+      const result = await courseContentService.getSentenceCountsByKnowledgePointIds([999, 1000])
+
+      assert.strictEqual(result.size, 2)
+      assert.strictEqual(result.get(999), 0)
+      assert.strictEqual(result.get(1000), 0)
+    })
+
+    await t.test('should integrate with lesson and knowledge point creation', async () => {
+      // Create lesson with knowledge points using the service
+      const knowledgePoints = [
+        createVocabularyPoint(1, '統合テスト1'),
+        createVocabularyPoint(1, '統合テスト2'),
+        createGrammarPoint(1, '統合文法'),
+      ]
+
+      const lessonsWithContent =
+        await courseContentService.createKnowledgePointsWithLesson(knowledgePoints)
+      const lesson = Array.from(lessonsWithContent.values())[0]
+
+      assert.ok(lesson, 'Lesson should be created')
+      assert.strictEqual(lesson.knowledgePoints.length, 3)
+
+      // Create sentences and associate with knowledge points
+      const sentences = await Promise.all([
+        sentenceRepo.create(createTestSentence('統合テスト文1')),
+        sentenceRepo.create(createTestSentence('統合テスト文2')),
+      ])
+
+      const kp1 = lesson.knowledgePoints[0]
+      const kp2 = lesson.knowledgePoints[1]
+      const kp3 = lesson.knowledgePoints[2]
+
+      assert.ok(kp1, 'Knowledge point 1 should exist')
+      assert.ok(kp2, 'Knowledge point 2 should exist')
+      assert.ok(kp3, 'Knowledge point 3 should exist')
+      assert.ok(sentences[0], 'Sentence 1 should exist')
+      assert.ok(sentences[1], 'Sentence 2 should exist')
+
+      await sentenceRepo.associateWithKnowledgePoint(sentences[0].id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[1].id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[0].id, kp2.id)
+
+      // Test sentence counts
+      const result = await courseContentService.getSentenceCountsByKnowledgePointIds([
+        kp1.id,
+        kp2.id,
+        kp3.id,
+      ])
+
+      assert.strictEqual(result.size, 3)
+      assert.strictEqual(result.get(kp1.id), 2)
+      assert.strictEqual(result.get(kp2.id), 1)
+      assert.strictEqual(result.get(kp3.id), 0)
+    })
+  })
 })

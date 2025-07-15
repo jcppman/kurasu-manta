@@ -25,7 +25,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
         annotations: [],
-        examples: ['こんにちは、田中さん。'],
       })
 
       // Create a sentence and associate it
@@ -61,7 +60,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
-          examples: ['こんにちは、田中さん。'],
         })
 
         // Create sentences and associate them
@@ -106,7 +104,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
-          examples: ['こんにちは、田中さん。'],
         })
 
         const result = await knowledgeRepo.getById(kp.id, { includeSentences: true })
@@ -136,7 +133,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
         annotations: [],
-        examples: [],
       })
 
       await knowledgeRepo.associateWithLesson(kp1.id, 1)
@@ -144,6 +140,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
       const results = await knowledgeRepo.getByLessonId(1)
 
       assert.strictEqual(results.length, 1)
+      assert.ok(results[0], 'First result should exist')
       assert.ok(!('sentences' in results[0]))
     })
 
@@ -166,7 +163,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
-          examples: [],
         })
 
         await knowledgeRepo.associateWithLesson(kp1.id, 1)
@@ -181,8 +177,10 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         const results = await knowledgeRepo.getByLessonId(1, { includeSentences: true })
 
         assert.strictEqual(results.length, 1)
+        assert.ok(results[0], 'First result should exist')
         assert.ok('sentences' in results[0])
         assert.strictEqual(results[0].sentences?.length, 1)
+        assert.ok(results[0].sentences?.[0], 'First sentence should exist')
         assert.strictEqual(results[0].sentences?.[0].content, 'こんにちは、田中さん。')
       }
     )
@@ -205,7 +203,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
         annotations: [],
-        examples: [],
       })
 
       await knowledgeRepo.associateWithLesson(kp.id, 1)
@@ -213,6 +210,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
       const results = await knowledgeRepo.getByConditions({ lessonId: 1 })
 
       assert.strictEqual(results.items.length, 1)
+      assert.ok(results.items[0], 'First result should exist')
       assert.ok(!('sentences' in results.items[0]))
     })
 
@@ -235,7 +233,6 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
-          examples: [],
         })
 
         await knowledgeRepo.associateWithLesson(kp.id, 1)
@@ -254,8 +251,10 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         )
 
         assert.strictEqual(results.items.length, 1)
+        assert.ok(results.items[0], 'First result should exist')
         assert.ok('sentences' in results.items[0])
         assert.strictEqual(results.items[0].sentences?.length, 1)
+        assert.ok(results.items[0].sentences?.[0], 'First sentence should exist')
         assert.strictEqual(results.items[0].sentences?.[0].content, 'こんにちは、田中さん。')
       }
     )

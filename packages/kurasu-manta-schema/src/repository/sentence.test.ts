@@ -247,4 +247,87 @@ test('SentenceRepository', async (t) => {
       assert.strictEqual(result.get(sentence2.id)?.length, 1)
     })
   })
+
+  await t.test('getCountByKnowledgePointIds', async (t) => {
+    await t.test('should return empty map for empty knowledge point IDs', async () => {
+      const result = await sentenceRepo.getCountByKnowledgePointIds([])
+      assert.strictEqual(result.size, 0)
+    })
+
+    await t.test('should return counts for single knowledge point', async () => {
+      const kp = await knowledgeRepo.create(createKnowledgePoint('単語'))
+      const sentence1 = await sentenceRepo.create({
+        content: '文1',
+        explanation: { en: 'Sentence 1', cn: '句子1' },
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: '文2',
+        explanation: { en: 'Sentence 2', cn: '句子2' },
+      })
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp.id)
+
+      const result = await sentenceRepo.getCountByKnowledgePointIds([kp.id])
+
+      assert.strictEqual(result.size, 1)
+      assert.strictEqual(result.get(kp.id), 2)
+    })
+
+    await t.test('should return counts for multiple knowledge points', async () => {
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
+      const kp3 = await knowledgeRepo.create(createKnowledgePoint('単語3'))
+
+      const sentence1 = await sentenceRepo.create({
+        content: '文1',
+        explanation: { en: 'Sentence 1', cn: '句子1' },
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: '文2',
+        explanation: { en: 'Sentence 2', cn: '句子2' },
+      })
+      const sentence3 = await sentenceRepo.create({
+        content: '文3',
+        explanation: { en: 'Sentence 3', cn: '句子3' },
+      })
+
+      // kp1: 3 sentences, kp2: 1 sentence, kp3: 0 sentences
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id)
+
+      const result = await sentenceRepo.getCountByKnowledgePointIds([kp1.id, kp2.id, kp3.id])
+
+      assert.strictEqual(result.size, 3)
+      assert.strictEqual(result.get(kp1.id), 3)
+      assert.strictEqual(result.get(kp2.id), 1)
+      assert.strictEqual(result.get(kp3.id), 0)
+    })
+
+    await t.test('should handle non-existent knowledge point IDs', async () => {
+      const result = await sentenceRepo.getCountByKnowledgePointIds([999, 1000])
+
+      assert.strictEqual(result.size, 2)
+      assert.strictEqual(result.get(999), 0)
+      assert.strictEqual(result.get(1000), 0)
+    })
+
+    await t.test('should handle mixed existing and non-existent knowledge point IDs', async () => {
+      const kp = await knowledgeRepo.create(createKnowledgePoint('単語'))
+      const sentence = await sentenceRepo.create({
+        content: '文',
+        explanation: { en: 'Sentence', cn: '句子' },
+      })
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
+
+      const result = await sentenceRepo.getCountByKnowledgePointIds([kp.id, 999])
+
+      assert.strictEqual(result.size, 2)
+      assert.strictEqual(result.get(kp.id), 1)
+      assert.strictEqual(result.get(999), 0)
+    })
+  })
 })
