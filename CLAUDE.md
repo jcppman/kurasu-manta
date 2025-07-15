@@ -24,6 +24,7 @@ Knowledge Admin (TypeScript Scripts) → Content Generation → SQLite (Drizzle)
 
 ### Package Manager
 - Always use pnpm
+- use pnpm test rather than npm test
 
 ### Database: Drizzle + SQLite
 - Same tech stack across server and client
