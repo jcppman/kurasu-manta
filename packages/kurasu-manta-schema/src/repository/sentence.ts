@@ -222,4 +222,45 @@ export class SentenceRepository {
 
     return result
   }
+
+  /**
+   * Get sentence counts for multiple knowledge points
+   */
+  async getCountByKnowledgePointIds(knowledgePointIds: number[]): Promise<Map<number, number>> {
+    if (knowledgePointIds.length === 0) {
+      return new Map()
+    }
+
+    // Use OR conditions for each knowledge point ID
+    const knowledgePointConditions = knowledgePointIds.map((id) =>
+      eq(sentenceKnowledgePointsTable.knowledgePointId, id)
+    )
+
+    const rows = await this.db
+      .select({
+        knowledgePointId: sentenceKnowledgePointsTable.knowledgePointId,
+        count: count(),
+      })
+      .from(sentenceKnowledgePointsTable)
+      .where(
+        knowledgePointConditions.length === 1
+          ? knowledgePointConditions[0]
+          : or(...knowledgePointConditions)
+      )
+      .groupBy(sentenceKnowledgePointsTable.knowledgePointId)
+
+    const result = new Map<number, number>()
+
+    // Initialize all knowledge point IDs with count 0
+    for (const id of knowledgePointIds) {
+      result.set(id, 0)
+    }
+
+    // Update with actual counts
+    for (const row of rows) {
+      result.set(row.knowledgePointId, row.count)
+    }
+
+    return result
+  }
 }

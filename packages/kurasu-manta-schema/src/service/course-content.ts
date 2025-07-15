@@ -4,6 +4,7 @@ import { mergeWithPartialFiltered } from '@/common/utils'
 import type { Db } from '@/drizzle/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
+import { SentenceRepository } from '@/repository/sentence'
 import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { Lesson } from '@/zod/lesson'
 import { groupBy, isEmpty, isNumber, map, toPairs } from 'lodash-es'
@@ -22,10 +23,12 @@ export interface LessonWithContent extends Lesson {
 export class CourseContentService {
   private lessonRepository: LessonRepository
   private knowledgeRepository: KnowledgeRepository
+  private sentenceRepository: SentenceRepository
 
   constructor(private db: Db) {
     this.lessonRepository = new LessonRepository(db)
     this.knowledgeRepository = new KnowledgeRepository(db)
+    this.sentenceRepository = new SentenceRepository(db)
   }
 
   /**
@@ -221,5 +224,14 @@ export class CourseContentService {
 
     // Return the updated vocabulary
     return updatedKnowledgePoint
+  }
+
+  /**
+   * Get sentence counts for multiple knowledge points
+   */
+  async getSentenceCountsByKnowledgePointIds(
+    knowledgePointIds: number[]
+  ): Promise<Map<number, number>> {
+    return this.sentenceRepository.getCountByKnowledgePointIds(knowledgePointIds)
   }
 }
