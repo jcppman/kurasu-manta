@@ -7,6 +7,7 @@ import {
   getGrammarData,
   getVocData,
 } from '@/workflows/minna-jp-1/data'
+import { generateSentencesForLesson } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 import { eq, inArray } from 'drizzle-orm'
@@ -169,4 +170,32 @@ export async function createGrammarLessons() {
   }
 
   logger.info('All grammar lessons created successfully')
+}
+
+export async function createSentencesForLesson(lessonId: number) {
+  const courseContentService = new CourseContentService(db)
+
+  const generatedSentences = await generateSentencesForLesson(lessonId)
+  if (generatedSentences.length === 0) {
+    logger.info(`No sentences generated for lesson ${lessonId}`)
+    return
+  }
+  for (const sentence of generatedSentences) {
+    const { content, vocabularyIds, grammarIds, annotations, explanation } = sentence
+
+    // Combine vocabulary and grammar IDs
+    const allKnowledgePointIds = [...vocabularyIds, ...grammarIds]
+
+    // Create sentence and associate with knowledge points in one call
+    await courseContentService.createSentenceWithKnowledgePoints(
+      {
+        content,
+        explanation,
+        annotations,
+      },
+      allKnowledgePointIds
+    )
+
+    logger.info(`Created sentence for lesson ${lessonId}: "${content}"`)
+  }
 }

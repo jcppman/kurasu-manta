@@ -4,28 +4,29 @@ import {
   cleanGrammar,
   cleanVocabularies,
   createGrammarLessons,
+  createSentencesForLesson,
   createVocabularies,
 } from './services/data'
 
 export async function execute() {
-  await cleanGrammar()
-  await createGrammarLessons()
   // biome-ignore lint/correctness/noConstantCondition: <explanation>
   if (false) {
+    await cleanGrammar()
+    await createGrammarLessons()
     await cleanVocabularies()
     await createVocabularies()
     await generateVocabularyAudioClips()
   }
+  await createSentencesForLesson(1)
 }
 
-if (require.main === module) {
-  execute()
-    .then(() => {
-      logger.info('Workflow completed successfully')
-      process.exit(0)
-    })
-    .catch((error) => {
-      logger.error('Workflow failed:', error)
-      process.exit(1)
-    })
-}
+execute()
+  .then(() => {
+    logger.info('Workflow completed successfully')
+    process.exit(0)
+  })
+  .catch((error) => {
+    logger.error('Workflow failed')
+    logger.error(error)
+    process.exit(1)
+  })

@@ -7,6 +7,7 @@ import { LessonRepository } from '@/repository/lesson'
 import { SentenceRepository } from '@/repository/sentence'
 import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { Lesson } from '@/zod/lesson'
+import type { CreateSentence, Sentence } from '@/zod/sentence'
 import { groupBy, isEmpty, isNumber, map, toPairs } from 'lodash-es'
 
 /**
@@ -233,5 +234,26 @@ export class CourseContentService {
     knowledgePointIds: number[]
   ): Promise<Map<number, number>> {
     return this.sentenceRepository.getCountByKnowledgePointIds(knowledgePointIds)
+  }
+
+  /**
+   * Create a sentence and associate it with knowledge points
+   */
+  async createSentenceWithKnowledgePoints(
+    sentence: CreateSentence,
+    knowledgePointIds: number[]
+  ): Promise<Sentence> {
+    // Create the sentence
+    const createdSentence = await this.sentenceRepository.create(sentence)
+
+    // Associate with all knowledge points
+    for (const knowledgePointId of knowledgePointIds) {
+      await this.sentenceRepository.associateWithKnowledgePoint(
+        createdSentence.id,
+        knowledgePointId
+      )
+    }
+
+    return createdSentence
   }
 }

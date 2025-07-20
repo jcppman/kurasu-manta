@@ -1,4 +1,5 @@
 import type { sentencesTable } from '@/drizzle/schema'
+import type { Annotation } from '@/zod/annotation'
 import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
 
@@ -9,6 +10,8 @@ export function mapCreateSentenceToDrizzle(sentence: CreateSentence) {
   return {
     content: sentence.content,
     explanation: sentence.explanation,
+    annotations: sentence.annotations,
+    audio: sentence.audio,
   }
 }
 
@@ -30,6 +33,8 @@ export function mapDrizzleToSentence(row: typeof sentencesTable.$inferSelect): S
     id: row.id,
     content: row.content,
     explanation: row.explanation as LocalizedText,
+    annotations: (row.annotations as Annotation[]) || [],
+    audio: row.audio ?? undefined,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   }

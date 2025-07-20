@@ -46,3 +46,8 @@ export function calculateSHA1(buffer: Uint8Array): string {
   hash.update(buffer)
   return hash.digest('hex')
 }
+
+export function sanitizeVocabularyContent(text: string): string {
+  // no '～', no '―'
+  return text.replace(/～/g, '').replace(/―/g, '').replace(/\s+/g, ' ').trim()
+}
