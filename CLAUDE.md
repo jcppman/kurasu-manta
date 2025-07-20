@@ -4,8 +4,6 @@
 - put unit test file beside the .ts file rather than in test/ folder
 
 ## Index
-- **Technology Stack** - [.claude/tech-stack.md](.claude/tech-stack):  Core technologies and implementation approach
-- **Type-Safe Data Design** - [.claude/type-safe-data.md](.claude/type-safe-data): Detailed implementation patterns for type safety
 - **Knowledge Admin** - [apps/knowledge-admin](apps/knowledge-admin): Simple TypeScript scripts for content generation
 
 ## Core Architecture
@@ -44,6 +42,7 @@ Knowledge Admin (TypeScript Scripts) → Content Generation → SQLite (Drizzle)
 - TypeScript: Shared types across layers
 - Mappers: Type-safe conversion between layers
 - Repository: Abstract database implementation
+- Service: Business logic layer (consumers should only use services, not repositories directly)
 
 ## Knowledge Admin Implementation
 
@@ -116,8 +115,12 @@ knowledge-schema/
 ├── zod/       # Validation schemas
 ├── drizzle/   # DB schema with JSON fields
 ├── mappers/   # Type mapping layer
+├── repository/ # Data access layer (internal use only)
+├── service/   # Business logic layer (public API for consumers)
 └── index.ts   # Unified exports
 ```
+
+**Important**: Consumers of @kurasu-manta/knowledge-schema should only use services, not repositories directly. Services provide the proper business logic abstraction and ensure data consistency.
 
 ### Data Flow
 1. **Server**: External/AI → Zod Validation → Domain Objects → Mappers → Drizzle → SQLite
