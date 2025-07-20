@@ -100,7 +100,69 @@ export async function validateSentence(
     )
   ).flatMap((v) => v?.sentences ?? [])
   // if equal, unqualify the sentence
-  return existingSentences.some((s) => s.content.trim() === sentence.content.trim())
+  const isDuplicate = existingSentences.some((s) => s.content.trim() === sentence.content.trim())
+  if (isDuplicate) {
+    logger.warn(`Duplicate sentence found: ${sentence.content}`)
+    return false
+  }
+
+  // check if the sentence is correct
+  const prompt = `
+You are a Japanese language expert evaluating whether a sentence is grammatically and culturally appropriate for teaching.
+
+SENTENCE TO EVALUATE:
+${sentence.content}
+EXPLAIN:
+${sentence.explanation.zhCN}
+${sentence.explanation.enUS}
+
+CHECK FOR THESE TYPES OF ERRORS:
+
+1. **Cultural/Pragmatic Errors**
+   - Using honorifics incorrectly (e.g., さん/様/先生 about oneself)
+   - Inappropriate politeness levels for the context
+   - Culturally impossible or strange situations
+   - Using humble/respectful forms incorrectly
+
+2. **Grammatical Errors**
+   - Incorrect particle usage
+   - Wrong verb conjugations
+   - Incompatible grammar patterns
+   - Word order violations
+
+3. **Semantic/Logic Errors**
+   - Contradictory information within the sentence
+   - Nonsensical combinations
+   - Incorrect word usage (using 行く when 来る is needed)
+   - Counter/classifier mismatches
+
+COMMON MISTAKES TO CATCH:
+- 私は山田さんです (wrong - can't use さん for oneself)
+- 先生は来週来ています (wrong - tense doesn't match time expression)
+- きのう行きます (wrong - past time with non-past verb)
+- 私は私の本を読みます (awkward - unnecessary 私の)
+- お水をお飲みください (wrong - double honorific)
+
+EVALUATION:
+output true if the sentence is grammatically and culturally appropriate, otherwise output false.
+if false, provide a reason for the invalidity.
+`
+  const {
+    object: { valid, reason },
+  } = await generateObject({
+    model: openai('gpt-4o'),
+    prompt,
+    schema: z.object({
+      valid: z.boolean(),
+      reason: z.string().optional(),
+    }),
+  })
+
+  if (!valid) {
+    logger.warn(`Invalid sentence found: ${sentence.content}, reason: ${reason}`)
+  }
+
+  return valid
 }
 
 export interface GenerateSentencesForScopeParameters {
