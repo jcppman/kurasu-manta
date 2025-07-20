@@ -1,4 +1,5 @@
 import type { KnowledgePointType } from '@/common/types'
+import type { Annotation } from '@/zod/annotation'
 import type { LocalizedText } from '@/zod/localized-text'
 import { relations } from 'drizzle-orm'
 import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
@@ -60,6 +61,10 @@ export const sentencesTable = sqliteTable('sentences', {
   content: text().notNull(),
   // Explanation of the knowledge point (localized)
   explanation: jsonField<LocalizedText>('explanation').notNull(),
+  // Annotations for the sentence
+  annotations: jsonField<Annotation[]>('annotations'),
+  // Audio file path/URL for the sentence
+  audio: text('audio'),
   ...createdAndUpdatedAt,
 })
 

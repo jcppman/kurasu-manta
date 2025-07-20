@@ -1,3 +1,4 @@
+import { annotationSchema } from '@/zod/annotation'
 import { z } from 'zod'
 import { localizedText } from './localized-text'
 
@@ -7,6 +8,8 @@ import { localizedText } from './localized-text'
 export const baseSentenceSchema = z.object({
   content: z.string(),
   explanation: localizedText,
+  annotations: z.array(annotationSchema),
+  audio: z.string().optional(),
 })
 
 /**

@@ -40,3 +40,10 @@ export type Grammar = z.infer<typeof createGrammarSchema> & {
   id: number
   sentences?: z.infer<typeof sentenceSchema>[]
 }
+
+export function isVocabulary(knowledgePoint: KnowledgePoint): knowledgePoint is Vocabulary {
+  return knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY
+}
+export function isGrammar(knowledgePoint: KnowledgePoint): knowledgePoint is Grammar {
+  return knowledgePoint.type === KNOWLEDGE_POINT_TYPES.GRAMMAR
+}
