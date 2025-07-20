@@ -180,6 +180,7 @@ export async function createSentencesForLesson(lessonId: number) {
     logger.info(`No sentences generated for lesson ${lessonId}`)
     return
   }
+  logger.info(`Generated ${generatedSentences.length} sentences for lesson ${lessonId}`)
   for (const sentence of generatedSentences) {
     const { content, vocabularyIds, grammarIds, annotations, explanation } = sentence
 

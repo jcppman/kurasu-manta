@@ -1,4 +1,5 @@
 import db from '@/db'
+import { logger } from '@/lib/server/utils'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
@@ -85,6 +86,23 @@ interface KnowledgeBucket {
   grammar: Grammar[]
 }
 
+export async function validateSentence(
+  sentence: Omit<GeneratedSentence, 'annotations'>
+): Promise<boolean> {
+  // evaluate if the sentence is valid and is not too similar to existing sentences
+  // get existing sentences from the database
+  const courseContentService = new CourseContentService(db)
+  const existingSentences = (
+    await Promise.all(
+      sentence.vocabularyIds.map((vId) =>
+        courseContentService.getVocabularyById(vId, { withSentences: true })
+      )
+    )
+  ).flatMap((v) => v?.sentences ?? [])
+  // if equal, unqualify the sentence
+  return existingSentences.some((s) => s.content.trim() === sentence.content.trim())
+}
+
 export interface GenerateSentencesForScopeParameters {
   amount: number
   buckets: {
@@ -151,6 +169,7 @@ Create sentences that are clear, useful, and appropriate for students at this le
     object: { sentences },
   } = await generateObject({
     model: openai('gpt-4o'),
+    temperature: 1,
     prompt,
     schema: z.object({
       sentences: z.array(
@@ -168,19 +187,22 @@ Create sentences that are clear, useful, and appropriate for students at this le
   })
 
   return Promise.all(
-    sentences.map(async (sentence) => {
-      return {
-        ...sentence,
-        annotations: await generateSentenceAnnotations(
-          sentence.content,
-          allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
-        ),
-      }
-    })
+    sentences
+      .filter((sentence) => validateSentence(sentence))
+      .map(async (sentence) => {
+        return {
+          ...sentence,
+          annotations: await generateSentenceAnnotations(
+            sentence.content,
+            allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
+          ),
+        }
+      })
   )
 }
 
 const SENTENCE_COUNT_PER_LESSON = 10
+const SENTENCE_COUNT_PER_KNOWLEDGE_POINT = 5
 export async function generateSentencesForLesson(
   lessonId: number,
   amount = SENTENCE_COUNT_PER_LESSON
@@ -200,7 +222,8 @@ export async function generateSentencesForLesson(
   const params = targetLesson.knowledgePoints.reduce(
     (accum, curr) => {
       const count = countMap.get(curr.id) ?? 0
-      const ratio = (amount - count) / amount
+      const ratio =
+        (SENTENCE_COUNT_PER_KNOWLEDGE_POINT - count) / SENTENCE_COUNT_PER_KNOWLEDGE_POINT
       if (ratio >= 0.6) {
         if (isVocabulary(curr)) {
           accum.buckets.urgent.vocabularies.push(curr)
@@ -239,6 +262,23 @@ export async function generateSentencesForLesson(
         },
       },
     } as GenerateSentencesForScopeParameters
+  )
+
+  // report the number of vocabularies and grammar in each bucket
+  logger.info(
+    `Generating sentences for lesson: ${JSON.stringify(
+      {
+        lessonId,
+        urgentVocabularies: params.buckets.urgent.vocabularies.length,
+        urgentGrammar: params.buckets.urgent.grammar.length,
+        highVocabularies: params.buckets.high.vocabularies.length,
+        highGrammar: params.buckets.high.grammar.length,
+        lowVocabularies: params.buckets.low.vocabularies.length,
+        lowGrammar: params.buckets.low.grammar.length,
+      },
+      null,
+      2
+    )}`
   )
 
   return generateSentencesFromPrioritizedBuckets(params)

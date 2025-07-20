@@ -192,8 +192,13 @@ export class CourseContentService {
     }
   }
 
-  async getVocabularyById(id: number): Promise<Vocabulary | null> {
-    const vocabulary = await this.knowledgeRepository.getById(id)
+  async getVocabularyById(
+    id: number,
+    options: { withSentences?: boolean } = {}
+  ): Promise<Vocabulary | null> {
+    const vocabulary = await this.knowledgeRepository.getById(id, {
+      includeSentences: options.withSentences,
+    })
     if (!vocabulary || vocabulary.type !== KNOWLEDGE_POINT_TYPES.VOCABULARY) {
       return null
     }
