@@ -18,11 +18,6 @@
       "require": "./build/mapper/*.js",
       "import": "./build/mapper/*.mjs"
     },
-    "./repository/*": {
-      "types": "./build/repository/*.d.ts",
-      "require": "./build/repository/*.js",
-      "import": "./build/repository/*.mjs"
-    },
     "./service/*": {
       "types": "./build/service/*.d.ts",
       "require": "./build/service/*.js",

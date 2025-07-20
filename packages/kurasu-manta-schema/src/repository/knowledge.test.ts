@@ -31,6 +31,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
       const sentence = await sentenceRepo.create({
         content: 'こんにちは、田中さん。',
         explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
+        annotations: [],
       })
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
 
@@ -66,10 +67,12 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         const sentence1 = await sentenceRepo.create({
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
+          annotations: [],
         })
         const sentence2 = await sentenceRepo.create({
           content: 'こんにちは、皆さん。',
           explanation: { en: 'Hello, everyone.', ja: 'こんにちは、皆さん。' },
+          annotations: [],
         })
 
         await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp.id)
@@ -171,6 +174,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         const sentence = await sentenceRepo.create({
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
+          annotations: [],
         })
         await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp1.id)
 
@@ -241,6 +245,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         const sentence = await sentenceRepo.create({
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
+          annotations: [],
         })
         await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
 

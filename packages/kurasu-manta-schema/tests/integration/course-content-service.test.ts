@@ -64,6 +64,7 @@ test('CourseContentService', async (t) => {
   const createTestSentence = (content: string): CreateSentence => ({
     content,
     explanation: mockExplanation,
+    annotations: [],
   })
 
   // Setup before each test
@@ -883,6 +884,226 @@ test('CourseContentService', async (t) => {
       assert.strictEqual(result.get(kp1.id), 2)
       assert.strictEqual(result.get(kp2.id), 1)
       assert.strictEqual(result.get(kp3.id), 0)
+    })
+  })
+
+  // Tests for createSentenceWithKnowledgePoints
+  await t.test('createSentenceWithKnowledgePoints', async (t) => {
+    await t.test('should create a sentence and associate it with knowledge points', async () => {
+      // Create knowledge points
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(1, '学校'))
+      const grammar = await knowledgeRepo.create(createGrammarPoint(1, 'に行く'))
+
+      // Create sentence with knowledge point associations
+      const sentenceData = createTestSentence('私は学校に行く')
+      const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
+        sentenceData,
+        [vocab.id, grammar.id]
+      )
+
+      // Assertions
+      assert.ok(createdSentence, 'Sentence should be created')
+      assert.strictEqual(createdSentence.content, '私は学校に行く', 'Content should match')
+      assert.deepStrictEqual(
+        createdSentence.explanation,
+        mockExplanation,
+        'Explanation should match'
+      )
+      assert.strictEqual(createdSentence.annotations.length, 0, 'Should have no annotations')
+
+      // Verify associations were created
+      const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
+        createdSentence.id
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints.length,
+        2,
+        'Should have 2 associated knowledge points'
+      )
+
+      const knowledgePointContents = associatedKnowledgePoints.map((kp) => kp.content)
+      assert.ok(knowledgePointContents.includes('学校'), 'Should include vocabulary')
+      assert.ok(knowledgePointContents.includes('に行く'), 'Should include grammar')
+    })
+
+    await t.test('should handle sentence creation with no knowledge points', async () => {
+      // Create sentence without knowledge point associations
+      const sentenceData = createTestSentence('これは単純な文です')
+      const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
+        sentenceData,
+        []
+      )
+
+      // Assertions
+      assert.ok(createdSentence, 'Sentence should be created')
+      assert.strictEqual(createdSentence.content, 'これは単純な文です', 'Content should match')
+
+      // Verify no associations were created
+      const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
+        createdSentence.id
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints.length,
+        0,
+        'Should have no associated knowledge points'
+      )
+    })
+
+    await t.test('should handle sentence creation with many knowledge points', async () => {
+      // Create multiple knowledge points
+      const knowledgePoints = await Promise.all([
+        knowledgeRepo.create(createVocabularyPoint(1, '私')),
+        knowledgeRepo.create(createVocabularyPoint(1, '学校')),
+        knowledgeRepo.create(createVocabularyPoint(1, '図書館')),
+        knowledgeRepo.create(createGrammarPoint(1, 'と')),
+        knowledgeRepo.create(createGrammarPoint(1, 'に行く')),
+      ])
+
+      // Create sentence with all knowledge points
+      const sentenceData = createTestSentence('私は学校と図書館に行く')
+      const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
+        sentenceData,
+        knowledgePoints.map((kp) => kp.id)
+      )
+
+      // Assertions
+      assert.ok(createdSentence, 'Sentence should be created')
+      assert.strictEqual(createdSentence.content, '私は学校と図書館に行く', 'Content should match')
+
+      // Verify all associations were created
+      const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
+        createdSentence.id
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints.length,
+        5,
+        'Should have 5 associated knowledge points'
+      )
+
+      const knowledgePointContents = associatedKnowledgePoints.map((kp) => kp.content)
+      assert.ok(knowledgePointContents.includes('私'), 'Should include 私')
+      assert.ok(knowledgePointContents.includes('学校'), 'Should include 学校')
+      assert.ok(knowledgePointContents.includes('図書館'), 'Should include 図書館')
+      assert.ok(knowledgePointContents.includes('と'), 'Should include と')
+      assert.ok(knowledgePointContents.includes('に行く'), 'Should include に行く')
+    })
+
+    await t.test('should handle sentence with annotations', async () => {
+      // Create knowledge point
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(1, '本'))
+
+      // Create sentence with annotations
+      const sentenceDataWithAnnotations: CreateSentence = {
+        content: '私は本を読む',
+        explanation: mockExplanation,
+        annotations: [
+          {
+            loc: 2,
+            len: 1,
+            type: 'vocabulary',
+            content: '本',
+            id: vocab.id,
+          },
+        ],
+      }
+
+      const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
+        sentenceDataWithAnnotations,
+        [vocab.id]
+      )
+
+      // Assertions
+      assert.ok(createdSentence, 'Sentence should be created')
+      assert.strictEqual(createdSentence.content, '私は本を読む', 'Content should match')
+      assert.strictEqual(createdSentence.annotations.length, 1, 'Should have 1 annotation')
+      assert.strictEqual(
+        createdSentence.annotations[0]?.type,
+        'vocabulary',
+        'Annotation type should match'
+      )
+      assert.strictEqual(
+        createdSentence.annotations[0]?.content,
+        '本',
+        'Annotation content should match'
+      )
+
+      // Verify association was created
+      const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
+        createdSentence.id
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints.length,
+        1,
+        'Should have 1 associated knowledge point'
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints[0]?.content,
+        '本',
+        'Should be associated with 本'
+      )
+    })
+
+    await t.test('should handle duplicate knowledge point IDs gracefully', async () => {
+      // Create knowledge point
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(1, '猫'))
+
+      // Create sentence with duplicate knowledge point IDs
+      const sentenceData = createTestSentence('猫が好きです')
+      const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
+        sentenceData,
+        [vocab.id, vocab.id, vocab.id] // Duplicates
+      )
+
+      // Assertions
+      assert.ok(createdSentence, 'Sentence should be created')
+      assert.strictEqual(createdSentence.content, '猫が好きです', 'Content should match')
+
+      // Verify only one association was created (due to unique constraint)
+      const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
+        createdSentence.id
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints.length,
+        1,
+        'Should have 1 associated knowledge point'
+      )
+      assert.strictEqual(
+        associatedKnowledgePoints[0]?.content,
+        '猫',
+        'Should be associated with 猫'
+      )
+    })
+
+    await t.test('should integrate with sentence counting functionality', async () => {
+      // Create knowledge points
+      const kp1 = await knowledgeRepo.create(createVocabularyPoint(1, '犬'))
+      const kp2 = await knowledgeRepo.create(createVocabularyPoint(1, '鳥'))
+
+      // Verify initial counts are zero
+      let counts = await courseContentService.getSentenceCountsByKnowledgePointIds([kp1.id, kp2.id])
+      assert.strictEqual(counts.get(kp1.id), 0, 'Initial count should be 0')
+      assert.strictEqual(counts.get(kp2.id), 0, 'Initial count should be 0')
+
+      // Create first sentence with both knowledge points
+      await courseContentService.createSentenceWithKnowledgePoints(
+        createTestSentence('犬と鳥がいます'),
+        [kp1.id, kp2.id]
+      )
+
+      // Verify counts increased
+      counts = await courseContentService.getSentenceCountsByKnowledgePointIds([kp1.id, kp2.id])
+      assert.strictEqual(counts.get(kp1.id), 1, 'Count for kp1 should be 1')
+      assert.strictEqual(counts.get(kp2.id), 1, 'Count for kp2 should be 1')
+
+      // Create second sentence with only first knowledge point
+      await courseContentService.createSentenceWithKnowledgePoints(createTestSentence('犬が走る'), [
+        kp1.id,
+      ])
+
+      // Verify counts updated correctly
+      counts = await courseContentService.getSentenceCountsByKnowledgePointIds([kp1.id, kp2.id])
+      assert.strictEqual(counts.get(kp1.id), 2, 'Count for kp1 should be 2')
+      assert.strictEqual(counts.get(kp2.id), 1, 'Count for kp2 should remain 1')
     })
   })
 })

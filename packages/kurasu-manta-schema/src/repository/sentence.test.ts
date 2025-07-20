@@ -21,11 +21,13 @@ test('SentenceRepository', async (t) => {
   const createSentenceData: CreateSentence = {
     content: 'これはテストの文です',
     explanation: mockExplanation,
+    annotations: [],
   }
 
   const createMinimalSentence: CreateSentence = {
     content: 'シンプルな文',
     explanation: { en: 'Simple sentence', cn: '简单句子' },
+    annotations: [],
   }
 
   const createKnowledgePoint = (content: string) => ({
@@ -103,6 +105,7 @@ test('SentenceRepository', async (t) => {
         await sentenceRepo.create({
           content: `テスト文 ${i + 1}`,
           explanation: { en: `Test sentence ${i + 1}` },
+          annotations: [],
         })
       }
 
@@ -228,10 +231,12 @@ test('SentenceRepository', async (t) => {
       const sentence1 = await sentenceRepo.create({
         content: '文1',
         explanation: { en: 'Sentence 1', cn: '句子1' },
+        annotations: [],
       })
       const sentence2 = await sentenceRepo.create({
         content: '文2',
         explanation: { en: 'Sentence 2', cn: '句子2' },
+        annotations: [],
       })
       const kp1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
       const kp2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
@@ -259,10 +264,12 @@ test('SentenceRepository', async (t) => {
       const sentence1 = await sentenceRepo.create({
         content: '文1',
         explanation: { en: 'Sentence 1', cn: '句子1' },
+        annotations: [],
       })
       const sentence2 = await sentenceRepo.create({
         content: '文2',
         explanation: { en: 'Sentence 2', cn: '句子2' },
+        annotations: [],
       })
 
       await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp.id)
@@ -282,14 +289,17 @@ test('SentenceRepository', async (t) => {
       const sentence1 = await sentenceRepo.create({
         content: '文1',
         explanation: { en: 'Sentence 1', cn: '句子1' },
+        annotations: [],
       })
       const sentence2 = await sentenceRepo.create({
         content: '文2',
         explanation: { en: 'Sentence 2', cn: '句子2' },
+        annotations: [],
       })
       const sentence3 = await sentenceRepo.create({
         content: '文3',
         explanation: { en: 'Sentence 3', cn: '句子3' },
+        annotations: [],
       })
 
       // kp1: 3 sentences, kp2: 1 sentence, kp3: 0 sentences
@@ -319,6 +329,7 @@ test('SentenceRepository', async (t) => {
       const sentence = await sentenceRepo.create({
         content: '文',
         explanation: { en: 'Sentence', cn: '句子' },
+        annotations: [],
       })
 
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
