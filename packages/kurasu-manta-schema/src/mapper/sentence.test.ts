@@ -21,6 +21,7 @@ test('sentence mappers', async (t) => {
     explanation: mockExplanation,
     annotations: mockAnnotations,
     audio: 'test-audio.mp3',
+    minLessonNumber: 1,
   }
 
   const sentence: Sentence = {
@@ -29,6 +30,7 @@ test('sentence mappers', async (t) => {
     explanation: mockExplanation,
     annotations: mockAnnotations,
     audio: 'test-audio.mp3',
+    minLessonNumber: 1,
     createdAt: '2024-01-01T00:00:00.000Z',
     updatedAt: '2024-01-01T00:00:00.000Z',
   }
@@ -39,6 +41,7 @@ test('sentence mappers', async (t) => {
     explanation: mockExplanation,
     annotations: mockAnnotations,
     audio: 'test-audio.mp3' as string | null,
+    minLessonNumber: 1,
     createdAt: '2024-01-01T00:00:00.000Z',
     updatedAt: '2024-01-01T00:00:00.000Z',
   }
@@ -51,6 +54,7 @@ test('sentence mappers', async (t) => {
       explanation: mockExplanation,
       annotations: mockAnnotations,
       audio: 'test-audio.mp3',
+      minLessonNumber: 1,
     })
   })
 
@@ -59,6 +63,7 @@ test('sentence mappers', async (t) => {
       content: 'シンプルな文',
       explanation: { en: 'Simple sentence', cn: '简单句子' },
       annotations: [],
+      minLessonNumber: 2,
     }
 
     const result = mapCreateSentenceToDrizzle(minimalSentence)
@@ -68,6 +73,7 @@ test('sentence mappers', async (t) => {
       explanation: { en: 'Simple sentence', cn: '简单句子' },
       annotations: [],
       audio: undefined,
+      minLessonNumber: 2,
     })
   })
 
@@ -80,6 +86,7 @@ test('sentence mappers', async (t) => {
       explanation: mockExplanation,
       annotations: mockAnnotations,
       audio: 'test-audio.mp3',
+      minLessonNumber: 1,
     })
   })
 
@@ -123,6 +130,7 @@ test('sentence mappers', async (t) => {
     assert.deepStrictEqual(sentenceFromDrizzle.explanation, createSentence.explanation)
     assert.deepStrictEqual(sentenceFromDrizzle.annotations, createSentence.annotations)
     assert.strictEqual(sentenceFromDrizzle.audio, createSentence.audio)
+    assert.strictEqual(sentenceFromDrizzle.minLessonNumber, createSentence.minLessonNumber)
     assert.strictEqual(sentenceFromDrizzle.id, 1)
   })
 })

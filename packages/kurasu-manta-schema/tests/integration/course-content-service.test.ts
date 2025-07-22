@@ -65,6 +65,7 @@ test('CourseContentService', async (t) => {
     content,
     explanation: mockExplanation,
     annotations: [],
+    minLessonNumber: 1,
   })
 
   // Setup before each test
@@ -91,7 +92,11 @@ test('CourseContentService', async (t) => {
       await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Get the lesson with content
-      const lessonWithContent = await courseContentService.getLessonWithContent(lesson.id)
+      const lessonWithContent = await courseContentService.getLessonById(lesson.id, {
+        withContent: true,
+      })
+
+      assert.ok(lessonWithContent)
 
       // Assertions
       assert.ok(lessonWithContent, 'Lesson with content should exist')
@@ -113,9 +118,12 @@ test('CourseContentService', async (t) => {
       const lesson = await lessonRepo.create(createLesson(2))
 
       // Get the lesson with content
-      const lessonWithContent = await courseContentService.getLessonWithContent(lesson.id)
+      const lessonWithContent = await courseContentService.getLessonById(lesson.id, {
+        withContent: true,
+      })
 
       // Assertions
+      assert.ok(lessonWithContent)
       assert.ok(lessonWithContent, 'Lesson with content should exist')
       assert.strictEqual(lessonWithContent?.id, lesson.id, 'Lesson ID should match')
       assert.strictEqual(
@@ -127,7 +135,7 @@ test('CourseContentService', async (t) => {
 
     await t.test('should return null for a non-existent lesson', async () => {
       // Get a non-existent lesson
-      const lessonWithContent = await courseContentService.getLessonWithContent(999)
+      const lessonWithContent = await courseContentService.getLessonById(999, { withContent: true })
 
       // Assertions
       assert.strictEqual(lessonWithContent, null, 'Should return null for non-existent lesson')
@@ -996,6 +1004,7 @@ test('CourseContentService', async (t) => {
       const sentenceDataWithAnnotations: CreateSentence = {
         content: '私は本を読む',
         explanation: mockExplanation,
+        minLessonNumber: 1,
         annotations: [
           {
             loc: 2,
@@ -1104,6 +1113,141 @@ test('CourseContentService', async (t) => {
       counts = await courseContentService.getSentenceCountsByKnowledgePointIds([kp1.id, kp2.id])
       assert.strictEqual(counts.get(kp1.id), 2, 'Count for kp1 should be 2')
       assert.strictEqual(counts.get(kp2.id), 1, 'Count for kp2 should remain 1')
+    })
+  })
+
+  // Tests for getLessonsInScope
+  await t.test('getLessonsInScope', async (t) => {
+    await t.test('should return empty array when no lessons exist', async () => {
+      const result = await courseContentService.getLessonsInScope(5)
+
+      assert.strictEqual(result.length, 0, 'Should return empty array when no lessons exist')
+    })
+
+    await t.test(
+      'should return lessons with number less than or equal to given number',
+      async () => {
+        // Create test lessons
+        const lesson1 = await lessonRepo.create(createLesson(1))
+        const lesson3 = await lessonRepo.create(createLesson(3))
+        const lesson5 = await lessonRepo.create(createLesson(5))
+        const lesson7 = await lessonRepo.create(createLesson(7))
+
+        // Test with scope = 5
+        const result = await courseContentService.getLessonsInScope(5)
+
+        assert.strictEqual(result.length, 3, 'Should return 3 lessons')
+
+        const lessonNumbers = result.map((lesson) => lesson.number).sort()
+        assert.deepStrictEqual(lessonNumbers, [1, 3, 5], 'Should return lessons 1, 3, and 5')
+      }
+    )
+
+    await t.test('should handle boundary conditions correctly', async () => {
+      // Create lessons at boundaries
+      await lessonRepo.create(createLesson(1))
+      await lessonRepo.create(createLesson(5))
+      await lessonRepo.create(createLesson(10))
+
+      // Test exact match boundary
+      const resultExact = await courseContentService.getLessonsInScope(5)
+      assert.strictEqual(resultExact.length, 2, 'Should include lesson with exact number match')
+
+      const exactNumbers = resultExact.map((lesson) => lesson.number).sort()
+      assert.deepStrictEqual(exactNumbers, [1, 5], 'Should include lessons 1 and 5')
+
+      // Test lower boundary
+      const resultLower = await courseContentService.getLessonsInScope(1)
+      assert.strictEqual(resultLower.length, 1, 'Should include only lesson 1')
+      assert.strictEqual(resultLower[0]?.number, 1, 'Should be lesson 1')
+
+      // Test no match
+      const resultNone = await courseContentService.getLessonsInScope(0)
+      assert.strictEqual(resultNone.length, 0, 'Should return no lessons when number is too low')
+    })
+
+    await t.test('should integrate with lesson creation workflow', async () => {
+      // Create lessons using the course content service
+      const knowledgePoints = [
+        createVocabularyPoint(1, 'スコープテスト1'),
+        createVocabularyPoint(3, 'スコープテスト3'),
+        createVocabularyPoint(5, 'スコープテスト5'),
+      ]
+
+      const lessonsWithContent =
+        await courseContentService.createKnowledgePointsWithLesson(knowledgePoints)
+
+      // Verify lessons were created
+      assert.strictEqual(lessonsWithContent.size, 3, 'Should create 3 lessons')
+
+      // Test scope filtering
+      const lessonsInScope = await courseContentService.getLessonsInScope(3)
+      assert.strictEqual(lessonsInScope.length, 2, 'Should return 2 lessons in scope')
+
+      const scopeNumbers = lessonsInScope.map((lesson) => lesson.number).sort()
+      assert.deepStrictEqual(scopeNumbers, [1, 3], 'Should include lessons 1 and 3')
+    })
+
+    await t.test('should preserve lesson properties correctly', async () => {
+      const originalLesson = await lessonRepo.create({
+        number: 3,
+        title: 'Scope Test Lesson',
+        description: 'A test lesson for scope functionality',
+      })
+
+      const result = await courseContentService.getLessonsInScope(5)
+
+      assert.strictEqual(result.length, 1, 'Should return one lesson')
+
+      const returnedLesson = result[0]
+      assert.ok(returnedLesson, 'Lesson should exist')
+      assert.strictEqual(returnedLesson.id, originalLesson.id, 'ID should match')
+      assert.strictEqual(returnedLesson.number, originalLesson.number, 'Number should match')
+      assert.strictEqual(returnedLesson.title, originalLesson.title, 'Title should match')
+      assert.strictEqual(
+        returnedLesson.description,
+        originalLesson.description,
+        'Description should match'
+      )
+    })
+
+    await t.test('should work with large datasets', async () => {
+      // Create multiple lessons using both direct repository and service methods
+      for (let i = 1; i <= 10; i++) {
+        await lessonRepo.create(createLesson(i))
+      }
+
+      // Also create some lessons through the service with knowledge points
+      const knowledgePoints = [
+        createVocabularyPoint(15, 'サービステスト'),
+        createVocabularyPoint(20, 'サービステスト2'),
+      ]
+      await courseContentService.createKnowledgePointsWithLesson(knowledgePoints)
+
+      // Test filtering with different scopes
+      const scope10 = await courseContentService.getLessonsInScope(10)
+      assert.strictEqual(scope10.length, 10, 'Should return 10 lessons for scope 10')
+
+      const scope15 = await courseContentService.getLessonsInScope(15)
+      assert.strictEqual(scope15.length, 11, 'Should return 11 lessons for scope 15')
+
+      const scope25 = await courseContentService.getLessonsInScope(25)
+      assert.strictEqual(scope25.length, 12, 'Should return all 12 lessons for scope 25')
+    })
+
+    await t.test('should integrate with other service methods', async () => {
+      // Create lesson with knowledge points
+      const lesson = await lessonRepo.create(createLesson(2))
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(2, '統合テスト'))
+      await knowledgeRepo.associateWithLesson(vocab.id, lesson.id)
+
+      // Verify lesson can be retrieved through different methods
+      const lessonById = await courseContentService.getLessonById(lesson.id)
+      assert.ok(lessonById, 'Should find lesson by ID')
+
+      const lessonsInScope = await courseContentService.getLessonsInScope(5)
+      assert.strictEqual(lessonsInScope.length, 1, 'Should find lesson in scope')
+      assert.strictEqual(lessonsInScope[0]?.id, lesson.id, 'Should be the same lesson')
     })
   })
 })
