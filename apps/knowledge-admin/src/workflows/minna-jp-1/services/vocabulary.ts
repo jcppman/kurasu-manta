@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai'
 import { generateObject } from 'ai'
-import type { MinaVocabulary } from '../data'
+import type { MinaVocabulary } from '../content'
 
 export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> {
   const ret = await generateObject({

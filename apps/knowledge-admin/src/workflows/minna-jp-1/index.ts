@@ -9,15 +9,12 @@ import {
 } from './services/data'
 
 export async function execute() {
-  // biome-ignore lint/correctness/noConstantCondition: <explanation>
-  if (false) {
-    await cleanGrammar()
-    await createGrammarLessons()
-    await cleanVocabularies()
-    await createVocabularies()
-    await generateVocabularyAudioClips()
-  }
-  await createSentencesForLesson(1)
+  await cleanGrammar()
+  await createGrammarLessons()
+  await cleanVocabularies()
+  await createVocabularies()
+  // await generateVocabularyAudioClips()
+  // await createSentencesForLesson(1)
 }
 
 execute()

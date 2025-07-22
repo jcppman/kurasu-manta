@@ -1,16 +1,16 @@
 import db from '@/db'
 import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/db/schema'
 import { logger } from '@/lib/server/utils'
+import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
+import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
+import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
+import { eq, inArray } from 'drizzle-orm'
 import {
   type MinaGrammar,
   type MinaVocabulary,
   getGrammarData,
   getVocData,
-} from '@/workflows/minna-jp-1/data'
-import { generateSentencesForLesson } from '@/workflows/minna-jp-1/services/sentence'
-import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
-import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
-import { eq, inArray } from 'drizzle-orm'
+} from 'src/workflows/minna-jp-1/content'
 
 export async function cleanVocabularies() {
   logger.info('Resetting database - dropping vocabulary knowledge points...')
@@ -172,15 +172,15 @@ export async function createGrammarLessons() {
   logger.info('All grammar lessons created successfully')
 }
 
-export async function createSentencesForLesson(lessonId: number) {
+export async function createSentencesForLesson(lessonNumber: number) {
   const courseContentService = new CourseContentService(db)
 
-  const generatedSentences = await generateSentencesForLesson(lessonId)
+  const generatedSentences = await generateSentencesForLessonNumber(lessonNumber)
   if (generatedSentences.length === 0) {
-    logger.info(`No sentences generated for lesson ${lessonId}`)
+    logger.info(`No sentences generated for lesson number ${lessonNumber}`)
     return
   }
-  logger.info(`Generated ${generatedSentences.length} sentences for lesson ${lessonId}`)
+  logger.info(`Generated ${generatedSentences.length} sentences for lesson ${lessonNumber}`)
   for (const sentence of generatedSentences) {
     const { content, vocabularyIds, grammarIds, annotations, explanation } = sentence
 
@@ -193,10 +193,11 @@ export async function createSentencesForLesson(lessonId: number) {
         content,
         explanation,
         annotations,
+        minLessonNumber: lessonNumber,
       },
       allKnowledgePointIds
     )
 
-    logger.info(`Created sentence for lesson ${lessonId}: "${content}"`)
+    logger.info(`Created sentence for lesson number ${lessonNumber}: "${content}"`)
   }
 }
