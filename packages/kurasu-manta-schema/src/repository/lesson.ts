@@ -3,7 +3,7 @@ import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import { mapCreateLessonToDrizzle, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mapper/lesson'
 import type { CreateLesson, Lesson } from '@/zod/lesson'
-import { eq } from 'drizzle-orm'
+import { eq, lte } from 'drizzle-orm'
 
 /**
  * Repository for lessons
@@ -99,5 +99,23 @@ export class LessonRepository {
       .where(eq(lessonKnowledgePointsTable.lessonId, lessonId))
 
     return rows.map((row: { knowledgePointId: number }) => row.knowledgePointId)
+  }
+
+  /**
+   * Get lessons by conditions
+   */
+  async getLessonsByConditions(conditions: {
+    lessonNumberLessThan?: number
+  }): Promise<Lesson[]> {
+    let rows: (typeof lessonsTable.$inferSelect)[]
+    const query = this.db.select().from(lessonsTable)
+
+    if (conditions.lessonNumberLessThan !== undefined) {
+      rows = await query.where(lte(lessonsTable.number, conditions.lessonNumberLessThan))
+    } else {
+      rows = await query
+    }
+
+    return rows.map(mapDrizzleToLesson)
   }
 }

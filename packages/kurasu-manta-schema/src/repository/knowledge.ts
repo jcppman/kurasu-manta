@@ -51,11 +51,8 @@ export class KnowledgeRepository {
   /**
    * Get a knowledge point by ID
    */
-  async getById(
-    id: number,
-    options?: { includeSentences?: boolean }
-  ): Promise<KnowledgePoint | null> {
-    if (options?.includeSentences) {
+  async getById(id: number, options?: { withSentences?: boolean }): Promise<KnowledgePoint | null> {
+    if (options?.withSentences) {
       const result = await this.db.query.knowledgePointsTable.findFirst({
         where: eq(knowledgePointsTable.id, id),
         with: {
@@ -85,9 +82,9 @@ export class KnowledgeRepository {
    */
   async getByLessonId(
     lessonId: number,
-    options?: { includeSentences?: boolean }
+    options?: { withSentences?: boolean }
   ): Promise<KnowledgePoint[]> {
-    if (options?.includeSentences) {
+    if (options?.withSentences) {
       // First get the knowledge point IDs for this lesson
       const lessonKnowledgePoints = await this.db
         .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
@@ -207,7 +204,7 @@ export class KnowledgeRepository {
       hasAudio?: boolean
     },
     pagination: PaginationParams = { page: 1, limit: 20 },
-    options?: { includeSentences?: boolean }
+    options?: { withSentences?: boolean }
   ): Promise<PaginatedResult<KnowledgePoint>> {
     // Set default pagination values
     const page = pagination.page || 1
@@ -244,7 +241,7 @@ export class KnowledgeRepository {
     }
 
     // Fetch sentences if requested
-    if (options?.includeSentences && items.length > 0) {
+    if (options?.withSentences && items.length > 0) {
       // Get knowledge points with sentences using relational query
       const knowledgePointsWithSentences = await this.db.query.knowledgePointsTable.findMany({
         where: sql`${knowledgePointsTable.id} IN (${items.map((item) => item.id).join(',')})`,

@@ -33,13 +33,26 @@ export class CourseContentService {
   }
 
   /**
-   * Get a lesson by ID with its knowledge points
+   * Get a lesson by ID, optionally with its knowledge points
    */
-  async getLessonWithContent(lessonId: number): Promise<LessonWithContent | null> {
+  async getLessonById(
+    lessonId: number,
+    options: { withContent: true }
+  ): Promise<LessonWithContent | null>
+  async getLessonById(lessonId: number, options?: { withContent?: false }): Promise<Lesson | null>
+  async getLessonById(
+    lessonId: number,
+    options: { withContent?: boolean } = {}
+  ): Promise<Lesson | LessonWithContent | null> {
     // Get the lesson by ID
     const lesson = await this.lessonRepository.getById(lessonId)
     if (!lesson) {
       return null
+    }
+
+    // If content is not requested, return just the lesson
+    if (!options.withContent) {
+      return lesson
     }
 
     // Get the knowledge points for this lesson
@@ -197,7 +210,7 @@ export class CourseContentService {
     options: { withSentences?: boolean } = {}
   ): Promise<Vocabulary | null> {
     const vocabulary = await this.knowledgeRepository.getById(id, {
-      includeSentences: options.withSentences,
+      withSentences: options.withSentences,
     })
     if (!vocabulary || vocabulary.type !== KNOWLEDGE_POINT_TYPES.VOCABULARY) {
       return null
@@ -260,5 +273,14 @@ export class CourseContentService {
     }
 
     return createdSentence
+  }
+
+  /**
+   * Get lessons that are in scope (lesson number less than or equal to given lesson number)
+   */
+  async getLessonsInScope(lessonNumber: number): Promise<Lesson[]> {
+    return this.lessonRepository.getLessonsByConditions({
+      lessonNumberLessThan: lessonNumber,
+    })
   }
 }
