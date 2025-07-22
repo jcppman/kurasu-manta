@@ -1,0 +1,372 @@
+[
+  {
+    "lesson": 1,
+    "content": "～は～です。",
+    "explanation": "表示肯定，~是~（人名、國籍、職業、年齡）"
+  },
+  {
+    "lesson": 1,
+    "content": "～は～じゃありません。",
+    "explanation": "表示否定，~不是~"
+  },
+  {
+    "lesson": 1,
+    "content": "～は～ですか。",
+    "explanation": "~是~嗎？"
+  },
+  {
+    "lesson": 1,
+    "content": "名詞の名詞",
+    "explanation": ""
+  },
+  {
+    "lesson": 1,
+    "content": "～も～です。",
+    "explanation": "表示同前，也"
+  },
+  {
+    "lesson": 1,
+    "content": "～歳",
+    "explanation": "年齡的說法"
+  },
+  {
+    "lesson": 2,
+    "content": "これ／それ／あれ",
+    "explanation": ""
+  },
+  {
+    "lesson": 2,
+    "content": "～は～ですか、～ですか。",
+    "explanation": "~是~，或是~"
+  },
+  {
+    "lesson": 2,
+    "content": "何の～",
+    "explanation": "詢問內容、種類"
+  },
+  {
+    "lesson": 2,
+    "content": "誰の～",
+    "explanation": "詢問物品所有者，是誰的呢？"
+  },
+  {
+    "lesson": 2,
+    "content": "代替名詞使用的「の」",
+    "explanation": ""
+  },
+  {
+    "lesson": 2,
+    "content": "この／その／あの  ＋名詞",
+    "explanation": ""
+  },
+  {
+    "lesson": 3,
+    "content": "ここ／そこ／あそこ",
+    "explanation": ""
+  },
+  {
+    "lesson": 3,
+    "content": "名詞はどこですか。",
+    "explanation": "用於詢問所在的場所"
+  },
+  {
+    "lesson": 3,
+    "content": "名詞は場所です。",
+    "explanation": "表示人、物所在的場所"
+  },
+  {
+    "lesson": 3,
+    "content": "こちら／そちら／あちら",
+    "explanation": ""
+  },
+  {
+    "lesson": 3,
+    "content": "どちらですか。",
+    "explanation": "問國家名、公司名、學校名時用「どちら」更有禮貌"
+  },
+  {
+    "lesson": 3,
+    "content": "どこの～",
+    "explanation": "製造生產國或生產公司（品牌）"
+  },
+  {
+    "lesson": 3,
+    "content": "いくらですか。",
+    "explanation": "價錢的講法"
+  },
+  {
+    "lesson": 4,
+    "content": "今　～時～分です。",
+    "explanation": "現在~點~分"
+  },
+  {
+    "lesson": 4,
+    "content": "～曜日",
+    "explanation": "星期~"
+  },
+  {
+    "lesson": 4,
+    "content": "～から～まで",
+    "explanation": "從~到~"
+  },
+  {
+    "lesson": 4,
+    "content": "動詞時態表現",
+    "explanation": ""
+  },
+  {
+    "lesson": 4,
+    "content": "時間に～ます。",
+    "explanation": "在~時間做~"
+  },
+  {
+    "lesson": 4,
+    "content": "時間から時間まで",
+    "explanation": "從~到~"
+  },
+  {
+    "lesson": 4,
+    "content": "動詞時態表現",
+    "explanation": ""
+  },
+  {
+    "lesson": 5,
+    "content": "～へ　行きます",
+    "explanation": "「へ」表示動作動作移動的方向，往~，朝~"
+  },
+  {
+    "lesson": 5,
+    "content": "～で　行きます",
+    "explanation": "移動交通工具的助詞「で」，使用～"
+  },
+  {
+    "lesson": 5,
+    "content": "～と　行きます",
+    "explanation": "「と」表示行為動作的共同者，和~"
+  },
+  {
+    "lesson": 5,
+    "content": "～に　行きます",
+    "explanation": "日期、月份等表現"
+  },
+  {
+    "lesson": 6,
+    "content": "名詞を動詞",
+    "explanation": "助詞「を」的用法"
+  },
+  {
+    "lesson": 6,
+    "content": "名詞をします",
+    "explanation": "做~"
+  },
+  {
+    "lesson": 6,
+    "content": "場所で動詞",
+    "explanation": "在（場所）~做~"
+  },
+  {
+    "lesson": 6,
+    "content": "動作1。それから、動作2",
+    "explanation": "連接兩個動作的「それから」"
+  },
+  {
+    "lesson": 6,
+    "content": "動詞ませんか。",
+    "explanation": "表示邀請，要不要（一起）~呢？"
+  },
+  {
+    "lesson": 6,
+    "content": "動詞ましょう。",
+    "explanation": "表示積極的提議、邀請"
+  },
+  {
+    "lesson": 7,
+    "content": "（道具）で～",
+    "explanation": "用~工具"
+  },
+  {
+    "lesson": 7,
+    "content": "（言語）で～",
+    "explanation": "用~語言"
+  },
+  {
+    "lesson": 7,
+    "content": "～は（言語）で～です",
+    "explanation": "~用~叫做~"
+  },
+  {
+    "lesson": 7,
+    "content": "に",
+    "explanation": "表示動作對象"
+  },
+  {
+    "lesson": 7,
+    "content": "授受表現",
+    "explanation": ""
+  },
+  {
+    "lesson": 7,
+    "content": "もう～ました",
+    "explanation": "已經~了"
+  },
+  {
+    "lesson": 8,
+    "content": "形容詞",
+    "explanation": ""
+  },
+  {
+    "lesson": 8,
+    "content": "形容詞の肯定句",
+    "explanation": ""
+  },
+  {
+    "lesson": 8,
+    "content": "形容詞の否定句",
+    "explanation": ""
+  },
+  {
+    "lesson": 8,
+    "content": "程度副詞 とても、あまり",
+    "explanation": ""
+  },
+  {
+    "lesson": 8,
+    "content": "そして／が",
+    "explanation": "不僅~，而且~／雖然，但是"
+  },
+  {
+    "lesson": 8,
+    "content": "どんな名詞ですか。",
+    "explanation": "什麼樣的（名詞）呢？"
+  },
+  {
+    "lesson": 8,
+    "content": "そうですね。",
+    "explanation": ""
+  },
+  {
+    "lesson": 9,
+    "content": "名詞が好きです。",
+    "explanation": "我喜歡~/不喜歡~"
+  },
+  {
+    "lesson": 9,
+    "content": "名詞が上手／下手です。",
+    "explanation": "對拿手/不拿手"
+  },
+  {
+    "lesson": 9,
+    "content": "名詞がわかります。",
+    "explanation": "懂"
+  },
+  {
+    "lesson": 9,
+    "content": "名詞があります。",
+    "explanation": "有~"
+  },
+  {
+    "lesson": 9,
+    "content": "～から、～。",
+    "explanation": "因為所以"
+  },
+  {
+    "lesson": 10,
+    "content": "あります、います",
+    "explanation": ""
+  },
+  {
+    "lesson": 10,
+    "content": "場所に 物が あります。",
+    "explanation": "在某處有某物"
+  },
+  {
+    "lesson": 10,
+    "content": "場所に 物が います。",
+    "explanation": "在某處有人、動物"
+  },
+  {
+    "lesson": 10,
+    "content": "方向、位置",
+    "explanation": ""
+  },
+  {
+    "lesson": 10,
+    "content": "物は 場所に あります。",
+    "explanation": "某物在某處"
+  },
+  {
+    "lesson": 10,
+    "content": "人・動物は 場所に います。",
+    "explanation": "人・動物在某處"
+  },
+  {
+    "lesson": 10,
+    "content": "～や～や～など",
+    "explanation": "有有等等"
+  },
+  {
+    "lesson": 10,
+    "content": "有無句、存在句",
+    "explanation": ""
+  },
+  {
+    "lesson": 11,
+    "content": "數量的説法",
+    "explanation": ""
+  },
+  {
+    "lesson": 11,
+    "content": "扁平、薄的東西",
+    "explanation": ""
+  },
+  {
+    "lesson": 11,
+    "content": "人數",
+    "explanation": ""
+  },
+  {
+    "lesson": 11,
+    "content": "動作的頻率",
+    "explanation": ""
+  },
+  {
+    "lesson": 11,
+    "content": "どのくらい",
+    "explanation": "詢問時間的長度"
+  },
+  {
+    "lesson": 11,
+    "content": "かかります",
+    "explanation": "花費（時間、金錢）"
+  },
+  {
+    "lesson": 12,
+    "content": "動詞、形容詞、名詞の形",
+    "explanation": ""
+  },
+  {
+    "lesson": 12,
+    "content": "な形容詞／名詞 過去形、過去否定形",
+    "explanation": ""
+  },
+  {
+    "lesson": 12,
+    "content": "い形容詞 過去形、過去否定形",
+    "explanation": ""
+  },
+  {
+    "lesson": 12,
+    "content": "ＡはＢより～",
+    "explanation": "比較"
+  },
+  {
+    "lesson": 12,
+    "content": "～と～と、どちらが～",
+    "explanation": "二個的選擇、～和～哪一個比較～"
+  },
+  {
+    "lesson": 12,
+    "content": "名詞で～が一番～です",
+    "explanation": "範圍內的選擇"
+  }
+]
