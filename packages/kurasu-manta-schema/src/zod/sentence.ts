@@ -10,6 +10,8 @@ export const baseSentenceSchema = z.object({
   explanation: localizedText,
   annotations: z.array(annotationSchema),
   audio: z.string().optional(),
+  // the lesson number this sentence generated for
+  minLessonNumber: z.number(),
 })
 
 /**
