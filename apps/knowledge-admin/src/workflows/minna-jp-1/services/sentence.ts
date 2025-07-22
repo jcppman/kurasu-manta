@@ -1,5 +1,11 @@
 import db from '@/db'
 import { logger } from '@/lib/server/utils'
+import {
+  GENERATED_SENTENCE_COUNT_PER_BATCH,
+  GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
+  MAX_LOW_PRIORITY_GRAMMAR,
+  MAX_LOW_PRIORITY_VOCABULARIES,
+} from '@/workflows/minna-jp-1/constants'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
@@ -12,6 +18,7 @@ import {
   isVocabulary,
 } from '@kurasu-manta/knowledge-schema/zod/knowledge'
 import { generateObject } from 'ai'
+import random from 'random'
 import { z } from 'zod'
 
 function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): string {
@@ -165,13 +172,14 @@ if false, provide a reason for the invalidity.
   return valid
 }
 
+interface PrioritizedBuckets {
+  urgent: KnowledgeBucket
+  high: KnowledgeBucket
+  low: KnowledgeBucket
+}
 export interface GenerateSentencesForScopeParameters {
   amount: number
-  buckets: {
-    urgent: KnowledgeBucket
-    high: KnowledgeBucket
-    low: KnowledgeBucket
-  }
+  buckets: PrioritizedBuckets
 }
 
 export async function generateSentencesFromPrioritizedBuckets({
@@ -263,85 +271,108 @@ Create sentences that are clear, useful, and appropriate for students at this le
   )
 }
 
-const SENTENCE_COUNT_PER_LESSON = 10
-const SENTENCE_COUNT_PER_KNOWLEDGE_POINT = 5
-export async function generateSentencesForLesson(
-  lessonId: number,
-  amount = SENTENCE_COUNT_PER_LESSON
-): Promise<GeneratedSentence[]> {
-  // TEMP: only get vocabularies and grammar for the target lesson
+async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<PrioritizedBuckets> {
   const courseContentService = new CourseContentService(db)
-  // get all vocabularies and grammar for lessons that number <= targetLesson
-  const targetLesson = await courseContentService.getLessonWithContent(lessonId)
-  if (!targetLesson) {
-    throw new Error(`Lesson with ID ${lessonId} not found`)
+
+  // get all lessons directly as there won't be too much
+  const lessons = await courseContentService.getLessonsInScope(lessonNumber)
+  const mustUseLessons = lessons.filter((l) => l.number === lessonNumber)
+
+  // collect must use lessons knowledge points first
+  const targetKnowledgePoints = (
+    await Promise.all(
+      mustUseLessons.flatMap((l) => courseContentService.getLessonById(l.id, { withContent: true }))
+    )
+  ).flatMap((l) => l?.knowledgePoints ?? [])
+
+  const nearbyLessons = lessons.filter((l) => l.number === lessonNumber - 1)
+  const nearbyKnowledgePoints = (
+    await Promise.all(
+      nearbyLessons.flatMap((l) => courseContentService.getLessonById(l.id, { withContent: true }))
+    )
+  ).flatMap((l) => l?.knowledgePoints ?? [])
+
+  targetKnowledgePoints.push(...nearbyKnowledgePoints)
+
+  const buckets: PrioritizedBuckets = {
+    urgent: {
+      vocabularies: [],
+      grammar: [],
+    },
+    high: {
+      vocabularies: [],
+      grammar: [],
+    },
+    low: {
+      vocabularies: [],
+      grammar: [],
+    },
   }
 
   // calculate weights
   const countMap = await courseContentService.getSentenceCountsByKnowledgePointIds(
-    targetLesson.knowledgePoints.map((k) => k.id)
+    targetKnowledgePoints.map((k) => k.id)
   )
-  const params = targetLesson.knowledgePoints.reduce(
-    (accum, curr) => {
-      const count = countMap.get(curr.id) ?? 0
-      const ratio =
-        (SENTENCE_COUNT_PER_KNOWLEDGE_POINT - count) / SENTENCE_COUNT_PER_KNOWLEDGE_POINT
-      if (ratio >= 0.6) {
-        if (isVocabulary(curr)) {
-          accum.buckets.urgent.vocabularies.push(curr)
-        } else if (isGrammar(curr)) {
-          accum.buckets.urgent.grammar.push(curr)
-        }
-      } else if (ratio >= 0.3) {
-        if (isVocabulary(curr)) {
-          accum.buckets.high.vocabularies.push(curr)
-        } else if (isGrammar(curr)) {
-          accum.buckets.high.grammar.push(curr)
-        }
-      } else {
-        if (isVocabulary(curr)) {
-          accum.buckets.low.vocabularies.push(curr)
-        } else if (isGrammar(curr)) {
-          accum.buckets.low.grammar.push(curr)
-        }
+  for (const curr of targetKnowledgePoints) {
+    const count = countMap.get(curr.id) ?? 0
+    const ratio =
+      (GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT - count) /
+      GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT
+    if (ratio >= 0.6) {
+      if (isVocabulary(curr)) {
+        buckets.urgent.vocabularies.push(curr)
+      } else if (isGrammar(curr)) {
+        buckets.urgent.grammar.push(curr)
       }
-      return accum
-    },
-    {
-      amount,
-      buckets: {
-        urgent: {
-          vocabularies: [],
-          grammar: [],
-        },
-        high: {
-          vocabularies: [],
-          grammar: [],
-        },
-        low: {
-          vocabularies: [],
-          grammar: [],
-        },
-      },
-    } as GenerateSentencesForScopeParameters
-  )
+    } else if (ratio >= 0.3) {
+      if (isVocabulary(curr)) {
+        buckets.high.vocabularies.push(curr)
+      } else if (isGrammar(curr)) {
+        buckets.high.grammar.push(curr)
+      }
+    } else {
+      if (isVocabulary(curr)) {
+        buckets.low.vocabularies.push(curr)
+      } else if (isGrammar(curr)) {
+        buckets.low.grammar.push(curr)
+      }
+    }
+  }
+
+  // limit low priority items
+  buckets.low.vocabularies = random
+    .shuffle(buckets.low.vocabularies)
+    .slice(0, MAX_LOW_PRIORITY_VOCABULARIES)
+  buckets.low.grammar = random.shuffle(buckets.low.grammar).slice(0, MAX_LOW_PRIORITY_GRAMMAR)
+
+  return buckets
+}
+
+export async function generateSentencesForLessonNumber(
+  lessonNumber: number,
+  amount = GENERATED_SENTENCE_COUNT_PER_BATCH
+): Promise<GeneratedSentence[]> {
+  const buckets = await getKnowledgePointsByLessonNumber(lessonNumber)
 
   // report the number of vocabularies and grammar in each bucket
   logger.info(
     `Generating sentences for lesson: ${JSON.stringify(
       {
-        lessonId,
-        urgentVocabularies: params.buckets.urgent.vocabularies.length,
-        urgentGrammar: params.buckets.urgent.grammar.length,
-        highVocabularies: params.buckets.high.vocabularies.length,
-        highGrammar: params.buckets.high.grammar.length,
-        lowVocabularies: params.buckets.low.vocabularies.length,
-        lowGrammar: params.buckets.low.grammar.length,
+        lessonNumber,
+        urgentVocabularies: buckets.urgent.vocabularies.length,
+        urgentGrammar: buckets.urgent.grammar.length,
+        highVocabularies: buckets.high.vocabularies.length,
+        highGrammar: buckets.high.grammar.length,
+        lowVocabularies: buckets.low.vocabularies.length,
+        lowGrammar: buckets.low.grammar.length,
       },
       null,
       2
     )}`
   )
 
-  return generateSentencesFromPrioritizedBuckets(params)
+  return generateSentencesFromPrioritizedBuckets({
+    amount,
+    buckets,
+  })
 }

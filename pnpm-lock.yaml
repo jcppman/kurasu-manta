@@ -62,6 +62,9 @@ importers:
       pino:
         specifier: ^9.6.0
         version: 9.6.0
+      random:
+        specifier: ^5.4.1
+        version: 5.4.1
       shelljs:
         specifier: ^0.9.2
         version: 0.9.2
@@ -5714,6 +5717,10 @@ packages:
 
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
+
+  random@5.4.1:
+    resolution: {integrity: sha512-HtccRkYkAXCbj9bqsyGKGlicyeZ5AsQgs49fEuUO/BvrJ7WOQqXPjdg1CZrFjBkoT75ozrWlQXJ7TcXXLv2ISQ==}
+    engines: {node: '>=18'}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -13490,6 +13497,8 @@ snapshots:
       inherits: 2.0.4
 
   quick-format-unescaped@4.0.4: {}
+
+  random@5.4.1: {}
 
   randombytes@2.1.0:
     dependencies:
