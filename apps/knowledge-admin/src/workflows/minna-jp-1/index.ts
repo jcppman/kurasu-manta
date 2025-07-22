@@ -2,6 +2,7 @@ import { logger } from '@/lib/server/utils'
 import { generateVocabularyAudioClips } from './services/audio'
 import {
   cleanGrammar,
+  cleanSentences,
   cleanVocabularies,
   createGrammarLessons,
   createSentencesForLesson,
@@ -9,12 +10,13 @@ import {
 } from './services/data'
 
 export async function execute() {
-  await cleanGrammar()
-  await createGrammarLessons()
-  await cleanVocabularies()
-  await createVocabularies()
+  // await cleanGrammar()
+  // await createGrammarLessons()
+  // await cleanVocabularies()
+  // await createVocabularies()
   // await generateVocabularyAudioClips()
-  // await createSentencesForLesson(1)
+  await cleanSentences()
+  await createSentencesForLesson(1)
 }
 
 execute()

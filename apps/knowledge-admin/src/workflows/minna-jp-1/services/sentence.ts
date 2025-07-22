@@ -1,7 +1,6 @@
 import db from '@/db'
 import { logger } from '@/lib/server/utils'
 import {
-  GENERATED_SENTENCE_COUNT_PER_BATCH,
   GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
   MAX_LOW_PRIORITY_GRAMMAR,
   MAX_LOW_PRIORITY_VOCABULARIES,
@@ -34,33 +33,46 @@ export async function generateSentenceAnnotations(
   vocabularies: Vocabulary[]
 ): Promise<Annotation[]> {
   const prompt = `
-You are a Japanese language annotation expert. A list of already annotated vocabularies is provided. Your tasks are:
+You are a Japanese language annotation expert. Your task is to annotate a Japanese sentence based on a provided vocabulary list.
 
-- mark vocabulary locations for vocabulary in list, with annotation type 'vocabulary'
-- mark kanji pronunciations for kanji words in the sentence but NOT in the provided vocabulary list, with annotation type 'furigana'
+ANNOTATION RULES:
+1. **Vocabulary Annotations** (type: 'vocabulary')
+   - Mark all occurrences of words from the provided vocabulary list
+   - Each annotation must match the vocabulary item exactly (e.g., annotate "私" not "私は")
+   - Include the vocabulary ID in the annotation
+
+2. **Furigana Annotations** (type: 'furigana')
+   - Mark ONLY kanji characters that are NOT part of the provided vocabulary
+   - Provide pronunciation in hiragana
+   - Do NOT include trailing hiragana in the annotation length
+   - Group consecutive kanji that form a single word (e.g., 家族 as one annotation, not 家 and 族 separately)
 
 SENTENCE TO ANNOTATE:
 "${sentence}"
 
-VOCABULARY USED IN THIS SENTENCE:
+VOCABULARY LIST:
 ${vocabularies.map((v) => knowledgeDetails(v, 'vocabulary')).join('\n')}
 
 OUTPUT FORMAT:
-For each annotation, provide:
-1. loc: The character position where the annotation starts (0-based index)
-2. len: The length of the text segment being annotated
-3. type: 'furigana' | 'vocabulary' (use 'vocabulary' for words that are in the provided vocabulary list)
-4. content: The furigana or vocabulary content being annotated
-5. id: If type is 'vocabulary', you MUST set it to the id of the vocabulary. if type is 'furigana', ignore this field.
+Return a JSON array where each annotation contains:
+- loc: Starting position (0-based character index)
+- len: Number of characters to annotate
+- type: 'vocabulary' or 'furigana'
+- content: The annotation content (vocabulary word or furigana reading)
+- id: Vocabulary ID (required for 'vocabulary' type, keep it absent for 'furigana')
 
-REQUIREMENTS:
+EXAMPLE:
+For sentence "古い傘", the output would be:
+[
+  {"loc": 0, "len": 1, "type": "furigana", "content": "ふる"},
+  {"loc": 2, "len": 1, "type": "furigana", "content": "かさ"}
+]
+
+CONSTRAINTS:
 - Annotations must not overlap
-- Position and length must be accurate for the actual characters in the sentence
-- Ensure the annotated text matches exactly what appears in the sentence, for example if the vocabulary is "私", don't annotate "私は", just "私"
-- If a word appears multiple times, annotate all occurrences
-- Combine multiple kanji in a single annotation if they are part of the same word, for example: mark 家族 in one annotation rather than 家 and 族 separately.
-
-Return only the annotations array with no additional text.
+- Annotate all occurrences of vocabulary words
+- Ensure exact character positions and lengths
+- Return only the JSON array with no additional text
   `
 
   const { object } = await generateObject({
@@ -256,19 +268,23 @@ Create sentences that are clear, useful, and appropriate for students at this le
     }),
   })
 
-  return Promise.all(
-    sentences
-      .filter((sentence) => validateSentence(sentence))
-      .map(async (sentence) => {
-        return {
-          ...sentence,
-          annotations: await generateSentenceAnnotations(
-            sentence.content,
-            allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
-          ),
-        }
-      })
-  )
+  const generated: GeneratedSentence[] = []
+
+  for (const sentence of sentences) {
+    logger.info(`Generated sentence: ${sentence.content}`)
+    if (!(await validateSentence(sentence))) {
+      continue
+    }
+    generated.push({
+      ...sentence,
+      annotations: await generateSentenceAnnotations(
+        sentence.content,
+        allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
+      ),
+    })
+  }
+
+  return generated
 }
 
 async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<PrioritizedBuckets> {
@@ -350,7 +366,7 @@ async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<P
 
 export async function generateSentencesForLessonNumber(
   lessonNumber: number,
-  amount = GENERATED_SENTENCE_COUNT_PER_BATCH
+  amount: number
 ): Promise<GeneratedSentence[]> {
   const buckets = await getKnowledgePointsByLessonNumber(lessonNumber)
 

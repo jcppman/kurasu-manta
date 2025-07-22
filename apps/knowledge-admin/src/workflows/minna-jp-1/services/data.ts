@@ -1,6 +1,12 @@
 import db from '@/db'
-import { knowledgePointsTable, lessonKnowledgePointsTable } from '@/db/schema'
+import {
+  knowledgePointsTable,
+  lessonKnowledgePointsTable,
+  sentenceKnowledgePointsTable,
+  sentencesTable,
+} from '@/db/schema'
 import { logger } from '@/lib/server/utils'
+import { GENERATED_SENTENCE_COUNT_PER_BATCH } from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
@@ -76,6 +82,20 @@ export async function cleanGrammar() {
   logger.info(`Deleted ${grammarIds.length} grammar knowledge points`)
 
   logger.info('Database reset completed - grammar knowledge points dropped')
+}
+
+export async function cleanSentences() {
+  logger.info('Resetting database - dropping all sentences...')
+
+  // Delete all sentence-knowledge point associations first
+  await db.delete(sentenceKnowledgePointsTable)
+  logger.info('Deleted all sentence-knowledge point associations')
+
+  // Delete all sentences
+  await db.delete(sentencesTable)
+  logger.info('Deleted all sentences')
+
+  logger.info('Database reset completed - all sentences dropped')
 }
 
 async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
@@ -175,7 +195,10 @@ export async function createGrammarLessons() {
 export async function createSentencesForLesson(lessonNumber: number) {
   const courseContentService = new CourseContentService(db)
 
-  const generatedSentences = await generateSentencesForLessonNumber(lessonNumber)
+  const generatedSentences = await generateSentencesForLessonNumber(
+    lessonNumber,
+    GENERATED_SENTENCE_COUNT_PER_BATCH
+  )
   if (generatedSentences.length === 0) {
     logger.info(`No sentences generated for lesson number ${lessonNumber}`)
     return
