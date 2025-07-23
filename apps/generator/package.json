@@ -1,5 +1,5 @@
 {
-  "name": "knowledge-admin",
+  "name": "@kurasu-manta/knowledge-generator",
   "version": "0.1.0",
   "private": true,
   "scripts": {

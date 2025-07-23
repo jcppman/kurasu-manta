@@ -5,7 +5,7 @@ import {
   sentenceKnowledgePointsTable,
   sentencesTable,
 } from '@/db/schema'
-import { logger } from '@/lib/server/utils'
+import { logger } from '@/lib/utils'
 import { DESIRED_SENTENCE_COUNT_PER_BATCH } from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'

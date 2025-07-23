@@ -1,14 +1,13 @@
-import { DB_FILE_NAME } from '@/lib/server/constants'
+import { DB_FILE_PATH } from '@/lib/constants'
 import { drizzle } from 'drizzle-orm/libsql'
 import * as schema from './schema'
 
 const getDbClient = () => {
-  const db = drizzle(DB_FILE_NAME, {
+  return drizzle({
+    connection: `file:${DB_FILE_PATH}`,
     schema,
     casing: 'snake_case',
   })
-
-  return db
 }
 
 export { getDbClient }

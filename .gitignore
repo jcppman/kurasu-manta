@@ -70,3 +70,5 @@ xcuserdata
 tmp/
 
 .env
+
+/data

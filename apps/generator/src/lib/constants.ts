@@ -12,5 +12,7 @@ const constants = envSchema.parse(process.env)
 
 export const AUDIO_DIR = resolve(constants.DB_DIR, 'audio')
 
+export const DB_FILE_PATH = resolve(constants.DB_DIR, constants.DB_FILE_NAME)
+
 export default constants
 export const { DB_DIR, DB_FILE_NAME, OPENAI_API_KEY, LOG_LEVEL } = constants

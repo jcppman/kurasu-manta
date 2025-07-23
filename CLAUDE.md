@@ -4,7 +4,7 @@
 - put unit test file beside the .ts file rather than in test/ folder
 
 ## Index
-- **Knowledge Admin** - [apps/knowledge-admin](apps/knowledge-admin): Simple TypeScript scripts for content generation
+- **Knowledge Admin** - [apps/knowledge-admin](apps/generator): Simple TypeScript scripts for content generation
 
 ## Core Architecture
 ```

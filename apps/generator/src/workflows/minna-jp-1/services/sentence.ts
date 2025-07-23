@@ -1,5 +1,5 @@
 import db from '@/db'
-import { logger } from '@/lib/server/utils'
+import { logger } from '@/lib/utils'
 import {
   DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
   MAX_LOW_PRIORITY_GRAMMAR,

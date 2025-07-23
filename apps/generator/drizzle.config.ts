@@ -1,4 +1,4 @@
-import { DB_FILE_NAME } from '@/lib/server/constants'
+import { DB_FILE_PATH } from '@/lib/constants'
 import { defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
@@ -7,6 +7,6 @@ export default defineConfig({
   casing: 'snake_case',
   dialect: 'sqlite',
   dbCredentials: {
-    url: DB_FILE_NAME,
+    url: DB_FILE_PATH,
   },
 })
