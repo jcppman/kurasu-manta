@@ -61,11 +61,11 @@ test('CourseContentService', async (t) => {
     cn: '这个句子展示词汇用法',
   }
 
-  const createTestSentence = (content: string): CreateSentence => ({
+  const createTestSentence = (content: string, minLessonNumber = 1): CreateSentence => ({
     content,
     explanation: mockExplanation,
     annotations: [],
-    minLessonNumber: 1,
+    minLessonNumber,
   })
 
   // Setup before each test
@@ -1248,6 +1248,223 @@ test('CourseContentService', async (t) => {
       const lessonsInScope = await courseContentService.getLessonsInScope(5)
       assert.strictEqual(lessonsInScope.length, 1, 'Should find lesson in scope')
       assert.strictEqual(lessonsInScope[0]?.id, lesson.id, 'Should be the same lesson')
+    })
+  })
+
+  // Tests for new methods added for dashboard support
+  await t.test('getKnowledgePointsByConditions', async (t) => {
+    await t.test('should retrieve all knowledge points when no type specified', async () => {
+      // Create lessons
+      const lesson1 = await lessonRepo.create(createLesson(20))
+      const lesson2 = await lessonRepo.create(createLesson(21))
+
+      // Create mixed knowledge points
+      const vocab1 = await knowledgeRepo.create(createVocabularyPoint(20, '語彙1'))
+      const vocab2 = await knowledgeRepo.create(createVocabularyPoint(21, '語彙2'))
+      const grammar1 = await knowledgeRepo.create(createGrammarPoint(20, '文法1'))
+      const grammar2 = await knowledgeRepo.create(createGrammarPoint(21, '文法2'))
+
+      // Associate with lessons
+      await knowledgeRepo.associateWithLesson(vocab1.id, lesson1.id)
+      await knowledgeRepo.associateWithLesson(vocab2.id, lesson2.id)
+      await knowledgeRepo.associateWithLesson(grammar1.id, lesson1.id)
+      await knowledgeRepo.associateWithLesson(grammar2.id, lesson2.id)
+
+      // Get all knowledge points (no type filter)
+      const result = await courseContentService.getKnowledgePointsByConditions({})
+
+      // Should return both vocabulary and grammar points
+      assert.ok(result.items.length >= 4, 'Should return at least 4 knowledge points')
+
+      const vocabularies = result.items.filter((item) => item.type === 'vocabulary')
+      const grammars = result.items.filter((item) => item.type === 'grammar')
+
+      assert.ok(vocabularies.length >= 2, 'Should include vocabulary points')
+      assert.ok(grammars.length >= 2, 'Should include grammar points')
+    })
+
+    await t.test('should filter by type when specified', async () => {
+      // Create mixed knowledge points
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(22, 'フィルタテスト'))
+      const grammar = await knowledgeRepo.create(createGrammarPoint(22, 'フィルタ文法'))
+
+      // Get only vocabulary points
+      const vocabResult = await courseContentService.getKnowledgePointsByConditions({
+        type: 'vocabulary',
+      })
+
+      // Get only grammar points
+      const grammarResult = await courseContentService.getKnowledgePointsByConditions({
+        type: 'grammar',
+      })
+
+      // Verify filtering works
+      const allVocabs = vocabResult.items.every((item) => item.type === 'vocabulary')
+      const allGrammars = grammarResult.items.every((item) => item.type === 'grammar')
+
+      assert.ok(allVocabs, 'Should only return vocabulary points when type is vocabulary')
+      assert.ok(allGrammars, 'Should only return grammar points when type is grammar')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple knowledge points
+      const lesson = await lessonRepo.create(createLesson(23))
+      const points = []
+
+      for (let i = 1; i <= 5; i++) {
+        const point = await knowledgeRepo.create(createVocabularyPoint(23, `ページング${i}`))
+        await knowledgeRepo.associateWithLesson(point.id, lesson.id)
+        points.push(point)
+      }
+
+      // Get first page (limit 2)
+      const page1 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id },
+        { limit: 2, offset: 0 }
+      )
+
+      // Get second page (limit 2, offset 2)
+      const page2 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id },
+        { limit: 2, offset: 2 }
+      )
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+      assert.ok(page1.hasNextPage, 'First page should indicate more items available')
+      assert.strictEqual(page1.total, 5, 'Total should be 5')
+    })
+  })
+
+  await t.test('getLessons', async (t) => {
+    await t.test('should retrieve all lessons without pagination', async () => {
+      // Create test lessons
+      const lesson1 = await lessonRepo.create(createLesson(30))
+      const lesson2 = await lessonRepo.create(createLesson(31))
+      const lesson3 = await lessonRepo.create(createLesson(32))
+
+      // Get all lessons
+      const result = await courseContentService.getLessons()
+
+      assert.ok(result.items.length >= 3, 'Should return at least 3 lessons')
+      assert.strictEqual(result.hasNextPage, false, 'Should not have more items when no pagination')
+      assert.ok(result.total >= 3, 'Total should be at least 3')
+
+      // Verify lesson data structure
+      const firstLesson = result.items[0]
+      assert.ok(firstLesson?.id, 'Lesson should have an ID')
+      assert.ok(typeof firstLesson?.number === 'number', 'Lesson should have a number')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple lessons
+      for (let i = 40; i <= 44; i++) {
+        await lessonRepo.create(createLesson(i))
+      }
+
+      // Get first page
+      const page1 = await courseContentService.getLessons({ limit: 2, offset: 0 })
+
+      // Get second page
+      const page2 = await courseContentService.getLessons({ limit: 2, offset: 2 })
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+
+      // Verify pagination metadata
+      assert.ok(page1.total >= 5, 'Total should be at least 5')
+      assert.ok(page1.hasNextPage, 'Should indicate more items available')
+    })
+  })
+
+  await t.test('getSentences', async (t) => {
+    await t.test('should retrieve all sentences without filtering', async () => {
+      // Create test sentences
+      const sentence1 = await sentenceRepo.create(createTestSentence('テスト文章1', 10))
+      const sentence2 = await sentenceRepo.create(createTestSentence('テスト文章2', 15))
+      const sentence3 = await sentenceRepo.create(createTestSentence('テスト文章3', 20))
+
+      // Get all sentences
+      const result = await courseContentService.getSentences()
+
+      assert.ok(result.items.length >= 3, 'Should return at least 3 sentences')
+      assert.strictEqual(result.hasNextPage, false, 'Should not have more items when no pagination')
+      assert.ok(result.total >= 3, 'Total should be at least 3')
+
+      // Verify sentence data structure
+      const firstSentence = result.items[0]
+      assert.ok(firstSentence?.id, 'Sentence should have an ID')
+      assert.ok(typeof firstSentence?.content === 'string', 'Sentence should have content')
+      assert.ok(
+        typeof firstSentence?.minLessonNumber === 'number',
+        'Sentence should have minLessonNumber'
+      )
+    })
+
+    await t.test('should filter by minLessonNumber', async () => {
+      // Create sentences with different lesson numbers
+      await sentenceRepo.create(createTestSentence('早い文章', 5))
+      await sentenceRepo.create(createTestSentence('遅い文章', 25))
+
+      // Filter sentences with minLessonNumber >= 20
+      const result = await courseContentService.getSentences({ minLessonNumber: 20 })
+
+      // All returned sentences should have minLessonNumber >= 20
+      const allAboveThreshold = result.items.every((sentence) => sentence.minLessonNumber >= 20)
+      assert.ok(allAboveThreshold, 'All sentences should have minLessonNumber >= 20')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple sentences
+      for (let i = 50; i <= 54; i++) {
+        await sentenceRepo.create(createTestSentence(`ページング文章${i}`, i))
+      }
+
+      // Get first page
+      const page1 = await courseContentService.getSentences({}, { limit: 2, offset: 0 })
+
+      // Get second page
+      const page2 = await courseContentService.getSentences({}, { limit: 2, offset: 2 })
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+
+      // Verify pagination metadata
+      assert.ok(page1.total >= 5, 'Total should be at least 5')
+      assert.ok(page1.hasNextPage, 'Should indicate more items available')
+    })
+
+    await t.test('should combine filtering and pagination', async () => {
+      // Create sentences with mixed lesson numbers
+      for (let i = 60; i <= 64; i++) {
+        await sentenceRepo.create(createTestSentence(`組み合わせ${i}`, i))
+      }
+
+      // Filter and paginate: minLessonNumber >= 62, limit 2
+      const result = await courseContentService.getSentences(
+        { minLessonNumber: 62 },
+        { limit: 2, offset: 0 }
+      )
+
+      assert.ok(result.items.length <= 2, 'Should respect limit')
+      const allAboveThreshold = result.items.every((sentence) => sentence.minLessonNumber >= 62)
+      assert.ok(allAboveThreshold, 'All sentences should meet filter criteria')
+    })
+  })
+
+  // Test backward compatibility with deprecated method
+  await t.test('getVocabulariesByConditions backward compatibility', async (t) => {
+    await t.test('should still work as before', async () => {
+      // Create mixed knowledge points
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(70, '互換性テスト'))
+      const grammar = await knowledgeRepo.create(createGrammarPoint(70, '文法テスト'))
+
+      // Old method should still return only vocabularies
+      const result = await courseContentService.getVocabulariesByConditions({})
+
+      // Should only return vocabulary points
+      const allVocabs = result.items.every((item) => item.type === 'vocabulary')
+      assert.ok(allVocabs, 'Should only return vocabulary points for backward compatibility')
     })
   })
 })
