@@ -1,7 +1,7 @@
 import db from '@/db'
 import { logger } from '@/lib/server/utils'
 import {
-  GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
+  DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
   MAX_LOW_PRIORITY_GRAMMAR,
   MAX_LOW_PRIORITY_VOCABULARIES,
 } from '@/workflows/minna-jp-1/constants'
@@ -83,10 +83,28 @@ CONSTRAINTS:
     }),
   })
 
-  return object.annotations.map((a) => ({
+  const trimmedAnnotations = object.annotations.map((a) => ({
     ...a,
     content: a.content.trim(),
   }))
+
+  // sometimes the AI may return furigana annotations that are already part of the vocabulary, filter them out
+
+  // range is [loc, loc + len - 1] both inclusive
+  const vocRanges = trimmedAnnotations
+    .filter((a) => a.type === 'vocabulary')
+    .map((a) => [a.loc, a.loc + a.len - 1])
+  return trimmedAnnotations.filter((a) => {
+    if (a.type === 'vocabulary') {
+      return true
+    }
+
+    return !vocRanges.some((range) => {
+      const [vocStart, vocEnd] = range
+      const [furiganaStart, furiganaEnd] = [a.loc, a.loc + a.len - 1]
+      return furiganaStart <= vocEnd && furiganaEnd >= vocStart
+    })
+  })
 }
 
 interface GeneratedSentence {
@@ -127,7 +145,7 @@ export async function validateSentence(
 
   // check if the sentence is correct
   const prompt = `
-You are a Japanese language expert evaluating whether a sentence is grammatically and culturally appropriate for teaching.
+You are a Japanese language expert evaluating sentences for a Japanese textbook.
 
 SENTENCE TO EVALUATE:
 ${sentence.content}
@@ -135,36 +153,27 @@ EXPLAIN:
 ${sentence.explanation.zhCN}
 ${sentence.explanation.enUS}
 
-CHECK FOR THESE TYPES OF ERRORS:
+EVALUATION CRITERIA:
+Focus on detecting serious errors that would mislead students. Accept sentences that are:
+- Grammatically correct (even if formal or textbook-style)
+- Logically consistent
+- Appropriate for educational contexts
 
-1. **Cultural/Pragmatic Errors**
-   - Using honorifics incorrectly (e.g., さん/様/先生 about oneself)
-   - Inappropriate politeness levels for the context
-   - Culturally impossible or strange situations
-   - Using humble/respectful forms incorrectly
+REJECT ONLY IF:
+1. **Fundamental Grammar Violations**: Incorrect particles, verb conjugations, or structural patterns that break Japanese grammar rules
+2. **Honorific Misuse**: Using respectful language incorrectly about oneself or in impossible contexts
+3. **Logical Contradictions**: Tense-time mismatches or internally contradictory information
+4. **Semantic Impossibilities**: Nonsensical word combinations or impossible situations
+5. **Cultural Rudeness**: Sentences that would be considered rude, too direct, or inappropriate in Japanese culture (even in educational contexts)
 
-2. **Grammatical Errors**
-   - Incorrect particle usage
-   - Wrong verb conjugations
-   - Incompatible grammar patterns
-   - Word order violations
-
-3. **Semantic/Logic Errors**
-   - Contradictory information within the sentence
-   - Nonsensical combinations
-   - Incorrect word usage (using 行く when 来る is needed)
-   - Counter/classifier mismatches
-
-COMMON MISTAKES TO CATCH:
-- 私は山田さんです (wrong - can't use さん for oneself)
-- 先生は来週来ています (wrong - tense doesn't match time expression)
-- きのう行きます (wrong - past time with non-past verb)
-- 私は私の本を読みます (awkward - unnecessary 私の)
-- お水をお飲みください (wrong - double honorific)
+ACCEPT:
+- Formal vocabulary choices appropriate for textbooks
+- Polite direct questions common in educational dialogues
+- Standard textbook expressions even if less common in casual speech
 
 EVALUATION:
-output true if the sentence is grammatically and culturally appropriate, otherwise output false.
-if false, provide a reason for the invalidity.
+Output true if grammatically correct and logically sound for educational use.
+Output false only for clear errors that would confuse or mislead students.
 `
   const {
     object: { valid, reason },
@@ -201,9 +210,15 @@ export async function generateSentencesFromPrioritizedBuckets({
   const { urgent, high, low } = buckets
 
   const prompt = `
-You are a Japanese language teacher creating example sentences for みんなの日本語 students.
+You are a Japanese language teacher creating example sentences for students learning Japanese.
 
-Generate ${amount} Japanese sentences using the vocabulary and grammar provided below.
+Generate ${amount} Japanese sentences using ONLY the vocabulary and grammar provided below.
+
+CRITICAL VOCABULARY CONSTRAINT:
+- You MUST only use vocabulary words that are explicitly listed in the sections below
+- Do NOT use any vocabulary words that are not in the provided lists
+- If you need additional words for particles, basic grammar, or function words (は、が、を、に、で、と、の、も、から、まで、です、ます、etc.), those are acceptable
+- But avoid using content vocabulary (nouns, verbs, adjectives, adverbs) that are not in the provided lists
 
 VOCABULARY AND GRAMMAR BY PRIORITY:
 
@@ -287,7 +302,10 @@ Create sentences that are clear, useful, and appropriate for students at this le
   return generated
 }
 
-async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<PrioritizedBuckets> {
+async function getPrioritizedKnowledgePointsByLessonNumber(
+  lessonNumber: number,
+  maxDesiredCount: number
+): Promise<PrioritizedBuckets> {
   const courseContentService = new CourseContentService(db)
 
   // get all lessons directly as there won't be too much
@@ -331,9 +349,7 @@ async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<P
   )
   for (const curr of targetKnowledgePoints) {
     const count = countMap.get(curr.id) ?? 0
-    const ratio =
-      (GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT - count) /
-      GENERATED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT
+    const ratio = (maxDesiredCount - count) / maxDesiredCount
     if (ratio >= 0.6) {
       if (isVocabulary(curr)) {
         buckets.urgent.vocabularies.push(curr)
@@ -355,6 +371,11 @@ async function getKnowledgePointsByLessonNumber(lessonNumber: number): Promise<P
     }
   }
 
+  buckets.urgent.vocabularies = random.shuffle(buckets.urgent.vocabularies)
+  buckets.urgent.grammar = random.shuffle(buckets.urgent.grammar)
+  buckets.high.vocabularies = random.shuffle(buckets.high.vocabularies)
+  buckets.high.grammar = random.shuffle(buckets.high.grammar)
+
   // limit low priority items
   buckets.low.vocabularies = random
     .shuffle(buckets.low.vocabularies)
@@ -368,7 +389,10 @@ export async function generateSentencesForLessonNumber(
   lessonNumber: number,
   amount: number
 ): Promise<GeneratedSentence[]> {
-  const buckets = await getKnowledgePointsByLessonNumber(lessonNumber)
+  const buckets = await getPrioritizedKnowledgePointsByLessonNumber(
+    lessonNumber,
+    DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT
+  )
 
   // report the number of vocabularies and grammar in each bucket
   logger.info(

@@ -6,7 +6,7 @@ import {
   sentencesTable,
 } from '@/db/schema'
 import { logger } from '@/lib/server/utils'
-import { GENERATED_SENTENCE_COUNT_PER_BATCH } from '@/workflows/minna-jp-1/constants'
+import { DESIRED_SENTENCE_COUNT_PER_BATCH } from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
@@ -197,7 +197,7 @@ export async function createSentencesForLesson(lessonNumber: number) {
 
   const generatedSentences = await generateSentencesForLessonNumber(
     lessonNumber,
-    GENERATED_SENTENCE_COUNT_PER_BATCH
+    DESIRED_SENTENCE_COUNT_PER_BATCH
   )
   if (generatedSentences.length === 0) {
     logger.info(`No sentences generated for lesson number ${lessonNumber}`)
