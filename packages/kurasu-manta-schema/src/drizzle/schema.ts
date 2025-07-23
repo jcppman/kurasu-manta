@@ -65,6 +65,8 @@ export const sentencesTable = sqliteTable('sentences', {
   annotations: jsonField<Annotation[]>('annotations'),
   // Audio file path/URL for the sentence
   audio: text('audio'),
+  // The lesson number this sentence is generated for
+  minLessonNumber: int().notNull(),
   ...createdAndUpdatedAt,
 })
 

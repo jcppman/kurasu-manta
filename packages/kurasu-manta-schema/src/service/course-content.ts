@@ -1,5 +1,5 @@
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
-import type { PaginatedResult, PaginationParams } from '@/common/types'
+import type { KnowledgePointType, PaginatedResult, PaginationParams } from '@/common/types'
 import { mergeWithPartialFiltered } from '@/common/utils'
 import type { Db } from '@/drizzle/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
@@ -33,13 +33,26 @@ export class CourseContentService {
   }
 
   /**
-   * Get a lesson by ID with its knowledge points
+   * Get a lesson by ID, optionally with its knowledge points
    */
-  async getLessonWithContent(lessonId: number): Promise<LessonWithContent | null> {
+  async getLessonById(
+    lessonId: number,
+    options: { withContent: true }
+  ): Promise<LessonWithContent | null>
+  async getLessonById(lessonId: number, options?: { withContent?: false }): Promise<Lesson | null>
+  async getLessonById(
+    lessonId: number,
+    options: { withContent?: boolean } = {}
+  ): Promise<Lesson | LessonWithContent | null> {
     // Get the lesson by ID
     const lesson = await this.lessonRepository.getById(lessonId)
     if (!lesson) {
       return null
+    }
+
+    // If content is not requested, return just the lesson
+    if (!options.withContent) {
+      return lesson
     }
 
     // Get the knowledge points for this lesson
@@ -159,7 +172,46 @@ export class CourseContentService {
   }
 
   /**
+   * Get knowledge points by conditions with pagination
+   * @param conditions Filtering conditions
+   * @param pagination Pagination parameters (supports both page-based and offset-based)
+   * @returns Paginated result of knowledge points
+   */
+  async getKnowledgePointsByConditions(
+    conditions: {
+      lessonId?: number
+      hasAudio?: boolean
+      type?: KnowledgePointType // Optional type filter - if not provided, returns all types
+    },
+    pagination?: PaginationParams | { limit?: number; offset?: number }
+  ): Promise<PaginatedResult<KnowledgePoint>> {
+    // Convert offset-based pagination to page-based if needed
+    let normalizedPagination: PaginationParams | undefined
+    if (pagination) {
+      if ('offset' in pagination) {
+        // Convert offset-based to page-based
+        const limit = pagination.limit || 20
+        const offset = pagination.offset || 0
+        const page = Math.floor(offset / limit) + 1
+        normalizedPagination = { page, limit }
+      } else {
+        normalizedPagination = pagination
+      }
+    }
+
+    // Use the repository method with optional type filtering
+    const result = await this.knowledgeRepository.getByConditions(
+      conditions, // Pass conditions as-is, including optional type
+      normalizedPagination
+    )
+
+    // Return all knowledge points (no filtering needed since repository handles it)
+    return result
+  }
+
+  /**
    * Get vocabularies by conditions with pagination
+   * @deprecated Use getKnowledgePointsByConditions with type: 'vocabulary' instead
    * @param conditions Filtering conditions
    * @param pagination Pagination parameters
    * @returns Paginated result of vocabularies
@@ -171,8 +223,8 @@ export class CourseContentService {
     },
     pagination?: PaginationParams
   ): Promise<PaginatedResult<Vocabulary>> {
-    // Use the repository method with the VOCABULARY type added to conditions
-    const result = await this.knowledgeRepository.getByConditions(
+    // Delegate to the new method with vocabulary type filter
+    const result = await this.getKnowledgePointsByConditions(
       {
         ...conditions,
         type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
@@ -180,8 +232,7 @@ export class CourseContentService {
       pagination
     )
 
-    // Filter the results to only include vocabularies
-    // This is a type safety measure, as the repository should already filter by type
+    // Filter the results to only include vocabularies for type safety
     const vocabularies = result.items.filter(
       (item): item is Vocabulary => item.type === KNOWLEDGE_POINT_TYPES.VOCABULARY
     )
@@ -197,7 +248,7 @@ export class CourseContentService {
     options: { withSentences?: boolean } = {}
   ): Promise<Vocabulary | null> {
     const vocabulary = await this.knowledgeRepository.getById(id, {
-      includeSentences: options.withSentences,
+      withSentences: options.withSentences,
     })
     if (!vocabulary || vocabulary.type !== KNOWLEDGE_POINT_TYPES.VOCABULARY) {
       return null
@@ -260,5 +311,136 @@ export class CourseContentService {
     }
 
     return createdSentence
+  }
+
+  /**
+   * Get lessons that are in scope (lesson number less than or equal to given lesson number)
+   */
+  async getLessonsInScope(lessonNumber: number): Promise<Lesson[]> {
+    return this.lessonRepository.getLessonsByConditions({
+      lessonNumberLessThan: lessonNumber,
+    })
+  }
+
+  /**
+   * Get all lessons with optional pagination
+   * @param pagination Pagination parameters (supports both page-based and offset-based)
+   * @returns Paginated result of lessons
+   */
+  async getLessons(
+    pagination?: PaginationParams | { limit?: number; offset?: number }
+  ): Promise<PaginatedResult<Lesson>> {
+    // For now, we'll implement this as getting all lessons
+    // The repository doesn't have a paginated getAll method, so we'll use a simple wrapper
+    const lessons = await this.lessonRepository.getAll()
+
+    // Apply pagination manually if provided
+    if (pagination) {
+      let limit: number
+      let offset: number
+      let page: number
+
+      if ('offset' in pagination) {
+        // Handle offset-based pagination
+        limit = pagination.limit || 10
+        offset = pagination.offset || 0
+        page = Math.floor(offset / limit) + 1
+      } else {
+        // Handle page-based pagination
+        const paginationParams = pagination as PaginationParams
+        page = paginationParams.page || 1
+        limit = paginationParams.limit || 10
+        offset = (page - 1) * limit
+      }
+
+      const paginatedLessons = lessons.slice(offset, offset + limit)
+      const totalPages = Math.ceil(lessons.length / limit)
+
+      return {
+        items: paginatedLessons,
+        total: lessons.length,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      }
+    }
+
+    return {
+      items: lessons,
+      total: lessons.length,
+      page: 1,
+      limit: lessons.length,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+    }
+  }
+
+  /**
+   * Get all sentences with optional filtering and pagination
+   * @param filters Filtering conditions
+   * @param pagination Pagination parameters (supports both page-based and offset-based)
+   * @returns Paginated result of sentences
+   */
+  async getSentences(
+    filters?: { minLessonNumber?: number },
+    pagination?: PaginationParams | { limit?: number; offset?: number }
+  ): Promise<PaginatedResult<Sentence>> {
+    // For now, we'll implement this as getting all sentences
+    // The repository doesn't have a paginated getAll method with filters, so we'll use a simple wrapper
+    const sentences = await this.sentenceRepository.getAll()
+
+    // Apply filtering if provided
+    let filteredSentences = sentences
+    if (filters?.minLessonNumber !== undefined) {
+      filteredSentences = sentences.filter(
+        (sentence) => sentence.minLessonNumber >= (filters.minLessonNumber ?? 0)
+      )
+    }
+
+    // Apply pagination manually if provided
+    if (pagination) {
+      let limit: number
+      let offset: number
+      let page: number
+
+      if ('offset' in pagination) {
+        // Handle offset-based pagination
+        limit = pagination.limit || 10
+        offset = pagination.offset || 0
+        page = Math.floor(offset / limit) + 1
+      } else {
+        // Handle page-based pagination
+        const paginationParams = pagination as PaginationParams
+        page = paginationParams.page || 1
+        limit = paginationParams.limit || 10
+        offset = (page - 1) * limit
+      }
+
+      const paginatedSentences = filteredSentences.slice(offset, offset + limit)
+      const totalPages = Math.ceil(filteredSentences.length / limit)
+
+      return {
+        items: paginatedSentences,
+        total: filteredSentences.length,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      }
+    }
+
+    return {
+      items: filteredSentences,
+      total: filteredSentences.length,
+      page: 1,
+      limit: filteredSentences.length,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+    }
   }
 }

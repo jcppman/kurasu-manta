@@ -6,8 +6,8 @@ import { KnowledgeRepository } from './knowledge'
 import { LessonRepository } from './lesson'
 import { SentenceRepository } from './sentence'
 
-test('KnowledgeRepository - includeSentences option', async (t) => {
-  await t.test('getById with includeSentences option', async (t) => {
+test('KnowledgeRepository - withSentences option', async (t) => {
+  await t.test('getById with withSentences option', async (t) => {
     await t.test('should return knowledge point without sentences by default', async () => {
       const db = await createInMemoryDb()
       const knowledgeRepo = new KnowledgeRepository(db)
@@ -32,6 +32,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
         content: 'こんにちは、田中さん。',
         explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
         annotations: [],
+        minLessonNumber: 1,
       })
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
 
@@ -43,7 +44,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
     })
 
     await t.test(
-      'should return knowledge point with sentences when includeSentences is true',
+      'should return knowledge point with sentences when withSentences is true',
       async () => {
         const db = await createInMemoryDb()
         const knowledgeRepo = new KnowledgeRepository(db)
@@ -68,17 +69,19 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
           annotations: [],
+          minLessonNumber: 1,
         })
         const sentence2 = await sentenceRepo.create({
           content: 'こんにちは、皆さん。',
           explanation: { en: 'Hello, everyone.', ja: 'こんにちは、皆さん。' },
           annotations: [],
+          minLessonNumber: 1,
         })
 
         await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp.id)
         await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp.id)
 
-        const result = await knowledgeRepo.getById(kp.id, { includeSentences: true })
+        const result = await knowledgeRepo.getById(kp.id, { withSentences: true })
 
         assert.ok(result)
         assert.strictEqual(result.id, kp.id)
@@ -109,7 +112,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           annotations: [],
         })
 
-        const result = await knowledgeRepo.getById(kp.id, { includeSentences: true })
+        const result = await knowledgeRepo.getById(kp.id, { withSentences: true })
 
         assert.ok(result)
         assert.strictEqual(result.id, kp.id)
@@ -119,7 +122,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
     )
   })
 
-  await t.test('getByLessonId with includeSentences option', async (t) => {
+  await t.test('getByLessonId with withSentences option', async (t) => {
     await t.test('should return knowledge points without sentences by default', async () => {
       const db = await createInMemoryDb()
       const knowledgeRepo = new KnowledgeRepository(db)
@@ -148,7 +151,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
     })
 
     await t.test(
-      'should return knowledge points with sentences when includeSentences is true',
+      'should return knowledge points with sentences when withSentences is true',
       async () => {
         const db = await createInMemoryDb()
         const knowledgeRepo = new KnowledgeRepository(db)
@@ -175,10 +178,11 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
           annotations: [],
+          minLessonNumber: 1,
         })
         await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp1.id)
 
-        const results = await knowledgeRepo.getByLessonId(1, { includeSentences: true })
+        const results = await knowledgeRepo.getByLessonId(1, { withSentences: true })
 
         assert.strictEqual(results.length, 1)
         assert.ok(results[0], 'First result should exist')
@@ -190,7 +194,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
     )
   })
 
-  await t.test('getByConditions with includeSentences option', async (t) => {
+  await t.test('getByConditions with withSentences option', async (t) => {
     await t.test('should return knowledge points without sentences by default', async () => {
       const db = await createInMemoryDb()
       const knowledgeRepo = new KnowledgeRepository(db)
@@ -219,7 +223,7 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
     })
 
     await t.test(
-      'should return knowledge points with sentences when includeSentences is true',
+      'should return knowledge points with sentences when withSentences is true',
       async () => {
         const db = await createInMemoryDb()
         const knowledgeRepo = new KnowledgeRepository(db)
@@ -246,13 +250,14 @@ test('KnowledgeRepository - includeSentences option', async (t) => {
           content: 'こんにちは、田中さん。',
           explanation: { en: 'Hello, Mr. Tanaka.', ja: 'こんにちは、田中さん。' },
           annotations: [],
+          minLessonNumber: 1,
         })
         await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
 
         const results = await knowledgeRepo.getByConditions(
           { lessonId: 1 },
           { page: 1, limit: 20 },
-          { includeSentences: true }
+          { withSentences: true }
         )
 
         assert.strictEqual(results.items.length, 1)

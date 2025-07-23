@@ -61,10 +61,11 @@ test('CourseContentService', async (t) => {
     cn: '这个句子展示词汇用法',
   }
 
-  const createTestSentence = (content: string): CreateSentence => ({
+  const createTestSentence = (content: string, minLessonNumber = 1): CreateSentence => ({
     content,
     explanation: mockExplanation,
     annotations: [],
+    minLessonNumber,
   })
 
   // Setup before each test
@@ -91,7 +92,11 @@ test('CourseContentService', async (t) => {
       await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Get the lesson with content
-      const lessonWithContent = await courseContentService.getLessonWithContent(lesson.id)
+      const lessonWithContent = await courseContentService.getLessonById(lesson.id, {
+        withContent: true,
+      })
+
+      assert.ok(lessonWithContent)
 
       // Assertions
       assert.ok(lessonWithContent, 'Lesson with content should exist')
@@ -113,9 +118,12 @@ test('CourseContentService', async (t) => {
       const lesson = await lessonRepo.create(createLesson(2))
 
       // Get the lesson with content
-      const lessonWithContent = await courseContentService.getLessonWithContent(lesson.id)
+      const lessonWithContent = await courseContentService.getLessonById(lesson.id, {
+        withContent: true,
+      })
 
       // Assertions
+      assert.ok(lessonWithContent)
       assert.ok(lessonWithContent, 'Lesson with content should exist')
       assert.strictEqual(lessonWithContent?.id, lesson.id, 'Lesson ID should match')
       assert.strictEqual(
@@ -127,7 +135,7 @@ test('CourseContentService', async (t) => {
 
     await t.test('should return null for a non-existent lesson', async () => {
       // Get a non-existent lesson
-      const lessonWithContent = await courseContentService.getLessonWithContent(999)
+      const lessonWithContent = await courseContentService.getLessonById(999, { withContent: true })
 
       // Assertions
       assert.strictEqual(lessonWithContent, null, 'Should return null for non-existent lesson')
@@ -996,6 +1004,7 @@ test('CourseContentService', async (t) => {
       const sentenceDataWithAnnotations: CreateSentence = {
         content: '私は本を読む',
         explanation: mockExplanation,
+        minLessonNumber: 1,
         annotations: [
           {
             loc: 2,
@@ -1104,6 +1113,358 @@ test('CourseContentService', async (t) => {
       counts = await courseContentService.getSentenceCountsByKnowledgePointIds([kp1.id, kp2.id])
       assert.strictEqual(counts.get(kp1.id), 2, 'Count for kp1 should be 2')
       assert.strictEqual(counts.get(kp2.id), 1, 'Count for kp2 should remain 1')
+    })
+  })
+
+  // Tests for getLessonsInScope
+  await t.test('getLessonsInScope', async (t) => {
+    await t.test('should return empty array when no lessons exist', async () => {
+      const result = await courseContentService.getLessonsInScope(5)
+
+      assert.strictEqual(result.length, 0, 'Should return empty array when no lessons exist')
+    })
+
+    await t.test(
+      'should return lessons with number less than or equal to given number',
+      async () => {
+        // Create test lessons
+        const lesson1 = await lessonRepo.create(createLesson(1))
+        const lesson3 = await lessonRepo.create(createLesson(3))
+        const lesson5 = await lessonRepo.create(createLesson(5))
+        const lesson7 = await lessonRepo.create(createLesson(7))
+
+        // Test with scope = 5
+        const result = await courseContentService.getLessonsInScope(5)
+
+        assert.strictEqual(result.length, 3, 'Should return 3 lessons')
+
+        const lessonNumbers = result.map((lesson) => lesson.number).sort()
+        assert.deepStrictEqual(lessonNumbers, [1, 3, 5], 'Should return lessons 1, 3, and 5')
+      }
+    )
+
+    await t.test('should handle boundary conditions correctly', async () => {
+      // Create lessons at boundaries
+      await lessonRepo.create(createLesson(1))
+      await lessonRepo.create(createLesson(5))
+      await lessonRepo.create(createLesson(10))
+
+      // Test exact match boundary
+      const resultExact = await courseContentService.getLessonsInScope(5)
+      assert.strictEqual(resultExact.length, 2, 'Should include lesson with exact number match')
+
+      const exactNumbers = resultExact.map((lesson) => lesson.number).sort()
+      assert.deepStrictEqual(exactNumbers, [1, 5], 'Should include lessons 1 and 5')
+
+      // Test lower boundary
+      const resultLower = await courseContentService.getLessonsInScope(1)
+      assert.strictEqual(resultLower.length, 1, 'Should include only lesson 1')
+      assert.strictEqual(resultLower[0]?.number, 1, 'Should be lesson 1')
+
+      // Test no match
+      const resultNone = await courseContentService.getLessonsInScope(0)
+      assert.strictEqual(resultNone.length, 0, 'Should return no lessons when number is too low')
+    })
+
+    await t.test('should integrate with lesson creation workflow', async () => {
+      // Create lessons using the course content service
+      const knowledgePoints = [
+        createVocabularyPoint(1, 'スコープテスト1'),
+        createVocabularyPoint(3, 'スコープテスト3'),
+        createVocabularyPoint(5, 'スコープテスト5'),
+      ]
+
+      const lessonsWithContent =
+        await courseContentService.createKnowledgePointsWithLesson(knowledgePoints)
+
+      // Verify lessons were created
+      assert.strictEqual(lessonsWithContent.size, 3, 'Should create 3 lessons')
+
+      // Test scope filtering
+      const lessonsInScope = await courseContentService.getLessonsInScope(3)
+      assert.strictEqual(lessonsInScope.length, 2, 'Should return 2 lessons in scope')
+
+      const scopeNumbers = lessonsInScope.map((lesson) => lesson.number).sort()
+      assert.deepStrictEqual(scopeNumbers, [1, 3], 'Should include lessons 1 and 3')
+    })
+
+    await t.test('should preserve lesson properties correctly', async () => {
+      const originalLesson = await lessonRepo.create({
+        number: 3,
+        title: 'Scope Test Lesson',
+        description: 'A test lesson for scope functionality',
+      })
+
+      const result = await courseContentService.getLessonsInScope(5)
+
+      assert.strictEqual(result.length, 1, 'Should return one lesson')
+
+      const returnedLesson = result[0]
+      assert.ok(returnedLesson, 'Lesson should exist')
+      assert.strictEqual(returnedLesson.id, originalLesson.id, 'ID should match')
+      assert.strictEqual(returnedLesson.number, originalLesson.number, 'Number should match')
+      assert.strictEqual(returnedLesson.title, originalLesson.title, 'Title should match')
+      assert.strictEqual(
+        returnedLesson.description,
+        originalLesson.description,
+        'Description should match'
+      )
+    })
+
+    await t.test('should work with large datasets', async () => {
+      // Create multiple lessons using both direct repository and service methods
+      for (let i = 1; i <= 10; i++) {
+        await lessonRepo.create(createLesson(i))
+      }
+
+      // Also create some lessons through the service with knowledge points
+      const knowledgePoints = [
+        createVocabularyPoint(15, 'サービステスト'),
+        createVocabularyPoint(20, 'サービステスト2'),
+      ]
+      await courseContentService.createKnowledgePointsWithLesson(knowledgePoints)
+
+      // Test filtering with different scopes
+      const scope10 = await courseContentService.getLessonsInScope(10)
+      assert.strictEqual(scope10.length, 10, 'Should return 10 lessons for scope 10')
+
+      const scope15 = await courseContentService.getLessonsInScope(15)
+      assert.strictEqual(scope15.length, 11, 'Should return 11 lessons for scope 15')
+
+      const scope25 = await courseContentService.getLessonsInScope(25)
+      assert.strictEqual(scope25.length, 12, 'Should return all 12 lessons for scope 25')
+    })
+
+    await t.test('should integrate with other service methods', async () => {
+      // Create lesson with knowledge points
+      const lesson = await lessonRepo.create(createLesson(2))
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(2, '統合テスト'))
+      await knowledgeRepo.associateWithLesson(vocab.id, lesson.id)
+
+      // Verify lesson can be retrieved through different methods
+      const lessonById = await courseContentService.getLessonById(lesson.id)
+      assert.ok(lessonById, 'Should find lesson by ID')
+
+      const lessonsInScope = await courseContentService.getLessonsInScope(5)
+      assert.strictEqual(lessonsInScope.length, 1, 'Should find lesson in scope')
+      assert.strictEqual(lessonsInScope[0]?.id, lesson.id, 'Should be the same lesson')
+    })
+  })
+
+  // Tests for new methods added for dashboard support
+  await t.test('getKnowledgePointsByConditions', async (t) => {
+    await t.test('should retrieve all knowledge points when no type specified', async () => {
+      // Create lessons
+      const lesson1 = await lessonRepo.create(createLesson(20))
+      const lesson2 = await lessonRepo.create(createLesson(21))
+
+      // Create mixed knowledge points
+      const vocab1 = await knowledgeRepo.create(createVocabularyPoint(20, '語彙1'))
+      const vocab2 = await knowledgeRepo.create(createVocabularyPoint(21, '語彙2'))
+      const grammar1 = await knowledgeRepo.create(createGrammarPoint(20, '文法1'))
+      const grammar2 = await knowledgeRepo.create(createGrammarPoint(21, '文法2'))
+
+      // Associate with lessons
+      await knowledgeRepo.associateWithLesson(vocab1.id, lesson1.id)
+      await knowledgeRepo.associateWithLesson(vocab2.id, lesson2.id)
+      await knowledgeRepo.associateWithLesson(grammar1.id, lesson1.id)
+      await knowledgeRepo.associateWithLesson(grammar2.id, lesson2.id)
+
+      // Get all knowledge points (no type filter)
+      const result = await courseContentService.getKnowledgePointsByConditions({})
+
+      // Should return both vocabulary and grammar points
+      assert.ok(result.items.length >= 4, 'Should return at least 4 knowledge points')
+
+      const vocabularies = result.items.filter((item) => item.type === 'vocabulary')
+      const grammars = result.items.filter((item) => item.type === 'grammar')
+
+      assert.ok(vocabularies.length >= 2, 'Should include vocabulary points')
+      assert.ok(grammars.length >= 2, 'Should include grammar points')
+    })
+
+    await t.test('should filter by type when specified', async () => {
+      // Create mixed knowledge points
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(22, 'フィルタテスト'))
+      const grammar = await knowledgeRepo.create(createGrammarPoint(22, 'フィルタ文法'))
+
+      // Get only vocabulary points
+      const vocabResult = await courseContentService.getKnowledgePointsByConditions({
+        type: 'vocabulary',
+      })
+
+      // Get only grammar points
+      const grammarResult = await courseContentService.getKnowledgePointsByConditions({
+        type: 'grammar',
+      })
+
+      // Verify filtering works
+      const allVocabs = vocabResult.items.every((item) => item.type === 'vocabulary')
+      const allGrammars = grammarResult.items.every((item) => item.type === 'grammar')
+
+      assert.ok(allVocabs, 'Should only return vocabulary points when type is vocabulary')
+      assert.ok(allGrammars, 'Should only return grammar points when type is grammar')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple knowledge points
+      const lesson = await lessonRepo.create(createLesson(23))
+      const points = []
+
+      for (let i = 1; i <= 5; i++) {
+        const point = await knowledgeRepo.create(createVocabularyPoint(23, `ページング${i}`))
+        await knowledgeRepo.associateWithLesson(point.id, lesson.id)
+        points.push(point)
+      }
+
+      // Get first page (limit 2)
+      const page1 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id },
+        { limit: 2, offset: 0 }
+      )
+
+      // Get second page (limit 2, offset 2)
+      const page2 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id },
+        { limit: 2, offset: 2 }
+      )
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+      assert.ok(page1.hasNextPage, 'First page should indicate more items available')
+      assert.strictEqual(page1.total, 5, 'Total should be 5')
+    })
+  })
+
+  await t.test('getLessons', async (t) => {
+    await t.test('should retrieve all lessons without pagination', async () => {
+      // Create test lessons
+      const lesson1 = await lessonRepo.create(createLesson(30))
+      const lesson2 = await lessonRepo.create(createLesson(31))
+      const lesson3 = await lessonRepo.create(createLesson(32))
+
+      // Get all lessons
+      const result = await courseContentService.getLessons()
+
+      assert.ok(result.items.length >= 3, 'Should return at least 3 lessons')
+      assert.strictEqual(result.hasNextPage, false, 'Should not have more items when no pagination')
+      assert.ok(result.total >= 3, 'Total should be at least 3')
+
+      // Verify lesson data structure
+      const firstLesson = result.items[0]
+      assert.ok(firstLesson?.id, 'Lesson should have an ID')
+      assert.ok(typeof firstLesson?.number === 'number', 'Lesson should have a number')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple lessons
+      for (let i = 40; i <= 44; i++) {
+        await lessonRepo.create(createLesson(i))
+      }
+
+      // Get first page
+      const page1 = await courseContentService.getLessons({ limit: 2, offset: 0 })
+
+      // Get second page
+      const page2 = await courseContentService.getLessons({ limit: 2, offset: 2 })
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+
+      // Verify pagination metadata
+      assert.ok(page1.total >= 5, 'Total should be at least 5')
+      assert.ok(page1.hasNextPage, 'Should indicate more items available')
+    })
+  })
+
+  await t.test('getSentences', async (t) => {
+    await t.test('should retrieve all sentences without filtering', async () => {
+      // Create test sentences
+      const sentence1 = await sentenceRepo.create(createTestSentence('テスト文章1', 10))
+      const sentence2 = await sentenceRepo.create(createTestSentence('テスト文章2', 15))
+      const sentence3 = await sentenceRepo.create(createTestSentence('テスト文章3', 20))
+
+      // Get all sentences
+      const result = await courseContentService.getSentences()
+
+      assert.ok(result.items.length >= 3, 'Should return at least 3 sentences')
+      assert.strictEqual(result.hasNextPage, false, 'Should not have more items when no pagination')
+      assert.ok(result.total >= 3, 'Total should be at least 3')
+
+      // Verify sentence data structure
+      const firstSentence = result.items[0]
+      assert.ok(firstSentence?.id, 'Sentence should have an ID')
+      assert.ok(typeof firstSentence?.content === 'string', 'Sentence should have content')
+      assert.ok(
+        typeof firstSentence?.minLessonNumber === 'number',
+        'Sentence should have minLessonNumber'
+      )
+    })
+
+    await t.test('should filter by minLessonNumber', async () => {
+      // Create sentences with different lesson numbers
+      await sentenceRepo.create(createTestSentence('早い文章', 5))
+      await sentenceRepo.create(createTestSentence('遅い文章', 25))
+
+      // Filter sentences with minLessonNumber >= 20
+      const result = await courseContentService.getSentences({ minLessonNumber: 20 })
+
+      // All returned sentences should have minLessonNumber >= 20
+      const allAboveThreshold = result.items.every((sentence) => sentence.minLessonNumber >= 20)
+      assert.ok(allAboveThreshold, 'All sentences should have minLessonNumber >= 20')
+    })
+
+    await t.test('should support pagination', async () => {
+      // Create multiple sentences
+      for (let i = 50; i <= 54; i++) {
+        await sentenceRepo.create(createTestSentence(`ページング文章${i}`, i))
+      }
+
+      // Get first page
+      const page1 = await courseContentService.getSentences({}, { limit: 2, offset: 0 })
+
+      // Get second page
+      const page2 = await courseContentService.getSentences({}, { limit: 2, offset: 2 })
+
+      assert.strictEqual(page1.items.length, 2, 'First page should have 2 items')
+      assert.strictEqual(page2.items.length, 2, 'Second page should have 2 items')
+
+      // Verify pagination metadata
+      assert.ok(page1.total >= 5, 'Total should be at least 5')
+      assert.ok(page1.hasNextPage, 'Should indicate more items available')
+    })
+
+    await t.test('should combine filtering and pagination', async () => {
+      // Create sentences with mixed lesson numbers
+      for (let i = 60; i <= 64; i++) {
+        await sentenceRepo.create(createTestSentence(`組み合わせ${i}`, i))
+      }
+
+      // Filter and paginate: minLessonNumber >= 62, limit 2
+      const result = await courseContentService.getSentences(
+        { minLessonNumber: 62 },
+        { limit: 2, offset: 0 }
+      )
+
+      assert.ok(result.items.length <= 2, 'Should respect limit')
+      const allAboveThreshold = result.items.every((sentence) => sentence.minLessonNumber >= 62)
+      assert.ok(allAboveThreshold, 'All sentences should meet filter criteria')
+    })
+  })
+
+  // Test backward compatibility with deprecated method
+  await t.test('getVocabulariesByConditions backward compatibility', async (t) => {
+    await t.test('should still work as before', async () => {
+      // Create mixed knowledge points
+      const vocab = await knowledgeRepo.create(createVocabularyPoint(70, '互換性テスト'))
+      const grammar = await knowledgeRepo.create(createGrammarPoint(70, '文法テスト'))
+
+      // Old method should still return only vocabularies
+      const result = await courseContentService.getVocabulariesByConditions({})
+
+      // Should only return vocabulary points
+      const allVocabs = result.items.every((item) => item.type === 'vocabulary')
+      assert.ok(allVocabs, 'Should only return vocabulary points for backward compatibility')
     })
   })
 })

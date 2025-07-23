@@ -12,6 +12,7 @@ export function mapCreateSentenceToDrizzle(sentence: CreateSentence) {
     explanation: sentence.explanation,
     annotations: sentence.annotations,
     audio: sentence.audio,
+    minLessonNumber: sentence.minLessonNumber,
   }
 }
 
@@ -35,6 +36,7 @@ export function mapDrizzleToSentence(row: typeof sentencesTable.$inferSelect): S
     explanation: row.explanation as LocalizedText,
     annotations: (row.annotations as Annotation[]) || [],
     audio: row.audio ?? undefined,
+    minLessonNumber: row.minLessonNumber,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   }

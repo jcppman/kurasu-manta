@@ -21,7 +21,18 @@
     },
     "overrides": {
       "strtok3": "8.0.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@swc/core",
+      "@tailwindcss/oxide",
+      "better-sqlite3",
+      "dtrace-provider",
+      "esbuild",
+      "lefthook",
+      "protobufjs",
+      "sharp"
+    ]
   },
   "prettier": {
     "printWidth": 100,
