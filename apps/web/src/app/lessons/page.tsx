@@ -1,7 +1,5 @@
-'use client'
-
+import { getLessons } from '@/server/lessons'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 interface Lesson {
   id: number
@@ -10,26 +8,8 @@ interface Lesson {
   description?: string
 }
 
-export default function LessonsPage() {
-  const [lessons, setLessons] = useState<Lesson[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/lessons')
-      .then((res) => res.json())
-      .then((data) => {
-        setLessons(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError('Failed to load lessons')
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) return <div className="container mx-auto p-8">Loading...</div>
-  if (error) return <div className="container mx-auto p-8">Error: {error}</div>
+export default async function LessonsPage() {
+  const lessons = await getLessons()
 
   return (
     <div className="container mx-auto p-8">

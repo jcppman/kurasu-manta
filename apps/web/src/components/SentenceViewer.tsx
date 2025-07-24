@@ -79,7 +79,7 @@ export function SentenceViewer({ text, annotations }: SentenceViewerProps) {
             <span
               key={`annotated-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
               className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(segment.annotation.type)}`}
-              onMouseEnter={() => setHoveredAnnotation(segment.annotation)}
+              onMouseEnter={() => setHoveredAnnotation(segment.annotation || null)}
               onMouseLeave={() => setHoveredAnnotation(null)}
             >
               {segment.text}

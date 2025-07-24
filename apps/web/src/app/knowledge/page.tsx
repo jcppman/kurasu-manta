@@ -1,36 +1,16 @@
-'use client'
-
+import { getKnowledgePoints } from '@/server/knowledge'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 interface KnowledgePoint {
   id: number
   content: string
   explanation: { en?: string } | null
   type: string
-  createdAt: string
+  lesson: number
 }
 
-export default function KnowledgePage() {
-  const [knowledgePoints, setKnowledgePoints] = useState<KnowledgePoint[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/knowledge')
-      .then((res) => res.json())
-      .then((data) => {
-        setKnowledgePoints(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError('Failed to load knowledge points')
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) return <div className="container mx-auto p-8">Loading...</div>
-  if (error) return <div className="container mx-auto p-8">Error: {error}</div>
+export default async function KnowledgePage() {
+  const knowledgePoints = await getKnowledgePoints()
 
   return (
     <div className="container mx-auto p-8">
@@ -55,8 +35,8 @@ export default function KnowledgePage() {
             {kp.explanation?.en && <p className="text-gray-700 mb-3">{kp.explanation.en}</p>}
 
             <div className="flex justify-between items-center text-sm text-gray-500">
-              <div>{/* Lesson relationship to be implemented later */}</div>
-              <div>Created: {new Date(kp.createdAt).toLocaleDateString()}</div>
+              <div>Lesson: {kp.lesson}</div>
+              <div />
             </div>
           </div>
         ))}

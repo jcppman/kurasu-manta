@@ -1,9 +1,7 @@
-'use client'
-
 import { SentenceViewer } from '@/components/SentenceViewer'
+import { getSentences } from '@/server/sentences'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 interface Sentence {
   id: number
@@ -14,26 +12,8 @@ interface Sentence {
   minLessonNumber: number
 }
 
-export default function SentencesPage() {
-  const [sentences, setSentences] = useState<Sentence[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/sentences')
-      .then((res) => res.json())
-      .then((data) => {
-        setSentences(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError('Failed to load sentences')
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) return <div className="container mx-auto p-8">Loading...</div>
-  if (error) return <div className="container mx-auto p-8">Error: {error}</div>
+export default async function SentencesPage() {
+  const sentences = await getSentences()
 
   return (
     <div className="container mx-auto p-8">
