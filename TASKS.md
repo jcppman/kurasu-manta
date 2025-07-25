@@ -1,45 +1,49 @@
-# Project Tasks
+# Optimization Tasks
 
-## ✅ Refactor Web App: Replace API Routes with Direct Database Access (COMPLETED)
+## Fix generateSentenceAnnotations Function Accuracy Issues
 
-### Overview
-Refactor the `@apps/web` application to use direct database access via `content-service` instead of Next.js API routes. Extract API logic into server functions and call them directly from pages.
+**Location**: `apps/generator/src/workflows/minna-jp-1/services/sentence.ts:31-108`
 
-### Completed Tasks
+### Current Problems
+- AI model (GPT-4o) provides incorrect character positions and lengths for annotations
+- No validation of returned positions against actual sentence content  
+- Complex prompt trying to do vocabulary matching + furigana generation + positioning in one step
+- Unreliable character counting from LLM output
 
-#### ✅ 1. Create Server Functions
-- ✅ Created `src/server/lessons.ts` with `getLessons()` and `getLessonById()` functions
-- ✅ Created `src/server/knowledge.ts` with `getKnowledgePoints()` function  
-- ✅ Created `src/server/sentences.ts` with `getSentences()` function
-- ✅ All functions properly use `CourseContentService` and handle errors
+### Optimization Strategy: Hybrid Approach
 
-#### ✅ 2. Update Page Components to Use Server Functions
-- ✅ Converted `src/app/lessons/page.tsx` from client to server component
-- ✅ Converted `src/app/knowledge/page.tsx` from client to server component
-- ✅ Converted `src/app/sentences/page.tsx` from client to server component
-- ✅ Converted `src/app/lessons/[id]/page.tsx` from client to server component
-- ✅ Removed all `useEffect`, `useState`, and `fetch` calls
-- ✅ Fixed Next.js 15 async params requirements
+#### Phase 1: Add Deterministic Validation
+- [ ] Create `validateAnnotation(sentence: string, annotation: Annotation): boolean` function
+- [ ] Add position validation to check AI-generated positions against actual text
+- [ ] Implement automatic position correction for vocabulary annotations
+- [ ] Add comprehensive logging for debugging annotation issues
 
-#### ✅ 3. Remove Unused API Routes
-- ✅ Deleted `src/app/api/lessons/route.ts`
-- ✅ Deleted `src/app/api/knowledge/route.ts`
-- ✅ Deleted `src/app/api/sentences/route.ts`
-- ✅ Deleted entire `src/app/api/lessons/` directory including `[id]/route.ts`
+#### Phase 2: Implement Hybrid Vocabulary Matching
+- [ ] Split vocabulary annotation (deterministic) from furigana generation (AI)
+- [ ] Replace AI vocabulary positioning with exact string matching using `String.indexOf()`
+- [ ] Implement fuzzy matching for vocabulary variations (conjugations, particles)
+- [ ] Keep AI only for furigana content generation, not positioning
 
-#### ✅ 4. Update Error Handling
-- ✅ Server functions throw appropriate errors for Next.js to handle
-- ✅ Fixed TypeScript interface issues (removed non-existent `createdAt` property)
-- ✅ Fixed SentenceViewer component type safety
+#### Phase 3: Optimize Furigana Processing
+- [ ] Use regex patterns for kanji detection: `/[\u4e00-\u9faf]/g`
+- [ ] Implement character-by-character processing for accurate positioning
+- [ ] Consider using Japanese text processing library (kuromoji.js) for tokenization
+- [ ] Generate furigana content via AI but calculate positions deterministically
 
-#### ✅ 5. Testing and Verification
-- ✅ All pages build successfully without errors
-- ✅ Code linting passes with `pnpm lint-fix` 
-- ✅ Build verification completed successfully
-- ✅ Static generation working for all routes
+#### Phase 4: Enhanced Error Handling
+- [ ] Add fallback strategies for failed annotations
+- [ ] Implement overlap detection and resolution
+- [ ] Add comprehensive validation layer with automatic correction
+- [ ] Create unit tests for annotation accuracy
 
-### Achieved Benefits
-- ✅ Improved performance by removing API round-trips
-- ✅ Better type safety with direct service usage
-- ✅ Simplified architecture following Next.js App Router patterns
-- ✅ Reduced client-side JavaScript bundle size (all pages now server-rendered)
+### Implementation Notes
+- Maintain backwards compatibility with existing `Annotation` interface
+- Ensure deterministic and reproducible results
+- Add performance monitoring for annotation generation time
+- Consider caching frequently used vocabulary patterns
+
+### Success Metrics
+- 100% accurate character positions for vocabulary annotations
+- Significant reduction in annotation errors
+- Faster annotation generation through reduced AI dependency
+- Better error handling and recovery

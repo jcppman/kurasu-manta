@@ -10,6 +10,7 @@ interface SentenceViewerProps {
 
 export function SentenceViewer({ text, annotations }: SentenceViewerProps) {
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
+  console.log(text, annotations)
 
   // Sort annotations by location to process them in order
   const sortedAnnotations = [...annotations].sort((a, b) => a.loc - b.loc)

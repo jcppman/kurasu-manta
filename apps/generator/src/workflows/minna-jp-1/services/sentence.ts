@@ -1,4 +1,5 @@
 import db from '@/db'
+import { processInParallel } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
   DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
@@ -283,21 +284,71 @@ Create sentences that are clear, useful, and appropriate for students at this le
     }),
   })
 
-  const generated: GeneratedSentence[] = []
-
-  for (const sentence of sentences) {
-    logger.info(`Generated sentence: ${sentence.content}`)
-    if (!(await validateSentence(sentence))) {
-      continue
+  // Validate sentences in parallel with controlled concurrency
+  logger.info(`Validating ${sentences.length} sentences with default concurrency`)
+  const validationResults = await processInParallel(sentences, async (sentence) => {
+    logger.info(`Validating sentence: ${sentence.content}`)
+    const isValid = await validateSentence(sentence)
+    if (!isValid) {
+      throw new Error('Validation failed')
     }
-    generated.push({
+    return sentence
+  })
+
+  // Process only successfully validated sentences
+  const validatedSentences = validationResults
+    .filter(
+      (
+        result
+      ): result is {
+        success: true
+        result: Omit<GeneratedSentence, 'annotations'>
+        item: Omit<GeneratedSentence, 'annotations'>
+      } => result.success
+    )
+    .map((result) => result.result)
+
+  logger.info(`${validatedSentences.length} out of ${sentences.length} sentences passed validation`)
+
+  // Generate annotations for validated sentences in parallel
+  logger.info(
+    `Generating annotations for ${validatedSentences.length} sentences with default concurrency`
+  )
+  const annotationResults = await processInParallel(validatedSentences, async (sentence) => {
+    const annotations = await generateSentenceAnnotations(
+      sentence.content,
+      allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
+    )
+    return {
       ...sentence,
-      annotations: await generateSentenceAnnotations(
-        sentence.content,
-        allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
-      ),
-    })
-  }
+      annotations,
+    }
+  })
+
+  // Process only sentences with successful annotation generation
+  const generated = annotationResults
+    .filter(
+      (
+        result
+      ): result is {
+        success: true
+        result: GeneratedSentence
+        item: Omit<GeneratedSentence, 'annotations'>
+      } => {
+        if (!result.success) {
+          logger.warn(
+            `Failed to generate annotations for sentence: ${result.item.content}`,
+            result.error
+          )
+        }
+        return result.success
+      }
+    )
+    .map((result) => result.result)
+
+  logger.info(
+    `${generated.length} out of ${validatedSentences.length} sentences successfully generated with annotations`
+  )
 
   return generated
 }

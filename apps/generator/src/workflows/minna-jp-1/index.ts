@@ -11,12 +11,12 @@ import {
 
 export async function execute() {
   // await cleanGrammar()
-  await createGrammarLessons()
+  //await createGrammarLessons()
   // await cleanVocabularies()
-  await createVocabularies()
+  //await createVocabularies()
   // await generateVocabularyAudioClips()
   // await cleanSentences()
-  // await createSentencesForLesson(1)
+  await createSentencesForLesson(1)
 }
 
 execute()
