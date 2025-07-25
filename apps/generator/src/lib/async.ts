@@ -1,3 +1,5 @@
+import { DEFAULT_MAX_CONCURRENCY } from '@/workflows/minna-jp-1/constants'
+
 export type ProcessResult<T, R> =
   | {
       success: true
@@ -11,12 +13,10 @@ export type ProcessResult<T, R> =
     }
 
 // Default concurrency for external API calls
-const DEFAULT_CONCURRENCY = 5
-
 export async function processInParallel<T, R>(
   items: T[],
   processor: (item: T) => Promise<R>,
-  concurrency: number = DEFAULT_CONCURRENCY
+  concurrency: number = DEFAULT_MAX_CONCURRENCY
 ): Promise<ProcessResult<T, R>[]> {
   if (concurrency <= 0) {
     throw new Error('Concurrency must be greater than 0')

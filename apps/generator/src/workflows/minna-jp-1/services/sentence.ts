@@ -3,6 +3,7 @@ import { processInParallel } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
   DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
+  MAX_LLM_RETRY_TIMES,
   MAX_LOW_PRIORITY_GRAMMAR,
   MAX_LOW_PRIORITY_VOCABULARIES,
 } from '@/workflows/minna-jp-1/constants'
@@ -108,8 +109,167 @@ CONSTRAINTS:
   })
 }
 
+export async function generateSentenceExplanations(
+  sentences: string[]
+): Promise<{ zhCN: string; enUS: string }[]> {
+  if (sentences.length === 0) {
+    return []
+  }
+
+  let remainingSentences = [...sentences]
+  const results: ({ zhCN: string; enUS: string } | null)[] = new Array(sentences.length).fill(null)
+  let retryCount = 0
+
+  while (remainingSentences.length > 0 && retryCount < MAX_LLM_RETRY_TIMES) {
+    const prompt = `
+You are a professional translator providing accurate translations of Japanese sentences.
+
+Your task is to translate each Japanese sentence into Chinese (Simplified) and English.
+
+SENTENCES TO TRANSLATE:
+${remainingSentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
+
+TRANSLATION GUIDELINES:
+- Provide natural, accurate translations that convey the original meaning
+- Chinese translations should use Simplified Chinese characters
+- English translations should be clear and natural
+- Maintain the tone and style of the original sentence
+- For formal Japanese sentences, use appropriate formal language in translations
+- For casual Japanese sentences, use appropriate casual language in translations
+
+OUTPUT FORMAT:
+Return translations in the same order as the input sentences.
+    `
+
+    try {
+      const { object } = await generateObject({
+        model: openai('gpt-4o'),
+        prompt,
+        schema: z.object({
+          translations: z.array(
+            z.object({
+              zhCN: z.string(),
+              enUS: z.string(),
+            })
+          ),
+        }),
+      })
+
+      // Process translations and identify failed ones
+      const failedIndices: number[] = []
+      const newRemainingSentences: string[] = []
+
+      remainingSentences.forEach((sentence, currentIndex) => {
+        const originalIndex = sentences.indexOf(sentence)
+        const translation = object.translations[currentIndex]
+
+        // Validate translation
+        if (!translation?.zhCN?.trim() || !translation?.enUS?.trim()) {
+          logger.warn(
+            `Empty translation generated for sentence: ${sentence} (attempt ${retryCount + 1})`
+          )
+          failedIndices.push(originalIndex)
+          newRemainingSentences.push(sentence)
+        } else {
+          // Translation is valid, store it
+          results[originalIndex] = {
+            zhCN: translation.zhCN.trim(),
+            enUS: translation.enUS.trim(),
+          }
+        }
+      })
+
+      remainingSentences = newRemainingSentences
+      retryCount++
+
+      if (failedIndices.length > 0) {
+        logger.info(
+          `Retrying ${failedIndices.length} failed translations (attempt ${retryCount}/${MAX_LLM_RETRY_TIMES})`
+        )
+      }
+    } catch (error) {
+      logger.error(`Translation generation failed on attempt ${retryCount + 1}:`, error)
+      retryCount++
+    }
+  }
+
+  // Handle any remaining failed translations
+  return results.map((result, index) => {
+    if (result === null) {
+      const sentence = sentences[index]
+      logger.error(
+        `Failed to generate translation for sentence after ${MAX_LLM_RETRY_TIMES} attempts: ${sentence}`
+      )
+      throw new Error(`Translation failed for sentence: ${sentence}`)
+    }
+    return result
+  })
+}
+
+interface ParsedToken {
+  text: string
+  furigana?: string
+}
+
+function parseToken(token: string): ParsedToken {
+  const furiganaMatch = token.match(/^(.+?)\[(.+?)\]$/)
+  if (furiganaMatch) {
+    return {
+      text: furiganaMatch[1],
+      furigana: furiganaMatch[2],
+    }
+  }
+  return {
+    text: token,
+  }
+}
+
+function calculateAnnotationsFromTokens(
+  tokens: string[],
+  vocabularyItems: Vocabulary[]
+): Annotation[] {
+  const annotations: Annotation[] = []
+  let currentPosition = 0
+
+  // Create a map of vocabulary content to ID for quick lookup
+  const vocabMap = new Map<string, number>()
+  for (const vocab of vocabularyItems) {
+    vocabMap.set(vocab.content, vocab.id)
+  }
+
+  for (const token of tokens) {
+    const parsed = parseToken(token)
+    const tokenLength = parsed.text.length
+
+    // Check if this token is a vocabulary item
+    const vocabId = vocabMap.get(parsed.text)
+    if (vocabId) {
+      annotations.push({
+        loc: currentPosition,
+        len: tokenLength,
+        type: 'vocabulary',
+        content: parsed.text,
+        id: vocabId,
+      })
+    } else if (parsed.furigana) {
+      // This is a kanji with furigana annotation
+      annotations.push({
+        loc: currentPosition,
+        len: tokenLength,
+        type: 'furigana',
+        content: parsed.furigana,
+      })
+    }
+
+    currentPosition += tokenLength
+  }
+
+  return annotations
+}
+
 interface GeneratedSentence {
   content: string
+  tokens: string[]
   explanation: {
     zhCN: string
     enUS: string
@@ -125,7 +285,7 @@ interface KnowledgeBucket {
 }
 
 export async function validateSentence(
-  sentence: Omit<GeneratedSentence, 'annotations'>
+  sentence: Omit<GeneratedSentence, 'annotations' | 'explanation'>
 ): Promise<boolean> {
   // evaluate if the sentence is valid and is not too similar to existing sentences
   // get existing sentences from the database
@@ -150,9 +310,6 @@ You are a Japanese language expert evaluating sentences for a Japanese textbook.
 
 SENTENCE TO EVALUATE:
 ${sentence.content}
-EXPLAIN:
-${sentence.explanation.zhCN}
-${sentence.explanation.enUS}
 
 EVALUATION CRITERIA:
 Focus on detecting serious errors that would mislead students. Accept sentences that are:
@@ -258,7 +415,17 @@ GENERATION GUIDELINES:
 5. Combine items from different priorities when it creates better sentences
 6. Vary sentence types: statements, questions, negative forms, past/present tense
 7. Focus on practical, daily-life situations that students would actually encounter
-8. provide 'zhCN' and 'enUS' explanations for each sentence
+
+TOKENIZATION OUTPUT REQUIREMENT:
+For each sentence, also provide a tokenized version with furigana annotations:
+- Split the sentence into meaningful tokens
+- For kanji that are NOT in the provided vocabulary list, add furigana in brackets: kanji[hiragana]
+- For vocabulary items from the provided list, keep them as-is (no furigana needed)
+- Particles and hiragana-only words should be separate tokens
+
+EXAMPLE:
+- Sentence: "私は日本人です"
+- Tokens: ["私", "は", "日本人[にほんじん]", "です"]
 
 Create sentences that are clear, useful, and appropriate for students at this level.
   `
@@ -273,10 +440,7 @@ Create sentences that are clear, useful, and appropriate for students at this le
       sentences: z.array(
         z.object({
           content: z.string(),
-          explanation: z.object({
-            zhCN: z.string(),
-            enUS: z.string(),
-          }),
+          tokens: z.array(z.string()),
           vocabularyIds: z.array(z.number()),
           grammarIds: z.array(z.number()),
         })
@@ -310,13 +474,24 @@ Create sentences that are clear, useful, and appropriate for students at this le
 
   logger.info(`${validatedSentences.length} out of ${sentences.length} sentences passed validation`)
 
-  // Generate annotations for validated sentences in parallel
+  // Generate translations for validated sentences
+  logger.info(`Generating translations for ${validatedSentences.length} sentences`)
+  const translations = await generateSentenceExplanations(validatedSentences.map((s) => s.content))
+
+  // Combine sentences with translations
+  const sentencesWithExplanations = validatedSentences.map((sentence, index) => ({
+    ...sentence,
+    explanation: translations[index],
+  }))
+
+  // Generate annotations from tokens deterministically
   logger.info(
-    `Generating annotations for ${validatedSentences.length} sentences with default concurrency`
+    `Generating annotations from tokens for ${sentencesWithExplanations.length} sentences`
   )
-  const annotationResults = await processInParallel(validatedSentences, async (sentence) => {
-    const annotations = await generateSentenceAnnotations(
-      sentence.content,
+  const generated = sentencesWithExplanations.map((sentence) => {
+    logger.debug(`Generating annotations for sentence: ${JSON.stringify(sentence)}`)
+    const annotations = calculateAnnotationsFromTokens(
+      sentence.tokens,
       allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
     )
     return {
@@ -325,30 +500,7 @@ Create sentences that are clear, useful, and appropriate for students at this le
     }
   })
 
-  // Process only sentences with successful annotation generation
-  const generated = annotationResults
-    .filter(
-      (
-        result
-      ): result is {
-        success: true
-        result: GeneratedSentence
-        item: Omit<GeneratedSentence, 'annotations'>
-      } => {
-        if (!result.success) {
-          logger.warn(
-            `Failed to generate annotations for sentence: ${result.item.content}`,
-            result.error
-          )
-        }
-        return result.success
-      }
-    )
-    .map((result) => result.result)
-
-  logger.info(
-    `${generated.length} out of ${validatedSentences.length} sentences successfully generated with annotations`
-  )
+  logger.info(`${generated.length} sentences successfully generated with annotations`)
 
   return generated
 }
