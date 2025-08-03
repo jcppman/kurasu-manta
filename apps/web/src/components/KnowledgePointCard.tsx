@@ -8,6 +8,7 @@ interface KnowledgePoint {
   explanation: { [languageCode: string]: string }
   type: string
   lesson: number
+  sentenceCount?: number
 }
 
 interface KnowledgePointCardProps {
@@ -23,6 +24,7 @@ export function KnowledgePointCard({ knowledgePoint }: KnowledgePointCardProps) 
       knowledgePointId: knowledgePoint.id.toString(),
       type: knowledgePoint.type,
       content: knowledgePoint.content,
+      lessonId: knowledgePoint.lesson.toString(),
     })
     router.push(`/sentences?${params.toString()}`)
   }
@@ -48,7 +50,14 @@ export function KnowledgePointCard({ knowledgePoint }: KnowledgePointCardProps) 
       )}
 
       <div className="flex justify-between items-center">
-        <div className="text-xs text-gray-500">Type: {knowledgePoint.type}</div>
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-gray-500">Type: {knowledgePoint.type}</div>
+          {typeof knowledgePoint.sentenceCount === 'number' && (
+            <div className="text-xs text-gray-500">
+              {knowledgePoint.sentenceCount} sentence{knowledgePoint.sentenceCount !== 1 ? 's' : ''}
+            </div>
+          )}
+        </div>
         <div className="text-xs text-blue-600 hover:text-blue-800">View sentences →</div>
       </div>
     </button>

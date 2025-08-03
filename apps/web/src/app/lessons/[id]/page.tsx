@@ -14,6 +14,7 @@ interface KnowledgePoint {
   explanation: { en?: string }
   type: string
   lesson: number
+  sentenceCount?: number
 }
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
