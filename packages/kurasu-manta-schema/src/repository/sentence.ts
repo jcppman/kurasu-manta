@@ -7,11 +7,7 @@ import {
 import type * as schema from '@/drizzle/schema'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
-import {
-  mapCreateSentenceToDrizzle,
-  mapDrizzleToSentence,
-  mapSentenceToDrizzle,
-} from '@/mapper/sentence'
+import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
 import { and, count, eq, or, sql } from 'drizzle-orm'

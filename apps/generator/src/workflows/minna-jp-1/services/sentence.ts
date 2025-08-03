@@ -40,6 +40,16 @@ ANNOTATION RULES:
 2. Group consecutive kanji that form a single word (e.g., 家族[かぞく], not 家[か]族[ぞく])
 3. Do NOT add furigana to hiragana, katakana, or punctuation
 4. Keep all other characters exactly as they are
+5. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
+
+CONTEXT-DEPENDENT READING EXAMPLES:
+- 何 as "what" in questions: なん (何ですか → 何[なん]ですか)
+- 何 as "how many" with counters: なん (何人 → 何[なん]人[にん])
+- 何 as indefinite "something": なに (何か → 何[なに]か)
+- 一 as number "one": いち (一つ → 一[ひと]つ)
+- 一 in compound words: いっ (一番 → 一[いち]番[ばん])
+- 人 after numbers: にん (三人 → 三[さん]人[にん])
+- 人 as "person": ひと (人が → 人[ひと]が)
 
 SENTENCE TO ANNOTATE:
 "${sentence}"
@@ -53,6 +63,12 @@ Output: "古[ふる]い傘[かさ]を買[か]いました"
 
 Input: "私は学校に行きます"
 Output: "私[わたし]は学校[がっこう]に行[い]きます"
+
+Input: "お名前は何ですか"
+Output: "お名前[なまえ]は何[なん]ですか"
+
+Input: "何人いますか"
+Output: "何[なん]人[にん]いますか"
 
 Return only the annotated sentence with no additional text.
   `

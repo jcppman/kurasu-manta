@@ -26,7 +26,7 @@ export class CourseContentService {
   private knowledgeRepository: KnowledgeRepository
   private sentenceRepository: SentenceRepository
 
-  constructor(private db: Db) {
+  constructor(db: Db) {
     this.lessonRepository = new LessonRepository(db)
     this.knowledgeRepository = new KnowledgeRepository(db)
     this.sentenceRepository = new SentenceRepository(db)
@@ -330,6 +330,7 @@ export class CourseContentService {
   async getLessons(
     pagination?: PaginationParams | { limit?: number; offset?: number }
   ): Promise<PaginatedResult<Lesson>> {
+    // TODO: add required method to repository
     // For now, we'll implement this as getting all lessons
     // The repository doesn't have a paginated getAll method, so we'll use a simple wrapper
     const lessons = await this.lessonRepository.getAll()
@@ -388,6 +389,7 @@ export class CourseContentService {
     filters?: { minLessonNumber?: number },
     pagination?: PaginationParams | { limit?: number; offset?: number }
   ): Promise<PaginatedResult<Sentence>> {
+    // TODO: add required method to repository
     // For now, we'll implement this as getting all sentences
     // The repository doesn't have a paginated getAll method with filters, so we'll use a simple wrapper
     const sentences = await this.sentenceRepository.getAll()
@@ -442,5 +444,11 @@ export class CourseContentService {
       hasNextPage: false,
       hasPrevPage: false,
     }
+  }
+
+  async getLessonKnowledgePointSentenceStats(lessonId: number) {
+    // TODO
+    // this function should get statistics for:
+    // sentence count grouped by knowledge point id
   }
 }

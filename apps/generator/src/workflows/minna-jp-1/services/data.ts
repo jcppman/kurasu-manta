@@ -199,9 +199,8 @@ export async function createGrammarLessons() {
 export async function createSentencesForLesson(lessonNumber: number) {
   const courseContentService = new CourseContentService(db)
 
-  const generatedSentences = await withRetry(
-    () => generateSentencesForLessonNumber(lessonNumber, DESIRED_SENTENCE_COUNT_PER_BATCH),
-    { maxAttempts: MAX_LLM_RETRY_TIMES }
+  const generatedSentences = await withRetry(() =>
+    generateSentencesForLessonNumber(lessonNumber, DESIRED_SENTENCE_COUNT_PER_BATCH)
   )
   if (generatedSentences.length === 0) {
     logger.info(`No sentences generated for lesson number ${lessonNumber}`)
@@ -227,4 +226,19 @@ export async function createSentencesForLesson(lessonNumber: number) {
 
     logger.info(`Created sentence for lesson number ${lessonNumber}: "${content}"`)
   }
+}
+
+export async function createSentencesForLessons(
+  untilLessonNumber: number = Number.POSITIVE_INFINITY
+) {
+  const courseContentService = new CourseContentService(db)
+
+  // Get all lessons
+  const { items: lessons } = await courseContentService.getLessons()
+
+  const lessonsToProcess = lessons
+    .filter((lesson) => lesson.number <= untilLessonNumber)
+    .sort((a, b) => a.number - b.number)
+
+  // get stats: each lesson's sentence count by knowledge point id
 }

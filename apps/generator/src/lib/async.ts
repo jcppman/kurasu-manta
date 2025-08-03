@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_CONCURRENCY } from '@/workflows/minna-jp-1/constants'
+import { DEFAULT_MAX_CONCURRENCY, MAX_LLM_RETRY_TIMES } from '@/workflows/minna-jp-1/constants'
 import { logger } from './utils'
 
 export type ProcessResult<T, R> =
@@ -67,7 +67,7 @@ export interface RetryOptions {
 }
 
 const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
-  maxAttempts: 3,
+  maxAttempts: MAX_LLM_RETRY_TIMES,
   initialDelay: 1000,
   backoffFactor: 2,
   maxDelay: 10000,
