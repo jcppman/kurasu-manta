@@ -7,7 +7,7 @@
     "debug-gen:jp-1": "dotenvx run -f .env -- tsx --inspect-brk src/workflows/minna-jp-1 | pino-pretty",
     "db:push": "dotenvx run -f .env -- drizzle-kit push",
     "db:generate": "dotenvx run -f .env -- drizzle-kit generate",
-    "test": "tsx --test '**/*.test.ts'"
+    "test": "dotenvx run -f .env -- tsx --test '**/*.test.ts'"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",

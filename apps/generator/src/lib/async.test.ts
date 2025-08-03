@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it, test } from 'node:test'
+import { describe, test } from 'node:test'
 import { processInParallel, withRetry } from './async'
 
 describe('processInParallel', () => {
@@ -290,6 +290,7 @@ describe('withRetry', () => {
     let lastTime = startTime
 
     const originalSetTimeout = global.setTimeout
+    // @ts-ignore
     global.setTimeout = (
       callback: TimerHandler,
       delay?: number | undefined,
@@ -330,6 +331,7 @@ describe('withRetry', () => {
     }
 
     const originalSetTimeout = global.setTimeout
+    // @ts-ignore
     global.setTimeout = (
       callback: TimerHandler,
       delay?: number | undefined,

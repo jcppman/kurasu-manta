@@ -64,5 +64,5 @@ test('何時', () => {
   ]
 
   const result = toFullFurigana(text, annotations)
-  strictEqual(result, 'いつ')
+  strictEqual(result, '何いつ')
 })

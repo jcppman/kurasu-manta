@@ -10,7 +10,7 @@ import {
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
-import { type Annotation, annotationSchema } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import {
   type Grammar,
   type KnowledgePoint,
@@ -30,83 +30,116 @@ function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): s
   return `<${parentTagName} id="${input.id}">${result}</${parentTagName}>`
 }
 
-export async function generateSentenceAnnotations(
-  sentence: string,
-  vocabularies: Vocabulary[]
-): Promise<Annotation[]> {
+export async function generateFuriganaAnnotations(sentence: string): Promise<Annotation[]> {
   const prompt = `
-You are a Japanese language annotation expert. Your task is to annotate a Japanese sentence based on a provided vocabulary list.
+You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
 
 ANNOTATION RULES:
-1. **Vocabulary Annotations** (type: 'vocabulary')
-   - Mark all occurrences of words from the provided vocabulary list
-   - Each annotation must match the vocabulary item exactly (e.g., annotate "私" not "私は")
-   - Include the vocabulary ID in the annotation
-
-2. **Furigana Annotations** (type: 'furigana')
-   - Mark ONLY kanji characters that are NOT part of the provided vocabulary
-   - Provide pronunciation in hiragana
-   - Do NOT include trailing hiragana in the annotation length
-   - Group consecutive kanji that form a single word (e.g., 家族 as one annotation, not 家 and 族 separately)
+1. Add furigana for ALL kanji characters using the format: kanji[hiragana]
+2. Group consecutive kanji that form a single word (e.g., 家族[かぞく], not 家[か]族[ぞく])
+3. Do NOT add furigana to hiragana, katakana, or punctuation
+4. Keep all other characters exactly as they are
 
 SENTENCE TO ANNOTATE:
 "${sentence}"
 
-VOCABULARY LIST:
-${vocabularies.map((v) => knowledgeDetails(v, 'vocabulary')).join('\n')}
-
 OUTPUT FORMAT:
-Return a JSON array where each annotation contains:
-- loc: Starting position (0-based character index)
-- len: Number of characters to annotate
-- type: 'vocabulary' or 'furigana'
-- content: The annotation content (vocabulary word or furigana reading)
-- id: Vocabulary ID (required for 'vocabulary' type, keep it absent for 'furigana')
+Return the sentence with furigana annotations in brackets. Do NOT provide JSON or any other format.
 
-EXAMPLE:
-For sentence "古い傘", the output would be:
-[
-  {"loc": 0, "len": 1, "type": "furigana", "content": "ふる"},
-  {"loc": 2, "len": 1, "type": "furigana", "content": "かさ"}
-]
+EXAMPLES:
+Input: "古い傘を買いました"
+Output: "古[ふる]い傘[かさ]を買[か]いました"
 
-CONSTRAINTS:
-- Annotations must not overlap
-- Annotate all occurrences of vocabulary words
-- Ensure exact character positions and lengths
-- Return only the JSON array with no additional text
+Input: "私は学校に行きます"
+Output: "私[わたし]は学校[がっこう]に行[い]きます"
+
+Return only the annotated sentence with no additional text.
   `
 
   const { object } = await generateObject({
     model: openai('gpt-4o'),
     prompt,
     schema: z.object({
-      annotations: z.array(annotationSchema),
+      annotatedSentence: z.string(),
     }),
   })
 
-  const trimmedAnnotations = object.annotations.map((a) => ({
-    ...a,
-    content: a.content.trim(),
-  }))
+  // Parse the annotated sentence to generate position-based annotations
+  return parseAnnotatedSentenceToAnnotations(object.annotatedSentence, sentence)
+}
 
-  // sometimes the AI may return furigana annotations that are already part of the vocabulary, filter them out
+function parseAnnotatedSentenceToAnnotations(
+  annotatedSentence: string,
+  originalSentence: string
+): Annotation[] {
+  const annotations: Annotation[] = []
+  let originalPos = 0
+  let annotatedPos = 0
 
-  // range is [loc, loc + len - 1] both inclusive
-  const vocRanges = trimmedAnnotations
-    .filter((a) => a.type === 'vocabulary')
-    .map((a) => [a.loc, a.loc + a.len - 1])
-  return trimmedAnnotations.filter((a) => {
-    if (a.type === 'vocabulary') {
-      return true
+  while (annotatedPos < annotatedSentence.length) {
+    const char = annotatedSentence[annotatedPos]
+
+    if (char === '[') {
+      // Find the closing bracket
+      const closingBracket = annotatedSentence.indexOf(']', annotatedPos)
+      if (closingBracket === -1) {
+        throw new Error(
+          `Malformed annotation: missing closing bracket after position ${annotatedPos}`
+        )
+      }
+
+      // Extract furigana content
+      const furigana = annotatedSentence.slice(annotatedPos + 1, closingBracket)
+
+      // Find the kanji that this furigana belongs to by looking backwards
+      // from the current originalPos to find the start of the kanji sequence
+      let kanjiStart = originalPos
+
+      // Look backwards to find the start of the kanji sequence
+      while (kanjiStart > 0) {
+        const prevChar = originalSentence[kanjiStart - 1]
+        if (!/[\u4e00-\u9faf]/.test(prevChar)) {
+          break
+        }
+        kanjiStart--
+      }
+
+      // The kanji sequence ends at the current originalPos
+      const kanjiEnd = originalPos
+
+      if (kanjiStart < kanjiEnd) {
+        annotations.push({
+          loc: kanjiStart,
+          len: kanjiEnd - kanjiStart,
+          type: 'furigana',
+          content: furigana.trim(),
+        })
+      }
+
+      // Move past the furigana annotation
+      annotatedPos = closingBracket + 1
+    } else {
+      // Regular character - should match the original
+      if (originalPos >= originalSentence.length) {
+        throw new Error('Annotated sentence is longer than original sentence')
+      }
+
+      if (char !== originalSentence[originalPos]) {
+        throw new Error(
+          `Character mismatch at position ${originalPos}: expected '${originalSentence[originalPos]}', got '${char}'`
+        )
+      }
+      annotatedPos++
+      originalPos++
     }
+  }
 
-    return !vocRanges.some((range) => {
-      const [vocStart, vocEnd] = range
-      const [furiganaStart, furiganaEnd] = [a.loc, a.loc + a.len - 1]
-      return furiganaStart <= vocEnd && furiganaEnd >= vocStart
-    })
-  })
+  // Check that we've consumed the entire original sentence
+  if (originalPos !== originalSentence.length) {
+    throw new Error('Original sentence is longer than annotated sentence')
+  }
+
+  return annotations
 }
 
 async function generateTranslationsForSentences(
@@ -171,31 +204,37 @@ export async function generateSentenceExplanations(
   })
 }
 
-interface ParsedToken {
-  text: string
-  furigana?: string
+async function generateCombinedAnnotations(
+  sentence: string,
+  tokens: string[],
+  vocabularyItems: Vocabulary[]
+): Promise<Annotation[]> {
+  // Generate vocabulary annotations from tokens
+  const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(tokens, vocabularyItems)
+
+  // Generate furigana annotations for all kanji in the sentence
+  const furiganaAnnotations = await generateFuriganaAnnotations(sentence)
+
+  // Combine and remove overlapping furigana
+  const vocabularyRanges = vocabularyAnnotations.map((a) => [a.loc, a.loc + a.len - 1])
+
+  const filteredFuriganaAnnotations = furiganaAnnotations.filter((annotation) => {
+    const furiganaStart = annotation.loc
+    const furiganaEnd = annotation.loc + annotation.len - 1
+
+    const overlapsWithVocabulary = vocabularyRanges.some(([vocabStart, vocabEnd]) => {
+      return furiganaStart <= vocabEnd && furiganaEnd >= vocabStart
+    })
+
+    return !overlapsWithVocabulary
+  })
+
+  // Combine all annotations and sort by position
+  const allAnnotations = [...vocabularyAnnotations, ...filteredFuriganaAnnotations]
+  return allAnnotations.sort((a, b) => a.loc - b.loc)
 }
 
-function parseToken(token: string): ParsedToken {
-  const furiganaMatch = token.match(/^(.+?)\[(.+?)\]$/)
-  if (furiganaMatch) {
-    const text = furiganaMatch[1]
-    const furigana = furiganaMatch[2]
-
-    // Check if text contains any kanji characters
-    const hasKanji = /[\u4e00-\u9faf]/.test(text)
-
-    return {
-      text,
-      furigana: hasKanji ? furigana : undefined,
-    }
-  }
-  return {
-    text: token,
-  }
-}
-
-function calculateAnnotationsFromTokens(
+function calculateVocabularyAnnotationsFromTokens(
   tokens: string[],
   vocabularyItems: Vocabulary[]
 ): Annotation[] {
@@ -209,26 +248,17 @@ function calculateAnnotationsFromTokens(
   }
 
   for (const token of tokens) {
-    const parsed = parseToken(token)
-    const tokenLength = parsed.text.length
+    const tokenLength = token.length
 
     // Check if this token is a vocabulary item
-    const vocabId = vocabMap.get(parsed.text)
+    const vocabId = vocabMap.get(token)
     if (vocabId) {
       annotations.push({
         loc: currentPosition,
         len: tokenLength,
         type: 'vocabulary',
-        content: parsed.text,
+        content: token,
         id: vocabId,
-      })
-    } else if (parsed.furigana) {
-      // This is a kanji with furigana annotation
-      annotations.push({
-        loc: currentPosition,
-        len: tokenLength,
-        type: 'furigana',
-        content: parsed.furigana,
       })
     }
 
@@ -390,24 +420,21 @@ GENERATION GUIDELINES:
 IMPORTANT: The sentence content itself should contain NO furigana marks - write pure Japanese text only.
 
 TOKENIZATION OUTPUT REQUIREMENT:
-For each sentence, also provide a tokenized version with furigana annotations:
+For each sentence, also provide a tokenized version:
 - Split the sentence into meaningful tokens, including ALL characters
-- Include punctuation marks (、。！？etc.) as separate tokens
 - NEVER split vocabulary items from the provided list - keep them as complete tokens
-- For kanji that are NOT in the provided vocabulary list, add furigana in brackets: kanji[hiragana]
-- Do NOT add furigana to non-kanji tokens (hiragana, katakana, particles, punctuation)
-- For vocabulary items from the provided list, keep them as-is (no furigana needed)
+- Include punctuation marks (、。！？etc.) as separate tokens
 - Particles and hiragana-only words should be separate tokens
 
 EXAMPLES:
-- Sentence content: "私は日本人です" (NO furigana in content)
-- Tokens: ["私", "は", "日本人[にほんじん]", "です"]
+- Sentence content: "私は日本人です"
+- Tokens: ["私", "は", "日本人", "です"]
 
-- Sentence content: "失礼ですが、お名前は何ですか。" (NO furigana in content)
-- If "お名前は" is a vocabulary item: ["失礼[しつれい]", "ですが", "、", "お名前は", "何[なん]", "ですか", "。"]
-- If "お名前は" is NOT a vocabulary item: ["失礼[しつれい]", "ですが", "、", "お名前[なまえ]", "は", "何[なん]", "ですか", "。"]
+- Sentence content: "失礼ですが、お名前は何ですか。"
+- If "お名前は" is a vocabulary item: ["失礼", "ですが", "、", "お名前は", "何", "ですか", "。"]
+- If "お名前は" is NOT a vocabulary item: ["失礼", "ですが", "、", "お名前", "は", "何", "ですか", "。"]
 
-Create sentences that are clear, useful, and appropriate for students at this level.
+Create sentences that are clear, useful, and appropriate for students.
   `
   const allVocabularies = [...urgent.vocabularies, ...high.vocabularies, ...low.vocabularies]
   const {
@@ -464,21 +491,24 @@ Create sentences that are clear, useful, and appropriate for students at this le
     explanation: translations[index],
   }))
 
-  // Generate annotations from tokens deterministically
+  // Generate annotations using two-stage approach
   logger.info(
-    `Generating annotations from tokens for ${sentencesWithExplanations.length} sentences`
+    `Generating annotations for ${sentencesWithExplanations.length} sentences using two-stage approach`
   )
-  const generated = sentencesWithExplanations.map((sentence) => {
-    logger.debug(`Generating annotations for sentence: ${sentence.tokens}`)
-    const annotations = calculateAnnotationsFromTokens(
-      sentence.tokens,
-      allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
-    )
-    return {
-      ...sentence,
-      annotations,
-    }
-  })
+  const generated = await Promise.all(
+    sentencesWithExplanations.map(async (sentence) => {
+      logger.debug(`Generating annotations for sentence: ${sentence.content}`)
+      const annotations = await generateCombinedAnnotations(
+        sentence.content,
+        sentence.tokens,
+        allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
+      )
+      return {
+        ...sentence,
+        annotations,
+      }
+    })
+  )
 
   logger.info(`${generated.length} sentences successfully generated with annotations`)
 
