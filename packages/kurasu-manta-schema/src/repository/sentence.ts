@@ -10,7 +10,7 @@ import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
-import { and, count, eq, or, sql } from 'drizzle-orm'
+import { and, count, eq, gte, or, sql } from 'drizzle-orm'
 import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
@@ -21,38 +21,62 @@ export class SentenceRepository {
   constructor(private db: LibSQLDatabase<typeof schema>) {}
 
   /**
-   * Get all sentences
+   * Get sentences with optional filtering and pagination
    */
-  async getAll(): Promise<Sentence[]> {
-    const rows = await this.db.select().from(sentencesTable)
-    return rows.map(mapDrizzleToSentence)
-  }
-
-  /**
-   * Get a sentence by ID
-   */
-  async getById(id: number): Promise<Sentence | null> {
-    const rows = await this.db.select().from(sentencesTable).where(eq(sentencesTable.id, id))
-
-    return optionalResult(rows, mapDrizzleToSentence)
-  }
-
-  /**
-   * Get sentences with pagination
-   */
-  async getWithPagination(
-    params: PaginationParams = { page: 1, limit: 20 }
+  async getMany(
+    conditions: {
+      minLessonNumber?: number
+    } = {},
+    pagination?: PaginationParams
   ): Promise<PaginatedResult<Sentence>> {
-    const page = params.page || 1
-    const limit = params.limit || 20
+    // If no pagination provided, return all results
+    if (!pagination) {
+      const rows =
+        conditions.minLessonNumber !== undefined
+          ? await this.db
+              .select()
+              .from(sentencesTable)
+              .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+          : await this.db.select().from(sentencesTable)
+
+      const items = rows.map(mapDrizzleToSentence)
+      return {
+        items,
+        total: items.length,
+        page: 1,
+        limit: items.length,
+        totalPages: items.length === 0 ? 0 : 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      }
+    }
+
+    // Apply pagination
+    const page = pagination.page || 1
+    const limit = pagination.limit || 20
     const offset = (page - 1) * limit
 
     // Get total count
-    const result = await this.db.select({ count: count() }).from(sentencesTable)
-    const total = result[0]?.count || 0
+    const countResult =
+      conditions.minLessonNumber !== undefined
+        ? await this.db
+            .select({ count: count() })
+            .from(sentencesTable)
+            .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+        : await this.db.select({ count: count() }).from(sentencesTable)
 
-    // Get paginated sentences
-    const rows = await this.db.select().from(sentencesTable).limit(limit).offset(offset)
+    const total = countResult[0]?.count || 0
+
+    // Get paginated results
+    const rows =
+      conditions.minLessonNumber !== undefined
+        ? await this.db
+            .select()
+            .from(sentencesTable)
+            .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+            .limit(limit)
+            .offset(offset)
+        : await this.db.select().from(sentencesTable).limit(limit).offset(offset)
 
     const items = rows.map(mapDrizzleToSentence)
     const totalPages = Math.ceil(total / limit)
@@ -66,6 +90,25 @@ export class SentenceRepository {
       hasNextPage: page < totalPages,
       hasPrevPage: page > 1,
     }
+  }
+
+  /**
+   * Get a sentence by ID
+   */
+  async getById(id: number): Promise<Sentence | null> {
+    const rows = await this.db.select().from(sentencesTable).where(eq(sentencesTable.id, id))
+
+    return optionalResult(rows, mapDrizzleToSentence)
+  }
+
+  /**
+   * Get sentences with pagination
+   * @deprecated Use getMany() instead
+   */
+  async getWithPagination(
+    params: PaginationParams = { page: 1, limit: 20 }
+  ): Promise<PaginatedResult<Sentence>> {
+    return this.getMany({}, params)
   }
 
   /**

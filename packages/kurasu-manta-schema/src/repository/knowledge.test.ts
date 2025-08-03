@@ -194,7 +194,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
     )
   })
 
-  await t.test('getByConditions with withSentences option', async (t) => {
+  await t.test('getMany with withSentences option', async (t) => {
     await t.test('should return knowledge points without sentences by default', async () => {
       const db = await createInMemoryDb()
       const knowledgeRepo = new KnowledgeRepository(db)
@@ -215,7 +215,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
 
       await knowledgeRepo.associateWithLesson(kp.id, 1)
 
-      const results = await knowledgeRepo.getByConditions({ lessonId: 1 })
+      const results = await knowledgeRepo.getMany({ lessonId: 1 })
 
       assert.strictEqual(results.items.length, 1)
       assert.ok(results.items[0], 'First result should exist')
@@ -254,7 +254,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
         })
         await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp.id)
 
-        const results = await knowledgeRepo.getByConditions(
+        const results = await knowledgeRepo.getMany(
           { lessonId: 1 },
           { page: 1, limit: 20 },
           { withSentences: true }

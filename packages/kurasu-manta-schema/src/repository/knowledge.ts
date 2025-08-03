@@ -42,10 +42,11 @@ export class KnowledgeRepository {
 
   /**
    * Get all knowledge points
+   * @deprecated Use getMany() instead
    */
   async getAll(): Promise<KnowledgePoint[]> {
-    const rows = await this.db.select().from(knowledgePointsTable)
-    return rows.map(mapDrizzleToKnowledgePoint)
+    const result = await this.getMany()
+    return result.items
   }
 
   /**
@@ -191,27 +192,81 @@ export class KnowledgeRepository {
   }
 
   /**
-   * Get knowledge points by conditions with pagination
+   * Get knowledge points with optional filtering and pagination
    * @param conditions Filtering conditions
    * @param pagination Pagination parameters
    * @param options Additional options
    * @returns Paginated result of knowledge points
    */
-  async getByConditions(
+  async getMany(
     conditions: {
       lessonId?: number
       type?: KnowledgePointType
       hasAudio?: boolean
-    },
-    pagination: PaginationParams = { page: 1, limit: 20 },
+    } = {},
+    pagination?: PaginationParams,
     options?: { withSentences?: boolean }
   ): Promise<PaginatedResult<KnowledgePoint>> {
-    // Set default pagination values
+    const whereClause = this.buildWhereClause(conditions)
+
+    // If no pagination provided, return all results
+    if (!pagination) {
+      const rows = await this.db
+        .select()
+        .from(knowledgePointsTable)
+        .where(whereClause)
+        .orderBy(knowledgePointsTable.id)
+
+      const items = rows.map(mapDrizzleToKnowledgePoint)
+
+      // Set lesson property if filtered by lessonId
+      if (conditions.lessonId !== undefined) {
+        for (const item of items) {
+          item.lesson = conditions.lessonId
+        }
+      }
+
+      // Fetch sentences if requested
+      if (options?.withSentences && items.length > 0) {
+        const knowledgePointsWithSentences = await this.db.query.knowledgePointsTable.findMany({
+          where: sql`${knowledgePointsTable.id} IN (${items.map((item) => item.id).join(',')})`,
+          with: {
+            sentenceKnowledgePoints: {
+              with: {
+                sentence: true,
+              },
+            },
+          },
+        })
+
+        const sentenceMap = new Map()
+        for (const kp of knowledgePointsWithSentences) {
+          sentenceMap.set(
+            kp.id,
+            kp.sentenceKnowledgePoints.map((skp) => mapDrizzleToSentence(skp.sentence))
+          )
+        }
+
+        for (const item of items) {
+          item.sentences = sentenceMap.get(item.id) || []
+        }
+      }
+
+      return {
+        items,
+        total: items.length,
+        page: 1,
+        limit: items.length,
+        totalPages: items.length === 0 ? 0 : 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      }
+    }
+
+    // Apply pagination
     const page = pagination.page || 1
     const limit = pagination.limit || 20
     const offset = (page - 1) * limit
-
-    const whereClause = this.buildWhereClause(conditions)
 
     // Get total count for pagination
     const countResult = await this.db

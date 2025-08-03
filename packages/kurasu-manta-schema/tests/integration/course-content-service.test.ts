@@ -164,7 +164,8 @@ test('CourseContentService', async (t) => {
         // Assertions
         assert.ok(resultMap.size > 0, 'Result map should not be empty')
 
-        const allKnowledgePoints = await knowledgeRepo.getAll()
+        const allKnowledgePointsResult = await knowledgeRepo.getMany()
+        const allKnowledgePoints = allKnowledgePointsResult.items
         assert.equal(allKnowledgePoints.length, 3, 'should have 3 kp inserted')
       }
     )

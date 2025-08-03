@@ -93,7 +93,8 @@ test('SentenceRepository', async (t) => {
     const sentence1 = await sentenceRepo.create(createSentenceData)
     const sentence2 = await sentenceRepo.create(createMinimalSentence)
 
-    const allSentences = await sentenceRepo.getAll()
+    const result = await sentenceRepo.getMany()
+    const allSentences = result.items
 
     assert.strictEqual(allSentences.length, 2)
     assert.ok(allSentences.some((s) => s.id === sentence1.id))

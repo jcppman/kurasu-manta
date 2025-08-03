@@ -200,7 +200,7 @@ export class CourseContentService {
     }
 
     // Use the repository method with optional type filtering
-    const result = await this.knowledgeRepository.getByConditions(
+    const result = await this.knowledgeRepository.getMany(
       conditions, // Pass conditions as-is, including optional type
       normalizedPagination
     )
@@ -330,53 +330,22 @@ export class CourseContentService {
   async getLessons(
     pagination?: PaginationParams | { limit?: number; offset?: number }
   ): Promise<PaginatedResult<Lesson>> {
-    // TODO: add required method to repository
-    // For now, we'll implement this as getting all lessons
-    // The repository doesn't have a paginated getAll method, so we'll use a simple wrapper
-    const lessons = await this.lessonRepository.getAll()
-
-    // Apply pagination manually if provided
+    // Convert offset-based pagination to page-based if needed
+    let normalizedPagination: PaginationParams | undefined
     if (pagination) {
-      let limit: number
-      let offset: number
-      let page: number
-
       if ('offset' in pagination) {
-        // Handle offset-based pagination
-        limit = pagination.limit || 10
-        offset = pagination.offset || 0
-        page = Math.floor(offset / limit) + 1
+        // Convert offset-based to page-based
+        const limit = pagination.limit || 10
+        const offset = pagination.offset || 0
+        const page = Math.floor(offset / limit) + 1
+        normalizedPagination = { page, limit }
       } else {
-        // Handle page-based pagination
-        const paginationParams = pagination as PaginationParams
-        page = paginationParams.page || 1
-        limit = paginationParams.limit || 10
-        offset = (page - 1) * limit
-      }
-
-      const paginatedLessons = lessons.slice(offset, offset + limit)
-      const totalPages = Math.ceil(lessons.length / limit)
-
-      return {
-        items: paginatedLessons,
-        total: lessons.length,
-        page,
-        limit,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1,
+        normalizedPagination = pagination
       }
     }
 
-    return {
-      items: lessons,
-      total: lessons.length,
-      page: 1,
-      limit: lessons.length,
-      totalPages: 1,
-      hasNextPage: false,
-      hasPrevPage: false,
-    }
+    // Use the repository method
+    return this.lessonRepository.getMany({}, normalizedPagination)
   }
 
   /**
@@ -389,66 +358,47 @@ export class CourseContentService {
     filters?: { minLessonNumber?: number },
     pagination?: PaginationParams | { limit?: number; offset?: number }
   ): Promise<PaginatedResult<Sentence>> {
-    // TODO: add required method to repository
-    // For now, we'll implement this as getting all sentences
-    // The repository doesn't have a paginated getAll method with filters, so we'll use a simple wrapper
-    const sentences = await this.sentenceRepository.getAll()
-
-    // Apply filtering if provided
-    let filteredSentences = sentences
-    if (filters?.minLessonNumber !== undefined) {
-      filteredSentences = sentences.filter(
-        (sentence) => sentence.minLessonNumber >= (filters.minLessonNumber ?? 0)
-      )
-    }
-
-    // Apply pagination manually if provided
+    // Convert offset-based pagination to page-based if needed
+    let normalizedPagination: PaginationParams | undefined
     if (pagination) {
-      let limit: number
-      let offset: number
-      let page: number
-
       if ('offset' in pagination) {
-        // Handle offset-based pagination
-        limit = pagination.limit || 10
-        offset = pagination.offset || 0
-        page = Math.floor(offset / limit) + 1
+        // Convert offset-based to page-based
+        const limit = pagination.limit || 10
+        const offset = pagination.offset || 0
+        const page = Math.floor(offset / limit) + 1
+        normalizedPagination = { page, limit }
       } else {
-        // Handle page-based pagination
-        const paginationParams = pagination as PaginationParams
-        page = paginationParams.page || 1
-        limit = paginationParams.limit || 10
-        offset = (page - 1) * limit
-      }
-
-      const paginatedSentences = filteredSentences.slice(offset, offset + limit)
-      const totalPages = Math.ceil(filteredSentences.length / limit)
-
-      return {
-        items: paginatedSentences,
-        total: filteredSentences.length,
-        page,
-        limit,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1,
+        normalizedPagination = pagination
       }
     }
 
-    return {
-      items: filteredSentences,
-      total: filteredSentences.length,
-      page: 1,
-      limit: filteredSentences.length,
-      totalPages: 1,
-      hasNextPage: false,
-      hasPrevPage: false,
-    }
+    // Use the repository method with filters
+    return this.sentenceRepository.getMany(filters || {}, normalizedPagination)
   }
 
-  async getLessonKnowledgePointSentenceStats(lessonId: number) {
-    // TODO
-    // this function should get statistics for:
-    // sentence count grouped by knowledge point id
+  /**
+   * Get statistics for knowledge points in a lesson
+   * @param lessonId The lesson ID to get stats for
+   * @returns Array of statistics with knowledge point ID and sentence count
+   */
+  async getLessonKnowledgePointSentenceStats(
+    lessonId: number
+  ): Promise<Array<{ knowledgePointId: number; sentenceCount: number }>> {
+    // Get all knowledge points for this lesson
+    const knowledgePoints = await this.knowledgeRepository.getByLessonId(lessonId)
+
+    if (knowledgePoints.length === 0) {
+      return []
+    }
+
+    // Get sentence counts for all knowledge points
+    const knowledgePointIds = knowledgePoints.map((kp) => kp.id)
+    const sentenceCountsMap = await this.getSentenceCountsByKnowledgePointIds(knowledgePointIds)
+
+    // Build the result array
+    return knowledgePoints.map((kp) => ({
+      knowledgePointId: kp.id,
+      sentenceCount: sentenceCountsMap.get(kp.id) || 0,
+    }))
   }
 }
