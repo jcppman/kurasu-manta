@@ -19,6 +19,7 @@ interface SearchParams {
   knowledgePointId?: string
   type?: string
   content?: string
+  lessonId?: string
 }
 
 interface SentencesPageProps {
@@ -36,12 +37,14 @@ export default async function SentencesPage({ searchParams }: SentencesPageProps
   const sentences = result.items
 
   const isFiltered = !!knowledgePointId
+  const backUrl = params.lessonId ? `/lessons/${params.lessonId}` : '/'
+  const backText = params.lessonId ? 'Back to Lesson' : 'Back to Dashboard'
 
   return (
     <div className="container mx-auto p-8">
       <div className="mb-6">
-        <Link href="/" className="text-blue-600 hover:text-blue-800">
-          &larr; Back to Dashboard
+        <Link href={backUrl} className="text-blue-600 hover:text-blue-800">
+          &larr; {backText}
         </Link>
       </div>
 

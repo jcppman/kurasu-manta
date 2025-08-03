@@ -73,6 +73,17 @@ export async function getLessonById(id: number) {
       return null
     }
 
+    // Get sentence counts for all knowledge points in this lesson
+    const knowledgePointIds = lessonWithContent.knowledgePoints.map((kp) => kp.id)
+    const sentenceCounts =
+      await courseService.getSentenceCountsByKnowledgePointIds(knowledgePointIds)
+
+    // Enhance knowledge points with sentence counts
+    const knowledgePointsWithCounts = lessonWithContent.knowledgePoints.map((kp) => ({
+      ...kp,
+      sentenceCount: sentenceCounts.get(kp.id) || 0,
+    }))
+
     return {
       lesson: {
         id: lessonWithContent.id,
@@ -80,7 +91,7 @@ export async function getLessonById(id: number) {
         description: lessonWithContent.description,
         number: lessonWithContent.number,
       },
-      knowledgePoints: lessonWithContent.knowledgePoints,
+      knowledgePoints: knowledgePointsWithCounts,
     }
   } catch (error) {
     console.error('Failed to fetch lesson:', error)
