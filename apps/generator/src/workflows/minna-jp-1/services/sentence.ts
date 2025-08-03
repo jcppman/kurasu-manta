@@ -2,10 +2,11 @@ import db from '@/db'
 import { processInParallel, withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
-  DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
   MAX_LLM_RETRY_TIMES,
   MAX_LOW_PRIORITY_GRAMMAR,
   MAX_LOW_PRIORITY_VOCABULARIES,
+  SENTENCE_HIGH_AMOUNT_THRESHOLD,
+  SENTENCE_URGENT_AMOUNT_THRESHOLD,
 } from '@/workflows/minna-jp-1/constants'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
@@ -57,7 +58,7 @@ Return only the annotated sentence with no additional text.
   `
 
   const { object } = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4.1'),
     prompt,
     schema: z.object({
       annotatedSentence: z.string(),
@@ -166,7 +167,7 @@ Return translations in the same order as the input sentences.
   `
 
   const { object } = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4.1'),
     prompt,
     schema: z.object({
       translations: z.array(
@@ -286,7 +287,8 @@ interface KnowledgeBucket {
 }
 
 export async function validateSentence(
-  sentence: Omit<GeneratedSentence, 'annotations' | 'explanation'>
+  sentence: Omit<GeneratedSentence, 'annotations' | 'explanation'>,
+  availableVocabularies: Vocabulary[]
 ): Promise<boolean> {
   // evaluate if the sentence is valid and is not too similar to existing sentences
   // get existing sentences from the database
@@ -299,11 +301,22 @@ export async function validateSentence(
     )
   ).flatMap((v) => v?.sentences ?? [])
   // if equal, unqualify the sentence
-  const isDuplicate = existingSentences.some((s) => s.content.trim() === sentence.content.trim())
+  const isDuplicate = existingSentences.some(
+    (s) =>
+      s.content.replace(/[、。！？]/g, '').trim() ===
+      sentence.content.replace(/[、。！？]/g, '').trim()
+  )
   if (isDuplicate) {
     logger.warn(`Duplicate sentence found: ${sentence.content}`)
     return false
   }
+
+  // Get vocabulary details for context from provided vocabularies
+  const targetVocabularies = availableVocabularies.filter((v) =>
+    sentence.vocabularyIds.includes(v.id)
+  )
+
+  const targetWords = targetVocabularies.map((v) => v.content).join(', ')
 
   // check if the sentence is correct
   const prompt = `
@@ -312,32 +325,39 @@ You are a Japanese language expert evaluating sentences for a Japanese textbook.
 SENTENCE TO EVALUATE:
 ${sentence.content}
 
+TARGET VOCABULARY BEING DEMONSTRATED:
+${targetWords}
+
 EVALUATION CRITERIA:
-Focus on detecting serious errors that would mislead students. Accept sentences that are:
-- Grammatically correct (even if formal or textbook-style)
-- Logically consistent
+This sentence demonstrates target vocabulary for language learners. Balance educational goals with natural language patterns.
+
+ACCEPT sentences that are:
+- Grammatically correct and naturally flowing
+- Logically consistent and realistic
 - Appropriate for educational contexts
+- Using target vocabulary in natural, believable situations
 
-REJECT ONLY IF:
-1. **Fundamental Grammar Violations**: Incorrect particles, verb conjugations, or structural patterns that break Japanese grammar rules
-2. **Honorific Misuse**: Using respectful language incorrectly about oneself or in impossible contexts
-3. **Logical Contradictions**: Tense-time mismatches or internally contradictory information
-4. **Semantic Impossibilities**: Nonsensical word combinations or impossible situations
-5. **Cultural Rudeness**: Sentences that would be considered rude, too direct, or inappropriate in Japanese culture (even in educational contexts)
+REJECT IF:
+1. **Grammar Violations**: Incorrect particles, verb conjugations, or structural patterns
+2. **Honorific Misuse**: Using respectful language incorrectly about oneself or impossible contexts
+3. **Logical Issues**: Tense-time mismatches or contradictory information
+4. **Unnatural Constructions**: Awkward stacking of modifiers, overly complex descriptions, or artificial-sounding combinations that native speakers wouldn't use
+5. **Unrealistic Scenarios**: Situations that feel contrived or wouldn't occur in real life
 
-ACCEPT:
-- Formal vocabulary choices appropriate for textbooks
-- Polite direct questions common in educational dialogues
-- Standard textbook expressions even if less common in casual speech
+EDUCATIONAL BALANCE:
+- Target vocabulary should be used in natural, believable contexts
+- Prefer simple, clear sentences over complex constructions
+- Formal vocabulary (like '貴方') is acceptable when used appropriately, but avoid artificially forcing multiple target words into unnatural combinations
+- Sentences should sound like something a native speaker might actually say or encounter
 
 EVALUATION:
-Output true if grammatically correct and logically sound for educational use.
-Output false only for clear errors that would confuse or mislead students.
+Output true if grammatically correct, natural-sounding, and suitable for educational use.
+Output false for sentences that would confuse students due to grammar errors, unnatural constructions, or overly artificial combinations.
 `
   const {
     object: { valid, reason },
   } = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4.1'),
     prompt,
     schema: z.object({
       valid: z.boolean(),
@@ -374,15 +394,13 @@ You are a Japanese language teacher creating example sentences for students lear
 Generate ${amount} Japanese sentences using ONLY the vocabulary and grammar provided below.
 
 CRITICAL VOCABULARY CONSTRAINT:
-- You MUST only use vocabulary words that are explicitly listed in the sections below
-- Do NOT use any vocabulary words that are not in the provided lists
+- TRY YOUR BEST to only use vocabulary words that are explicitly listed in the sections below
+- AVOID using content vocabulary (nouns, verbs, adjectives, adverbs) that are not in the provided lists
 - If you need additional words for particles, basic grammar, or function words (は、が、を、に、で、と、の、も、から、まで、です、ます、etc.), those are acceptable
-- But avoid using content vocabulary (nouns, verbs, adjectives, adverbs) that are not in the provided lists
 
 VOCABULARY AND GRAMMAR BY PRIORITY:
 
-=== URGENT (need more examples) ===
-Must appear in at least ${Math.ceil(amount * 0.6)} sentences
+=== URGENT (need more sentences) ===
 <vocabulary>
 ${urgent.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 </vocabulary>
@@ -390,8 +408,7 @@ ${urgent.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 ${urgent.grammar.map((g) => knowledgeDetails(g)).join('\n')}
 </grammar>
 
-=== HIGH (need some examples) ===
-Should appear in at least ${Math.ceil(amount * 0.3)} sentences
+=== HIGH (need some sentences) ===
 <vocabulary>
 ${high.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 </vocabulary>
@@ -415,9 +432,6 @@ GENERATION GUIDELINES:
 4. Use LOW priority items only when they make sentences more natural
 5. Combine items from different priorities when it creates better sentences
 6. Vary sentence types: statements, questions, negative forms, past/present tense
-7. Focus on practical, daily-life situations that students would actually encounter
-
-IMPORTANT: The sentence content itself should contain NO furigana marks - write pure Japanese text only.
 
 TOKENIZATION OUTPUT REQUIREMENT:
 For each sentence, also provide a tokenized version:
@@ -455,11 +469,32 @@ Create sentences that are clear, useful, and appropriate for students.
     }),
   })
 
+  const allKnowledgePointIds = new Set([
+    ...urgent.vocabularies.map((v) => `v:${v.id}`),
+    ...urgent.grammar.map((g) => `g:${g.id}`),
+    ...high.vocabularies.map((v) => `v:${v.id}`),
+    ...high.grammar.map((g) => `g:${g.id}`),
+    ...low.vocabularies.map((v) => `v:${v.id}`),
+    ...low.grammar.map((g) => `g:${g.id}`),
+  ])
+
   // Validate sentences in parallel with controlled concurrency
   logger.info(`Validating ${sentences.length} sentences with default concurrency`)
   const validationResults = await processInParallel(sentences, async (sentence) => {
+    // validate if ids are valid or something faked by LLM
+    for (const id of sentence.vocabularyIds) {
+      if (!allKnowledgePointIds.has(`v:${id}`)) {
+        throw new Error(`Invalid vocabulary ID found: ${id} in sentence: ${sentence.content}`)
+      }
+    }
+    for (const id of sentence.grammarIds) {
+      if (!allKnowledgePointIds.has(`g:${id}`)) {
+        throw new Error(`Invalid grammar ID found: ${id} in sentence: ${sentence.content}`)
+      }
+    }
+
     logger.info(`Validating sentence: ${sentence.content}`)
-    const isValid = await validateSentence(sentence)
+    const isValid = await validateSentence(sentence, allVocabularies)
     if (!isValid) {
       throw new Error('Validation failed')
     }
@@ -467,7 +502,7 @@ Create sentences that are clear, useful, and appropriate for students.
   })
 
   // Process only successfully validated sentences
-  const validatedSentences = validationResults
+  const cleanedUpSentences = validationResults
     .filter(
       (
         result
@@ -477,16 +512,19 @@ Create sentences that are clear, useful, and appropriate for students.
         item: Omit<GeneratedSentence, 'annotations'>
       } => result.success
     )
-    .map((result) => result.result)
+    .map((result) => ({
+      ...result.result,
+      content: result.result.content.replace(/ /g, '').trim(), // Clean up whitespace
+    }))
 
-  logger.info(`${validatedSentences.length} out of ${sentences.length} sentences passed validation`)
+  logger.info(`${cleanedUpSentences.length} out of ${sentences.length} sentences passed validation`)
 
   // Generate translations for validated sentences
-  logger.info(`Generating translations for ${validatedSentences.length} sentences`)
-  const translations = await generateSentenceExplanations(validatedSentences.map((s) => s.content))
+  logger.info(`Generating translations for ${cleanedUpSentences.length} sentences`)
+  const translations = await generateSentenceExplanations(cleanedUpSentences.map((s) => s.content))
 
   // Combine sentences with translations
-  const sentencesWithExplanations = validatedSentences.map((sentence, index) => ({
+  const sentencesWithExplanations = cleanedUpSentences.map((sentence, index) => ({
     ...sentence,
     explanation: translations[index],
   }))
@@ -516,8 +554,7 @@ Create sentences that are clear, useful, and appropriate for students.
 }
 
 async function getPrioritizedKnowledgePointsByLessonNumber(
-  lessonNumber: number,
-  maxDesiredCount: number
+  lessonNumber: number
 ): Promise<PrioritizedBuckets> {
   const courseContentService = new CourseContentService(db)
 
@@ -562,14 +599,13 @@ async function getPrioritizedKnowledgePointsByLessonNumber(
   )
   for (const curr of targetKnowledgePoints) {
     const count = countMap.get(curr.id) ?? 0
-    const ratio = (maxDesiredCount - count) / maxDesiredCount
-    if (ratio >= 0.6) {
+    if (count <= SENTENCE_URGENT_AMOUNT_THRESHOLD) {
       if (isVocabulary(curr)) {
         buckets.urgent.vocabularies.push(curr)
       } else if (isGrammar(curr)) {
         buckets.urgent.grammar.push(curr)
       }
-    } else if (ratio >= 0.3) {
+    } else if (count <= SENTENCE_HIGH_AMOUNT_THRESHOLD) {
       if (isVocabulary(curr)) {
         buckets.high.vocabularies.push(curr)
       } else if (isGrammar(curr)) {
@@ -602,10 +638,7 @@ export async function generateSentencesForLessonNumber(
   lessonNumber: number,
   amount: number
 ): Promise<GeneratedSentence[]> {
-  const buckets = await getPrioritizedKnowledgePointsByLessonNumber(
-    lessonNumber,
-    DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT
-  )
+  const buckets = await getPrioritizedKnowledgePointsByLessonNumber(lessonNumber)
 
   // report the number of vocabularies and grammar in each bucket
   logger.info(

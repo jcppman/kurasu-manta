@@ -15,7 +15,7 @@ export async function execute() {
   // await cleanVocabularies()
   //await createVocabularies()
   // await generateVocabularyAudioClips()
-  await cleanSentences()
+  // await cleanSentences()
   await createSentencesForLesson(1)
 }
 
