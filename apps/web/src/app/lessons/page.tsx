@@ -7,6 +7,11 @@ interface Lesson {
   number: number
   title?: string
   description?: string
+  counts?: {
+    vocabulary: number
+    grammar: number
+    sentences: number
+  }
 }
 
 interface SearchParams {
@@ -46,7 +51,26 @@ export default async function LessonsPage({ searchParams }: LessonsPageProps) {
             <h2 className="text-xl font-semibold mb-2">
               {lesson.title || `Lesson ${lesson.number}`}
             </h2>
-            <p className="text-gray-600 mb-2">{lesson.description || 'No description'}</p>
+            <p className="text-gray-600 mb-3">{lesson.description || 'No description'}</p>
+
+            {/* Content counts */}
+            {lesson.counts && (
+              <div className="flex gap-4 mb-3">
+                <div className="flex items-center gap-1 text-sm">
+                  <span className="w-3 h-3 bg-blue-500 rounded-full" />
+                  <span className="text-gray-600">{lesson.counts.vocabulary} vocab</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm">
+                  <span className="w-3 h-3 bg-green-500 rounded-full" />
+                  <span className="text-gray-600">{lesson.counts.grammar} grammar</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm">
+                  <span className="w-3 h-3 bg-purple-500 rounded-full" />
+                  <span className="text-gray-600">{lesson.counts.sentences} sentences</span>
+                </div>
+              </div>
+            )}
+
             <div className="text-sm text-gray-500">Lesson {lesson.number}</div>
           </Link>
         ))}

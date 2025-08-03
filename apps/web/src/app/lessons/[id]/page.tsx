@@ -1,3 +1,4 @@
+import { KnowledgePointCard } from '@/components/KnowledgePointCard'
 import { getLessonById } from '@/server/lessons'
 import Link from 'next/link'
 
@@ -46,13 +47,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {knowledgePoints.map((kp) => (
-                <div key={kp.id} className="p-4 bg-white border border-gray-200 rounded-lg">
-                  <h3 className="font-semibold">{kp.content}</h3>
-                  {kp.explanation?.en && (
-                    <p className="text-gray-600 text-sm mt-1">{kp.explanation.en}</p>
-                  )}
-                  <div className="text-xs text-gray-500 mt-2">Type: {kp.type}</div>
-                </div>
+                <KnowledgePointCard key={kp.id} knowledgePoint={kp} />
               ))}
             </div>
           )}

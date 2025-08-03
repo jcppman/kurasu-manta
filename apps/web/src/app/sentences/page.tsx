@@ -16,6 +16,9 @@ interface Sentence {
 interface SearchParams {
   page?: string
   limit?: string
+  knowledgePointId?: string
+  type?: string
+  content?: string
 }
 
 interface SentencesPageProps {
@@ -26,9 +29,13 @@ export default async function SentencesPage({ searchParams }: SentencesPageProps
   const params = await searchParams
   const page = Number(params.page) || 1
   const limit = Number(params.limit) || 10
+  const knowledgePointId = params.knowledgePointId ? Number(params.knowledgePointId) : undefined
 
-  const result = await getSentences({ page, limit })
+  const filters = knowledgePointId ? { knowledgePointId } : undefined
+  const result = await getSentences(filters, { page, limit })
   const sentences = result.items
+
+  const isFiltered = !!knowledgePointId
 
   return (
     <div className="container mx-auto p-8">
@@ -38,18 +45,28 @@ export default async function SentencesPage({ searchParams }: SentencesPageProps
         </Link>
       </div>
 
-      <h1 className="text-3xl font-bold mb-8">Sentences</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">
+          {isFiltered ? `Sentences for ${params.type}: "${params.content}"` : 'Sentences'}
+        </h1>
+        {isFiltered && (
+          <div className="mt-2">
+            <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+              Filtered by {params.type} ID: {knowledgePointId}
+            </span>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-6">
         {sentences.map((sentence) => (
           <div key={sentence.id} className="p-6 bg-white border border-gray-200 rounded-lg shadow">
-            <SentenceViewer text={sentence.content} annotations={sentence.annotations || []} />
-
-            {sentence.explanation?.en && (
-              <div className="mt-4 p-3 bg-gray-50 rounded">
-                <strong>Translation:</strong> {sentence.explanation.en}
-              </div>
-            )}
+            <SentenceViewer
+              text={sentence.content}
+              annotations={sentence.annotations || []}
+              explanation={sentence.explanation}
+              highlightKnowledgePointId={knowledgePointId}
+            />
 
             <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
               <div>Lesson: {sentence.minLessonNumber}</div>
