@@ -7,7 +7,7 @@ interface KnowledgePoint {
   content: string
   explanation: { en?: string } | null
   type: string
-  lesson: number
+  lessonId: number
 }
 
 interface SearchParams {
@@ -50,7 +50,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
             {kp.explanation?.en && <p className="text-gray-700 mb-3">{kp.explanation.en}</p>}
 
             <div className="flex justify-between items-center text-sm text-gray-500">
-              <div>Lesson: {kp.lesson}</div>
+              <div>Lesson: {kp.lessonId}</div>
               <div />
             </div>
           </div>

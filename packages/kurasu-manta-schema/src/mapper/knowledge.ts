@@ -12,6 +12,7 @@ export function mapCreateKnowledgePointToDrizzle(knowledgePoint: CreateKnowledge
     type: knowledgePoint.type,
     content: knowledgePoint.content,
     explanation: knowledgePoint.explanation,
+    lessonId: knowledgePoint.lessonId,
   }
 
   let typeSpecificData: Record<string, unknown> = {}
@@ -45,10 +46,10 @@ export function mapKnowledgePointToDrizzle(knowledgePoint: KnowledgePoint) {
 export function mapDrizzleToKnowledgePoint(
   row: typeof knowledgePointsTable.$inferSelect
 ): KnowledgePoint {
-  const { type, content, explanation, typeSpecificData } = row
+  const { type, content, explanation, typeSpecificData, lessonId } = row
   const baseData = {
     id: row.id,
-    lesson: 0, // This will be set from the lesson relationship
+    lessonId: lessonId,
     content,
     explanation: explanation as LocalizedText,
   }

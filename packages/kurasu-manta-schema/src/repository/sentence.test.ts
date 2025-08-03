@@ -3,6 +3,7 @@ import test from 'node:test'
 
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
+import { LessonRepository } from '@/repository/lesson'
 import { SentenceRepository } from '@/repository/sentence'
 import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
@@ -11,6 +12,7 @@ import { createInMemoryDb } from '@tests/utils/db'
 test('SentenceRepository', async (t) => {
   let sentenceRepo: SentenceRepository
   let knowledgeRepo: KnowledgeRepository
+  let lessonRepo: LessonRepository
 
   // Test fixtures
   const mockExplanation: LocalizedText = {
@@ -33,7 +35,7 @@ test('SentenceRepository', async (t) => {
   }
 
   const createKnowledgePoint = (content: string) => ({
-    lesson: 1,
+    lessonId: 1,
     content,
     type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
     explanation: {
@@ -57,6 +59,10 @@ test('SentenceRepository', async (t) => {
     const db = await createInMemoryDb()
     sentenceRepo = new SentenceRepository(db)
     knowledgeRepo = new KnowledgeRepository(db)
+    lessonRepo = new LessonRepository(db)
+
+    // Create lesson 1 for all knowledge points in tests
+    await lessonRepo.create({ number: 1, title: 'Test Lesson', description: 'Test' })
   })
 
   await t.test('create', async (t) => {

@@ -79,7 +79,7 @@ export class CourseContentService {
     }
 
     // Group knowledge points by lesson number
-    const knowledgePointsByLesson = groupBy(knowledgePoints, 'lesson')
+    const knowledgePointsByLesson = groupBy(knowledgePoints, 'lessonId')
 
     // Map to store lessons with their created knowledge points
     const lessonsWithContent = new Map<number, LessonWithContent>()
@@ -108,12 +108,10 @@ export class CourseContentService {
         })
       }
 
-      // Create knowledge points and associate them with the lesson
+      // Create knowledge points (they already have lessonId set)
       const createdKnowledgePoints = await Promise.all(
         map(lessonKnowledgePoints, async (knowledgePoint) => {
-          const createdKnowledgePoint = await this.knowledgeRepository.create(knowledgePoint)
-          await this.knowledgeRepository.associateWithLesson(createdKnowledgePoint.id, lesson.id)
-          return createdKnowledgePoint
+          return this.knowledgeRepository.create(knowledgePoint)
         })
       )
 
@@ -149,7 +147,7 @@ export class CourseContentService {
   }
 
   /**
-   * Remove knowledge points from a lesson
+   * Remove knowledge points from a lesson (delete them entirely since they belong to one lesson)
    */
   async removeKnowledgePointsFromLesson(
     lessonId: number,
@@ -160,9 +158,9 @@ export class CourseContentService {
     }
 
     try {
-      // Disassociate each knowledge point from the lesson
+      // Delete each knowledge point (since they belong to one lesson only)
       for (const knowledgePointId of knowledgePointIds) {
-        await this.knowledgeRepository.disassociateFromLesson(knowledgePointId, lessonId)
+        await this.knowledgeRepository.delete(knowledgePointId)
       }
       return true
     } catch (error) {

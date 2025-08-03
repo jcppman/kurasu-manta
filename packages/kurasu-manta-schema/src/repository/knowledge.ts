@@ -2,7 +2,6 @@ import { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
 import type { PaginatedResult, PaginationParams } from '@/common/types'
 import {
   knowledgePointsTable,
-  lessonKnowledgePointsTable,
   sentenceKnowledgePointsTable,
   type sentencesTable,
 } from '@/drizzle/schema'
@@ -86,21 +85,9 @@ export class KnowledgeRepository {
     options?: { withSentences?: boolean }
   ): Promise<KnowledgePoint[]> {
     if (options?.withSentences) {
-      // First get the knowledge point IDs for this lesson
-      const lessonKnowledgePoints = await this.db
-        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
-        .from(lessonKnowledgePointsTable)
-        .where(eq(lessonKnowledgePointsTable.lessonId, lessonId))
-
-      const knowledgePointIds = lessonKnowledgePoints.map((lkp) => lkp.knowledgePointId)
-
-      if (knowledgePointIds.length === 0) {
-        return []
-      }
-
       // Use relational query to get knowledge points with sentences
       const results = await this.db.query.knowledgePointsTable.findMany({
-        where: sql`${knowledgePointsTable.id} IN (${knowledgePointIds.join(',')})`,
+        where: eq(knowledgePointsTable.lessonId, lessonId),
         with: {
           sentenceKnowledgePoints: {
             with: {
@@ -114,19 +101,11 @@ export class KnowledgeRepository {
     }
 
     const rows = await this.db
-      .select({
-        knowledgePoint: knowledgePointsTable,
-      })
-      .from(lessonKnowledgePointsTable)
-      .innerJoin(
-        knowledgePointsTable,
-        eq(lessonKnowledgePointsTable.knowledgePointId, knowledgePointsTable.id)
-      )
-      .where(eq(lessonKnowledgePointsTable.lessonId, lessonId))
+      .select()
+      .from(knowledgePointsTable)
+      .where(eq(knowledgePointsTable.lessonId, lessonId))
 
-    return rows.map((row: { knowledgePoint: typeof knowledgePointsTable.$inferSelect }) =>
-      mapDrizzleToKnowledgePoint(row.knowledgePoint)
-    )
+    return rows.map((row) => mapDrizzleToKnowledgePoint(row))
   }
 
   /**
@@ -165,33 +144,6 @@ export class KnowledgeRepository {
   }
 
   /**
-   * Associate a knowledge point with a lesson
-   */
-  async associateWithLesson(knowledgePointId: number, lessonId: number): Promise<void> {
-    await this.db
-      .insert(lessonKnowledgePointsTable)
-      .values({
-        knowledgePointId,
-        lessonId,
-      })
-      .onConflictDoNothing()
-  }
-
-  /**
-   * Disassociate a knowledge point from a lesson
-   */
-  async disassociateFromLesson(knowledgePointId: number, lessonId: number): Promise<void> {
-    await this.db
-      .delete(lessonKnowledgePointsTable)
-      .where(
-        and(
-          eq(lessonKnowledgePointsTable.knowledgePointId, knowledgePointId),
-          eq(lessonKnowledgePointsTable.lessonId, lessonId)
-        )
-      )
-  }
-
-  /**
    * Get knowledge points with optional filtering and pagination
    * @param conditions Filtering conditions
    * @param pagination Pagination parameters
@@ -218,13 +170,6 @@ export class KnowledgeRepository {
         .orderBy(knowledgePointsTable.id)
 
       const items = rows.map(mapDrizzleToKnowledgePoint)
-
-      // Set lesson property if filtered by lessonId
-      if (conditions.lessonId !== undefined) {
-        for (const item of items) {
-          item.lesson = conditions.lessonId
-        }
-      }
 
       // Fetch sentences if requested
       if (options?.withSentences && items.length > 0) {
@@ -288,13 +233,6 @@ export class KnowledgeRepository {
     // Map the results
     const items = rows.map(mapDrizzleToKnowledgePoint)
 
-    // If we filtered by lessonId, set the lesson property for each knowledge point
-    if (conditions.lessonId !== undefined) {
-      for (const item of items) {
-        item.lesson = conditions.lessonId
-      }
-    }
-
     // Fetch sentences if requested
     if (options?.withSentences && items.length > 0) {
       // Get knowledge points with sentences using relational query
@@ -349,15 +287,7 @@ export class KnowledgeRepository {
 
     // Filter by lesson ID if provided
     if (conditions.lessonId !== undefined) {
-      const subquery = this.db
-        .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
-        .from(lessonKnowledgePointsTable)
-        .where(eq(lessonKnowledgePointsTable.lessonId, conditions.lessonId))
-        .as('lesson_knowledge_points_subquery')
-
-      whereConditions.push(
-        sql`${knowledgePointsTable.id} IN (SELECT ${subquery.knowledgePointId} FROM ${subquery})`
-      )
+      whereConditions.push(eq(knowledgePointsTable.lessonId, conditions.lessonId))
     }
 
     // Filter by type if provided

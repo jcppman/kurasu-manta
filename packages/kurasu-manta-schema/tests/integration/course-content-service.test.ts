@@ -19,7 +19,7 @@ test('CourseContentService', async (t) => {
 
   // Test fixtures
   const createVocabularyPoint = (lessonNumber: number, content: string) => ({
-    lesson: lessonNumber,
+    lessonId: lessonNumber,
     content,
     type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
     explanation: {
@@ -39,7 +39,7 @@ test('CourseContentService', async (t) => {
   })
 
   const createGrammarPoint = (lessonNumber: number, content: string) => ({
-    lesson: lessonNumber,
+    lessonId: lessonNumber,
     content,
     type: KNOWLEDGE_POINT_TYPES.GRAMMAR,
     explanation: {
@@ -88,8 +88,6 @@ test('CourseContentService', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(1, '文法'))
 
       // Associate knowledge points with the lesson
-      await knowledgeRepo.associateWithLesson(vocPoint.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Get the lesson with content
       const lessonWithContent = await courseContentService.getLessonById(lesson.id, {
@@ -283,8 +281,6 @@ test('CourseContentService', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(8, '削除文法'))
 
       // Associate knowledge points with the lesson
-      await knowledgeRepo.associateWithLesson(vocPoint.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Delete the lesson with content
       const result = await courseContentService.deleteLessonWithContent(lesson.id)
@@ -324,9 +320,6 @@ test('CourseContentService', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(9, '残す文法'))
 
       // Associate knowledge points with the lesson
-      await knowledgeRepo.associateWithLesson(vocPoint1.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocPoint2.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Remove specific knowledge points
       const result = await courseContentService.removeKnowledgePointsFromLesson(lesson.id, [
@@ -367,9 +360,6 @@ test('CourseContentService', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(10, '部分文法'))
 
       // Associate knowledge points with the lesson
-      await knowledgeRepo.associateWithLesson(vocPoint1.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocPoint2.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Remove only one knowledge point
       const result = await courseContentService.removeKnowledgePointsFromLesson(lesson.id, [
@@ -420,10 +410,6 @@ test('CourseContentService', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(12, '文法'))
 
       // Associate all points with the lesson
-      await knowledgeRepo.associateWithLesson(vocPoint1.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocPoint2.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocPoint3.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(grammarPoint.id, lesson.id)
 
       // Get vocabularies with pagination (limit 2, page 1)
       const result1 = await courseContentService.getVocabulariesByConditions(
@@ -459,6 +445,9 @@ test('CourseContentService', async (t) => {
     })
 
     await t.test('should retrieve vocabularies with audio', async () => {
+      // Create a lesson first
+      const lesson = await lessonRepo.create(createLesson(13))
+
       // Create vocabulary points with and without audio
       const vocWithAudio1 = await knowledgeRepo.create({
         ...createVocabularyPoint(13, '音声あり1'),
@@ -469,12 +458,6 @@ test('CourseContentService', async (t) => {
         audio: 'audio2.mp3',
       })
       const vocWithoutAudio = await knowledgeRepo.create(createVocabularyPoint(13, '音声なし'))
-
-      // Create a lesson and associate all points
-      const lesson = await lessonRepo.create(createLesson(13))
-      await knowledgeRepo.associateWithLesson(vocWithAudio1.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocWithAudio2.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocWithoutAudio.id, lesson.id)
 
       // Get vocabularies with audio
       const result = await courseContentService.getVocabulariesByConditions({ hasAudio: true })
@@ -522,9 +505,6 @@ test('CourseContentService', async (t) => {
       })
 
       // Associate points with their lessons
-      await knowledgeRepo.associateWithLesson(vocWithAudio.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(vocWithoutAudio.id, lesson.id)
-      await knowledgeRepo.associateWithLesson(otherVocWithAudio.id, otherLesson.id)
 
       // Get vocabularies with combined conditions: from lesson 14 with audio
       const result = await courseContentService.getVocabulariesByConditions({
@@ -626,9 +606,6 @@ test('CourseContentService', async (t) => {
           const grammar1 = await knowledgeRepo.create(createGrammarPoint(1, 'に行く'))
 
           // Associate knowledge points with lessons
-          await knowledgeRepo.associateWithLesson(vocab1.id, lesson1.id)
-          await knowledgeRepo.associateWithLesson(vocab2.id, lesson2.id)
-          await knowledgeRepo.associateWithLesson(grammar1.id, lesson1.id)
 
           // Create sentence that uses knowledge points from both lessons
           const sentence = await sentenceRepo.create(createTestSentence('私は学校と図書館に行く'))
@@ -689,7 +666,6 @@ test('CourseContentService', async (t) => {
 
           // Associate knowledge points with lesson
           for (const kp of knowledgePoints) {
-            await knowledgeRepo.associateWithLesson(kp.id, lesson.id)
           }
 
           // Create sentences associated with these knowledge points
@@ -1240,7 +1216,6 @@ test('CourseContentService', async (t) => {
       // Create lesson with knowledge points
       const lesson = await lessonRepo.create(createLesson(2))
       const vocab = await knowledgeRepo.create(createVocabularyPoint(2, '統合テスト'))
-      await knowledgeRepo.associateWithLesson(vocab.id, lesson.id)
 
       // Verify lesson can be retrieved through different methods
       const lessonById = await courseContentService.getLessonById(lesson.id)
@@ -1266,10 +1241,6 @@ test('CourseContentService', async (t) => {
       const grammar2 = await knowledgeRepo.create(createGrammarPoint(21, '文法2'))
 
       // Associate with lessons
-      await knowledgeRepo.associateWithLesson(vocab1.id, lesson1.id)
-      await knowledgeRepo.associateWithLesson(vocab2.id, lesson2.id)
-      await knowledgeRepo.associateWithLesson(grammar1.id, lesson1.id)
-      await knowledgeRepo.associateWithLesson(grammar2.id, lesson2.id)
 
       // Get all knowledge points (no type filter)
       const result = await courseContentService.getKnowledgePointsByConditions({})
@@ -1285,6 +1256,9 @@ test('CourseContentService', async (t) => {
     })
 
     await t.test('should filter by type when specified', async () => {
+      // Create lesson first
+      const lesson = await lessonRepo.create(createLesson(22))
+
       // Create mixed knowledge points
       const vocab = await knowledgeRepo.create(createVocabularyPoint(22, 'フィルタテスト'))
       const grammar = await knowledgeRepo.create(createGrammarPoint(22, 'フィルタ文法'))
@@ -1308,13 +1282,14 @@ test('CourseContentService', async (t) => {
     })
 
     await t.test('should support pagination', async () => {
-      // Create multiple knowledge points
+      // Create lesson first
       const lesson = await lessonRepo.create(createLesson(23))
+
+      // Create multiple knowledge points
       const points = []
 
       for (let i = 1; i <= 5; i++) {
         const point = await knowledgeRepo.create(createVocabularyPoint(23, `ページング${i}`))
-        await knowledgeRepo.associateWithLesson(point.id, lesson.id)
         points.push(point)
       }
 
@@ -1456,6 +1431,9 @@ test('CourseContentService', async (t) => {
   // Test backward compatibility with deprecated method
   await t.test('getVocabulariesByConditions backward compatibility', async (t) => {
     await t.test('should still work as before', async () => {
+      // Create lesson first
+      const lesson = await lessonRepo.create(createLesson(70))
+
       // Create mixed knowledge points
       const vocab = await knowledgeRepo.create(createVocabularyPoint(70, '互換性テスト'))
       const grammar = await knowledgeRepo.create(createGrammarPoint(70, '文法テスト'))

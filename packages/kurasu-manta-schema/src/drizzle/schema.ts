@@ -39,6 +39,10 @@ export const lessonsTable = sqliteTable('lessons', {
  */
 export const knowledgePointsTable = sqliteTable('knowledge_points', {
   id: int().primaryKey({ autoIncrement: true }),
+  // Foreign key to lessons table (one-to-many relationship)
+  lessonId: int()
+    .notNull()
+    .references(() => lessonsTable.id, { onDelete: 'cascade' }),
   // Type of knowledge point (vocabulary or grammar)
   type: text().notNull().$type<KnowledgePointType>(),
   // Content in Japanese
@@ -71,26 +75,6 @@ export const sentencesTable = sqliteTable('sentences', {
 })
 
 /**
- * Lesson to Knowledge Point relationship (many-to-many)
- */
-export const lessonKnowledgePointsTable = sqliteTable(
-  'lesson_knowledge_points',
-  {
-    lessonId: int()
-      .notNull()
-      .references(() => lessonsTable.id, { onDelete: 'cascade' }),
-    knowledgePointId: int()
-      .notNull()
-      .references(() => knowledgePointsTable.id, { onDelete: 'cascade' }),
-    // Creation timestamp
-    createdAt: text()
-      .notNull()
-      .$defaultFn(() => new Date().toISOString()),
-  },
-  (table) => [primaryKey({ columns: [table.lessonId, table.knowledgePointId] })]
-)
-
-/**
  * Sentence to Knowledge Point relationship (many-to-many)
  */
 export const sentenceKnowledgePointsTable = sqliteTable(
@@ -114,29 +98,18 @@ export const sentenceKnowledgePointsTable = sqliteTable(
  * Relations for the lessons table
  */
 export const lessonsRelations = relations(lessonsTable, ({ many }) => ({
-  lessonKnowledgePoints: many(lessonKnowledgePointsTable),
+  knowledgePoints: many(knowledgePointsTable),
 }))
 
 /**
  * Relations for the knowledge points table
  */
-export const knowledgePointsRelations = relations(knowledgePointsTable, ({ many }) => ({
-  lessonKnowledgePoints: many(lessonKnowledgePointsTable),
-  sentenceKnowledgePoints: many(sentenceKnowledgePointsTable),
-}))
-
-/**
- * Relations for the lesson knowledge points table
- */
-export const lessonKnowledgePointsRelations = relations(lessonKnowledgePointsTable, ({ one }) => ({
+export const knowledgePointsRelations = relations(knowledgePointsTable, ({ one, many }) => ({
   lesson: one(lessonsTable, {
-    fields: [lessonKnowledgePointsTable.lessonId],
+    fields: [knowledgePointsTable.lessonId],
     references: [lessonsTable.id],
   }),
-  knowledgePoint: one(knowledgePointsTable, {
-    fields: [lessonKnowledgePointsTable.knowledgePointId],
-    references: [knowledgePointsTable.id],
-  }),
+  sentenceKnowledgePoints: many(sentenceKnowledgePointsTable),
 }))
 
 /**

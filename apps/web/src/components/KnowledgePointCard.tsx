@@ -7,7 +7,7 @@ interface KnowledgePoint {
   content: string
   explanation: { [languageCode: string]: string }
   type: string
-  lesson: number
+  lessonId: number
   sentenceCount?: number
 }
 
@@ -24,7 +24,7 @@ export function KnowledgePointCard({ knowledgePoint }: KnowledgePointCardProps) 
       knowledgePointId: knowledgePoint.id.toString(),
       type: knowledgePoint.type,
       content: knowledgePoint.content,
-      lessonId: knowledgePoint.lesson.toString(),
+      lessonId: knowledgePoint.lessonId.toString(),
     })
     router.push(`/sentences?${params.toString()}`)
   }

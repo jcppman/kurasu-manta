@@ -6,7 +6,7 @@ import type { sentenceSchema } from './sentence'
 
 export const baseKnowledgePointSchema = z.object({
   id: z.number().optional(),
-  lesson: z.number(),
+  lessonId: z.number(),
   content: z.string(),
   explanation: localizedText,
 })

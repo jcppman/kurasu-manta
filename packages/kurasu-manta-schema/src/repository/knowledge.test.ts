@@ -20,7 +20,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
       // Create a knowledge point
       const kp = await knowledgeRepo.create({
         type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-        lesson: 1,
+        lessonId: 1,
         content: 'こんにちは',
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
@@ -57,7 +57,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
         // Create a knowledge point
         const kp = await knowledgeRepo.create({
           type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-          lesson: 1,
+          lessonId: 1,
           content: 'こんにちは',
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
@@ -105,7 +105,7 @@ test('KnowledgeRepository - withSentences option', async (t) => {
         // Create a knowledge point without sentences
         const kp = await knowledgeRepo.create({
           type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-          lesson: 1,
+          lessonId: 1,
           content: 'こんにちは',
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
@@ -134,14 +134,12 @@ test('KnowledgeRepository - withSentences option', async (t) => {
       // Create lesson and knowledge points
       const kp1 = await knowledgeRepo.create({
         type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-        lesson: 1,
+        lessonId: 1,
         content: 'こんにちは',
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
         annotations: [],
       })
-
-      await knowledgeRepo.associateWithLesson(kp1.id, 1)
 
       const results = await knowledgeRepo.getByLessonId(1)
 
@@ -164,14 +162,12 @@ test('KnowledgeRepository - withSentences option', async (t) => {
         // Create lesson and knowledge points
         const kp1 = await knowledgeRepo.create({
           type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-          lesson: 1,
+          lessonId: 1,
           content: 'こんにちは',
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
         })
-
-        await knowledgeRepo.associateWithLesson(kp1.id, 1)
 
         // Create and associate sentence
         const sentence = await sentenceRepo.create({
@@ -206,14 +202,12 @@ test('KnowledgeRepository - withSentences option', async (t) => {
       // Create knowledge point
       const kp = await knowledgeRepo.create({
         type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-        lesson: 1,
+        lessonId: 1,
         content: 'こんにちは',
         explanation: { en: 'Hello', ja: 'こんにちは' },
         pos: 'interjection',
         annotations: [],
       })
-
-      await knowledgeRepo.associateWithLesson(kp.id, 1)
 
       const results = await knowledgeRepo.getMany({ lessonId: 1 })
 
@@ -236,14 +230,12 @@ test('KnowledgeRepository - withSentences option', async (t) => {
         // Create knowledge point
         const kp = await knowledgeRepo.create({
           type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-          lesson: 1,
+          lessonId: 1,
           content: 'こんにちは',
           explanation: { en: 'Hello', ja: 'こんにちは' },
           pos: 'interjection',
           annotations: [],
         })
-
-        await knowledgeRepo.associateWithLesson(kp.id, 1)
 
         // Create and associate sentence
         const sentence = await sentenceRepo.create({

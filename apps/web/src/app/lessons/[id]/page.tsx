@@ -13,7 +13,7 @@ interface KnowledgePoint {
   content: string
   explanation: { en?: string }
   type: string
-  lesson: number
+  lessonId: number
   sentenceCount?: number
 }
 

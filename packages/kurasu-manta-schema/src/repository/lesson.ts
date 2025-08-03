@@ -1,5 +1,5 @@
 import type { PaginatedResult, PaginationParams } from '@/common/types'
-import { lessonKnowledgePointsTable, lessonsTable } from '@/drizzle/schema'
+import { knowledgePointsTable, lessonsTable } from '@/drizzle/schema'
 import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import { mapCreateLessonToDrizzle, mapDrizzleToLesson, mapLessonToDrizzle } from '@/mapper/lesson'
@@ -159,11 +159,11 @@ export class LessonRepository {
    */
   async getKnowledgePointIds(lessonId: number): Promise<number[]> {
     const rows = await this.db
-      .select({ knowledgePointId: lessonKnowledgePointsTable.knowledgePointId })
-      .from(lessonKnowledgePointsTable)
-      .where(eq(lessonKnowledgePointsTable.lessonId, lessonId))
+      .select({ id: knowledgePointsTable.id })
+      .from(knowledgePointsTable)
+      .where(eq(knowledgePointsTable.lessonId, lessonId))
 
-    return rows.map((row: { knowledgePointId: number }) => row.knowledgePointId)
+    return rows.map((row: { id: number }) => row.id)
   }
 
   /**
