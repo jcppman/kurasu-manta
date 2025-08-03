@@ -18,7 +18,6 @@ export function SentenceViewer({
 }: SentenceViewerProps) {
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('en')
 
   // Sort annotations by location to process them in order
   const sortedAnnotations = [...annotations].sort((a, b) => a.loc - b.loc)
@@ -140,30 +139,16 @@ export function SentenceViewer({
       {/* Explanation section */}
       {explanation && availableLanguages.length > 0 && (
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-          {/* Language toggle buttons */}
-          {availableLanguages.length > 1 && (
-            <div className="flex gap-2 mb-2">
-              {availableLanguages.map((lang) => (
-                <button
-                  key={lang}
-                  type="button"
-                  onClick={() => setSelectedLanguage(lang)}
-                  className={`px-2 py-1 text-xs rounded ${
-                    selectedLanguage === lang
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {lang.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="text-sm font-medium text-gray-900 mb-2">Explanations:</div>
 
-          {/* Display explanation in selected language */}
-          <div className="text-sm text-gray-700">
-            <strong>Explanation:</strong>{' '}
-            {explanation[selectedLanguage] || explanation[availableLanguages[0]]}
+          {/* Display all language explanations simultaneously */}
+          <div className="space-y-2">
+            {availableLanguages.map((lang) => (
+              <div key={lang} className="text-sm">
+                <span className="font-medium text-xs text-gray-600 uppercase mr-2">{lang}:</span>
+                <span className="text-gray-700">{explanation[lang]}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
