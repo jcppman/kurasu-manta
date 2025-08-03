@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/Pagination'
 import { getLessons } from '@/server/lessons'
 import Link from 'next/link'
 
@@ -8,8 +9,22 @@ interface Lesson {
   description?: string
 }
 
-export default async function LessonsPage() {
-  const lessons = await getLessons()
+interface SearchParams {
+  page?: string
+  limit?: string
+}
+
+interface LessonsPageProps {
+  searchParams: Promise<SearchParams>
+}
+
+export default async function LessonsPage({ searchParams }: LessonsPageProps) {
+  const params = await searchParams
+  const page = Number(params.page) || 1
+  const limit = Number(params.limit) || 10
+
+  const result = await getLessons({ page, limit })
+  const lessons = result.items
 
   return (
     <div className="container mx-auto p-8">
@@ -35,6 +50,17 @@ export default async function LessonsPage() {
             <div className="text-sm text-gray-500">Lesson {lesson.number}</div>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <Pagination
+          currentPage={result.page}
+          totalPages={result.totalPages}
+          totalItems={result.total}
+          itemsPerPage={result.limit}
+          hasNextPage={result.hasNextPage}
+          hasPrevPage={result.hasPrevPage}
+        />
       </div>
     </div>
   )

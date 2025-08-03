@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { describe, it, test } from 'node:test'
-import { processInParallel } from './async'
+import { processInParallel, withRetry } from './async'
 
 describe('processInParallel', () => {
   test('should process empty array and return empty results', async () => {
@@ -203,5 +203,195 @@ describe('processInParallel', () => {
 
     // Should use default concurrency (5), so all items should run concurrently
     assert.strictEqual(maxActiveCount, 5)
+  })
+})
+
+describe('withRetry', () => {
+  test('should succeed on first attempt', async () => {
+    let callCount = 0
+    const fn = async () => {
+      callCount++
+      return 'success'
+    }
+
+    const result = await withRetry(fn)
+
+    assert.strictEqual(result, 'success')
+    assert.strictEqual(callCount, 1)
+  })
+
+  test('should retry and eventually succeed', async () => {
+    let callCount = 0
+    const fn = async () => {
+      callCount++
+      if (callCount < 3) {
+        throw new Error(`Attempt ${callCount} failed`)
+      }
+      return 'success'
+    }
+
+    const result = await withRetry(fn, { maxAttempts: 3 })
+
+    assert.strictEqual(result, 'success')
+    assert.strictEqual(callCount, 3)
+  })
+
+  test('should fail after max attempts exceeded', async () => {
+    let callCount = 0
+    const fn = async () => {
+      callCount++
+      throw new Error(`Attempt ${callCount} failed`)
+    }
+
+    await assert.rejects(
+      async () => {
+        await withRetry(fn, { maxAttempts: 3 })
+      },
+      { message: 'Attempt 3 failed' }
+    )
+
+    assert.strictEqual(callCount, 3)
+  })
+
+  test('should respect custom retry options', async () => {
+    let callCount = 0
+    const fn = async () => {
+      callCount++
+      throw new Error(`Attempt ${callCount} failed`)
+    }
+
+    const startTime = Date.now()
+
+    await assert.rejects(async () => {
+      await withRetry(fn, {
+        maxAttempts: 2,
+        initialDelay: 100,
+        backoffFactor: 1, // No backoff for predictable timing
+      })
+    })
+
+    const endTime = Date.now()
+    const elapsed = endTime - startTime
+
+    assert.strictEqual(callCount, 2)
+    // Should have at least the initial delay
+    assert.ok(elapsed >= 100)
+  })
+
+  test('should apply exponential backoff', async () => {
+    let callCount = 0
+    const delays: number[] = []
+    const fn = async () => {
+      callCount++
+      throw new Error(`Attempt ${callCount} failed`)
+    }
+
+    const startTime = Date.now()
+    let lastTime = startTime
+
+    const originalSetTimeout = global.setTimeout
+    global.setTimeout = (
+      callback: TimerHandler,
+      delay?: number | undefined,
+      ...args: unknown[]
+    ) => {
+      if (typeof delay === 'number') {
+        delays.push(delay)
+        const now = Date.now()
+        lastTime = now
+      }
+      return originalSetTimeout(callback, delay, ...args)
+    }
+
+    try {
+      await assert.rejects(async () => {
+        await withRetry(fn, {
+          maxAttempts: 3,
+          initialDelay: 100,
+          backoffFactor: 2,
+        })
+      })
+    } finally {
+      global.setTimeout = originalSetTimeout
+    }
+
+    assert.strictEqual(callCount, 3)
+    assert.strictEqual(delays.length, 2) // 2 retries means 2 delays
+    assert.strictEqual(delays[0], 100) // First delay
+    assert.strictEqual(delays[1], 200) // Second delay (100 * 2)
+  })
+
+  test('should respect max delay', async () => {
+    let callCount = 0
+    const delays: number[] = []
+    const fn = async () => {
+      callCount++
+      throw new Error(`Attempt ${callCount} failed`)
+    }
+
+    const originalSetTimeout = global.setTimeout
+    global.setTimeout = (
+      callback: TimerHandler,
+      delay?: number | undefined,
+      ...args: unknown[]
+    ) => {
+      if (typeof delay === 'number') {
+        delays.push(delay)
+      }
+      return originalSetTimeout(callback, delay, ...args)
+    }
+
+    try {
+      await assert.rejects(async () => {
+        await withRetry(fn, {
+          maxAttempts: 4,
+          initialDelay: 100,
+          backoffFactor: 3,
+          maxDelay: 250,
+        })
+      })
+    } finally {
+      global.setTimeout = originalSetTimeout
+    }
+
+    assert.strictEqual(callCount, 4)
+    assert.strictEqual(delays.length, 3) // 3 retries means 3 delays
+    assert.strictEqual(delays[0], 100) // First delay
+    assert.strictEqual(delays[1], 250) // Second delay capped at maxDelay (would be 300)
+    assert.strictEqual(delays[2], 250) // Third delay also capped
+  })
+
+  test('should use default options when not specified', async () => {
+    let callCount = 0
+    const fn = async () => {
+      callCount++
+      throw new Error(`Attempt ${callCount} failed`)
+    }
+
+    await assert.rejects(async () => {
+      await withRetry(fn) // Using defaults
+    })
+
+    // Default maxAttempts is 3
+    assert.strictEqual(callCount, 3)
+  })
+
+  test('should preserve return type', async () => {
+    const numberFn = async (): Promise<number> => 42
+    const stringFn = async (): Promise<string> => 'hello'
+    const objectFn = async (): Promise<{ value: string }> => ({ value: 'test' })
+
+    const numberResult = await withRetry(numberFn)
+    const stringResult = await withRetry(stringFn)
+    const objectResult = await withRetry(objectFn)
+
+    // TypeScript should infer correct types
+    assert.strictEqual(typeof numberResult, 'number')
+    assert.strictEqual(typeof stringResult, 'string')
+    assert.strictEqual(typeof objectResult, 'object')
+
+    assert.strictEqual(numberResult, 42)
+    assert.strictEqual(stringResult, 'hello')
+    assert.deepStrictEqual(objectResult, { value: 'test' })
   })
 })

@@ -1,5 +1,5 @@
 import db from '@/db'
-import { processInParallel } from '@/lib/async'
+import { processInParallel, withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
   DESIRED_SENTENCE_COUNT_PER_KNOWLEDGE_POINT,
@@ -109,25 +109,16 @@ CONSTRAINTS:
   })
 }
 
-export async function generateSentenceExplanations(
+async function generateTranslationsForSentences(
   sentences: string[]
 ): Promise<{ zhCN: string; enUS: string }[]> {
-  if (sentences.length === 0) {
-    return []
-  }
-
-  let remainingSentences = [...sentences]
-  const results: ({ zhCN: string; enUS: string } | null)[] = new Array(sentences.length).fill(null)
-  let retryCount = 0
-
-  while (remainingSentences.length > 0 && retryCount < MAX_LLM_RETRY_TIMES) {
-    const prompt = `
+  const prompt = `
 You are a professional translator providing accurate translations of Japanese sentences.
 
 Your task is to translate each Japanese sentence into Chinese (Simplified) and English.
 
 SENTENCES TO TRANSLATE:
-${remainingSentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
+${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
 
 TRANSLATION GUIDELINES:
 - Provide natural, accurate translations that convey the original meaning
@@ -139,70 +130,44 @@ TRANSLATION GUIDELINES:
 
 OUTPUT FORMAT:
 Return translations in the same order as the input sentences.
-    `
+  `
 
-    try {
-      const { object } = await generateObject({
-        model: openai('gpt-4o'),
-        prompt,
-        schema: z.object({
-          translations: z.array(
-            z.object({
-              zhCN: z.string(),
-              enUS: z.string(),
-            })
-          ),
-        }),
-      })
+  const { object } = await generateObject({
+    model: openai('gpt-4o'),
+    prompt,
+    schema: z.object({
+      translations: z.array(
+        z.object({
+          zhCN: z.string(),
+          enUS: z.string(),
+        })
+      ),
+    }),
+  })
 
-      // Process translations and identify failed ones
-      const failedIndices: number[] = []
-      const newRemainingSentences: string[] = []
-
-      remainingSentences.forEach((sentence, currentIndex) => {
-        const originalIndex = sentences.indexOf(sentence)
-        const translation = object.translations[currentIndex]
-
-        // Validate translation
-        if (!translation?.zhCN?.trim() || !translation?.enUS?.trim()) {
-          logger.warn(
-            `Empty translation generated for sentence: ${sentence} (attempt ${retryCount + 1})`
-          )
-          failedIndices.push(originalIndex)
-          newRemainingSentences.push(sentence)
-        } else {
-          // Translation is valid, store it
-          results[originalIndex] = {
-            zhCN: translation.zhCN.trim(),
-            enUS: translation.enUS.trim(),
-          }
-        }
-      })
-
-      remainingSentences = newRemainingSentences
-      retryCount++
-
-      if (failedIndices.length > 0) {
-        logger.info(
-          `Retrying ${failedIndices.length} failed translations (attempt ${retryCount}/${MAX_LLM_RETRY_TIMES})`
-        )
-      }
-    } catch (error) {
-      logger.error(`Translation generation failed on attempt ${retryCount + 1}:`, error)
-      retryCount++
+  // Validate all translations
+  const validatedTranslations = object.translations.map((translation, index) => {
+    if (!translation?.zhCN?.trim() || !translation?.enUS?.trim()) {
+      throw new Error(`Empty translation generated for sentence: ${sentences[index]}`)
     }
+    return {
+      zhCN: translation.zhCN.trim(),
+      enUS: translation.enUS.trim(),
+    }
+  })
+
+  return validatedTranslations
+}
+
+export async function generateSentenceExplanations(
+  sentences: string[]
+): Promise<{ zhCN: string; enUS: string }[]> {
+  if (sentences.length === 0) {
+    return []
   }
 
-  // Handle any remaining failed translations
-  return results.map((result, index) => {
-    if (result === null) {
-      const sentence = sentences[index]
-      logger.error(
-        `Failed to generate translation for sentence after ${MAX_LLM_RETRY_TIMES} attempts: ${sentence}`
-      )
-      throw new Error(`Translation failed for sentence: ${sentence}`)
-    }
-    return result
+  return withRetry(() => generateTranslationsForSentences(sentences), {
+    maxAttempts: MAX_LLM_RETRY_TIMES,
   })
 }
 
@@ -214,9 +179,15 @@ interface ParsedToken {
 function parseToken(token: string): ParsedToken {
   const furiganaMatch = token.match(/^(.+?)\[(.+?)\]$/)
   if (furiganaMatch) {
+    const text = furiganaMatch[1]
+    const furigana = furiganaMatch[2]
+
+    // Check if text contains any kanji characters
+    const hasKanji = /[\u4e00-\u9faf]/.test(text)
+
     return {
-      text: furiganaMatch[1],
-      furigana: furiganaMatch[2],
+      text,
+      furigana: hasKanji ? furigana : undefined,
     }
   }
   return {
@@ -416,16 +387,25 @@ GENERATION GUIDELINES:
 6. Vary sentence types: statements, questions, negative forms, past/present tense
 7. Focus on practical, daily-life situations that students would actually encounter
 
+IMPORTANT: The sentence content itself should contain NO furigana marks - write pure Japanese text only.
+
 TOKENIZATION OUTPUT REQUIREMENT:
 For each sentence, also provide a tokenized version with furigana annotations:
-- Split the sentence into meaningful tokens
+- Split the sentence into meaningful tokens, including ALL characters
+- Include punctuation marks (、。！？etc.) as separate tokens
+- NEVER split vocabulary items from the provided list - keep them as complete tokens
 - For kanji that are NOT in the provided vocabulary list, add furigana in brackets: kanji[hiragana]
+- Do NOT add furigana to non-kanji tokens (hiragana, katakana, particles, punctuation)
 - For vocabulary items from the provided list, keep them as-is (no furigana needed)
 - Particles and hiragana-only words should be separate tokens
 
-EXAMPLE:
-- Sentence: "私は日本人です"
+EXAMPLES:
+- Sentence content: "私は日本人です" (NO furigana in content)
 - Tokens: ["私", "は", "日本人[にほんじん]", "です"]
+
+- Sentence content: "失礼ですが、お名前は何ですか。" (NO furigana in content)
+- If "お名前は" is a vocabulary item: ["失礼[しつれい]", "ですが", "、", "お名前は", "何[なん]", "ですか", "。"]
+- If "お名前は" is NOT a vocabulary item: ["失礼[しつれい]", "ですが", "、", "お名前[なまえ]", "は", "何[なん]", "ですか", "。"]
 
 Create sentences that are clear, useful, and appropriate for students at this level.
   `
@@ -433,7 +413,7 @@ Create sentences that are clear, useful, and appropriate for students at this le
   const {
     object: { sentences },
   } = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4.1'),
     temperature: 1,
     prompt,
     schema: z.object({
@@ -489,7 +469,7 @@ Create sentences that are clear, useful, and appropriate for students at this le
     `Generating annotations from tokens for ${sentencesWithExplanations.length} sentences`
   )
   const generated = sentencesWithExplanations.map((sentence) => {
-    logger.debug(`Generating annotations for sentence: ${JSON.stringify(sentence)}`)
+    logger.debug(`Generating annotations for sentence: ${sentence.tokens}`)
     const annotations = calculateAnnotationsFromTokens(
       sentence.tokens,
       allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))

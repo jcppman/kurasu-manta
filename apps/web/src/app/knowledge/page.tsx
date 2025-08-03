@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/Pagination'
 import { getKnowledgePoints } from '@/server/knowledge'
 import Link from 'next/link'
 
@@ -9,8 +10,22 @@ interface KnowledgePoint {
   lesson: number
 }
 
-export default async function KnowledgePage() {
-  const knowledgePoints = await getKnowledgePoints()
+interface SearchParams {
+  page?: string
+  limit?: string
+}
+
+interface KnowledgePageProps {
+  searchParams: Promise<SearchParams>
+}
+
+export default async function KnowledgePage({ searchParams }: KnowledgePageProps) {
+  const params = await searchParams
+  const page = Number(params.page) || 1
+  const limit = Number(params.limit) || 20
+
+  const result = await getKnowledgePoints({ page, limit })
+  const knowledgePoints = result.items
 
   return (
     <div className="container mx-auto p-8">
@@ -40,6 +55,17 @@ export default async function KnowledgePage() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <Pagination
+          currentPage={result.page}
+          totalPages={result.totalPages}
+          totalItems={result.total}
+          itemsPerPage={result.limit}
+          hasNextPage={result.hasNextPage}
+          hasPrevPage={result.hasPrevPage}
+        />
       </div>
     </div>
   )

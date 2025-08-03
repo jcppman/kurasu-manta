@@ -66,3 +66,28 @@
 - Significant reduction in annotation errors
 - Faster annotation generation through reduced AI dependency
 - Better error handling and recovery
+
+## Add Retry Mechanism to Sentence Generation
+
+**Location**: `apps/generator/src/workflows/minna-jp-1/services/data.ts:198-202`
+
+### Completed Work
+- [x] Created generic retry utility with exponential backoff in `src/lib/async.ts`
+- [x] Added retry mechanism to `generateSentencesForLessonNumber` call using `MAX_LLM_RETRY_TIMES` constant
+- [x] Refactored existing retry logic in `generateSentenceExplanations` to use new reusable utility
+- [x] Implemented comprehensive unit tests covering all retry scenarios (success, failure, backoff, max delay)
+- [x] Ensured code passes linting and type checking
+
+### Features
+- **Exponential backoff**: Configurable initial delay with backoff factor to avoid overwhelming services
+- **Maximum delay cap**: Prevents excessive wait times on repeated failures  
+- **Proper error logging**: Logs each retry attempt with attempt count and delay information
+- **Type-safe**: Preserves return types and provides proper TypeScript inference
+- **Configurable**: Supports custom retry options while providing sensible defaults
+- **Reusable**: Can be applied to any async function that needs retry logic
+
+### Benefits
+- **Improved reliability**: Handles transient failures in LLM API calls automatically
+- **Consistent retry behavior**: All retry logic uses the same tested utility
+- **Better error handling**: Proper logging and error propagation on final failure
+- **Reduced maintenance**: Centralized retry logic instead of scattered implementations

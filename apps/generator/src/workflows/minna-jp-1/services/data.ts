@@ -5,8 +5,12 @@ import {
   sentenceKnowledgePointsTable,
   sentencesTable,
 } from '@/db/schema'
+import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
-import { DESIRED_SENTENCE_COUNT_PER_BATCH } from '@/workflows/minna-jp-1/constants'
+import {
+  DESIRED_SENTENCE_COUNT_PER_BATCH,
+  MAX_LLM_RETRY_TIMES,
+} from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
@@ -195,9 +199,9 @@ export async function createGrammarLessons() {
 export async function createSentencesForLesson(lessonNumber: number) {
   const courseContentService = new CourseContentService(db)
 
-  const generatedSentences = await generateSentencesForLessonNumber(
-    lessonNumber,
-    DESIRED_SENTENCE_COUNT_PER_BATCH
+  const generatedSentences = await withRetry(
+    () => generateSentencesForLessonNumber(lessonNumber, DESIRED_SENTENCE_COUNT_PER_BATCH),
+    { maxAttempts: MAX_LLM_RETRY_TIMES }
   )
   if (generatedSentences.length === 0) {
     logger.info(`No sentences generated for lesson number ${lessonNumber}`)

@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/Pagination'
 import { SentenceViewer } from '@/components/SentenceViewer'
 import { getSentences } from '@/server/sentences'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
@@ -12,8 +13,22 @@ interface Sentence {
   minLessonNumber: number
 }
 
-export default async function SentencesPage() {
-  const sentences = await getSentences()
+interface SearchParams {
+  page?: string
+  limit?: string
+}
+
+interface SentencesPageProps {
+  searchParams: Promise<SearchParams>
+}
+
+export default async function SentencesPage({ searchParams }: SentencesPageProps) {
+  const params = await searchParams
+  const page = Number(params.page) || 1
+  const limit = Number(params.limit) || 10
+
+  const result = await getSentences({ page, limit })
+  const sentences = result.items
 
   return (
     <div className="container mx-auto p-8">
@@ -42,6 +57,17 @@ export default async function SentencesPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <Pagination
+          currentPage={result.page}
+          totalPages={result.totalPages}
+          totalItems={result.total}
+          itemsPerPage={result.limit}
+          hasNextPage={result.hasNextPage}
+          hasPrevPage={result.hasPrevPage}
+        />
       </div>
     </div>
   )

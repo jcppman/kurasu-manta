@@ -3,10 +3,10 @@ import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/cou
 
 const courseService = new CourseContentService(db)
 
-export async function getLessons() {
+export async function getLessons(pagination?: { page?: number; limit?: number }) {
   try {
-    const lessons = await courseService.getLessons()
-    return lessons.items
+    const lessons = await courseService.getLessons(pagination)
+    return lessons
   } catch (error) {
     console.error('Failed to fetch lessons:', error)
     throw new Error('Failed to fetch lessons')
