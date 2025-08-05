@@ -304,7 +304,7 @@ test('knowledgeDetails - basic knowledge point without explanation', () => {
     id: 123,
     content: '私',
     type: 'vocabulary',
-    lesson: 1,
+    lessonId: 1,
     explanation: {
       zhCN: '我',
     },
@@ -325,7 +325,7 @@ test('knowledgeDetails - knowledge point with explanation', () => {
       zhCN: '学校',
     },
     type: 'vocabulary',
-    lesson: 1,
+    lessonId: 1,
     pos: '',
     annotations: [],
   }
@@ -346,7 +346,7 @@ test('knowledgeDetails - custom parent tag name', () => {
       zhCN: '是',
     },
     type: 'grammar',
-    lesson: 1,
+    lessonId: 1,
   }
 
   const result = knowledgeDetails(input, 'grammar')
@@ -362,7 +362,7 @@ test('knowledgeDetails - vocabulary tag with explanation', () => {
       zhCN: '姓名',
     },
     type: 'vocabulary',
-    lesson: 1,
+    lessonId: 1,
     pos: '',
     annotations: [],
   }

@@ -66,71 +66,6 @@ export class CourseContentService {
   }
 
   /**
-   * Create knowledge points and associate them with their respective lessons
-   * Knowledge points can belong to different lessons
-   * @param knowledgePoints Array of knowledge points to create
-   * @returns Map of lesson number to LessonWithContent objects
-   */
-  async createKnowledgePointsWithLesson(
-    knowledgePoints: CreateKnowledgePoint[]
-  ): Promise<Map<number, LessonWithContent>> {
-    if (isEmpty(knowledgePoints)) {
-      throw new Error('At least one knowledge point is required')
-    }
-
-    // Group knowledge points by lesson number
-    const knowledgePointsByLesson = groupBy(knowledgePoints, 'lessonId')
-
-    // Map to store lessons with their created knowledge points
-    const lessonsWithContent = new Map<number, LessonWithContent>()
-
-    // Process each lesson group
-    for (const [lessonNumberStr, lessonKnowledgePoints] of toPairs(knowledgePointsByLesson)) {
-      const lessonNumber = Number(lessonNumberStr)
-
-      // Check if the lesson exists (using the more efficient method)
-      const lessonExists = await this.lessonRepository.existsByNumber(lessonNumber)
-
-      // Get or create the lesson
-      let lesson: Lesson
-      if (lessonExists) {
-        // Only fetch the full lesson if it exists
-        const existingLesson = await this.lessonRepository.getByNumber(lessonNumber)
-        if (!existingLesson) {
-          throw new Error(`Lesson ${lessonNumber} exists but could not be retrieved`)
-        }
-        lesson = existingLesson
-      } else {
-        // Create a new lesson with a default title
-        lesson = await this.lessonRepository.create({
-          number: lessonNumber,
-          title: `Lesson ${lessonNumber}`,
-        })
-      }
-
-      // Create knowledge points (they already have lessonId set)
-      const createdKnowledgePoints = await Promise.all(
-        map(lessonKnowledgePoints, async (knowledgePoint) => {
-          return this.knowledgeRepository.create(knowledgePoint)
-        })
-      )
-
-      // Ensure lesson ID is defined
-      if (!isNumber(lesson.id)) {
-        throw new Error(`Lesson ${lessonNumber} has no ID`)
-      }
-
-      // Add the lesson with its knowledge points to the result map
-      lessonsWithContent.set(lesson.number, {
-        ...lesson,
-        knowledgePoints: createdKnowledgePoints,
-      })
-    }
-
-    return lessonsWithContent
-  }
-
-  /**
    * Delete a lesson and its knowledge points
    */
   async deleteLessonWithContent(lessonId: number): Promise<boolean> {
@@ -344,6 +279,34 @@ export class CourseContentService {
 
     // Use the repository method
     return this.lessonRepository.getMany({}, normalizedPagination)
+  }
+
+  /**
+   * Get a lesson by its lesson number
+   * @param lessonNumber The lesson number to search for
+   * @returns The lesson if found, null otherwise
+   */
+  async getLessonByNumber(lessonNumber: number): Promise<Lesson | null> {
+    return this.lessonRepository.getByNumber(lessonNumber)
+  }
+
+  /**
+   * Create a new lesson
+   * @param lesson The lesson data to create
+   * @returns The created lesson with database ID
+   */
+  async createLesson(lesson: { number: number; title: string }): Promise<Lesson> {
+    return this.lessonRepository.create(lesson)
+  }
+
+  /**
+   * Create multiple knowledge points
+   * Each knowledge point must have a valid lessonId (database ID, not lesson number)
+   * @param knowledgePoints Array of knowledge points to create
+   * @returns Array of created knowledge points
+   */
+  async createKnowledgePoints(knowledgePoints: CreateKnowledgePoint[]): Promise<KnowledgePoint[]> {
+    return Promise.all(knowledgePoints.map((kp) => this.knowledgeRepository.create(kp)))
   }
 
   /**

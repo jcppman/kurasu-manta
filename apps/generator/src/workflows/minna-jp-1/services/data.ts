@@ -1,20 +1,15 @@
 import db from '@/db'
-import {
-  knowledgePointsTable,
-  lessonKnowledgePointsTable,
-  sentenceKnowledgePointsTable,
-  sentencesTable,
-} from '@/db/schema'
+import { knowledgePointsTable, sentenceKnowledgePointsTable, sentencesTable } from '@/db/schema'
 import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
   DESIRED_SENTENCE_COUNT_PER_BATCH,
-  MAX_LLM_RETRY_TIMES,
+  SENTENCE_URGENT_AMOUNT_THRESHOLD,
 } from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
-import { eq, inArray } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import {
   type MinaGrammar,
   type MinaVocabulary,
@@ -40,12 +35,7 @@ export async function cleanVocabularies() {
 
   logger.info(`Found ${vocabularyIds.length} vocabulary knowledge points to delete`)
 
-  // Delete lesson-knowledge point associations for vocabulary points only
-  await db
-    .delete(lessonKnowledgePointsTable)
-    .where(inArray(lessonKnowledgePointsTable.knowledgePointId, vocabularyIds))
-
-  logger.info('Deleted vocabulary lesson associations')
+  // Note: Knowledge points are directly deleted via foreign key constraint
 
   // Delete vocabulary knowledge points
   await db.delete(knowledgePointsTable).where(eq(knowledgePointsTable.type, 'vocabulary'))
@@ -73,12 +63,7 @@ export async function cleanGrammar() {
 
   logger.info(`Found ${grammarIds.length} grammar knowledge points to delete`)
 
-  // Delete lesson-knowledge point associations for grammar points only
-  await db
-    .delete(lessonKnowledgePointsTable)
-    .where(inArray(lessonKnowledgePointsTable.knowledgePointId, grammarIds))
-
-  logger.info('Deleted grammar lesson associations')
+  // Note: Knowledge points are directly deleted via foreign key constraint
 
   // Delete grammar knowledge points
   await db.delete(knowledgePointsTable).where(eq(knowledgePointsTable.type, 'grammar'))
@@ -105,15 +90,25 @@ export async function cleanSentences() {
 async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]) {
   const courseContentService = new CourseContentService(db)
 
+  // 1. Get or create lesson by number
+  let lesson = await courseContentService.getLessonByNumber(lessonNumber)
+  if (!lesson) {
+    lesson = await courseContentService.createLesson({
+      number: lessonNumber,
+      title: `Lesson ${lessonNumber}`,
+    })
+  }
+
+  // 2. Process vocabularies (POS lookup)
   const noPos = vocabularies.filter((v) => !v.pos)
   for (const voc of noPos) {
     voc.pos = await findPosOfVocabulary(voc)
   }
 
-  // insert
-  courseContentService.createKnowledgePointsWithLesson(
+  // 3. Create knowledge points with proper lesson ID
+  await courseContentService.createKnowledgePoints(
     vocabularies.map((v) => ({
-      lesson: lessonNumber,
+      lessonId: lesson.id, // Real database ID
       type: 'vocabulary',
       content: v.content,
       annotations: v.annotations,
@@ -121,7 +116,6 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
       explanation: {
         zhCN: v.translation,
       },
-      examples: [],
     }))
   )
 }
@@ -129,17 +123,25 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
 async function createGrammarLesson(lessonNumber: number, grammarItems: MinaGrammar[]) {
   const courseContentService = new CourseContentService(db)
 
-  // insert
-  return courseContentService.createKnowledgePointsWithLesson(
+  // 1. Get or create lesson by number
+  let lesson = await courseContentService.getLessonByNumber(lessonNumber)
+  if (!lesson) {
+    lesson = await courseContentService.createLesson({
+      number: lessonNumber,
+      title: `Lesson ${lessonNumber}`,
+    })
+  }
+
+  // 2. Create grammar knowledge points with proper lesson ID
+  return courseContentService.createKnowledgePoints(
     grammarItems.map((g) => ({
-      lesson: lessonNumber,
+      lessonId: lesson.id, // Real database ID
       type: 'grammar',
       content: g.content,
       annotations: [],
       explanation: {
         zhCN: g.explanation,
       },
-      examples: [],
     }))
   )
 }
@@ -240,5 +242,26 @@ export async function createSentencesForLessons(
     .filter((lesson) => lesson.number <= untilLessonNumber)
     .sort((a, b) => a.number - b.number)
 
-  // get stats: each lesson's sentence count by knowledge point id
+  let currentProgress = 0
+  while (currentProgress < lessonsToProcess.length) {
+    const stats = await courseContentService.getLessonKnowledgePointSentenceStats(
+      lessonsToProcess[currentProgress].id
+    )
+    if (
+      stats.some(
+        (knowledgePointSentenceCount) =>
+          knowledgePointSentenceCount.sentenceCount < SENTENCE_URGENT_AMOUNT_THRESHOLD
+      )
+    ) {
+      logger.info(`Creating sentences for lesson ${lessonsToProcess[currentProgress].number}...`)
+      await createSentencesForLesson(lessonsToProcess[currentProgress].number)
+    } else {
+      logger.info(
+        `All knowledge points in ${lessonsToProcess[currentProgress].number} has sufficient sentences`
+      )
+      currentProgress++
+    }
+  }
+
+  logger.info('All sentences created successfully for lessons up to', untilLessonNumber)
 }

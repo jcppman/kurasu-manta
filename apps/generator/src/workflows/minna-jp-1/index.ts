@@ -6,17 +6,18 @@ import {
   cleanVocabularies,
   createGrammarLessons,
   createSentencesForLesson,
+  createSentencesForLessons,
   createVocabularies,
 } from './services/data'
 
 export async function execute() {
   // await cleanGrammar()
-  //await createGrammarLessons()
+  // await createGrammarLessons()
   // await cleanVocabularies()
-  //await createVocabularies()
+  // await createVocabularies()
   // await generateVocabularyAudioClips()
   // await cleanSentences()
-  await createSentencesForLesson(1)
+  await createSentencesForLessons(3)
 }
 
 execute()

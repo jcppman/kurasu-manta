@@ -23,6 +23,7 @@ Knowledge Admin (TypeScript Scripts) → Content Generation → SQLite (Drizzle)
 ### Package Manager
 - Always use pnpm
 - use pnpm test rather than npm test
+- ALWAYS use pnpm instead of npm
 
 ### Database: Drizzle + SQLite
 - Same tech stack across server and client
@@ -108,6 +109,13 @@ async function createLessons() {
 - LocalizedText type for multilingual content
 - JSON storage in database
 - Type-safe access in application code
+
+### Database Relationships
+- **Lessons ↔ Knowledge Points**: One-to-many relationship
+  - Each lesson contains multiple knowledge points
+  - Each knowledge point belongs to exactly one lesson
+  - Direct foreign key constraint (lessonId) for data integrity
+  - Simplified queries without junction tables
 
 ### Shared Schema
 ```
