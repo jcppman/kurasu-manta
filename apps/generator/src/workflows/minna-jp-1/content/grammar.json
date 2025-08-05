@@ -16,8 +16,8 @@
   },
   {
     "lesson": 1,
-    "content": "名詞の名詞",
-    "explanation": ""
+    "content": "名詞1の名詞2",
+    "explanation": "名詞 1 表示名詞 2 的屬性。e.g: IMCの会社員"
   },
   {
     "lesson": 1,
@@ -52,7 +52,7 @@
   {
     "lesson": 2,
     "content": "代替名詞使用的「の」",
-    "explanation": ""
+    "explanation": "答語中，代替問句中出現的名詞使用。e.g: 佐藤さんのです。"
   },
   {
     "lesson": 2,
@@ -111,11 +111,6 @@
   },
   {
     "lesson": 4,
-    "content": "動詞時態表現",
-    "explanation": ""
-  },
-  {
-    "lesson": 4,
     "content": "時間に～ます。",
     "explanation": "在~時間做~"
   },
@@ -126,7 +121,7 @@
   },
   {
     "lesson": 4,
-    "content": "動詞時態表現",
+    "content": "動詞ます/ません/ました/ませんでした",
     "explanation": ""
   },
   {
@@ -152,7 +147,7 @@
   {
     "lesson": 6,
     "content": "名詞を動詞",
-    "explanation": "助詞「を」的用法"
+    "explanation": "助詞「を」的用法。e.g: 音楽を聞きます（聽音樂）"
   },
   {
     "lesson": 6,
@@ -192,16 +187,16 @@
   {
     "lesson": 7,
     "content": "～は（言語）で～です",
-    "explanation": "~用~叫做~"
+    "explanation": "~用~叫做~，要詢問個詞或句子用其他語言怎麼說時使用。e.g: 「ありがとう」は英語で何ですか？"
   },
   {
     "lesson": 7,
-    "content": "に",
-    "explanation": "表示動作對象"
+    "content": "名詞1（人）に名詞2をあげます",
+    "explanation": ""
   },
   {
     "lesson": 7,
-    "content": "授受表現",
+    "content": "名詞1（人）に名詞2をもらいま",
     "explanation": ""
   },
   {
@@ -212,7 +207,7 @@
   {
     "lesson": 8,
     "content": "形容詞",
-    "explanation": ""
+    "explanation": "い形容詞、な形容詞"
   },
   {
     "lesson": 8,
@@ -252,7 +247,7 @@
   {
     "lesson": 9,
     "content": "名詞が上手／下手です。",
-    "explanation": "對拿手/不拿手"
+    "explanation": "對xxx拿手/不拿手"
   },
   {
     "lesson": 9,
@@ -270,8 +265,8 @@
     "explanation": "因為所以"
   },
   {
-    "lesson": 10,
-    "content": "あります、います",
+    "lesson": 9,
+    "content": "よく/だいたい/たくさん/少し/あまり/ぜんぜん",
     "explanation": ""
   },
   {
@@ -286,8 +281,8 @@
   },
   {
     "lesson": 10,
-    "content": "方向、位置",
-    "explanation": ""
+    "content": "うえ/した/まえ/うしろ/みぎ/ひだり/なか/そと/となり/ちかく/あいだ",
+    "explanation": "方向、位置"
   },
   {
     "lesson": 10,
