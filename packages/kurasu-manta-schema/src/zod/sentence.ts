@@ -24,8 +24,8 @@ export const createSentenceSchema = baseSentenceSchema
  */
 export const sentenceSchema = baseSentenceSchema.extend({
   id: z.number().int().positive(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 /**

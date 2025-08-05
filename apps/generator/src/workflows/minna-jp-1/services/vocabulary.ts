@@ -9,11 +9,23 @@ export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> 
 
     The answer MUST be one of the following:
     - '名': noun
-    - '句型': phrase
+    - '動': verb
+    - '形': i-adjective
+    - '形動': na-adjective
+    - '副': adverb
+    - '助': particle
+    - '数': number/counter
+    - '句型': phrase/sentence pattern
     - '搭配': common collocation like subject and verb, longer common phrases is '句型' not '搭配'
 
     ### examples:
     エスカレーター => 名
+    食べます => 動
+    大きい => 形
+    きれい => 形動
+    とても => 副
+    は => 助
+    一つ => 数
     〜から来ました => 句型
     お名前は => 句型
     どうも => 句型
@@ -25,7 +37,7 @@ export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> 
     ${voc.content}
     `,
     output: 'enum',
-    enum: ['名', '句型', '搭配'],
+    enum: ['名', '動', '形', '形動', '副', '助', '数', '句型', '搭配'],
   })
 
   return ret.object

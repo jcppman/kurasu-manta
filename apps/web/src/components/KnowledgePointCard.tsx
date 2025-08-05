@@ -1,6 +1,9 @@
 'use client'
 
+import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/knowledge-schema/common/types'
+import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import { useRouter } from 'next/navigation'
+import { FuriganaText } from './FuriganaText'
 
 interface KnowledgePoint {
   id: number
@@ -9,6 +12,7 @@ interface KnowledgePoint {
   type: string
   lessonId: number
   sentenceCount?: number
+  annotations?: Annotation[]
 }
 
 interface KnowledgePointCardProps {
@@ -35,7 +39,13 @@ export function KnowledgePointCard({ knowledgePoint }: KnowledgePointCardProps) 
       className="p-4 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-left w-full"
       onClick={handleClick}
     >
-      <h3 className="font-semibold mb-2">{knowledgePoint.content}</h3>
+      <h3 className="font-semibold mb-2">
+        {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY && knowledgePoint.annotations ? (
+          <FuriganaText text={knowledgePoint.content} annotations={knowledgePoint.annotations} />
+        ) : (
+          knowledgePoint.content
+        )}
+      </h3>
 
       {/* Show explanations */}
       {knowledgePoint.explanation && Object.keys(knowledgePoint.explanation).length > 0 && (

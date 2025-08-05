@@ -1,14 +1,13 @@
-import { resolve } from 'node:path'
 import * as schema from '@/db/schema'
-import { drizzle } from 'drizzle-orm/libsql'
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
 
-// Database path - same as generator but from web app perspective
-const DB_DIR = process.env.DB_DIR || './db'
-const DB_FILE_NAME = process.env.DB_FILE_NAME || 'local.db'
-const DB_FILE_PATH = resolve(DB_DIR, DB_FILE_NAME)
-
-export const db = drizzle({
-  connection: `file:${DB_FILE_PATH}`,
-  schema,
-  casing: 'snake_case',
+const pool = new Pool({
+  host: process.env.POSTGRES_HOST || 'localhost',
+  port: Number(process.env.POSTGRES_PORT) || 5432,
+  user: process.env.POSTGRES_USER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  database: process.env.POSTGRES_DB || 'kurasu_manta',
 })
+
+export const db = drizzle(pool, { schema, casing: 'snake_case' })

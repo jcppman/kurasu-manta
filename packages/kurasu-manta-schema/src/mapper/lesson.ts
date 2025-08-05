@@ -6,7 +6,6 @@ import type { CreateLesson, Lesson } from '@/zod/lesson'
  */
 export function mapCreateLessonToDrizzle(lesson: CreateLesson) {
   return {
-    id: lesson.id,
     number: lesson.number,
     title: lesson.title,
     description: lesson.description,
@@ -28,5 +27,7 @@ export function mapDrizzleToLesson(row: typeof lessonsTable.$inferSelect): Lesso
     number: row.number,
     title: row.title ?? undefined,
     description: row.description ?? undefined,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
   }
 }

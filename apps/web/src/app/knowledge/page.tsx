@@ -2,14 +2,6 @@ import { Pagination } from '@/components/Pagination'
 import { getKnowledgePoints } from '@/server/knowledge'
 import Link from 'next/link'
 
-interface KnowledgePoint {
-  id: number
-  content: string
-  explanation: { en?: string } | null
-  type: string
-  lessonId: number
-}
-
 interface SearchParams {
   page?: string
   limit?: string

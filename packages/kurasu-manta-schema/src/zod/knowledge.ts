@@ -5,7 +5,6 @@ import { localizedText } from './localized-text'
 import type { sentenceSchema } from './sentence'
 
 export const baseKnowledgePointSchema = z.object({
-  id: z.number().optional(),
   lessonId: z.number(),
   content: z.string(),
   explanation: localizedText,
@@ -27,17 +26,34 @@ export const createKnowledgePointSchema = z.discriminatedUnion('type', [
   createGrammarSchema,
 ])
 
+export const vocabularySchema = createVocabularySchema.extend({
+  id: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export const grammarSchema = createGrammarSchema.extend({
+  id: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export const knowledgePointSchema = z.discriminatedUnion('type', [vocabularySchema, grammarSchema])
+
 export type CreateKnowledgePoint = z.infer<typeof createKnowledgePointSchema>
-export type KnowledgePoint = z.infer<typeof createKnowledgePointSchema> & {
-  id: number
+export type KnowledgePoint = z.infer<typeof knowledgePointSchema> & {
   sentences?: z.infer<typeof sentenceSchema>[]
 }
 export type Vocabulary = z.infer<typeof createVocabularySchema> & {
   id: number
+  createdAt: Date
+  updatedAt: Date
   sentences?: z.infer<typeof sentenceSchema>[]
 }
 export type Grammar = z.infer<typeof createGrammarSchema> & {
   id: number
+  createdAt: Date
+  updatedAt: Date
   sentences?: z.infer<typeof sentenceSchema>[]
 }
 

@@ -1,7 +1,13 @@
 'use client'
 
+import {
+  getAnnotationColor,
+  getNonFuriganaAnnotations,
+  isFuriganaAnnotation,
+} from '@/lib/annotations'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
 import { useState } from 'react'
+import { FuriganaText } from './FuriganaText'
 
 interface SentenceViewerProps {
   text: string
@@ -64,32 +70,6 @@ export function SentenceViewer({
 
   const segments = createSegments()
 
-  const getAnnotationColor = (type: string, annotation: Annotation) => {
-    // If this annotation matches the highlighted knowledge point, use special highlighting
-    if (highlightKnowledgePointId && annotation.id === highlightKnowledgePointId) {
-      return 'bg-yellow-200 border-yellow-400 text-yellow-900 ring-2 ring-yellow-300'
-    }
-
-    switch (type.toLowerCase()) {
-      case 'vocabulary':
-        return 'bg-blue-100 border-blue-300 text-blue-800'
-      case 'grammar':
-        return 'bg-green-100 border-green-300 text-green-800'
-      case 'particle':
-        return 'bg-purple-100 border-purple-300 text-purple-800'
-      case 'conjugation':
-        return 'bg-orange-100 border-orange-300 text-orange-800'
-      case 'furigana':
-        return 'bg-transparent border-none text-inherit' // No highlighting for furigana
-      default:
-        return 'bg-gray-100 border-gray-300 text-gray-800'
-    }
-  }
-
-  const isFuriganaAnnotation = (annotation: Annotation) => {
-    return annotation.type.toLowerCase() === 'furigana'
-  }
-
   // Get available languages from explanation
   const availableLanguages = explanation ? Object.keys(explanation) : []
 
@@ -103,21 +83,18 @@ export function SentenceViewer({
         {segments.map((segment, index) =>
           segment.isAnnotated && segment.annotation ? (
             isFuriganaAnnotation(segment.annotation) ? (
-              // Furigana annotation - display reading above kanji
-              <span
+              // Use FuriganaText component for furigana display
+              <FuriganaText
                 key={`furigana-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
-                className="relative inline-block"
-              >
-                <span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full text-xs text-gray-600 whitespace-nowrap">
-                  {segment.annotation.content}
-                </span>
-                {segment.text}
-              </span>
+                text={segment.text}
+                annotations={[segment.annotation]}
+                className="inline-block"
+              />
             ) : (
               // Regular annotation - display with hover tooltip
               <span
                 key={`annotated-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
-                className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(segment.annotation.type, segment.annotation)}`}
+                className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(segment.annotation.type, segment.annotation, highlightKnowledgePointId)}`}
                 onMouseEnter={(e) => {
                   setHoveredAnnotation(segment.annotation || null)
                   setMousePosition({ x: e.clientX, y: e.clientY })
@@ -153,8 +130,8 @@ export function SentenceViewer({
         </div>
       )}
 
-      {/* Tooltip for hovered annotation (excluding furigana) */}
-      {hoveredAnnotation && !isFuriganaAnnotation(hoveredAnnotation) && (
+      {/* Tooltip for hovered annotation */}
+      {hoveredAnnotation && (
         <div
           className="fixed z-50 p-3 bg-white border border-gray-200 rounded-lg shadow-lg max-w-xs pointer-events-none"
           style={{

@@ -6,6 +6,7 @@ export default defineConfig({
     'src/mapper/**/*.ts',
     'src/repository/**/*.ts',
     'src/service/**/*.ts',
+    'src/common/**/*.ts',
   ],
   format: ['cjs', 'esm'],
   outDir: 'build',

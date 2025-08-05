@@ -310,6 +310,8 @@ test('knowledgeDetails - basic knowledge point without explanation', () => {
     },
     pos: '',
     annotations: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   const result = knowledgeDetails(input)
@@ -328,6 +330,8 @@ test('knowledgeDetails - knowledge point with explanation', () => {
     lessonId: 1,
     pos: '',
     annotations: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   const result = knowledgeDetails(input)
@@ -347,6 +351,8 @@ test('knowledgeDetails - custom parent tag name', () => {
     },
     type: 'grammar',
     lessonId: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   const result = knowledgeDetails(input, 'grammar')
@@ -365,6 +371,8 @@ test('knowledgeDetails - vocabulary tag with explanation', () => {
     lessonId: 1,
     pos: '',
     annotations: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   const result = knowledgeDetails(input, 'vocabulary')

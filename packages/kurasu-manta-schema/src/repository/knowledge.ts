@@ -6,6 +6,7 @@ import {
   type sentencesTable,
 } from '@/drizzle/schema'
 import type * as schema from '@/drizzle/schema'
+import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import {
   mapCreateKnowledgePointToDrizzle,
@@ -15,14 +16,13 @@ import {
 import { mapDrizzleToSentence } from '@/mapper/sentence'
 import type { CreateKnowledgePoint, KnowledgePoint } from '@/zod/knowledge'
 import { and, eq, sql } from 'drizzle-orm'
-import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
  * Repository for knowledge points
  * This provides a clean API for accessing knowledge points from the database
  */
 export class KnowledgeRepository {
-  constructor(private db: LibSQLDatabase<typeof schema>) {}
+  constructor(private db: Db) {}
 
   /**
    * Helper method to map knowledge point with sentences from relational query result

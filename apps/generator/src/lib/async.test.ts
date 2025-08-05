@@ -292,7 +292,7 @@ describe('withRetry', () => {
     const originalSetTimeout = global.setTimeout
     // @ts-ignore
     global.setTimeout = (
-      callback: TimerHandler,
+      callback: (...args: unknown[]) => void,
       delay?: number | undefined,
       ...args: unknown[]
     ) => {
@@ -333,7 +333,7 @@ describe('withRetry', () => {
     const originalSetTimeout = global.setTimeout
     // @ts-ignore
     global.setTimeout = (
-      callback: TimerHandler,
+      callback: (...args: unknown[]) => void,
       delay?: number | undefined,
       ...args: unknown[]
     ) => {

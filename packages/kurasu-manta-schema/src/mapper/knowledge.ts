@@ -52,6 +52,8 @@ export function mapDrizzleToKnowledgePoint(
     lessonId: lessonId,
     content,
     explanation: explanation as LocalizedText,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
   }
 
   if (type === KNOWLEDGE_POINT_TYPES.VOCABULARY) {

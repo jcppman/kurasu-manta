@@ -5,20 +5,20 @@ import {
   sentencesTable,
 } from '@/drizzle/schema'
 import type * as schema from '@/drizzle/schema'
+import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
 import { and, count, eq, gte, or, sql } from 'drizzle-orm'
-import type { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
  * Repository for sentences
  * Provides a clean API for accessing sentences from the database
  */
 export class SentenceRepository {
-  constructor(private db: LibSQLDatabase<typeof schema>) {}
+  constructor(private db: Db) {}
 
   /**
    * Get sentences with optional filtering and pagination
@@ -168,7 +168,7 @@ export class SentenceRepository {
       .set({
         content: sentence.content,
         explanation: sentence.explanation,
-        updatedAt: new Date().toISOString(),
+        updatedAt: new Date(),
       })
       .where(eq(sentencesTable.id, sentence.id))
       .returning()
@@ -297,7 +297,7 @@ export class SentenceRepository {
 
     // Update with actual counts
     for (const row of rows) {
-      result.set(row.knowledgePointId, row.count)
+      result.set(row.knowledgePointId, Number(row.count))
     }
 
     return result

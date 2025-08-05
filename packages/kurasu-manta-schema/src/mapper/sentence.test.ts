@@ -31,8 +31,8 @@ test('sentence mappers', async (t) => {
     annotations: mockAnnotations,
     audio: 'test-audio.mp3',
     minLessonNumber: 1,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z',
+    createdAt: new Date('2024-01-01T00:00:00.000Z'),
+    updatedAt: new Date('2024-01-01T00:00:00.000Z'),
   }
 
   const drizzleRow = {
@@ -42,8 +42,8 @@ test('sentence mappers', async (t) => {
     annotations: mockAnnotations,
     audio: 'test-audio.mp3' as string | null,
     minLessonNumber: 1,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z',
+    createdAt: new Date('2024-01-01T00:00:00.000Z'),
+    updatedAt: new Date('2024-01-01T00:00:00.000Z'),
   }
 
   await t.test('mapCreateSentenceToDrizzle', () => {
@@ -121,8 +121,8 @@ test('sentence mappers', async (t) => {
       id: 1,
       ...drizzleInsert,
       audio: drizzleInsert.audio ?? null,
-      createdAt: '2024-01-01T00:00:00.000Z',
-      updatedAt: '2024-01-01T00:00:00.000Z',
+      createdAt: new Date('2024-01-01T00:00:00.000Z'),
+      updatedAt: new Date('2024-01-01T00:00:00.000Z'),
     }
     const sentenceFromDrizzle = mapDrizzleToSentence(drizzleRowFromInsert)
 

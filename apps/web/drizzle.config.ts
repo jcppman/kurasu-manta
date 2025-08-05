@@ -1,17 +1,15 @@
-import { resolve } from 'node:path'
 import { defineConfig } from 'drizzle-kit'
-
-// Database path - same as generator but from web app perspective
-const DB_DIR = resolve(__dirname, '../../data')
-const DB_FILE_NAME = 'local.db'
-const DB_FILE_PATH = resolve(DB_DIR, DB_FILE_NAME)
 
 export default defineConfig({
   out: './drizzle',
   schema: './src/db/schema.ts',
   casing: 'snake_case',
-  dialect: 'sqlite',
+  dialect: 'postgresql',
   dbCredentials: {
-    url: DB_FILE_PATH,
+    host: process.env.POSTGRES_HOST || 'localhost',
+    port: Number(process.env.POSTGRES_PORT) || 5432,
+    user: process.env.POSTGRES_USER || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'postgres',
+    database: process.env.POSTGRES_DB || 'kurasu_manta',
   },
 })

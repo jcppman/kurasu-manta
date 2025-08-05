@@ -2,30 +2,20 @@ import type { KnowledgePointType } from '@/common/types'
 import type { Annotation } from '@/zod/annotation'
 import type { LocalizedText } from '@/zod/localized-text'
 import { relations } from 'drizzle-orm'
-import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
-import { jsonField } from './utils'
+import { integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 
 const createdAndUpdatedAt = {
-  createdAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-  updatedAt: text()
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 }
-
-/**
- * Re-export knowledge point types for backward compatibility
- */
-export { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
 
 /**
  * Lessons table - represents a lesson
  */
-export const lessonsTable = sqliteTable('lessons', {
-  id: int().primaryKey({ autoIncrement: true }),
+export const lessonsTable = pgTable('lessons', {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
   // Lesson number
-  number: int().notNull().unique(),
+  number: integer().notNull().unique(),
   // Title of the lesson
   title: text(),
   // Description of the lesson
@@ -37,10 +27,10 @@ export const lessonsTable = sqliteTable('lessons', {
  * Knowledge points table - core content
  * Following the heterogeneous data approach with JSON fields for type-specific data
  */
-export const knowledgePointsTable = sqliteTable('knowledge_points', {
-  id: int().primaryKey({ autoIncrement: true }),
+export const knowledgePointsTable = pgTable('knowledge_points', {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
   // Foreign key to lessons table (one-to-many relationship)
-  lessonId: int()
+  lessonId: integer()
     .notNull()
     .references(() => lessonsTable.id, { onDelete: 'cascade' }),
   // Type of knowledge point (vocabulary or grammar)
@@ -48,48 +38,46 @@ export const knowledgePointsTable = sqliteTable('knowledge_points', {
   // Content in Japanese
   content: text().notNull(),
   // Explanation of the knowledge point (localized)
-  explanation: jsonField<LocalizedText>('explanation'),
+  explanation: jsonb('explanation').$type<LocalizedText>(),
   // Type-specific data stored in JSON fields
   // For vocabulary: pos, annotations, examples
   // For grammar: examples
-  typeSpecificData: jsonField<Record<string, unknown>>('type_specific_data'),
+  typeSpecificData: jsonb('type_specific_data').$type<Record<string, unknown>>(),
   ...createdAndUpdatedAt,
 })
 
 /**
  * Sentence table
  */
-export const sentencesTable = sqliteTable('sentences', {
-  id: int().primaryKey({ autoIncrement: true }),
+export const sentencesTable = pgTable('sentences', {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
   // Content in Japanese
   content: text().notNull(),
   // Explanation of the knowledge point (localized)
-  explanation: jsonField<LocalizedText>('explanation').notNull(),
+  explanation: jsonb('explanation').$type<LocalizedText>().notNull(),
   // Annotations for the sentence
-  annotations: jsonField<Annotation[]>('annotations'),
+  annotations: jsonb('annotations').$type<Annotation[]>(),
   // Audio file path/URL for the sentence
   audio: text('audio'),
   // The lesson number this sentence is generated for
-  minLessonNumber: int().notNull(),
+  minLessonNumber: integer().notNull(),
   ...createdAndUpdatedAt,
 })
 
 /**
  * Sentence to Knowledge Point relationship (many-to-many)
  */
-export const sentenceKnowledgePointsTable = sqliteTable(
+export const sentenceKnowledgePointsTable = pgTable(
   'sentence_knowledge_points',
   {
-    sentenceId: int()
+    sentenceId: integer()
       .notNull()
       .references(() => sentencesTable.id, { onDelete: 'cascade' }),
-    knowledgePointId: int()
+    knowledgePointId: integer()
       .notNull()
       .references(() => knowledgePointsTable.id, { onDelete: 'cascade' }),
     // Creation timestamp
-    createdAt: text()
-      .notNull()
-      .$defaultFn(() => new Date().toISOString()),
+    createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.sentenceId, table.knowledgePointId] })]
 )
