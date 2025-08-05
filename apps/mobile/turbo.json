@@ -1,9 +1,0 @@
-{
-  "extends": ["//"],
-  "tasks": {
-    "build": {
-      "outputs": ["build/**", "node_modules/.cache/metro/**"],
-      "env": ["EXPO_PUBLIC_*"]
-    }
-  }
-}
