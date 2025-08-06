@@ -4,6 +4,7 @@ import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/content-schema/common'
 import type { Annotation } from '@kurasu-manta/content-schema/zod'
 import type { Lesson } from '@kurasu-manta/content-schema/zod'
 import { useRouter } from 'next/navigation'
+import { AudioPlayer } from './AudioPlayer'
 import { FuriganaText } from './FuriganaText'
 
 interface KnowledgePoint {
@@ -14,6 +15,7 @@ interface KnowledgePoint {
   lessonId: number
   sentenceCount?: number
   annotations?: Annotation[]
+  audio?: string
 }
 
 interface KnowledgePointCardProps {
@@ -23,15 +25,18 @@ interface KnowledgePointCardProps {
 
 export function KnowledgePointCard({ knowledgePoint, lesson }: KnowledgePointCardProps) {
   return (
-    <button
-      type="button"
-      className="p-8 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-left w-full"
-    >
-      <h3 className="font-semibold mb-2">
-        {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY && knowledgePoint.annotations ? (
-          <FuriganaText text={knowledgePoint.content} annotations={knowledgePoint.annotations} />
-        ) : (
-          knowledgePoint.content
+    <div className="p-8 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left w-full">
+      <h3 className="font-semibold mb-2 flex items-center gap-2">
+        <span>
+          {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY &&
+          knowledgePoint.annotations ? (
+            <FuriganaText text={knowledgePoint.content} annotations={knowledgePoint.annotations} />
+          ) : (
+            knowledgePoint.content
+          )}
+        </span>
+        {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY && knowledgePoint.audio && (
+          <AudioPlayer audioHash={knowledgePoint.audio} />
         )}
       </h3>
 
@@ -59,6 +64,6 @@ export function KnowledgePointCard({ knowledgePoint, lesson }: KnowledgePointCar
           )}
         </div>
       </div>
-    </button>
+    </div>
   )
 }
