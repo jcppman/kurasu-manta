@@ -6,6 +6,7 @@ import { KnowledgeRepository } from '@/repository/knowledge'
 import { LessonRepository } from '@/repository/lesson'
 import { SentenceRepository } from '@/repository/sentence'
 import { CourseContentService } from '@/service/course-content'
+import { isVocabulary } from '@/zod/knowledge'
 import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence } from '@/zod/sentence'
 import { createInMemoryDb } from '../utils/db'
@@ -302,8 +303,8 @@ test('CourseContentService - New Methods', async (t) => {
       const grammarPoint = await knowledgeRepo.create(createGrammarPoint(lesson.id, '文法'))
 
       // Get vocabularies with pagination (limit 2, page 1)
-      const result1 = await courseContentService.getVocabulariesByConditions(
-        { lessonId: lesson.id },
+      const result1 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id, type: 'vocabulary' },
         { page: 1, limit: 2 }
       )
 
@@ -322,8 +323,8 @@ test('CourseContentService - New Methods', async (t) => {
       }
 
       // Get vocabularies with pagination (limit 2, page 2)
-      const result2 = await courseContentService.getVocabulariesByConditions(
-        { lessonId: lesson.id },
+      const result2 = await courseContentService.getKnowledgePointsByConditions(
+        { lessonId: lesson.id, type: 'vocabulary' },
         { page: 2, limit: 2 }
       )
 
@@ -352,7 +353,10 @@ test('CourseContentService - New Methods', async (t) => {
       )
 
       // Get vocabularies with audio
-      const result = await courseContentService.getVocabulariesByConditions({ hasAudio: true })
+      const result = await courseContentService.getKnowledgePointsByConditions({
+        hasAudio: true,
+        type: 'vocabulary',
+      })
 
       // Assertions
       assert.strictEqual(result.items.length, 2, 'Should return 2 items with audio')
@@ -360,12 +364,14 @@ test('CourseContentService - New Methods', async (t) => {
 
       // Verify all returned items have audio
       for (const item of result.items) {
+        assert.ok(isVocabulary(item))
         assert.ok(item.audio, 'Item should have audio')
       }
 
       // Get vocabularies without audio
-      const resultWithoutAudio = await courseContentService.getVocabulariesByConditions({
+      const resultWithoutAudio = await courseContentService.getKnowledgePointsByConditions({
         hasAudio: false,
+        type: 'vocabulary',
       })
 
       // Assertions
@@ -374,6 +380,7 @@ test('CourseContentService - New Methods', async (t) => {
 
       // Verify returned item has no audio
       for (const item of resultWithoutAudio.items) {
+        assert.ok(isVocabulary(item))
         assert.strictEqual(item.audio, undefined, 'Item should not have audio')
       }
     })
@@ -399,9 +406,10 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Get vocabularies with combined conditions: from lesson 14 with audio
-      const result = await courseContentService.getVocabulariesByConditions({
+      const result = await courseContentService.getKnowledgePointsByConditions({
         lessonId: lesson.id,
         hasAudio: true,
+        type: 'vocabulary',
       })
 
       // Assertions
@@ -413,13 +421,15 @@ test('CourseContentService - New Methods', async (t) => {
         '条件テスト1',
         'Should return the correct vocabulary'
       )
+      assert.ok(isVocabulary(result.items[0]))
       assert.ok(result.items[0].audio, 'Item should have audio')
     })
 
     await t.test('should return empty result when no vocabularies match conditions', async () => {
       // Get vocabularies with non-existent lesson ID
-      const result = await courseContentService.getVocabulariesByConditions({
+      const result = await courseContentService.getKnowledgePointsByConditions({
         lessonId: 999,
+        type: 'vocabulary',
       })
 
       // Assertions

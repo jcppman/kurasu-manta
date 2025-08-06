@@ -1,7 +1,7 @@
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import type { knowledgePointsTable } from '@/drizzle/schema'
 import type { Annotation } from '@/zod/annotation'
-import type { CreateKnowledgePoint, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
+import type { CreateKnowledgePoint, Grammar, KnowledgePoint, Vocabulary } from '@/zod/knowledge'
 import type { LocalizedText } from '@/zod/localized-text'
 
 /**
@@ -72,4 +72,20 @@ export function mapDrizzleToKnowledgePoint(
     ...baseData,
     type: KNOWLEDGE_POINT_TYPES.GRAMMAR,
   }
+}
+
+export function mapDrizzleToVocabulary(row: typeof knowledgePointsTable.$inferSelect): Vocabulary {
+  const kp = mapDrizzleToKnowledgePoint(row)
+  if (kp.type !== KNOWLEDGE_POINT_TYPES.VOCABULARY) {
+    throw new Error('Row is not a Vocabulary')
+  }
+  return kp as Vocabulary
+}
+
+export function mapDrizzleToGrammar(row: typeof knowledgePointsTable.$inferSelect): Grammar {
+  const kp = mapDrizzleToKnowledgePoint(row)
+  if (kp.type !== KNOWLEDGE_POINT_TYPES.GRAMMAR) {
+    throw new Error('Row is not a Grammar')
+  }
+  return kp
 }

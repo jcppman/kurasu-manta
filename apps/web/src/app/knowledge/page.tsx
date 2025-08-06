@@ -16,7 +16,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
   const page = Number(params.page) || 1
   const limit = Number(params.limit) || 20
 
-  const result = await getKnowledgePoints({ page, limit })
+  const result = await getKnowledgePoints({ pagination: { page, limit } })
   const knowledgePoints = result.items
 
   return (

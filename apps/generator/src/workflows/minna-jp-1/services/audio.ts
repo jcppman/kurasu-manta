@@ -109,9 +109,10 @@ export async function generateVocabularyAudioClips() {
   const courseContentService = new CourseContentService(db)
 
   // get vocabularies that has no audio clips
-  const { items } = await courseContentService.getVocabulariesByConditions(
+  const { items } = await courseContentService.getKnowledgePointsByConditions(
     {
       hasAudio: false,
+      type: 'vocabulary',
     },
     {
       page: 1,

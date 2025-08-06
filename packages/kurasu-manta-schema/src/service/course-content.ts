@@ -142,40 +142,6 @@ export class CourseContentService {
     return result
   }
 
-  /**
-   * Get vocabularies by conditions with pagination
-   * @deprecated Use getKnowledgePointsByConditions with type: 'vocabulary' instead
-   * @param conditions Filtering conditions
-   * @param pagination Pagination parameters
-   * @returns Paginated result of vocabularies
-   */
-  async getVocabulariesByConditions(
-    conditions: {
-      lessonId?: number
-      hasAudio?: boolean
-    },
-    pagination?: PaginationParams
-  ): Promise<PaginatedResult<Vocabulary>> {
-    // Delegate to the new method with vocabulary type filter
-    const result = await this.getKnowledgePointsByConditions(
-      {
-        ...conditions,
-        type: KNOWLEDGE_POINT_TYPES.VOCABULARY,
-      },
-      pagination
-    )
-
-    // Filter the results to only include vocabularies for type safety
-    const vocabularies = result.items.filter(
-      (item): item is Vocabulary => item.type === KNOWLEDGE_POINT_TYPES.VOCABULARY
-    )
-
-    return {
-      ...result,
-      items: vocabularies,
-    }
-  }
-
   async getVocabularyById(
     id: number,
     options: { withSentences?: boolean } = {}
