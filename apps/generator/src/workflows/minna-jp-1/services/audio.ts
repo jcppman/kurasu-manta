@@ -1,15 +1,17 @@
-import { writeFileSync } from 'node:fs'
-import { join } from 'node:path'
 import db from '@/db'
-import { AUDIO_DIR } from '@/lib/constants'
 import { logger } from '@/lib/utils'
-import { calculateSHA1, toFullFurigana } from '@/workflows/minna-jp-1/utils'
+import { toFullFurigana } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import textToSpeech from '@google-cloud/text-to-speech'
+import {
+  isAudioStoreSuccessResponse,
+  safeValidateAudioStoreResponse,
+  validateAudioStoreResponse,
+} from '@kurasu-manta/api-schema/audio'
 import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
 import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import { isVocabulary } from '@kurasu-manta/knowledge-schema/zod/knowledge'
 import { generateObject } from 'ai'
-import sh from 'shelljs'
 import { z } from 'zod'
 
 const client = new textToSpeech.TextToSpeechClient()
@@ -20,9 +22,54 @@ interface GenerateAudioParams {
 
 const TTS_PRONOUNCE_ERROR_RISK_THRESHOLD = 0.5
 
+// Web service URL for audio storage
+const AUDIO_API_BASE_URL = process.env.AUDIO_API_BASE_URL || 'http://localhost:3000'
+
+async function storeAudioViaAPI(audioData: Uint8Array): Promise<string> {
+  const url = `${AUDIO_API_BASE_URL}/api/audio`
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'audio/mpeg',
+      },
+      body: audioData,
+    })
+
+    const responseData = await response.json()
+
+    if (!response.ok) {
+      // Try to parse as error response
+      const validation = safeValidateAudioStoreResponse(responseData)
+
+      if (validation.success && 'error' in validation.data) {
+        throw new Error(
+          `Failed to store audio via API: ${response.status} - ${validation.data.error}`
+        )
+      }
+      throw new Error(`Failed to store audio via API: ${response.status} - Unknown error`)
+    }
+
+    // Validate successful response
+    const validatedResponse = validateAudioStoreResponse(responseData)
+
+    if (!isAudioStoreSuccessResponse(validatedResponse)) {
+      throw new Error('Unexpected response format from audio API')
+    }
+
+    logger.info(
+      `Audio stored successfully: hash=${validatedResponse.hash}, size=${validatedResponse.size}`
+    )
+    return validatedResponse.hash
+  } catch (error) {
+    logger.error('Failed to store audio via API:', error)
+    throw error
+  }
+}
+
 interface GenerateAudioReturns {
   content: Uint8Array
-  sha1: string
 }
 export async function generateAudio({
   content,
@@ -97,10 +144,7 @@ Expected reading: 「${fullReading}」
     throw new Error('Audio content is not a Uint8Array')
   }
 
-  const sha1 = calculateSHA1(audio)
-
   return {
-    sha1,
     content: audio,
   }
 }
@@ -123,21 +167,20 @@ export async function generateVocabularyAudioClips() {
   let processedCount = 0
 
   for (const voc of items) {
-    const { sha1, content } = await generateAudio({
+    if (!isVocabulary(voc)) {
+      continue
+    }
+    const { content } = await generateAudio({
       content: voc.content,
       annotations: voc.annotations,
     })
 
-    const dir = join(AUDIO_DIR, sha1.slice(0, 2))
-    const filename = `${sha1}.mp3`
-
-    // save audio to file system
-    sh.mkdir('-p', dir)
-    writeFileSync(join(dir, filename), content)
+    // save audio via API and get back the calculated hash
+    const hash = await storeAudioViaAPI(content)
 
     // update database
     await courseContentService.partialUpdateKnowledgePoint(voc.id, {
-      audio: sha1,
+      audio: hash,
     })
 
     processedCount++

@@ -298,8 +298,8 @@ export class KnowledgeRepository {
     // Filter by hasAudio if provided (only applicable for vocabularies)
     if (conditions.hasAudio !== undefined) {
       const audioCondition = conditions.hasAudio
-        ? sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NOT NULL`
-        : sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND (json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') IS NULL OR json_extract(${knowledgePointsTable.typeSpecificData}, '$.audio') = '')`
+        ? sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND ${knowledgePointsTable.typeSpecificData}->>'audio' IS NOT NULL AND ${knowledgePointsTable.typeSpecificData}->>'audio' != ''`
+        : sql`${knowledgePointsTable.type} = ${KNOWLEDGE_POINT_TYPES.VOCABULARY} AND (${knowledgePointsTable.typeSpecificData}->>'audio' IS NULL OR ${knowledgePointsTable.typeSpecificData}->>'audio' = '')`
 
       whereConditions.push(audioCondition)
     }
