@@ -119,7 +119,7 @@ async function createLessons() {
 
 ### Shared Schema
 ```
-knowledge-schema/
+content-schema/
 ├── zod/       # Validation schemas
 ├── drizzle/   # DB schema with JSON fields
 ├── mappers/   # Type mapping layer
@@ -128,7 +128,7 @@ knowledge-schema/
 └── index.ts   # Unified exports
 ```
 
-**Important**: Consumers of @kurasu-manta/knowledge-schema should only use services, not repositories directly. Services provide the proper business logic abstraction and ensure data consistency.
+**Important**: Consumers of @kurasu-manta/content-schema should only use services, not repositories directly. Services provide the proper business logic abstraction and ensure data consistency.
 
 ### Data Flow
 1. **Server**: External/AI → Zod Validation → Domain Objects → Mappers → Drizzle → SQLite

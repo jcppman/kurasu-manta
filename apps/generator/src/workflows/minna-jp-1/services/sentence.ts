@@ -10,15 +10,15 @@ import {
 } from '@/workflows/minna-jp-1/constants'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
-import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import { CourseContentService } from '@kurasu-manta/content-schema/service'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 import {
   type Grammar,
   type KnowledgePoint,
   type Vocabulary,
   isGrammar,
   isVocabulary,
-} from '@kurasu-manta/knowledge-schema/zod/knowledge'
+} from '@kurasu-manta/content-schema/zod'
 import { generateObject } from 'ai'
 import random from 'random'
 import { z } from 'zod'

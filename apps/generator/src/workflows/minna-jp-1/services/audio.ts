@@ -8,9 +8,9 @@ import {
   safeValidateAudioStoreResponse,
   validateAudioStoreResponse,
 } from '@kurasu-manta/api-schema/audio'
-import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
-import { isVocabulary } from '@kurasu-manta/knowledge-schema/zod/knowledge'
+import { CourseContentService } from '@kurasu-manta/content-schema/service'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
+import { isVocabulary } from '@kurasu-manta/content-schema/zod'
 import { generateObject } from 'ai'
 import { z } from 'zod'
 

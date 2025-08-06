@@ -1,17 +1,14 @@
 import { db, schema } from '@/server/db'
-import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/knowledge-schema/common/types'
-import {
-  mapDrizzleToGrammar,
-  mapDrizzleToVocabulary,
-} from '@kurasu-manta/knowledge-schema/mapper/knowledge'
-import { mapDrizzleToLesson } from '@kurasu-manta/knowledge-schema/mapper/lesson'
+import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/content-schema/common'
+import { mapDrizzleToGrammar, mapDrizzleToVocabulary } from '@kurasu-manta/content-schema/mapper'
+import { mapDrizzleToLesson } from '@kurasu-manta/content-schema/mapper'
 import {
   type Grammar,
   type Vocabulary,
   isGrammar,
   isVocabulary,
-} from '@kurasu-manta/knowledge-schema/zod/knowledge'
-import type { Lesson } from '@kurasu-manta/knowledge-schema/zod/lesson'
+} from '@kurasu-manta/content-schema/zod'
+import type { Lesson } from '@kurasu-manta/content-schema/zod'
 import { and, eq, lte, sql } from 'drizzle-orm'
 
 export interface DailyPractice {

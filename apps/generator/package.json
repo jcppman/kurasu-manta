@@ -16,7 +16,7 @@
     "@dotenvx/dotenvx": "^1.39.0",
     "@google-cloud/text-to-speech": "^6.0.1",
     "@kurasu-manta/api-schema": "workspace:^",
-    "@kurasu-manta/knowledge-schema": "workspace:^",
+    "@kurasu-manta/content-schema": "workspace:^",
     "ai": "^4.3.6",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",

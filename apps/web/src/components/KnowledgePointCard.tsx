@@ -1,8 +1,8 @@
 'use client'
 
-import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/knowledge-schema/common/types'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
-import type { Lesson } from '@kurasu-manta/knowledge-schema/zod/lesson'
+import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/content-schema/common'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
+import type { Lesson } from '@kurasu-manta/content-schema/zod'
 import { useRouter } from 'next/navigation'
 import { FuriganaText } from './FuriganaText'
 

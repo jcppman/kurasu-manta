@@ -1,6 +1,6 @@
 'use client'
 
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 
 interface FuriganaTextProps {
   text: string

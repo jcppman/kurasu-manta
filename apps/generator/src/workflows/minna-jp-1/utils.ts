@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 
 export function toFullFurigana(text: string, annotations: Annotation[]): string {
   const result: string[] = []

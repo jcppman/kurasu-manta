@@ -5,7 +5,7 @@ import {
   getNonFuriganaAnnotations,
   isFuriganaAnnotation,
 } from '@/lib/annotations'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 import { useState } from 'react'
 import { FuriganaText } from './FuriganaText'
 

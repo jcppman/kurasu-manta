@@ -1,4 +1,4 @@
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 
 /**
  * Check if an annotation is a furigana annotation

@@ -1,5 +1,5 @@
 import { db } from '@/server/db'
-import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
+import { CourseContentService } from '@kurasu-manta/content-schema/service'
 
 const courseService = new CourseContentService(db)
 

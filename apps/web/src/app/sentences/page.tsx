@@ -1,7 +1,7 @@
 import { Pagination } from '@/components/Pagination'
 import { SentenceViewer } from '@/components/SentenceViewer'
 import { getSentences } from '@/server/sentences'
-import type { Annotation } from '@kurasu-manta/knowledge-schema/zod/annotation'
+import type { Annotation } from '@kurasu-manta/content-schema/zod'
 import Link from 'next/link'
 
 interface Sentence {

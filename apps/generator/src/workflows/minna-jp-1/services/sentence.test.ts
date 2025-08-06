@@ -1,10 +1,6 @@
 import { strictEqual, throws } from 'node:assert'
 import test from 'node:test'
-import type {
-  Grammar,
-  KnowledgePoint,
-  Vocabulary,
-} from '@kurasu-manta/knowledge-schema/zod/knowledge'
+import type { Grammar, KnowledgePoint, Vocabulary } from '@kurasu-manta/content-schema/zod'
 
 // Import the function we're testing - it's not exported, so we need to make it accessible
 // For now, we'll copy the function for testing. In production, you might want to export it.

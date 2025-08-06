@@ -8,7 +8,7 @@ import {
 } from '@/workflows/minna-jp-1/constants'
 import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
-import { CourseContentService } from '@kurasu-manta/knowledge-schema/service/course-content'
+import { CourseContentService } from '@kurasu-manta/content-schema/service'
 import { eq } from 'drizzle-orm'
 import {
   type MinaGrammar,
