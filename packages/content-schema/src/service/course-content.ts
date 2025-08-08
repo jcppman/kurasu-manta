@@ -192,6 +192,13 @@ export class CourseContentService {
   }
 
   /**
+   * Get sentences associated with any of the provided knowledge point IDs
+   */
+  async getSentencesByKnowledgePointIds(knowledgePointIds: number[]): Promise<Sentence[]> {
+    return this.sentenceRepository.getSentencesByKnowledgePointIds(knowledgePointIds)
+  }
+
+  /**
    * Create a sentence and associate it with knowledge points
    */
   async createSentenceWithKnowledgePoints(
@@ -308,9 +315,14 @@ export class CourseContentService {
    * @param lessonId The lesson ID to get stats for
    * @returns Array of statistics with knowledge point ID and sentence count
    */
-  async getLessonKnowledgePointSentenceStats(
-    lessonId: number
-  ): Promise<Array<{ knowledgePointId: number; sentenceCount: number }>> {
+  async getLessonKnowledgePointSentenceStats(lessonId: number): Promise<
+    Array<{
+      knowledgePointId: number
+      sentenceCount: number
+      type: 'vocabulary' | 'grammar'
+      pos?: string
+    }>
+  > {
     // Get all knowledge points for this lesson
     const knowledgePoints = await this.knowledgeRepository.getByLessonId(lessonId)
 
@@ -326,6 +338,8 @@ export class CourseContentService {
     return knowledgePoints.map((kp) => ({
       knowledgePointId: kp.id,
       sentenceCount: sentenceCountsMap.get(kp.id) || 0,
+      type: kp.type,
+      pos: kp.type === 'vocabulary' ? kp.pos : undefined,
     }))
   }
 }

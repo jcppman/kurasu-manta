@@ -11,7 +11,7 @@ import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
-import { and, count, eq, gte, or, sql } from 'drizzle-orm'
+import { and, count, eq, gte, inArray, or, sql } from 'drizzle-orm'
 
 /**
  * Repository for sentences
@@ -122,6 +122,25 @@ export class SentenceRepository {
       .from(sentenceKnowledgePointsTable)
       .innerJoin(sentencesTable, eq(sentenceKnowledgePointsTable.sentenceId, sentencesTable.id))
       .where(eq(sentenceKnowledgePointsTable.knowledgePointId, knowledgePointId))
+
+    return rows.map((row) => mapDrizzleToSentence(row.sentence))
+  }
+
+  /**
+   * Get sentences associated with any of the provided knowledge point IDs
+   */
+  async getSentencesByKnowledgePointIds(knowledgePointIds: number[]): Promise<Sentence[]> {
+    if (knowledgePointIds.length === 0) {
+      return []
+    }
+
+    const rows = await this.db
+      .select({
+        sentence: sentencesTable,
+      })
+      .from(sentenceKnowledgePointsTable)
+      .innerJoin(sentencesTable, eq(sentenceKnowledgePointsTable.sentenceId, sentencesTable.id))
+      .where(inArray(sentenceKnowledgePointsTable.knowledgePointId, knowledgePointIds))
 
     return rows.map((row) => mapDrizzleToSentence(row.sentence))
   }

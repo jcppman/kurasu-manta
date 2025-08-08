@@ -5,8 +5,10 @@ import {
   MAX_LLM_RETRY_TIMES,
   MAX_LOW_PRIORITY_GRAMMAR,
   MAX_LOW_PRIORITY_VOCABULARIES,
-  SENTENCE_HIGH_AMOUNT_THRESHOLD,
-  SENTENCE_URGENT_AMOUNT_THRESHOLD,
+  SENTENCE_COUNT_GRAMMAR,
+  SENTENCE_COUNT_OTHER_VOCABULARY,
+  SENTENCE_COUNT_PHRASE_PATTERN,
+  SENTENCE_GENERATION_BATCH_SIZE,
 } from '@/workflows/minna-jp-1/constants'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
@@ -285,6 +287,99 @@ function calculateVocabularyAnnotationsFromTokens(
   return annotations
 }
 
+export function getTargetSentenceCount(type: 'vocabulary' | 'grammar', pos?: string): number {
+  if (type === 'vocabulary') {
+    // Check if it's 句型 (phrase pattern)
+    if (pos === '句型') {
+      return SENTENCE_COUNT_PHRASE_PATTERN
+    }
+    return SENTENCE_COUNT_OTHER_VOCABULARY
+  }
+  if (type === 'grammar') {
+    return SENTENCE_COUNT_GRAMMAR
+  }
+  return SENTENCE_COUNT_OTHER_VOCABULARY
+}
+
+// Keep the old function for backward compatibility in other parts of the code
+export function getTargetSentenceCountForKnowledgePoint(knowledgePoint: KnowledgePoint): number {
+  if (isVocabulary(knowledgePoint)) {
+    return getTargetSentenceCount('vocabulary', knowledgePoint.pos)
+  }
+  if (isGrammar(knowledgePoint)) {
+    return getTargetSentenceCount('grammar')
+  }
+  return SENTENCE_COUNT_OTHER_VOCABULARY
+}
+
+interface SentenceRating {
+  content: string
+  score: number
+  reasoning: string
+}
+
+async function rateSentences(
+  sentences: string[],
+  targetKnowledge: KnowledgePoint
+): Promise<SentenceRating[]> {
+  const prompt = `
+You are a Japanese language expert rating sentences for educational use. You must be critical and selective - most sentences should receive scores below 8.
+
+TARGET KNOWLEDGE POINT TO DEMONSTRATE:
+${knowledgeDetails(targetKnowledge)}
+
+SENTENCES TO RATE:
+${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
+
+RATING CRITERIA (1-10 scale, be strict):
+
+**HIGH SCORES (8-10)**: Reserve for exceptional sentences that are:
+- Simple and natural (something you'd actually hear/say)
+- Perfect demonstration of target knowledge in realistic context
+- Appropriate vocabulary combinations that make sense
+
+**MEDIUM SCORES (5-7)**: For sentences that are:
+- Grammatically correct but awkward or contrived
+- Unnatural combinations (like random facts: "神戸は中国じゃありません")
+- Overly complex for the target knowledge level
+
+**LOW SCORES (1-4)**: For sentences that are:
+- Grammatically incorrect
+- Very unnatural or nonsensical
+- Poor demonstration of target knowledge
+- Confusing for learners
+
+EXAMPLES OF WHAT TO PREFER:
+- For "銀行員": "あの方は銀行員じゃありません" (natural context)
+- NOT: "神戸は中国じゃありません" (weird factual statement)
+
+Be critical - only give high scores to truly excellent, natural sentences that students would benefit from learning.
+
+Rate each sentence with a score (1-10) and brief reasoning.
+  `
+
+  const { object } = await generateObject({
+    model: openai('gpt-4.1'),
+    temperature: 0.3, // Lower temperature for more consistent, critical ratings
+    prompt,
+    schema: z.object({
+      ratings: z.array(
+        z.object({
+          sentenceIndex: z.number(),
+          score: z.number().min(1).max(10),
+          reasoning: z.string(),
+        })
+      ),
+    }),
+  })
+
+  return object.ratings.map((rating, index) => ({
+    content: sentences[rating.sentenceIndex - 1] || sentences[index],
+    score: rating.score,
+    reasoning: rating.reasoning,
+  }))
+}
+
 interface GeneratedSentence {
   content: string
   tokens: string[]
@@ -307,24 +402,30 @@ export async function validateSentence(
   availableVocabularies: Vocabulary[]
 ): Promise<boolean> {
   // evaluate if the sentence is valid and is not too similar to existing sentences
-  // get existing sentences from the database
-  const courseContentService = new CourseContentService(db)
-  const existingSentences = (
-    await Promise.all(
-      sentence.vocabularyIds.map((vId) =>
-        courseContentService.getVocabularyById(vId, { withSentences: true })
-      )
+  // get existing sentences from ALL related knowledge points (both vocabulary and grammar)
+
+  // Get all knowledge point IDs (both vocabulary and grammar)
+  const allKnowledgePointIds = [...sentence.vocabularyIds, ...sentence.grammarIds]
+
+  if (allKnowledgePointIds.length > 0) {
+    // Use CourseContentService to query sentences related to these knowledge points
+    const courseContentService = new CourseContentService(db)
+    const existingSentences =
+      await courseContentService.getSentencesByKnowledgePointIds(allKnowledgePointIds)
+
+    // Normalize function to remove punctuation and whitespace
+    const normalizeContent = (content: string) => content.replace(/[、。！？\s]/g, '').trim()
+    const newSentenceNormalized = normalizeContent(sentence.content)
+
+    // Check for duplicates
+    const isDuplicate = existingSentences.some(
+      (s) => normalizeContent(s.content) === newSentenceNormalized
     )
-  ).flatMap((v) => v?.sentences ?? [])
-  // if equal, unqualify the sentence
-  const isDuplicate = existingSentences.some(
-    (s) =>
-      s.content.replace(/[、。！？]/g, '').trim() ===
-      sentence.content.replace(/[、。！？]/g, '').trim()
-  )
-  if (isDuplicate) {
-    logger.warn(`Duplicate sentence found: ${sentence.content}`)
-    return false
+
+    if (isDuplicate) {
+      logger.warn(`Duplicate sentence found: ${sentence.content}`)
+      return false
+    }
   }
 
   // Get vocabulary details for context from provided vocabularies
@@ -389,42 +490,44 @@ Output false for sentences that would confuse students due to grammar errors, un
 }
 
 interface PrioritizedBuckets {
-  urgent: KnowledgeBucket
+  target: KnowledgePoint
   high: KnowledgeBucket
   low: KnowledgeBucket
 }
 export interface GenerateSentencesForScopeParameters {
-  amount: number
   buckets: PrioritizedBuckets
+  amount: number
 }
 
 export async function generateSentencesFromPrioritizedBuckets({
-  amount,
   buckets,
+  amount,
 }: GenerateSentencesForScopeParameters): Promise<GeneratedSentence[]> {
-  const { urgent, high, low } = buckets
+  const { target, high, low } = buckets
+
+  // Get existing sentences for the target knowledge point to avoid generating similar ones
+  const courseContentService = new CourseContentService(db)
+  const existingSentences = await courseContentService.getSentencesByKnowledgePointIds([target.id])
+
+  const existingSentencesList = existingSentences.map((s) => s.content)
+  const existingSentencesSection =
+    existingSentencesList.length > 0
+      ? `${existingSentencesList.map((s, i) => `${i + 1}. ${s}`).join('\n')}`
+      : ''
 
   const prompt = `
 You are a Japanese language teacher creating example sentences for students learning Japanese.
 
-Generate ${amount} Japanese sentences using ONLY the vocabulary and grammar provided below.
+Generate exactly ${SENTENCE_GENERATION_BATCH_SIZE} simple, natural Japanese sentences.
 
-CRITICAL VOCABULARY CONSTRAINT:
-- TRY YOUR BEST to only use vocabulary words that are explicitly listed in the sections below
-- AVOID using content vocabulary (nouns, verbs, adjectives, adverbs) that are not in the provided lists
-- If you need additional words for particles, basic grammar, or function words (は、が、を、に、で、と、の、も、から、まで、です、ます、etc.), those are acceptable
+PRIMARY TARGET (MUST demonstrate clearly):
+${knowledgeDetails(target, isVocabulary(target) ? 'vocabulary' : 'grammar')}
 
-VOCABULARY AND GRAMMAR BY PRIORITY:
+EXISTING SENTENCES FOR TARGET KNOWLEDGE (avoid generating similar ones):
+${existingSentencesSection}
 
-=== URGENT (need more sentences) ===
-<vocabulary>
-${urgent.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
-</vocabulary>
-<grammar>
-${urgent.grammar.map((g) => knowledgeDetails(g)).join('\n')}
-</grammar>
-
-=== HIGH (need some sentences) ===
+SUPPORTING KNOWLEDGE (use naturally when appropriate):
+=== HIGH PRIORITY ===
 <vocabulary>
 ${high.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 </vocabulary>
@@ -432,8 +535,7 @@ ${high.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 ${high.grammar.map((g) => knowledgeDetails(g)).join('\n')}
 </grammar>
 
-=== LOW (use naturally) ===
-Already have sufficient examples - use only when it improves the sentence
+=== LOW PRIORITY (background knowledge) ===
 <vocabulary>
 ${low.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 </vocabulary>
@@ -441,32 +543,40 @@ ${low.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
 ${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
 </grammar>
 
+CRITICAL REQUIREMENTS:
+1. PRIMARY FOCUS: Each sentence MUST clearly demonstrate the target knowledge point
+2. SIMPLICITY: Keep sentences short and use basic grammar patterns
+3. NATURALNESS: Sound like real Japanese that natives would actually say
+4. VOCABULARY CONSTRAINT: Only use vocabulary from the provided lists above
+
 GENERATION GUIDELINES:
-1. Create exactly ${amount} sentences
-2. Prioritize URGENT items - try to use each urgent item at least once
-3. Include HIGH priority items regularly throughout your sentences
-4. Use LOW priority items only when they make sentences more natural
-5. Combine items from different priorities when it creates better sentences
-6. Vary sentence types: statements, questions, negative forms, past/present tense
+- Create exactly ${SENTENCE_GENERATION_BATCH_SIZE} sentences
+- Each sentence should clearly show how to use the TARGET knowledge point
+- Use HIGH priority knowledge naturally when it improves the sentence
+- Use LOW priority knowledge only if it makes sentences more natural
+- Prefer simple, direct sentences over complex constructions
+- Vary sentence types: statements, questions, negative forms
 
 TOKENIZATION OUTPUT REQUIREMENT:
-For each sentence, also provide a tokenized version:
-- Split the sentence into meaningful tokens, including ALL characters
-- NEVER split vocabulary items from the provided list - keep them as complete tokens
-- Include punctuation marks (、。！？etc.) as separate tokens
-- Particles and hiragana-only words should be separate tokens
+For each sentence, provide a tokenized version:
+- Split into meaningful tokens including ALL characters
+- Keep vocabulary items from the provided list as complete tokens
+- Include punctuation marks as separate tokens
+- Particles and function words should be separate tokens
 
 EXAMPLES:
-- Sentence content: "私は日本人です"
-- Tokens: ["私", "は", "日本人", "です"]
+- Sentence: "私は日本人です" → Tokens: ["私", "は", "日本人", "です"]
+- Sentence: "失礼ですが、お名前は何ですか。" → Tokens: ["失礼", "ですが", "、", "お名前は", "何", "ですか", "。"]
 
-- Sentence content: "失礼ですが、お名前は何ですか。"
-- If "お名前は" is a vocabulary item: ["失礼", "ですが", "、", "お名前は", "何", "ですか", "。"]
-- If "お名前は" is NOT a vocabulary item: ["失礼", "ですが", "、", "お名前", "は", "何", "ですか", "。"]
-
-Create sentences that are clear, useful, and appropriate for students.
+Create clear, simple sentences that help students understand the target knowledge point.
   `
-  const allVocabularies = [...urgent.vocabularies, ...high.vocabularies, ...low.vocabularies]
+
+  const allVocabularies = [
+    ...(isVocabulary(target) ? [target] : []),
+    ...high.vocabularies,
+    ...low.vocabularies,
+  ]
+
   const {
     object: { sentences },
   } = await generateObject({
@@ -485,19 +595,23 @@ Create sentences that are clear, useful, and appropriate for students.
     }),
   })
 
+  logger.debug(
+    `Generated ${sentences.length} sentences: \n${sentences.map((s) => s.content).join('\n')}`
+  )
+
   const allKnowledgePointIds = new Set([
-    ...urgent.vocabularies.map((v) => `v:${v.id}`),
-    ...urgent.grammar.map((g) => `g:${g.id}`),
+    isVocabulary(target) ? `v:${target.id}` : `g:${target.id}`,
     ...high.vocabularies.map((v) => `v:${v.id}`),
     ...high.grammar.map((g) => `g:${g.id}`),
     ...low.vocabularies.map((v) => `v:${v.id}`),
     ...low.grammar.map((g) => `g:${g.id}`),
   ])
 
-  // Validate sentences in parallel with controlled concurrency
-  logger.info(`Validating ${sentences.length} sentences with default concurrency`)
+  // Validate sentences in parallel
+  logger.info(`Validating ${sentences.length} sentences`)
+
   const validationResults = await processInParallel(sentences, async (sentence) => {
-    // validate if ids are valid or something faked by LLM
+    // Validate IDs
     for (const id of sentence.vocabularyIds) {
       if (!allKnowledgePointIds.has(`v:${id}`)) {
         throw new Error(`Invalid vocabulary ID found: ${id} in sentence: ${sentence.content}`)
@@ -509,7 +623,6 @@ Create sentences that are clear, useful, and appropriate for students.
       }
     }
 
-    logger.info(`Validating sentence: ${sentence.content}`)
     const isValid = await validateSentence(sentence, allVocabularies)
     if (!isValid) {
       throw new Error('Validation failed')
@@ -517,41 +630,54 @@ Create sentences that are clear, useful, and appropriate for students.
     return sentence
   })
 
-  // Process only successfully validated sentences
-  const cleanedUpSentences = validationResults
-    .filter(
-      (
-        result
-      ): result is {
-        success: true
-        result: Omit<GeneratedSentence, 'annotations'>
-        item: Omit<GeneratedSentence, 'annotations'>
-      } => result.success
-    )
+  // Get valid sentences
+  const validSentences = validationResults
+    .filter((result) => result.success)
     .map((result) => ({
       ...result.result,
-      content: result.result.content.replace(/ /g, '').trim(), // Clean up whitespace
+      content: result.result.content.replace(/ /g, '').trim(),
     }))
 
-  logger.info(`${cleanedUpSentences.length} out of ${sentences.length} sentences passed validation`)
+  if (validSentences.length === 0) {
+    logger.warn('No valid sentences generated')
+    return []
+  }
 
-  // Generate translations for validated sentences
-  logger.info(`Generating translations for ${cleanedUpSentences.length} sentences`)
-  const translations = await generateSentenceExplanations(cleanedUpSentences.map((s) => s.content))
+  // Rate sentences and select the best one
+  logger.info(`Rating ${validSentences.length} sentences`)
+  const ratings = await rateSentences(
+    validSentences.map((s) => s.content),
+    target
+  )
 
-  // Combine sentences with translations
-  const sentencesWithExplanations = cleanedUpSentences.map((sentence, index) => ({
+  // Sort by score and select top sentences
+  const topRatedSentences = ratings.sort((a, b) => b.score - a.score).slice(0, amount)
+
+  logger.debug(`Sentence ratings: ${JSON.stringify(topRatedSentences, null, 2)}`)
+  logger.info(`Selected ${topRatedSentences.length} top-rated sentences`)
+  topRatedSentences.forEach((rating, index) => {
+    logger.info(`#${index + 1}: ${rating.content} (score: ${rating.score}/10)`)
+  })
+
+  // Get the selected sentences with their data
+  const selectedSentences = topRatedSentences
+    .map((rating) => validSentences.find((s) => s.content === rating.content))
+    .filter(Boolean) as typeof validSentences
+
+  // Generate translations
+  logger.info(`Generating translations for ${selectedSentences.length} sentences`)
+  const translations = await generateSentenceExplanations(selectedSentences.map((s) => s.content))
+
+  // Add explanations
+  const sentencesWithExplanations = selectedSentences.map((sentence, index) => ({
     ...sentence,
     explanation: translations[index],
   }))
 
-  // Generate annotations using two-stage approach
-  logger.info(
-    `Generating annotations for ${sentencesWithExplanations.length} sentences using two-stage approach`
-  )
+  // Generate annotations
+  logger.info(`Generating annotations for ${sentencesWithExplanations.length} sentences`)
   const generated = await Promise.all(
     sentencesWithExplanations.map(async (sentence) => {
-      logger.debug(`Generating annotations for sentence: ${sentence.content}`)
       const annotations = await generateCombinedAnnotations(
         sentence.content,
         sentence.tokens,
@@ -563,8 +689,6 @@ Create sentences that are clear, useful, and appropriate for students.
       }
     })
   )
-
-  logger.info(`${generated.length} sentences successfully generated with annotations`)
 
   return generated
 }
@@ -594,75 +718,78 @@ async function getPrioritizedKnowledgePointsByLessonNumber(
 
   targetKnowledgePoints.push(...nearbyKnowledgePoints)
 
-  const buckets: PrioritizedBuckets = {
-    urgent: {
-      vocabularies: [],
-      grammar: [],
-    },
-    high: {
-      vocabularies: [],
-      grammar: [],
-    },
-    low: {
-      vocabularies: [],
-      grammar: [],
-    },
-  }
-
-  // calculate weights
+  // Calculate sentence deficits for prioritization
   const countMap = await courseContentService.getSentenceCountsByKnowledgePointIds(
     targetKnowledgePoints.map((k) => k.id)
   )
-  for (const curr of targetKnowledgePoints) {
-    const count = countMap.get(curr.id) ?? 0
-    if (count <= SENTENCE_URGENT_AMOUNT_THRESHOLD) {
-      if (isVocabulary(curr)) {
-        buckets.urgent.vocabularies.push(curr)
-      } else if (isGrammar(curr)) {
-        buckets.urgent.grammar.push(curr)
-      }
-    } else if (count <= SENTENCE_HIGH_AMOUNT_THRESHOLD) {
-      if (isVocabulary(curr)) {
-        buckets.high.vocabularies.push(curr)
-      } else if (isGrammar(curr)) {
-        buckets.high.grammar.push(curr)
-      }
-    } else {
-      if (isVocabulary(curr)) {
-        buckets.low.vocabularies.push(curr)
-      } else if (isGrammar(curr)) {
-        buckets.low.grammar.push(curr)
-      }
-    }
+
+  // Sort knowledge points by deficit (target - current), highest deficit first
+  const sortedByDeficit = targetKnowledgePoints
+    .map((kp) => {
+      const currentCount = countMap.get(kp.id) ?? 0
+      const targetCount = getTargetSentenceCountForKnowledgePoint(kp)
+      const deficit = Math.max(0, targetCount - currentCount)
+      return { knowledgePoint: kp, deficit, currentCount, targetCount }
+    })
+    .sort((a, b) => b.deficit - a.deficit)
+
+  // Select the knowledge point with highest deficit as target
+  const target = sortedByDeficit[0]?.knowledgePoint
+  if (!target) {
+    throw new Error('No knowledge points available for sentence generation')
   }
 
-  buckets.urgent.vocabularies = random.shuffle(buckets.urgent.vocabularies)
-  buckets.urgent.grammar = random.shuffle(buckets.urgent.grammar)
-  buckets.high.vocabularies = random.shuffle(buckets.high.vocabularies)
-  buckets.high.grammar = random.shuffle(buckets.high.grammar)
+  // Create high and low priority buckets from remaining knowledge points
+  const remainingKnowledgePoints = sortedByDeficit.slice(1).map((item) => item.knowledgePoint)
 
-  // limit low priority items
-  buckets.low.vocabularies = random
-    .shuffle(buckets.low.vocabularies)
-    .slice(0, MAX_LOW_PRIORITY_VOCABULARIES)
-  buckets.low.grammar = random.shuffle(buckets.low.grammar).slice(0, MAX_LOW_PRIORITY_GRAMMAR)
+  const high: KnowledgeBucket = { vocabularies: [], grammar: [] }
+  const low: KnowledgeBucket = { vocabularies: [], grammar: [] }
 
-  return buckets
+  // Split remaining points - high priority gets first half, low gets second half
+  const midpoint = Math.floor(remainingKnowledgePoints.length / 2)
+  const highPriorityPoints = remainingKnowledgePoints.slice(0, midpoint)
+  const lowPriorityPoints = remainingKnowledgePoints.slice(midpoint)
+
+  // Categorize by type
+  for (const kp of highPriorityPoints) {
+    if (isVocabulary(kp)) high.vocabularies.push(kp)
+    else if (isGrammar(kp)) high.grammar.push(kp)
+  }
+
+  for (const kp of lowPriorityPoints) {
+    if (isVocabulary(kp)) low.vocabularies.push(kp)
+    else if (isGrammar(kp)) low.grammar.push(kp)
+  }
+
+  // Shuffle and limit items
+  high.vocabularies = random.shuffle(high.vocabularies)
+  high.grammar = random.shuffle(high.grammar)
+  low.vocabularies = random.shuffle(low.vocabularies).slice(0, MAX_LOW_PRIORITY_VOCABULARIES)
+  low.grammar = random.shuffle(low.grammar).slice(0, MAX_LOW_PRIORITY_GRAMMAR)
+
+  return {
+    target,
+    high: {
+      vocabularies: high.vocabularies,
+      grammar: high.grammar,
+    },
+    low: {
+      vocabularies: low.vocabularies,
+      grammar: low.grammar,
+    },
+  }
 }
 
 export async function generateSentencesForLessonNumber(
-  lessonNumber: number,
-  amount: number
+  lessonNumber: number
 ): Promise<GeneratedSentence[]> {
   const buckets = await getPrioritizedKnowledgePointsByLessonNumber(lessonNumber)
-
-  // report the number of vocabularies and grammar in each bucket
+  // report the target and supporting knowledge
   logger.info(
     `Generating sentences for lesson: ${JSON.stringify(
       {
         lessonNumber,
-        urgentVocabularies: buckets.urgent.vocabularies.length,
-        urgentGrammar: buckets.urgent.grammar.length,
+        target: `${buckets.target.content} (${isVocabulary(buckets.target) ? 'vocab' : 'grammar'})`,
         highVocabularies: buckets.high.vocabularies.length,
         highGrammar: buckets.high.grammar.length,
         lowVocabularies: buckets.low.vocabularies.length,
@@ -674,7 +801,7 @@ export async function generateSentencesForLessonNumber(
   )
 
   return generateSentencesFromPrioritizedBuckets({
-    amount,
     buckets,
+    amount: getTargetSentenceCountForKnowledgePoint(buckets.target),
   })
 }

@@ -3,10 +3,9 @@ import { knowledgePointsTable, sentenceKnowledgePointsTable, sentencesTable } fr
 import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
-  DESIRED_SENTENCE_COUNT_PER_BATCH,
-  SENTENCE_URGENT_AMOUNT_THRESHOLD,
-} from '@/workflows/minna-jp-1/constants'
-import { generateSentencesForLessonNumber } from '@/workflows/minna-jp-1/services/sentence'
+  generateSentencesForLessonNumber,
+  getTargetSentenceCount,
+} from '@/workflows/minna-jp-1/services/sentence'
 import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/content-schema/service'
 import { eq } from 'drizzle-orm'
@@ -201,9 +200,7 @@ export async function createGrammarLessons() {
 export async function createSentencesForLesson(lessonNumber: number) {
   const courseContentService = new CourseContentService(db)
 
-  const generatedSentences = await withRetry(() =>
-    generateSentencesForLessonNumber(lessonNumber, DESIRED_SENTENCE_COUNT_PER_BATCH)
-  )
+  const generatedSentences = await withRetry(() => generateSentencesForLessonNumber(lessonNumber))
   if (generatedSentences.length === 0) {
     logger.info(`No sentences generated for lesson number ${lessonNumber}`)
     return
@@ -244,15 +241,18 @@ export async function createSentencesForLessons(
 
   let currentProgress = 0
   while (currentProgress < lessonsToProcess.length) {
-    const stats = await courseContentService.getLessonKnowledgePointSentenceStats(
-      lessonsToProcess[currentProgress].id
-    )
-    if (
-      stats.some(
-        (knowledgePointSentenceCount) =>
-          knowledgePointSentenceCount.sentenceCount < SENTENCE_URGENT_AMOUNT_THRESHOLD
-      )
-    ) {
+    const currentLesson = lessonsToProcess[currentProgress]
+
+    // Get sentence stats with pos info for all knowledge points in this lesson
+    const stats = await courseContentService.getLessonKnowledgePointSentenceStats(currentLesson.id)
+
+    // Check which knowledge points need more sentences using the efficient approach
+    const knowledgePointsNeedingSentences = stats.filter((stat) => {
+      const targetCount = getTargetSentenceCount(stat.type, stat.pos)
+      return stat.sentenceCount < targetCount
+    })
+
+    if (knowledgePointsNeedingSentences.length > 0) {
       logger.info(`Creating sentences for lesson ${lessonsToProcess[currentProgress].number}...`)
       await createSentencesForLesson(lessonsToProcess[currentProgress].number)
     } else {
