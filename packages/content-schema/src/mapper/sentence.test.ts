@@ -1,11 +1,10 @@
-import assert from 'node:assert'
-import test from 'node:test'
 import type { Annotation } from '@/zod/annotation'
 import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
+import { describe, expect, test } from 'vitest'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence, mapSentenceToDrizzle } from './sentence'
 
-test('sentence mappers', async (t) => {
+describe('sentence mappers', () => {
   const mockExplanation: LocalizedText = {
     en: 'This is a test sentence',
     cn: '这是一个测试句子',
@@ -46,10 +45,10 @@ test('sentence mappers', async (t) => {
     updatedAt: new Date('2024-01-01T00:00:00.000Z'),
   }
 
-  await t.test('mapCreateSentenceToDrizzle', () => {
+  test('mapCreateSentenceToDrizzle', () => {
     const result = mapCreateSentenceToDrizzle(createSentence)
 
-    assert.deepStrictEqual(result, {
+    expect(result).toEqual({
       content: 'これはテストの文です',
       explanation: mockExplanation,
       annotations: mockAnnotations,
@@ -58,7 +57,7 @@ test('sentence mappers', async (t) => {
     })
   })
 
-  await t.test('mapCreateSentenceToDrizzle with minimal data', () => {
+  test('mapCreateSentenceToDrizzle with minimal data', () => {
     const minimalSentence: CreateSentence = {
       content: 'シンプルな文',
       explanation: { en: 'Simple sentence', cn: '简单句子' },
@@ -68,7 +67,7 @@ test('sentence mappers', async (t) => {
 
     const result = mapCreateSentenceToDrizzle(minimalSentence)
 
-    assert.deepStrictEqual(result, {
+    expect(result).toEqual({
       content: 'シンプルな文',
       explanation: { en: 'Simple sentence', cn: '简单句子' },
       annotations: [],
@@ -77,10 +76,10 @@ test('sentence mappers', async (t) => {
     })
   })
 
-  await t.test('mapSentenceToDrizzle', () => {
+  test('mapSentenceToDrizzle', () => {
     const result = mapSentenceToDrizzle(sentence)
 
-    assert.deepStrictEqual(result, {
+    expect(result).toEqual({
       id: 1,
       content: 'これはテストの文です',
       explanation: mockExplanation,
@@ -90,13 +89,13 @@ test('sentence mappers', async (t) => {
     })
   })
 
-  await t.test('mapDrizzleToSentence', () => {
+  test('mapDrizzleToSentence', () => {
     const result = mapDrizzleToSentence(drizzleRow)
 
-    assert.deepStrictEqual(result, sentence)
+    expect(result).toEqual(sentence)
   })
 
-  await t.test('mapDrizzleToSentence with different explanation', () => {
+  test('mapDrizzleToSentence with different explanation', () => {
     const differentExplanation: LocalizedText = {
       en: 'Different explanation',
       cn: '不同的解释',
@@ -108,13 +107,13 @@ test('sentence mappers', async (t) => {
 
     const result = mapDrizzleToSentence(drizzleRowWithDifferentExplanation)
 
-    assert.deepStrictEqual(result, {
+    expect(result).toEqual({
       ...sentence,
       explanation: differentExplanation,
     })
   })
 
-  await t.test('round trip mapping preserves data', () => {
+  test('round trip mapping preserves data', () => {
     // Create → Drizzle → Sentence
     const drizzleInsert = mapCreateSentenceToDrizzle(createSentence)
     const drizzleRowFromInsert = {
@@ -126,11 +125,11 @@ test('sentence mappers', async (t) => {
     }
     const sentenceFromDrizzle = mapDrizzleToSentence(drizzleRowFromInsert)
 
-    assert.strictEqual(sentenceFromDrizzle.content, createSentence.content)
-    assert.deepStrictEqual(sentenceFromDrizzle.explanation, createSentence.explanation)
-    assert.deepStrictEqual(sentenceFromDrizzle.annotations, createSentence.annotations)
-    assert.strictEqual(sentenceFromDrizzle.audio, createSentence.audio)
-    assert.strictEqual(sentenceFromDrizzle.minLessonNumber, createSentence.minLessonNumber)
-    assert.strictEqual(sentenceFromDrizzle.id, 1)
+    expect(sentenceFromDrizzle.content).toBe(createSentence.content)
+    expect(sentenceFromDrizzle.explanation).toEqual(createSentence.explanation)
+    expect(sentenceFromDrizzle.annotations).toEqual(createSentence.annotations)
+    expect(sentenceFromDrizzle.audio).toBe(createSentence.audio)
+    expect(sentenceFromDrizzle.minLessonNumber).toBe(createSentence.minLessonNumber)
+    expect(sentenceFromDrizzle.id).toBe(1)
   })
 })

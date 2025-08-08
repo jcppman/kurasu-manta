@@ -77,6 +77,7 @@ export function SentenceViewer({
   const shouldPositionLeft =
     typeof window !== 'undefined' && mousePosition.x > window.innerWidth - 300
 
+  console.log(text, annotations, segments)
   return (
     <div className="relative">
       <div className="text-lg leading-relaxed mb-4" style={{ lineHeight: '2.5' }}>
@@ -86,8 +87,12 @@ export function SentenceViewer({
               // Use FuriganaText component for furigana display
               <FuriganaText
                 key={`furigana-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
-                text={segment.text}
-                annotations={[segment.annotation]}
+                segments={[
+                  {
+                    text: segment.text,
+                    furigana: segment.annotation.content,
+                  },
+                ]}
                 className="inline-block"
               />
             ) : (

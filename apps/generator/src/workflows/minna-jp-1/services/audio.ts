@@ -84,7 +84,7 @@ export async function generateAudio({
   const {
     object: { risk, reason },
   } = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4o-mini'),
     prompt: `
 You are a Japanese TTS assistant. Given a Japanese phrase and its expected reading (kana), return a numeric confidence score between 0.0 and 1.0.
 
@@ -152,37 +152,40 @@ Expected reading: 「${fullReading}」
 export async function generateVocabularyAudioClips() {
   const courseContentService = new CourseContentService(db)
 
-  // get vocabularies that has no audio clips
-  const { items } = await courseContentService.getKnowledgePointsByConditions(
-    {
-      hasAudio: false,
-      type: 'vocabulary',
-    },
-    {
-      page: 1,
-      limit: 100,
+  while (true) {
+    // get vocabularies that has no audio clips
+    const { items } = await courseContentService.getKnowledgePointsByConditions(
+      {
+        hasAudio: false,
+        type: 'vocabulary',
+      },
+      {
+        page: 1,
+        limit: 100,
+      }
+    )
+
+    if (items.length === 0) {
+      logger.info('No more vocabularies to process')
+      break
     }
-  )
 
-  let processedCount = 0
+    for (const voc of items) {
+      if (!isVocabulary(voc)) {
+        continue
+      }
+      const { content } = await generateAudio({
+        content: voc.content,
+        annotations: voc.annotations,
+      })
 
-  for (const voc of items) {
-    if (!isVocabulary(voc)) {
-      continue
+      // save audio via API and get back the calculated hash
+      const hash = await storeAudioViaAPI(content)
+
+      // update database
+      await courseContentService.partialUpdateKnowledgePoint(voc.id, {
+        audio: hash,
+      })
     }
-    const { content } = await generateAudio({
-      content: voc.content,
-      annotations: voc.annotations,
-    })
-
-    // save audio via API and get back the calculated hash
-    const hash = await storeAudioViaAPI(content)
-
-    // update database
-    await courseContentService.partialUpdateKnowledgePoint(voc.id, {
-      audio: hash,
-    })
-
-    processedCount++
   }
 }

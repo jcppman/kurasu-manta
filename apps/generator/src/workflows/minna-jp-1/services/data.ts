@@ -236,7 +236,7 @@ export async function createSentencesForLessons(
   const { items: lessons } = await courseContentService.getLessons()
 
   const lessonsToProcess = lessons
-    .filter((lesson) => lesson.number <= untilLessonNumber)
+    .filter((lesson) => lesson.number < untilLessonNumber + 1)
     .sort((a, b) => a.number - b.number)
 
   let currentProgress = 0
@@ -252,6 +252,9 @@ export async function createSentencesForLessons(
       return stat.sentenceCount < targetCount
     })
 
+    logger.info(
+      `Remaining knowledge points needing sentences in lesson ${currentLesson.number}: ${knowledgePointsNeedingSentences.length}/${stats.length}`
+    )
     if (knowledgePointsNeedingSentences.length > 0) {
       logger.info(`Creating sentences for lesson ${lessonsToProcess[currentProgress].number}...`)
       await createSentencesForLesson(lessonsToProcess[currentProgress].number)

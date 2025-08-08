@@ -4,7 +4,7 @@ import type { MinaVocabulary } from '../content'
 
 export async function findPosOfVocabulary(voc: MinaVocabulary): Promise<string> {
   const ret = await generateObject({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4o-mini'),
     prompt: `Given a Japanese word or phrase, your task is to determine its part of speech (POS).
 
     The answer MUST be one of the following:

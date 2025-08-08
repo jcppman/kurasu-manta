@@ -1,9 +1,8 @@
-import assert from 'node:assert'
-import test from 'node:test'
+import { describe, expect, test } from 'vitest'
 import { optionalResult, requireResult } from './utils'
 
-test('requireResult', async (t) => {
-  await t.test('maps valid result correctly', () => {
+describe('requireResult', () => {
+  test('maps valid result correctly', () => {
     const result = [{ id: 1, name: 'Test' }]
     const mapper = (item: { id: number; name: string }) => ({
       id: item.id,
@@ -11,41 +10,41 @@ test('requireResult', async (t) => {
     })
 
     const mapped = requireResult(result, mapper)
-    assert.deepStrictEqual(mapped, { id: 1, name: 'TEST' })
+    expect(mapped).toEqual({ id: 1, name: 'TEST' })
   })
 
-  await t.test('throws error on undefined result', () => {
+  test('throws error on undefined result', () => {
     const result = undefined
     const mapper = (item: { id: number }) => item
 
-    assert.throws(() => {
+    expect(() => {
       requireResult(result, mapper)
-    }, /No result returned from database/)
+    }).toThrow(/No result returned from database/)
   })
 
-  await t.test('throws error on empty result array', () => {
+  test('throws error on empty result array', () => {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const result: any[] = []
     const mapper = (item: { id: number }) => item
 
-    assert.throws(() => {
+    expect(() => {
       requireResult(result, mapper)
-    }, /No result returned from database/)
+    }).toThrow(/No result returned from database/)
   })
 
-  await t.test('throws error with custom message', () => {
+  test('throws error with custom message', () => {
     const result = undefined
     const mapper = (item: { id: number }) => item
     const errorMessage = 'Custom error message'
 
-    assert.throws(() => {
+    expect(() => {
       requireResult(result, mapper, errorMessage)
-    }, /Custom error message/)
+    }).toThrow(/Custom error message/)
   })
 })
 
-test('optionalResult', async (t) => {
-  await t.test('maps valid result correctly', () => {
+describe('optionalResult', () => {
+  test('maps valid result correctly', () => {
     const result = [{ id: 1, name: 'Test' }]
     const mapper = (item: { id: number; name: string }) => ({
       id: item.id,
@@ -53,23 +52,23 @@ test('optionalResult', async (t) => {
     })
 
     const mapped = optionalResult(result, mapper)
-    assert.deepStrictEqual(mapped, { id: 1, name: 'TEST' })
+    expect(mapped).toEqual({ id: 1, name: 'TEST' })
   })
 
-  await t.test('returns null on undefined result', () => {
+  test('returns null on undefined result', () => {
     const result = undefined
     const mapper = (item: { id: number }) => item
 
     const mapped = optionalResult(result, mapper)
-    assert.strictEqual(mapped, null)
+    expect(mapped).toBe(null)
   })
 
-  await t.test('returns null on empty result array', () => {
+  test('returns null on empty result array', () => {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const result: any[] = []
     const mapper = (item: { id: number }) => item
 
     const mapped = optionalResult(result, mapper)
-    assert.strictEqual(mapped, null)
+    expect(mapped).toBe(null)
   })
 })

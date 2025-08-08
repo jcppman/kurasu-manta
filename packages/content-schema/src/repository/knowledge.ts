@@ -1,11 +1,6 @@
 import { KNOWLEDGE_POINT_TYPES, type KnowledgePointType } from '@/common/types'
 import type { PaginatedResult, PaginationParams } from '@/common/types'
-import {
-  knowledgePointsTable,
-  sentenceKnowledgePointsTable,
-  type sentencesTable,
-} from '@/drizzle/schema'
-import type * as schema from '@/drizzle/schema'
+import { knowledgePointsTable, type sentencesTable } from '@/drizzle/schema'
 import type { Db } from '@/drizzle/types'
 import { optionalResult, requireResult } from '@/drizzle/utils'
 import {

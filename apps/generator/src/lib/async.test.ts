@@ -1,11 +1,10 @@
-import assert from 'node:assert'
-import { describe, test } from 'node:test'
+import { describe, expect, test } from 'vitest'
 import { processInParallel, withRetry } from './async'
 
 describe('processInParallel', () => {
   test('should process empty array and return empty results', async () => {
     const result = await processInParallel([], async (x) => x * 2, 2)
-    assert.deepStrictEqual(result, [])
+    expect(result).toEqual([])
   })
 
   test('should process all items successfully with concurrency limit', async () => {
@@ -17,14 +16,14 @@ describe('processInParallel', () => {
 
     const results = await processInParallel(items, processor, 2)
 
-    assert.strictEqual(results.length, 5)
+    expect(results.length).toBe(5)
 
     // All should be successful
     results.forEach((result, index) => {
-      assert.strictEqual(result.success, true)
+      expect(result.success).toBe(true)
       if (result.success) {
-        assert.strictEqual(result.result, items[index] * 2)
-        assert.strictEqual(result.item, items[index])
+        expect(result.result).toBe(items[index] * 2)
+        expect(result.item).toBe(items[index])
       }
     })
   })
@@ -40,21 +39,23 @@ describe('processInParallel', () => {
 
     const results = await processInParallel(items, processor, 3)
 
-    assert.strictEqual(results.length, 5)
+    expect(results.length).toBe(5)
 
     // Check successful results
     const successfulResults = results.filter((r) => r.success)
-    assert.strictEqual(successfulResults.length, 4)
+    expect(successfulResults.length).toBe(4)
 
     // Check failed result
     const failedResults = results.filter((r) => !r.success)
-    assert.strictEqual(failedResults.length, 1)
+    expect(failedResults.length).toBe(1)
 
     const failedResult = failedResults[0]
     if (!failedResult.success) {
-      assert.strictEqual(failedResult.item, 3)
-      assert.ok(failedResult.error instanceof Error)
-      assert.strictEqual(failedResult.error.message, 'Failed for 3')
+      expect(failedResult.item).toBe(3)
+      expect(failedResult.error instanceof Error).toBe(true)
+      if (failedResult.error instanceof Error) {
+        expect(failedResult.error.message).toBe('Failed for 3')
+      }
     }
   })
 
@@ -76,24 +77,18 @@ describe('processInParallel', () => {
     await processInParallel(items, processor, 2)
 
     // Should never exceed concurrency limit of 2
-    assert.ok(maxActiveCount <= 2)
-    assert.ok(maxActiveCount > 0)
+    expect(maxActiveCount <= 2).toBe(true)
+    expect(maxActiveCount > 0).toBe(true)
   })
 
   test('should throw error for invalid concurrency', async () => {
-    await assert.rejects(
-      async () => {
-        await processInParallel([1, 2, 3], async (x) => x, 0)
-      },
-      { message: 'Concurrency must be greater than 0' }
-    )
+    await expect(async () => {
+      await processInParallel([1, 2, 3], async (x) => x, 0)
+    }).rejects.toThrow('Concurrency must be greater than 0')
 
-    await assert.rejects(
-      async () => {
-        await processInParallel([1, 2, 3], async (x) => x, -1)
-      },
-      { message: 'Concurrency must be greater than 0' }
-    )
+    await expect(async () => {
+      await processInParallel([1, 2, 3], async (x) => x, -1)
+    }).rejects.toThrow('Concurrency must be greater than 0')
   })
 
   test('should handle processor that always throws', async () => {
@@ -104,14 +99,16 @@ describe('processInParallel', () => {
 
     const results = await processInParallel(items, processor, 2)
 
-    assert.strictEqual(results.length, 3)
+    expect(results.length).toBe(3)
 
     results.forEach((result, index) => {
-      assert.strictEqual(result.success, false)
+      expect(result.success).toBe(false)
       if (!result.success) {
-        assert.strictEqual(result.item, items[index])
-        assert.ok(result.error instanceof Error)
-        assert.strictEqual(result.error.message, `Always fails for ${items[index]}`)
+        expect(result.item).toBe(items[index])
+        expect(result.error instanceof Error).toBe(true)
+        if (result.error instanceof Error) {
+          expect(result.error.message).toBe(`Always fails for ${items[index]}`)
+        }
       }
     })
   })
@@ -126,12 +123,12 @@ describe('processInParallel', () => {
 
     const results = await processInParallel(items, processor, 3)
 
-    assert.strictEqual(results.length, 5)
+    expect(results.length).toBe(5)
 
     results.forEach((result, index) => {
-      assert.strictEqual(result.item, items[index])
+      expect(result.item).toBe(items[index])
       if (result.success) {
-        assert.strictEqual(result.result, items[index].toUpperCase())
+        expect(result.result).toBe(items[index].toUpperCase())
       }
     })
   })
@@ -142,11 +139,11 @@ describe('processInParallel', () => {
 
     const results = await processInParallel(items, processor, 1)
 
-    assert.strictEqual(results.length, 1)
-    assert.strictEqual(results[0].success, true)
+    expect(results.length).toBe(1)
+    expect(results[0].success).toBe(true)
     if (results[0].success) {
-      assert.strictEqual(results[0].result, 'result-42')
-      assert.strictEqual(results[0].item, 42)
+      expect(results[0].result).toBe('result-42')
+      expect(results[0].item).toBe(42)
     }
   })
 
@@ -163,12 +160,12 @@ describe('processInParallel', () => {
     for (const result of successfulResults) {
       // result.result should be string, not string | undefined
       const _resultLength: number = result.result.length
-      assert.ok(typeof result.result === 'string')
+      expect(typeof result.result === 'string').toBe(true)
     }
 
     for (const result of failedResults) {
       // result.error should be available, result.result should not exist
-      assert.ok(result.error !== undefined)
+      expect(result.error !== undefined).toBe(true)
       // @ts-expect-error - result should not have 'result' property when success is false
       const _shouldNotExist = result.result
     }
@@ -193,16 +190,16 @@ describe('processInParallel', () => {
     const results = await processInParallel(items, processor)
 
     // All should be successful
-    assert.strictEqual(results.length, 5)
+    expect(results.length).toBe(5)
     results.forEach((result, index) => {
-      assert.strictEqual(result.success, true)
+      expect(result.success).toBe(true)
       if (result.success) {
-        assert.strictEqual(result.result, items[index] * 2)
+        expect(result.result).toBe(items[index] * 2)
       }
     })
 
     // Should use default concurrency (5), so all items should run concurrently
-    assert.strictEqual(maxActiveCount, 5)
+    expect(maxActiveCount).toBe(5)
   })
 })
 
@@ -216,8 +213,8 @@ describe('withRetry', () => {
 
     const result = await withRetry(fn)
 
-    assert.strictEqual(result, 'success')
-    assert.strictEqual(callCount, 1)
+    expect(result).toBe('success')
+    expect(callCount).toBe(1)
   })
 
   test('should retry and eventually succeed', async () => {
@@ -232,8 +229,8 @@ describe('withRetry', () => {
 
     const result = await withRetry(fn, { maxAttempts: 3 })
 
-    assert.strictEqual(result, 'success')
-    assert.strictEqual(callCount, 3)
+    expect(result).toBe('success')
+    expect(callCount).toBe(3)
   })
 
   test('should fail after max attempts exceeded', async () => {
@@ -243,14 +240,11 @@ describe('withRetry', () => {
       throw new Error(`Attempt ${callCount} failed`)
     }
 
-    await assert.rejects(
-      async () => {
-        await withRetry(fn, { maxAttempts: 3 })
-      },
-      { message: 'Attempt 3 failed' }
-    )
+    await expect(async () => {
+      await withRetry(fn, { maxAttempts: 3 })
+    }).rejects.toThrow('Attempt 3 failed')
 
-    assert.strictEqual(callCount, 3)
+    expect(callCount).toBe(3)
   })
 
   test('should respect custom retry options', async () => {
@@ -262,20 +256,20 @@ describe('withRetry', () => {
 
     const startTime = Date.now()
 
-    await assert.rejects(async () => {
+    await expect(async () => {
       await withRetry(fn, {
         maxAttempts: 2,
         initialDelay: 100,
         backoffFactor: 1, // No backoff for predictable timing
       })
-    })
+    }).rejects.toThrow()
 
     const endTime = Date.now()
     const elapsed = endTime - startTime
 
-    assert.strictEqual(callCount, 2)
+    expect(callCount).toBe(2)
     // Should have at least the initial delay
-    assert.ok(elapsed >= 100)
+    expect(elapsed >= 100).toBe(true)
   })
 
   test('should apply exponential backoff', async () => {
@@ -305,21 +299,21 @@ describe('withRetry', () => {
     }
 
     try {
-      await assert.rejects(async () => {
+      await expect(async () => {
         await withRetry(fn, {
           maxAttempts: 3,
           initialDelay: 100,
           backoffFactor: 2,
         })
-      })
+      }).rejects.toThrow()
     } finally {
       global.setTimeout = originalSetTimeout
     }
 
-    assert.strictEqual(callCount, 3)
-    assert.strictEqual(delays.length, 2) // 2 retries means 2 delays
-    assert.strictEqual(delays[0], 100) // First delay
-    assert.strictEqual(delays[1], 200) // Second delay (100 * 2)
+    expect(callCount).toBe(3)
+    expect(delays.length).toBe(2) // 2 retries means 2 delays
+    expect(delays[0]).toBe(100) // First delay
+    expect(delays[1]).toBe(200) // Second delay (100 * 2)
   })
 
   test('should respect max delay', async () => {
@@ -344,23 +338,23 @@ describe('withRetry', () => {
     }
 
     try {
-      await assert.rejects(async () => {
+      await expect(async () => {
         await withRetry(fn, {
           maxAttempts: 4,
           initialDelay: 100,
           backoffFactor: 3,
           maxDelay: 250,
         })
-      })
+      }).rejects.toThrow()
     } finally {
       global.setTimeout = originalSetTimeout
     }
 
-    assert.strictEqual(callCount, 4)
-    assert.strictEqual(delays.length, 3) // 3 retries means 3 delays
-    assert.strictEqual(delays[0], 100) // First delay
-    assert.strictEqual(delays[1], 250) // Second delay capped at maxDelay (would be 300)
-    assert.strictEqual(delays[2], 250) // Third delay also capped
+    expect(callCount).toBe(4)
+    expect(delays.length).toBe(3) // 3 retries means 3 delays
+    expect(delays[0]).toBe(100) // First delay
+    expect(delays[1]).toBe(250) // Second delay capped at maxDelay (would be 300)
+    expect(delays[2]).toBe(250) // Third delay also capped
   })
 
   test('should use default options when not specified', async () => {
@@ -370,12 +364,12 @@ describe('withRetry', () => {
       throw new Error(`Attempt ${callCount} failed`)
     }
 
-    await assert.rejects(async () => {
+    await expect(async () => {
       await withRetry(fn) // Using defaults
-    })
+    }).rejects.toThrow()
 
     // Default maxAttempts is 3
-    assert.strictEqual(callCount, 3)
+    expect(callCount).toBe(3)
   })
 
   test('should preserve return type', async () => {
@@ -388,12 +382,12 @@ describe('withRetry', () => {
     const objectResult = await withRetry(objectFn)
 
     // TypeScript should infer correct types
-    assert.strictEqual(typeof numberResult, 'number')
-    assert.strictEqual(typeof stringResult, 'string')
-    assert.strictEqual(typeof objectResult, 'object')
+    expect(typeof numberResult).toBe('number')
+    expect(typeof stringResult).toBe('string')
+    expect(typeof objectResult).toBe('object')
 
-    assert.strictEqual(numberResult, 42)
-    assert.strictEqual(stringResult, 'hello')
-    assert.deepStrictEqual(objectResult, { value: 'test' })
+    expect(numberResult).toBe(42)
+    expect(stringResult).toBe('hello')
+    expect(objectResult).toEqual({ value: 'test' })
   })
 })

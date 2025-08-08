@@ -4,9 +4,9 @@ export const DEFAULT_MAX_CONCURRENCY = 5
 export const MAX_LLM_RETRY_TIMES = 3
 
 // New sentence generation constants
-export const SENTENCE_GENERATION_BATCH_SIZE = 10
+export const SENTENCE_GENERATION_BATCH_SIZE = 5
 
 // Knowledge type sentence targets
-export const SENTENCE_COUNT_GRAMMAR = 2
+export const SENTENCE_COUNT_GRAMMAR = 5
 export const SENTENCE_COUNT_PHRASE_PATTERN = 1 // 句型
 export const SENTENCE_COUNT_OTHER_VOCABULARY = 1

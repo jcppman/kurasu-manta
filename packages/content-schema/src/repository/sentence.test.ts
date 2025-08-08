@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import test from 'node:test'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
@@ -9,7 +8,7 @@ import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
 import { createInMemoryDb } from '@tests/utils/db'
 
-test('SentenceRepository', async (t) => {
+describe('SentenceRepository', () => {
   let sentenceRepo: SentenceRepository
   let knowledgeRepo: KnowledgeRepository
   let lessonRepo: LessonRepository
@@ -55,7 +54,7 @@ test('SentenceRepository', async (t) => {
   })
 
   // Setup before each test
-  t.beforeEach(async () => {
+  beforeEach(async () => {
     const db = await createInMemoryDb()
     sentenceRepo = new SentenceRepository(db)
     knowledgeRepo = new KnowledgeRepository(db)
@@ -65,36 +64,38 @@ test('SentenceRepository', async (t) => {
     await lessonRepo.create({ number: 1, title: 'Test Lesson', description: 'Test' })
   })
 
-  await t.test('create', async (t) => {
-    await t.test('should create a sentence with all fields', async () => {
+  describe('create', () => {
+    test('should create a sentence with all fields', async () => {
       const created = await sentenceRepo.create(createSentenceData)
 
-      assert.ok(created.id, 'Should have an ID')
-      assert.strictEqual(created.content, createSentenceData.content)
-      assert.deepStrictEqual(created.explanation, createSentenceData.explanation)
-      assert.ok(created.createdAt, 'Should have createdAt timestamp')
-      assert.ok(created.updatedAt, 'Should have updatedAt timestamp')
+      expect(created.id).toBeTruthy()
+      expect(created.content).toBe(createSentenceData.content)
+      expect(created.explanation).toEqual(createSentenceData.explanation)
+      expect(created.createdAt).toBeTruthy()
+      expect(created.updatedAt).toBeTruthy()
     })
   })
 
-  await t.test('getById', async (t) => {
-    await t.test('should retrieve a sentence by ID', async () => {
+  describe('getById', () => {
+    test('should retrieve a sentence by ID', async () => {
       const created = await sentenceRepo.create(createSentenceData)
       const retrieved = await sentenceRepo.getById(created.id)
 
-      assert.ok(retrieved, 'Should retrieve the sentence')
-      assert.strictEqual(retrieved.id, created.id)
-      assert.strictEqual(retrieved.content, created.content)
-      assert.deepStrictEqual(retrieved.explanation, created.explanation)
+      expect(retrieved).toBeTruthy()
+      if (retrieved) {
+        expect(retrieved.id).toBe(created.id)
+        expect(retrieved.content).toBe(created.content)
+        expect(retrieved.explanation).toEqual(created.explanation)
+      }
     })
 
-    await t.test('should return null for non-existent ID', async () => {
+    test('should return null for non-existent ID', async () => {
       const retrieved = await sentenceRepo.getById(999)
-      assert.strictEqual(retrieved, null)
+      expect(retrieved).toBe(null)
     })
   })
 
-  await t.test('getAll', async () => {
+  test('getAll', async () => {
     // Create multiple sentences
     const sentence1 = await sentenceRepo.create(createSentenceData)
     const sentence2 = await sentenceRepo.create(createMinimalSentence)
@@ -102,13 +103,13 @@ test('SentenceRepository', async (t) => {
     const result = await sentenceRepo.getMany()
     const allSentences = result.items
 
-    assert.strictEqual(allSentences.length, 2)
-    assert.ok(allSentences.some((s) => s.id === sentence1.id))
-    assert.ok(allSentences.some((s) => s.id === sentence2.id))
+    expect(allSentences.length).toBe(2)
+    expect(allSentences.some((s) => s.id === sentence1.id)).toBeTruthy()
+    expect(allSentences.some((s) => s.id === sentence2.id)).toBeTruthy()
   })
 
-  await t.test('getWithPagination', async (t) => {
-    await t.test('should paginate sentences correctly', async () => {
+  describe('getWithPagination', () => {
+    test('should paginate sentences correctly', async () => {
       // Create 5 sentences
       for (let i = 0; i < 5; i++) {
         await sentenceRepo.create({
@@ -121,31 +122,31 @@ test('SentenceRepository', async (t) => {
 
       // Test first page
       const page1 = await sentenceRepo.getWithPagination({ page: 1, limit: 2 })
-      assert.strictEqual(page1.items.length, 2)
-      assert.strictEqual(page1.total, 5)
-      assert.strictEqual(page1.page, 1)
-      assert.strictEqual(page1.limit, 2)
-      assert.strictEqual(page1.totalPages, 3)
-      assert.strictEqual(page1.hasNextPage, true)
-      assert.strictEqual(page1.hasPrevPage, false)
+      expect(page1.items.length).toBe(2)
+      expect(page1.total).toBe(5)
+      expect(page1.page).toBe(1)
+      expect(page1.limit).toBe(2)
+      expect(page1.totalPages).toBe(3)
+      expect(page1.hasNextPage).toBe(true)
+      expect(page1.hasPrevPage).toBe(false)
 
       // Test last page
       const page3 = await sentenceRepo.getWithPagination({ page: 3, limit: 2 })
-      assert.strictEqual(page3.items.length, 1)
-      assert.strictEqual(page3.hasNextPage, false)
-      assert.strictEqual(page3.hasPrevPage, true)
+      expect(page3.items.length).toBe(1)
+      expect(page3.hasNextPage).toBe(false)
+      expect(page3.hasPrevPage).toBe(true)
     })
 
-    await t.test('should use default pagination when not provided', async () => {
+    test('should use default pagination when not provided', async () => {
       await sentenceRepo.create(createSentenceData)
 
       const result = await sentenceRepo.getWithPagination()
-      assert.strictEqual(result.page, 1)
-      assert.strictEqual(result.limit, 20)
+      expect(result.page).toBe(1)
+      expect(result.limit).toBe(20)
     })
   })
 
-  await t.test('update', async () => {
+  test('update', async () => {
     const created = await sentenceRepo.create(createSentenceData)
 
     const updatedData: Sentence = {
@@ -156,46 +157,46 @@ test('SentenceRepository', async (t) => {
 
     const updated = await sentenceRepo.update(updatedData)
 
-    assert.strictEqual(updated.id, created.id)
-    assert.strictEqual(updated.content, '更新された文')
-    assert.deepStrictEqual(updated.explanation, { en: 'Updated sentence', cn: '更新的句子' })
-    assert.notStrictEqual(updated.updatedAt, created.updatedAt)
+    expect(updated.id).toBe(created.id)
+    expect(updated.content).toBe('更新された文')
+    expect(updated.explanation).toEqual({ en: 'Updated sentence', cn: '更新的句子' })
+    expect(updated.updatedAt).not.toBe(created.updatedAt)
   })
 
-  await t.test('delete', async (t) => {
-    await t.test('should delete an existing sentence', async () => {
+  describe('delete', () => {
+    test('should delete an existing sentence', async () => {
       const created = await sentenceRepo.create(createSentenceData)
 
       const deleted = await sentenceRepo.delete(created.id)
-      assert.strictEqual(deleted, true)
+      expect(deleted).toBe(true)
 
       const retrieved = await sentenceRepo.getById(created.id)
-      assert.strictEqual(retrieved, null)
+      expect(retrieved).toBe(null)
     })
 
-    await t.test('should return false for non-existent sentence', async () => {
+    test('should return false for non-existent sentence', async () => {
       const deleted = await sentenceRepo.delete(999)
-      assert.strictEqual(deleted, false)
+      expect(deleted).toBe(false)
     })
   })
 
-  await t.test('knowledge point associations', async (t) => {
-    await t.test('should associate sentence with knowledge point', async () => {
+  describe('knowledge point associations', () => {
+    test('should associate sentence with knowledge point', async () => {
       const sentence = await sentenceRepo.create(createSentenceData)
       const knowledgePoint = await knowledgeRepo.create(createKnowledgePoint('単語'))
 
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, knowledgePoint.id)
 
       const knowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
-      assert.strictEqual(knowledgePoints.length, 1)
-      assert.strictEqual(knowledgePoints[0]?.id, knowledgePoint.id)
+      expect(knowledgePoints.length).toBe(1)
+      expect(knowledgePoints[0]?.id).toBe(knowledgePoint.id)
 
       const sentences = await sentenceRepo.getByKnowledgePointId(knowledgePoint.id)
-      assert.strictEqual(sentences.length, 1)
-      assert.strictEqual(sentences[0]?.id, sentence.id)
+      expect(sentences.length).toBe(1)
+      expect(sentences[0]?.id).toBe(sentence.id)
     })
 
-    await t.test('should handle multiple associations', async () => {
+    test('should handle multiple associations', async () => {
       const sentence = await sentenceRepo.create(createSentenceData)
       const kp1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
       const kp2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
@@ -204,10 +205,10 @@ test('SentenceRepository', async (t) => {
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp2.id)
 
       const knowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
-      assert.strictEqual(knowledgePoints.length, 2)
+      expect(knowledgePoints.length).toBe(2)
     })
 
-    await t.test('should dissociate sentence from knowledge point', async () => {
+    test('should dissociate sentence from knowledge point', async () => {
       const sentence = await sentenceRepo.create(createSentenceData)
       const knowledgePoint = await knowledgeRepo.create(createKnowledgePoint('単語'))
 
@@ -215,10 +216,10 @@ test('SentenceRepository', async (t) => {
       await sentenceRepo.dissociateFromKnowledgePoint(sentence.id, knowledgePoint.id)
 
       const knowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
-      assert.strictEqual(knowledgePoints.length, 0)
+      expect(knowledgePoints.length).toBe(0)
     })
 
-    await t.test('should handle onConflictDoNothing for duplicate associations', async () => {
+    test('should handle onConflictDoNothing for duplicate associations', async () => {
       const sentence = await sentenceRepo.create(createSentenceData)
       const knowledgePoint = await knowledgeRepo.create(createKnowledgePoint('単語'))
 
@@ -227,17 +228,17 @@ test('SentenceRepository', async (t) => {
       await sentenceRepo.associateWithKnowledgePoint(sentence.id, knowledgePoint.id)
 
       const knowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(sentence.id)
-      assert.strictEqual(knowledgePoints.length, 1)
+      expect(knowledgePoints.length).toBe(1)
     })
   })
 
-  await t.test('getKnowledgePointsForSentences', async (t) => {
-    await t.test('should return empty map for empty sentence IDs', async () => {
+  describe('getKnowledgePointsForSentences', () => {
+    test('should return empty map for empty sentence IDs', async () => {
       const result = await sentenceRepo.getKnowledgePointsForSentences([])
-      assert.strictEqual(result.size, 0)
+      expect(result.size).toBe(0)
     })
 
-    await t.test('should return knowledge points for multiple sentences', async () => {
+    test('should return knowledge points for multiple sentences', async () => {
       const sentence1 = await sentenceRepo.create({
         content: '文1',
         explanation: { en: 'Sentence 1', cn: '句子1' },
@@ -259,19 +260,19 @@ test('SentenceRepository', async (t) => {
 
       const result = await sentenceRepo.getKnowledgePointsForSentences([sentence1.id, sentence2.id])
 
-      assert.strictEqual(result.size, 2)
-      assert.strictEqual(result.get(sentence1.id)?.length, 2)
-      assert.strictEqual(result.get(sentence2.id)?.length, 1)
+      expect(result.size).toBe(2)
+      expect(result.get(sentence1.id)?.length).toBe(2)
+      expect(result.get(sentence2.id)?.length).toBe(1)
     })
   })
 
-  await t.test('getCountByKnowledgePointIds', async (t) => {
-    await t.test('should return empty map for empty knowledge point IDs', async () => {
+  describe('getCountByKnowledgePointIds', () => {
+    test('should return empty map for empty knowledge point IDs', async () => {
       const result = await sentenceRepo.getCountByKnowledgePointIds([])
-      assert.strictEqual(result.size, 0)
+      expect(result.size).toBe(0)
     })
 
-    await t.test('should return counts for single knowledge point', async () => {
+    test('should return counts for single knowledge point', async () => {
       const kp = await knowledgeRepo.create(createKnowledgePoint('単語'))
       const sentence1 = await sentenceRepo.create({
         content: '文1',
@@ -291,11 +292,11 @@ test('SentenceRepository', async (t) => {
 
       const result = await sentenceRepo.getCountByKnowledgePointIds([kp.id])
 
-      assert.strictEqual(result.size, 1)
-      assert.strictEqual(result.get(kp.id), 2)
+      expect(result.size).toBe(1)
+      expect(result.get(kp.id)).toBe(2)
     })
 
-    await t.test('should return counts for multiple knowledge points', async () => {
+    test('should return counts for multiple knowledge points', async () => {
       const kp1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
       const kp2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
       const kp3 = await knowledgeRepo.create(createKnowledgePoint('単語3'))
@@ -327,21 +328,21 @@ test('SentenceRepository', async (t) => {
 
       const result = await sentenceRepo.getCountByKnowledgePointIds([kp1.id, kp2.id, kp3.id])
 
-      assert.strictEqual(result.size, 3)
-      assert.strictEqual(result.get(kp1.id), 3)
-      assert.strictEqual(result.get(kp2.id), 1)
-      assert.strictEqual(result.get(kp3.id), 0)
+      expect(result.size).toBe(3)
+      expect(result.get(kp1.id)).toBe(3)
+      expect(result.get(kp2.id)).toBe(1)
+      expect(result.get(kp3.id)).toBe(0)
     })
 
-    await t.test('should handle non-existent knowledge point IDs', async () => {
+    test('should handle non-existent knowledge point IDs', async () => {
       const result = await sentenceRepo.getCountByKnowledgePointIds([999, 1000])
 
-      assert.strictEqual(result.size, 2)
-      assert.strictEqual(result.get(999), 0)
-      assert.strictEqual(result.get(1000), 0)
+      expect(result.size).toBe(2)
+      expect(result.get(999)).toBe(0)
+      expect(result.get(1000)).toBe(0)
     })
 
-    await t.test('should handle mixed existing and non-existent knowledge point IDs', async () => {
+    test('should handle mixed existing and non-existent knowledge point IDs', async () => {
       const kp = await knowledgeRepo.create(createKnowledgePoint('単語'))
       const sentence = await sentenceRepo.create({
         content: '文',
@@ -354,9 +355,9 @@ test('SentenceRepository', async (t) => {
 
       const result = await sentenceRepo.getCountByKnowledgePointIds([kp.id, 999])
 
-      assert.strictEqual(result.size, 2)
-      assert.strictEqual(result.get(kp.id), 1)
-      assert.strictEqual(result.get(999), 0)
+      expect(result.size).toBe(2)
+      expect(result.get(kp.id)).toBe(1)
+      expect(result.get(999)).toBe(0)
     })
   })
 })

@@ -30,7 +30,21 @@ export function KnowledgePointCard({ knowledgePoint, lesson }: KnowledgePointCar
         <span>
           {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY &&
           knowledgePoint.annotations ? (
-            <FuriganaText text={knowledgePoint.content} annotations={knowledgePoint.annotations} />
+            <FuriganaText
+              segments={
+                knowledgePoint.annotations.filter((ann) => ann.type.toLowerCase() === 'furigana')
+                  .length > 0
+                  ? [
+                      {
+                        text: knowledgePoint.content,
+                        furigana: knowledgePoint.annotations.find(
+                          (ann) => ann.type.toLowerCase() === 'furigana'
+                        )?.content,
+                      },
+                    ]
+                  : [{ text: knowledgePoint.content }]
+              }
+            />
           ) : (
             knowledgePoint.content
           )}

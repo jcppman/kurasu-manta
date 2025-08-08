@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import test from 'node:test'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { KNOWLEDGE_POINT_TYPES } from '@/common/types'
 import { KnowledgeRepository } from '@/repository/knowledge'
@@ -11,7 +10,7 @@ import type { LocalizedText } from '@/zod/localized-text'
 import type { CreateSentence } from '@/zod/sentence'
 import { createInMemoryDb } from '../utils/db'
 
-test('CourseContentService - New Methods', async (t) => {
+describe('CourseContentService - New Methods', () => {
   let courseContentService: CourseContentService
   let knowledgeRepo: KnowledgeRepository
   let lessonRepo: LessonRepository
@@ -64,7 +63,7 @@ test('CourseContentService - New Methods', async (t) => {
     minLessonNumber: 1,
   })
 
-  t.beforeEach(async () => {
+  beforeEach(async () => {
     const db = await createInMemoryDb()
     courseContentService = new CourseContentService(db)
     knowledgeRepo = new KnowledgeRepository(db)
@@ -73,41 +72,41 @@ test('CourseContentService - New Methods', async (t) => {
   })
 
   // Tests for new methods
-  await t.test('getLessonByNumber', async (t) => {
-    await t.test('should return lesson when it exists', async () => {
+  describe('getLessonByNumber', () => {
+    test('should return lesson when it exists', async () => {
       // Create a lesson
       const lesson = await lessonRepo.create(createLesson(1))
 
       // Get lesson by number
       const result = await courseContentService.getLessonByNumber(1)
 
-      assert.ok(result, 'Should return a lesson')
-      assert.strictEqual(result.number, 1)
-      assert.strictEqual(result.title, 'Test Lesson 1')
+      expect(result).toBeTruthy()
+      expect(result?.number).toBe(1)
+      expect(result?.title).toBe('Test Lesson 1')
     })
 
-    await t.test('should return null when lesson does not exist', async () => {
+    test('should return null when lesson does not exist', async () => {
       const result = await courseContentService.getLessonByNumber(999)
-      assert.strictEqual(result, null, 'Should return null for non-existent lesson')
+      expect(result).toBe(null)
     })
   })
 
-  await t.test('createLesson', async (t) => {
-    await t.test('should create a new lesson', async () => {
+  describe('createLesson', () => {
+    test('should create a new lesson', async () => {
       const result = await courseContentService.createLesson({
         number: 5,
         title: 'New Lesson',
       })
 
-      assert.ok(result, 'Should return created lesson')
-      assert.strictEqual(result.number, 5)
-      assert.strictEqual(result.title, 'New Lesson')
-      assert.ok(result.id, 'Should have database ID')
+      expect(result).toBeTruthy()
+      expect(result.number).toBe(5)
+      expect(result.title).toBe('New Lesson')
+      expect(result.id).toBeTruthy()
     })
   })
 
-  await t.test('createKnowledgePoints', async (t) => {
-    await t.test('should create knowledge points with valid lesson IDs', async () => {
+  describe('createKnowledgePoints', () => {
+    test('should create knowledge points with valid lesson IDs', async () => {
       // Create a lesson first
       const lesson = await lessonRepo.create(createLesson(1))
 
@@ -119,35 +118,35 @@ test('CourseContentService - New Methods', async (t) => {
 
       const result = await courseContentService.createKnowledgePoints(knowledgePoints)
 
-      assert.strictEqual(result.length, 2, 'Should create 2 knowledge points')
-      assert.strictEqual(result[0]?.content, '私')
-      assert.strictEqual(result[1]?.content, 'です')
-      assert.strictEqual(result[0]?.lessonId, lesson.id)
-      assert.strictEqual(result[1]?.lessonId, lesson.id)
+      expect(result.length).toBe(2)
+      expect(result[0]?.content).toBe('私')
+      expect(result[1]?.content).toBe('です')
+      expect(result[0]?.lessonId).toBe(lesson.id)
+      expect(result[1]?.lessonId).toBe(lesson.id)
     })
 
-    await t.test('should create empty array when given empty input', async () => {
+    test('should create empty array when given empty input', async () => {
       const result = await courseContentService.createKnowledgePoints([])
-      assert.strictEqual(result.length, 0, 'Should return empty array')
+      expect(result.length).toBe(0)
     })
   })
 
   // Integration test combining the new methods
-  await t.test('Integration: Complete lesson creation workflow', async (t) => {
-    await t.test('should create lesson and knowledge points separately', async () => {
+  describe('Integration: Complete lesson creation workflow', () => {
+    test('should create lesson and knowledge points separately', async () => {
       const lessonNumber = 10
 
       // 1. Check if lesson exists
       let lesson = await courseContentService.getLessonByNumber(lessonNumber)
-      assert.strictEqual(lesson, null, 'Lesson should not exist initially')
+      expect(lesson).toBe(null)
 
       // 2. Create lesson
       lesson = await courseContentService.createLesson({
         number: lessonNumber,
         title: `Lesson ${lessonNumber}`,
       })
-      assert.ok(lesson, 'Lesson should be created')
-      assert.strictEqual(lesson.number, lessonNumber)
+      expect(lesson).toBeTruthy()
+      expect(lesson.number).toBe(lessonNumber)
 
       // 3. Create knowledge points with proper lesson ID
       const knowledgePoints = [
@@ -158,42 +157,42 @@ test('CourseContentService - New Methods', async (t) => {
 
       const createdKnowledgePoints =
         await courseContentService.createKnowledgePoints(knowledgePoints)
-      assert.strictEqual(createdKnowledgePoints.length, 3, 'Should create 3 knowledge points')
+      expect(createdKnowledgePoints.length).toBe(3)
 
       // 4. Verify all knowledge points have correct lesson ID
       for (const kp of createdKnowledgePoints) {
-        assert.strictEqual(kp.lessonId, lesson.id, 'Knowledge point should have correct lesson ID')
+        expect(kp.lessonId).toBe(lesson.id)
       }
 
       // 5. Verify lesson can be retrieved by number
       const retrievedLesson = await courseContentService.getLessonByNumber(lessonNumber)
-      assert.ok(retrievedLesson, 'Should be able to retrieve lesson by number')
-      assert.strictEqual(retrievedLesson.id, lesson.id)
+      expect(retrievedLesson).toBeTruthy()
+      expect(retrievedLesson?.id).toBe(lesson.id)
     })
   })
 
   // Test some existing methods that should still work
-  await t.test('Existing methods still work', async (t) => {
-    await t.test('getLessonById should work', async () => {
+  describe('Existing methods still work', () => {
+    test('getLessonById should work', async () => {
       const lesson = await lessonRepo.create(createLesson(2))
       const result = await courseContentService.getLessonById(lesson.id)
 
-      assert.ok(result, 'Should return lesson')
-      assert.strictEqual(result.id, lesson.id)
+      expect(result).toBeTruthy()
+      expect(result?.id).toBe(lesson.id)
     })
 
-    await t.test('getLessons should work', async () => {
+    test('getLessons should work', async () => {
       await lessonRepo.create(createLesson(3))
       await lessonRepo.create(createLesson(4))
 
       const result = await courseContentService.getLessons()
-      assert.ok(result.items.length >= 2, 'Should return at least 2 lessons')
+      expect(result.items.length).toBeGreaterThanOrEqual(2)
     })
   })
 
   // Tests for getLessonWithContent
-  await t.test('getLessonWithContent', async (t) => {
-    await t.test('should retrieve a lesson with its associated knowledge points', async () => {
+  describe('getLessonWithContent', () => {
+    test('should retrieve a lesson with its associated knowledge points', async () => {
       // Create a lesson
       const lesson = await lessonRepo.create(createLesson(1))
 
@@ -206,24 +205,20 @@ test('CourseContentService - New Methods', async (t) => {
         withContent: true,
       })
 
-      assert.ok(lessonWithContent)
+      expect(lessonWithContent).toBeTruthy()
 
       // Assertions
-      assert.ok(lessonWithContent, 'Lesson with content should exist')
-      assert.strictEqual(lessonWithContent?.id, lesson.id, 'Lesson ID should match')
-      assert.strictEqual(
-        lessonWithContent?.knowledgePoints.length,
-        2,
-        'Should have 2 knowledge points'
-      )
+      expect(lessonWithContent).toBeTruthy()
+      expect(lessonWithContent?.id).toBe(lesson.id)
+      expect(lessonWithContent?.knowledgePoints.length).toBe(2)
 
       // Verify knowledge points are included
       const knowledgePointContents = lessonWithContent?.knowledgePoints.map((kp) => kp.content)
-      assert.ok(knowledgePointContents.includes('単語'), 'Should include vocabulary point')
-      assert.ok(knowledgePointContents.includes('文法'), 'Should include grammar point')
+      expect(knowledgePointContents?.includes('単語')).toBe(true)
+      expect(knowledgePointContents?.includes('文法')).toBe(true)
     })
 
-    await t.test('should handle a lesson with no knowledge points', async () => {
+    test('should handle a lesson with no knowledge points', async () => {
       // Create a lesson without knowledge points
       const lesson = await lessonRepo.create(createLesson(2))
 
@@ -233,28 +228,24 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Assertions
-      assert.ok(lessonWithContent)
-      assert.ok(lessonWithContent, 'Lesson with content should exist')
-      assert.strictEqual(lessonWithContent?.id, lesson.id, 'Lesson ID should match')
-      assert.strictEqual(
-        lessonWithContent?.knowledgePoints.length,
-        0,
-        'Should have 0 knowledge points'
-      )
+      expect(lessonWithContent).toBeTruthy()
+      expect(lessonWithContent).toBeTruthy()
+      expect(lessonWithContent?.id).toBe(lesson.id)
+      expect(lessonWithContent?.knowledgePoints.length).toBe(0)
     })
 
-    await t.test('should return null for a non-existent lesson', async () => {
+    test('should return null for a non-existent lesson', async () => {
       // Get a non-existent lesson
       const lessonWithContent = await courseContentService.getLessonById(999, { withContent: true })
 
       // Assertions
-      assert.strictEqual(lessonWithContent, null, 'Should return null for non-existent lesson')
+      expect(lessonWithContent).toBe(null)
     })
   })
 
   // Tests for deleteLessonWithContent
-  await t.test('deleteLessonWithContent', async (t) => {
-    await t.test('should delete a lesson and all its associated knowledge points', async () => {
+  describe('deleteLessonWithContent', () => {
+    test('should delete a lesson and all its associated knowledge points', async () => {
       // Create a lesson
       const lesson = await lessonRepo.create(createLesson(8))
 
@@ -266,31 +257,31 @@ test('CourseContentService - New Methods', async (t) => {
       const result = await courseContentService.deleteLessonWithContent(lesson.id)
 
       // Assertions
-      assert.strictEqual(result, true, 'Deletion should be successful')
+      expect(result).toBe(true)
 
       // Verify the lesson was deleted
       const deletedLesson = await lessonRepo.getById(lesson.id)
-      assert.strictEqual(deletedLesson, null, 'Lesson should be deleted')
+      expect(deletedLesson).toBe(null)
 
       // Verify the knowledge points were deleted
       const vocPointAfter = await knowledgeRepo.getById(vocPoint.id)
       const grammarPointAfter = await knowledgeRepo.getById(grammarPoint.id)
-      assert.strictEqual(vocPointAfter, null, 'Vocabulary point should be deleted')
-      assert.strictEqual(grammarPointAfter, null, 'Grammar point should be deleted')
+      expect(vocPointAfter).toBe(null)
+      expect(grammarPointAfter).toBe(null)
     })
 
-    await t.test("should return false when the lesson doesn't exist", async () => {
+    test("should return false when the lesson doesn't exist", async () => {
       // Delete a non-existent lesson
       const result = await courseContentService.deleteLessonWithContent(999)
 
       // Assertions
-      assert.strictEqual(result, false, 'Deletion should fail for non-existent lesson')
+      expect(result).toBe(false)
     })
   })
 
   // Tests for getVocabulariesByConditions
-  await t.test('getVocabulariesByConditions', async (t) => {
-    await t.test('should retrieve vocabularies by lesson ID with pagination', async () => {
+  describe('getVocabulariesByConditions', () => {
+    test('should retrieve vocabularies by lesson ID with pagination', async () => {
       // Create a lesson
       const lesson = await lessonRepo.create(createLesson(12))
 
@@ -309,17 +300,17 @@ test('CourseContentService - New Methods', async (t) => {
       )
 
       // Assertions for first page
-      assert.strictEqual(result1.items.length, 2, 'Should return 2 items on first page')
-      assert.strictEqual(result1.total, 3, 'Total count should be 3')
-      assert.strictEqual(result1.page, 1, 'Current page should be 1')
-      assert.strictEqual(result1.limit, 2, 'Limit should be 2')
-      assert.strictEqual(result1.totalPages, 2, 'Total pages should be 2')
-      assert.strictEqual(result1.hasNextPage, true, 'Should have next page')
-      assert.strictEqual(result1.hasPrevPage, false, 'Should not have previous page')
+      expect(result1.items.length).toBe(2)
+      expect(result1.total).toBe(3)
+      expect(result1.page).toBe(1)
+      expect(result1.limit).toBe(2)
+      expect(result1.totalPages).toBe(2)
+      expect(result1.hasNextPage).toBe(true)
+      expect(result1.hasPrevPage).toBe(false)
 
       // Verify all returned items are vocabularies
       for (const item of result1.items) {
-        assert.strictEqual(item.type, KNOWLEDGE_POINT_TYPES.VOCABULARY, 'Item should be vocabulary')
+        expect(item.type).toBe(KNOWLEDGE_POINT_TYPES.VOCABULARY)
       }
 
       // Get vocabularies with pagination (limit 2, page 2)
@@ -329,13 +320,13 @@ test('CourseContentService - New Methods', async (t) => {
       )
 
       // Assertions for second page
-      assert.strictEqual(result2.items.length, 1, 'Should return 1 item on second page')
-      assert.strictEqual(result2.page, 2, 'Current page should be 2')
-      assert.strictEqual(result2.hasNextPage, false, 'Should not have next page')
-      assert.strictEqual(result2.hasPrevPage, true, 'Should have previous page')
+      expect(result2.items.length).toBe(1)
+      expect(result2.page).toBe(2)
+      expect(result2.hasNextPage).toBe(false)
+      expect(result2.hasPrevPage).toBe(true)
     })
 
-    await t.test('should retrieve vocabularies with audio', async () => {
+    test('should retrieve vocabularies with audio', async () => {
       // Create a lesson first
       const lesson = await lessonRepo.create(createLesson(13))
 
@@ -359,13 +350,15 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Assertions
-      assert.strictEqual(result.items.length, 2, 'Should return 2 items with audio')
-      assert.strictEqual(result.total, 2, 'Total count should be 2')
+      expect(result.items.length).toBe(2)
+      expect(result.total).toBe(2)
 
       // Verify all returned items have audio
       for (const item of result.items) {
-        assert.ok(isVocabulary(item))
-        assert.ok(item.audio, 'Item should have audio')
+        expect(isVocabulary(item)).toBe(true)
+        if (isVocabulary(item)) {
+          expect(item.audio).toBeTruthy()
+        }
       }
 
       // Get vocabularies without audio
@@ -375,17 +368,19 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Assertions
-      assert.strictEqual(resultWithoutAudio.items.length, 1, 'Should return 1 item without audio')
-      assert.strictEqual(resultWithoutAudio.total, 1, 'Total count should be 1')
+      expect(resultWithoutAudio.items.length).toBe(1)
+      expect(resultWithoutAudio.total).toBe(1)
 
       // Verify returned item has no audio
       for (const item of resultWithoutAudio.items) {
-        assert.ok(isVocabulary(item))
-        assert.strictEqual(item.audio, undefined, 'Item should not have audio')
+        expect(isVocabulary(item)).toBe(true)
+        if (isVocabulary(item)) {
+          expect(item.audio).toBe(undefined)
+        }
       }
     })
 
-    await t.test('should combine multiple conditions', async () => {
+    test('should combine multiple conditions', async () => {
       // Create a lesson
       const lesson = await lessonRepo.create(createLesson(14))
 
@@ -413,19 +408,17 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Assertions
-      assert.strictEqual(result.items.length, 1, 'Should return 1 item matching both conditions')
-      assert.strictEqual(result.total, 1, 'Total count should be 1')
+      expect(result.items.length).toBe(1)
+      expect(result.total).toBe(1)
       // Check if we have items before accessing them
-      assert.strictEqual(
-        result.items[0]?.content,
-        '条件テスト1',
-        'Should return the correct vocabulary'
-      )
-      assert.ok(isVocabulary(result.items[0]))
-      assert.ok(result.items[0].audio, 'Item should have audio')
+      expect(result.items[0]?.content).toBe('条件テスト1')
+      expect(result.items[0] && isVocabulary(result.items[0])).toBe(true)
+      if (result.items[0] && isVocabulary(result.items[0])) {
+        expect(result.items[0].audio).toBeTruthy()
+      }
     })
 
-    await t.test('should return empty result when no vocabularies match conditions', async () => {
+    test('should return empty result when no vocabularies match conditions', async () => {
       // Get vocabularies with non-existent lesson ID
       const result = await courseContentService.getKnowledgePointsByConditions({
         lessonId: 999,
@@ -433,22 +426,22 @@ test('CourseContentService - New Methods', async (t) => {
       })
 
       // Assertions
-      assert.strictEqual(result.items.length, 0, 'Should return empty array')
-      assert.strictEqual(result.total, 0, 'Total count should be 0')
-      assert.strictEqual(result.totalPages, 0, 'Total pages should be 0')
-      assert.strictEqual(result.hasNextPage, false, 'Should not have next page')
-      assert.strictEqual(result.hasPrevPage, false, 'Should not have previous page')
+      expect(result.items.length).toBe(0)
+      expect(result.total).toBe(0)
+      expect(result.totalPages).toBe(0)
+      expect(result.hasNextPage).toBe(false)
+      expect(result.hasPrevPage).toBe(false)
     })
   })
 
   // Tests for getSentenceCountsByKnowledgePointIds
-  await t.test('getSentenceCountsByKnowledgePointIds', async (t) => {
-    await t.test('should return empty map for empty knowledge point IDs', async () => {
+  describe('getSentenceCountsByKnowledgePointIds', () => {
+    test('should return empty map for empty knowledge point IDs', async () => {
       const result = await courseContentService.getSentenceCountsByKnowledgePointIds([])
-      assert.strictEqual(result.size, 0)
+      expect(result.size).toBe(0)
     })
 
-    await t.test('should return sentence counts for knowledge points', async () => {
+    test('should return sentence counts for knowledge points', async () => {
       // Create lesson first
       const lesson = await lessonRepo.create(createLesson(1))
 
@@ -477,24 +470,24 @@ test('CourseContentService - New Methods', async (t) => {
       ])
 
       // Assertions
-      assert.strictEqual(result.size, 3)
-      assert.strictEqual(result.get(kp1.id), 3)
-      assert.strictEqual(result.get(kp2.id), 1)
-      assert.strictEqual(result.get(kp3.id), 0)
+      expect(result.size).toBe(3)
+      expect(result.get(kp1.id)).toBe(3)
+      expect(result.get(kp2.id)).toBe(1)
+      expect(result.get(kp3.id)).toBe(0)
     })
 
-    await t.test('should handle non-existent knowledge point IDs', async () => {
+    test('should handle non-existent knowledge point IDs', async () => {
       const result = await courseContentService.getSentenceCountsByKnowledgePointIds([999, 1000])
 
-      assert.strictEqual(result.size, 2)
-      assert.strictEqual(result.get(999), 0)
-      assert.strictEqual(result.get(1000), 0)
+      expect(result.size).toBe(2)
+      expect(result.get(999)).toBe(0)
+      expect(result.get(1000)).toBe(0)
     })
   })
 
   // Tests for createSentenceWithKnowledgePoints
-  await t.test('createSentenceWithKnowledgePoints', async (t) => {
-    await t.test('should create a sentence and associate it with knowledge points', async () => {
+  describe('createSentenceWithKnowledgePoints', () => {
+    test('should create a sentence and associate it with knowledge points', async () => {
       // Create lesson first
       const lesson = await lessonRepo.create(createLesson(1))
 
@@ -510,31 +503,23 @@ test('CourseContentService - New Methods', async (t) => {
       )
 
       // Assertions
-      assert.ok(createdSentence, 'Sentence should be created')
-      assert.strictEqual(createdSentence.content, '私は学校に行く', 'Content should match')
-      assert.deepStrictEqual(
-        createdSentence.explanation,
-        mockExplanation,
-        'Explanation should match'
-      )
-      assert.strictEqual(createdSentence.annotations.length, 0, 'Should have no annotations')
+      expect(createdSentence).toBeTruthy()
+      expect(createdSentence.content).toBe('私は学校に行く')
+      expect(createdSentence.explanation).toEqual(mockExplanation)
+      expect(createdSentence.annotations.length).toBe(0)
 
       // Verify associations were created
       const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
         createdSentence.id
       )
-      assert.strictEqual(
-        associatedKnowledgePoints.length,
-        2,
-        'Should have 2 associated knowledge points'
-      )
+      expect(associatedKnowledgePoints.length).toBe(2)
 
       const knowledgePointContents = associatedKnowledgePoints.map((kp) => kp.content)
-      assert.ok(knowledgePointContents.includes('学校'), 'Should include vocabulary')
-      assert.ok(knowledgePointContents.includes('に行く'), 'Should include grammar')
+      expect(knowledgePointContents.includes('学校')).toBe(true)
+      expect(knowledgePointContents.includes('に行く')).toBe(true)
     })
 
-    await t.test('should handle sentence creation with no knowledge points', async () => {
+    test('should handle sentence creation with no knowledge points', async () => {
       // Create sentence without knowledge point associations
       const sentenceData = createTestSentence('これは単純な文です')
       const createdSentence = await courseContentService.createSentenceWithKnowledgePoints(
@@ -543,49 +528,42 @@ test('CourseContentService - New Methods', async (t) => {
       )
 
       // Assertions
-      assert.ok(createdSentence, 'Sentence should be created')
-      assert.strictEqual(createdSentence.content, 'これは単純な文です', 'Content should match')
+      expect(createdSentence).toBeTruthy()
+      expect(createdSentence.content).toBe('これは単純な文です')
 
       // Verify no associations were created
       const associatedKnowledgePoints = await sentenceRepo.getKnowledgePointsBySentenceId(
         createdSentence.id
       )
-      assert.strictEqual(
-        associatedKnowledgePoints.length,
-        0,
-        'Should have no associated knowledge points'
-      )
+      expect(associatedKnowledgePoints.length).toBe(0)
     })
   })
 
   // Tests for getLessonsInScope
-  await t.test('getLessonsInScope', async (t) => {
-    await t.test('should return empty array when no lessons exist', async () => {
+  describe('getLessonsInScope', () => {
+    test('should return empty array when no lessons exist', async () => {
       const result = await courseContentService.getLessonsInScope(5)
 
-      assert.strictEqual(result.length, 0, 'Should return empty array when no lessons exist')
+      expect(result.length).toBe(0)
     })
 
-    await t.test(
-      'should return lessons with number less than or equal to given number',
-      async () => {
-        // Create test lessons
-        const lesson1 = await lessonRepo.create(createLesson(1))
-        const lesson3 = await lessonRepo.create(createLesson(3))
-        const lesson5 = await lessonRepo.create(createLesson(5))
-        const lesson7 = await lessonRepo.create(createLesson(7))
+    test('should return lessons with number less than or equal to given number', async () => {
+      // Create test lessons
+      const lesson1 = await lessonRepo.create(createLesson(1))
+      const lesson3 = await lessonRepo.create(createLesson(3))
+      const lesson5 = await lessonRepo.create(createLesson(5))
+      const lesson7 = await lessonRepo.create(createLesson(7))
 
-        // Test with scope = 5
-        const result = await courseContentService.getLessonsInScope(5)
+      // Test with scope = 5
+      const result = await courseContentService.getLessonsInScope(5)
 
-        assert.strictEqual(result.length, 3, 'Should return 3 lessons')
+      expect(result.length).toBe(3)
 
-        const lessonNumbers = result.map((lesson) => lesson.number).sort()
-        assert.deepStrictEqual(lessonNumbers, [1, 3, 5], 'Should return lessons 1, 3, and 5')
-      }
-    )
+      const lessonNumbers = result.map((lesson) => lesson.number).sort()
+      expect(lessonNumbers).toEqual([1, 3, 5])
+    })
 
-    await t.test('should handle boundary conditions correctly', async () => {
+    test('should handle boundary conditions correctly', async () => {
       // Create lessons at boundaries
       await lessonRepo.create(createLesson(1))
       await lessonRepo.create(createLesson(5))
@@ -593,19 +571,19 @@ test('CourseContentService - New Methods', async (t) => {
 
       // Test exact match boundary
       const resultExact = await courseContentService.getLessonsInScope(5)
-      assert.strictEqual(resultExact.length, 2, 'Should include lesson with exact number match')
+      expect(resultExact.length).toBe(2)
 
       const exactNumbers = resultExact.map((lesson) => lesson.number).sort()
-      assert.deepStrictEqual(exactNumbers, [1, 5], 'Should include lessons 1 and 5')
+      expect(exactNumbers).toEqual([1, 5])
 
       // Test lower boundary
       const resultLower = await courseContentService.getLessonsInScope(1)
-      assert.strictEqual(resultLower.length, 1, 'Should include only lesson 1')
-      assert.strictEqual(resultLower[0]?.number, 1, 'Should be lesson 1')
+      expect(resultLower.length).toBe(1)
+      expect(resultLower[0]?.number).toBe(1)
 
       // Test no match
       const resultNone = await courseContentService.getLessonsInScope(0)
-      assert.strictEqual(resultNone.length, 0, 'Should return no lessons when number is too low')
+      expect(resultNone.length).toBe(0)
     })
   })
 })

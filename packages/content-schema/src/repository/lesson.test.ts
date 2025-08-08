@@ -1,64 +1,60 @@
-import assert from 'node:assert'
-import test from 'node:test'
 import { createInMemoryDb } from '@tests/utils/db'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { LessonRepository } from './lesson'
 
-test('LessonRepository', async (t) => {
+describe('LessonRepository', () => {
   let lessonRepo: LessonRepository
 
   // Setup before each test
-  t.beforeEach(async () => {
+  beforeEach(async () => {
     const db = await createInMemoryDb()
     lessonRepo = new LessonRepository(db)
   })
 
-  await t.test('getLessonsByConditions', async (t) => {
-    await t.test('should return empty array when no lessons exist', async () => {
+  describe('getLessonsByConditions', () => {
+    test('should return empty array when no lessons exist', async () => {
       const result = await lessonRepo.getLessonsByConditions({
         lessonNumberLessThan: 5,
       })
 
-      assert.strictEqual(result.length, 0, 'Should return empty array')
+      expect(result.length).toBe(0)
     })
 
-    await t.test(
-      'should return lessons with number less than or equal to given number',
-      async () => {
-        // Create test lessons
-        const lesson1 = await lessonRepo.create({
-          number: 1,
-          title: 'Lesson 1',
-          description: 'First lesson',
-        })
-        const lesson2 = await lessonRepo.create({
-          number: 3,
-          title: 'Lesson 3',
-          description: 'Third lesson',
-        })
-        const lesson3 = await lessonRepo.create({
-          number: 5,
-          title: 'Lesson 5',
-          description: 'Fifth lesson',
-        })
-        const lesson4 = await lessonRepo.create({
-          number: 7,
-          title: 'Lesson 7',
-          description: 'Seventh lesson',
-        })
+    test('should return lessons with number less than or equal to given number', async () => {
+      // Create test lessons
+      const lesson1 = await lessonRepo.create({
+        number: 1,
+        title: 'Lesson 1',
+        description: 'First lesson',
+      })
+      const lesson2 = await lessonRepo.create({
+        number: 3,
+        title: 'Lesson 3',
+        description: 'Third lesson',
+      })
+      const lesson3 = await lessonRepo.create({
+        number: 5,
+        title: 'Lesson 5',
+        description: 'Fifth lesson',
+      })
+      const lesson4 = await lessonRepo.create({
+        number: 7,
+        title: 'Lesson 7',
+        description: 'Seventh lesson',
+      })
 
-        // Test filtering with lessonNumberLessThan = 5
-        const result = await lessonRepo.getLessonsByConditions({
-          lessonNumberLessThan: 5,
-        })
+      // Test filtering with lessonNumberLessThan = 5
+      const result = await lessonRepo.getLessonsByConditions({
+        lessonNumberLessThan: 5,
+      })
 
-        assert.strictEqual(result.length, 3, 'Should return 3 lessons')
+      expect(result.length).toBe(3)
 
-        const lessonNumbers = result.map((lesson) => lesson.number).sort()
-        assert.deepStrictEqual(lessonNumbers, [1, 3, 5], 'Should return lessons 1, 3, and 5')
-      }
-    )
+      const lessonNumbers = result.map((lesson) => lesson.number).sort()
+      expect(lessonNumbers).toEqual([1, 3, 5])
+    })
 
-    await t.test('should return all lessons when condition is not specified', async () => {
+    test('should return all lessons when condition is not specified', async () => {
       // Create test lessons
       await lessonRepo.create({
         number: 1,
@@ -74,10 +70,10 @@ test('LessonRepository', async (t) => {
       // Test without any conditions
       const result = await lessonRepo.getLessonsByConditions({})
 
-      assert.strictEqual(result.length, 2, 'Should return all lessons')
+      expect(result.length).toBe(2)
     })
 
-    await t.test('should handle boundary conditions correctly', async () => {
+    test('should handle boundary conditions correctly', async () => {
       // Create lessons at boundaries
       const lesson1 = await lessonRepo.create({
         number: 1,
@@ -99,26 +95,26 @@ test('LessonRepository', async (t) => {
       const resultExact = await lessonRepo.getLessonsByConditions({
         lessonNumberLessThan: 5,
       })
-      assert.strictEqual(resultExact.length, 2, 'Should include lesson with exact number match')
+      expect(resultExact.length).toBe(2)
 
       const exactNumbers = resultExact.map((lesson) => lesson.number).sort()
-      assert.deepStrictEqual(exactNumbers, [1, 5], 'Should include lessons 1 and 5')
+      expect(exactNumbers).toEqual([1, 5])
 
       // Test lower boundary
       const resultLower = await lessonRepo.getLessonsByConditions({
         lessonNumberLessThan: 1,
       })
-      assert.strictEqual(resultLower.length, 1, 'Should include lesson 1')
-      assert.strictEqual(resultLower[0]?.number, 1, 'Should be lesson 1')
+      expect(resultLower.length).toBe(1)
+      expect(resultLower[0]?.number).toBe(1)
 
       // Test no match
       const resultNone = await lessonRepo.getLessonsByConditions({
         lessonNumberLessThan: 0,
       })
-      assert.strictEqual(resultNone.length, 0, 'Should return no lessons when number is too low')
+      expect(resultNone.length).toBe(0)
     })
 
-    await t.test('should preserve lesson properties correctly', async () => {
+    test('should preserve lesson properties correctly', async () => {
       const originalLesson = await lessonRepo.create({
         number: 3,
         title: 'Test Lesson',
@@ -129,21 +125,17 @@ test('LessonRepository', async (t) => {
         lessonNumberLessThan: 5,
       })
 
-      assert.strictEqual(result.length, 1, 'Should return one lesson')
+      expect(result.length).toBe(1)
 
       const returnedLesson = result[0]
-      assert.ok(returnedLesson, 'Lesson should exist')
-      assert.strictEqual(returnedLesson.id, originalLesson.id, 'ID should match')
-      assert.strictEqual(returnedLesson.number, originalLesson.number, 'Number should match')
-      assert.strictEqual(returnedLesson.title, originalLesson.title, 'Title should match')
-      assert.strictEqual(
-        returnedLesson.description,
-        originalLesson.description,
-        'Description should match'
-      )
+      expect(returnedLesson).toBeTruthy()
+      expect(returnedLesson?.id).toBe(originalLesson.id)
+      expect(returnedLesson?.number).toBe(originalLesson.number)
+      expect(returnedLesson?.title).toBe(originalLesson.title)
+      expect(returnedLesson?.description).toBe(originalLesson.description)
     })
 
-    await t.test('should handle large datasets efficiently', async () => {
+    test('should handle large datasets efficiently', async () => {
       // Create multiple lessons
       const lessonCount = 20
       for (let i = 1; i <= lessonCount; i++) {
@@ -159,16 +151,16 @@ test('LessonRepository', async (t) => {
         lessonNumberLessThan: 10,
       })
 
-      assert.strictEqual(result.length, 10, 'Should return 10 lessons')
+      expect(result.length).toBe(10)
 
       const numbers = result.map((lesson) => lesson.number).sort((a, b) => a - b)
       const expectedNumbers = Array.from({ length: 10 }, (_, i) => i + 1)
-      assert.deepStrictEqual(numbers, expectedNumbers, 'Should return lessons 1-10')
+      expect(numbers).toEqual(expectedNumbers)
     })
   })
 
-  await t.test('Integration with existing methods', async (t) => {
-    await t.test('should work together with other repository methods', async () => {
+  describe('Integration with existing methods', () => {
+    test('should work together with other repository methods', async () => {
       // Create lesson using create method
       const createdLesson = await lessonRepo.create({
         number: 2,
@@ -178,18 +170,18 @@ test('LessonRepository', async (t) => {
 
       // Verify it exists using getByNumber
       const foundByNumber = await lessonRepo.getByNumber(2)
-      assert.ok(foundByNumber, 'Lesson should be found by number')
+      expect(foundByNumber).toBeTruthy()
 
       // Verify it's included in getLessonsByConditions
       const foundByConditions = await lessonRepo.getLessonsByConditions({
         lessonNumberLessThan: 5,
       })
-      assert.strictEqual(foundByConditions.length, 1, 'Should find lesson through conditions')
-      assert.strictEqual(foundByConditions[0]?.id, createdLesson.id, 'Should be the same lesson')
+      expect(foundByConditions.length).toBe(1)
+      expect(foundByConditions[0]?.id).toBe(createdLesson.id)
 
       // Verify existsByNumber works
       const exists = await lessonRepo.existsByNumber(2)
-      assert.strictEqual(exists, true, 'Lesson should exist')
+      expect(exists).toBe(true)
     })
   })
 })

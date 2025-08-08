@@ -1,5 +1,5 @@
 import db from '@/db'
-import { processInParallel, withRetry } from '@/lib/async'
+import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
 import {
   MAX_LLM_RETRY_TIMES,
@@ -25,7 +25,7 @@ import { generateObject } from 'ai'
 import random from 'random'
 import { z } from 'zod'
 
-function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): string {
+export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): string {
   let result = `<content>${sanitizeVocabularyContent(input.content)}</content>`
   if (input.explanation) {
     result += `<explain>${input.explanation.zhCN}</explain>`
@@ -34,6 +34,7 @@ function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): s
 }
 
 export async function generateFuriganaAnnotations(sentence: string): Promise<Annotation[]> {
+  console.log('RUNNING THE LLM')
   const prompt = `
 You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
 
@@ -76,7 +77,7 @@ Return only the annotated sentence with no additional text.
   `
 
   const { object } = await generateObject({
-    model: openai('gpt-4.1'),
+    model: openai('gpt-4o-mini'),
     prompt,
     schema: z.object({
       annotatedSentence: z.string(),
@@ -87,7 +88,7 @@ Return only the annotated sentence with no additional text.
   return parseAnnotatedSentenceToAnnotations(object.annotatedSentence, sentence)
 }
 
-function parseAnnotatedSentenceToAnnotations(
+export function parseAnnotatedSentenceToAnnotations(
   annotatedSentence: string,
   originalSentence: string
 ): Annotation[] {
@@ -185,7 +186,7 @@ Return translations in the same order as the input sentences.
   `
 
   const { object } = await generateObject({
-    model: openai('gpt-4.1'),
+    model: openai('gpt-4o-mini'),
     prompt,
     schema: z.object({
       translations: z.array(
@@ -223,7 +224,7 @@ export async function generateSentenceExplanations(
   })
 }
 
-async function generateCombinedAnnotations(
+export async function generateCombinedAnnotations(
   sentence: string,
   tokens: string[],
   vocabularyItems: Vocabulary[]
@@ -253,7 +254,7 @@ async function generateCombinedAnnotations(
   return allAnnotations.sort((a, b) => a.loc - b.loc)
 }
 
-function calculateVocabularyAnnotationsFromTokens(
+export function calculateVocabularyAnnotationsFromTokens(
   tokens: string[],
   vocabularyItems: Vocabulary[]
 ): Annotation[] {
@@ -397,6 +398,78 @@ interface KnowledgeBucket {
   grammar: Grammar[]
 }
 
+interface ValidationResult {
+  results: Array<{
+    sentenceIndex: number
+    grammaticallyValid: boolean
+    pronunciationValid: boolean
+    overallValid: boolean
+    reason?: string
+  }>
+}
+
+async function validatePronunciationConsistency(
+  sentenceContent: string,
+  targetVocabularies: Vocabulary[]
+): Promise<boolean> {
+  if (targetVocabularies.length === 0) {
+    return true
+  }
+
+  // Build vocabulary context with expected pronunciations
+  const vocabularyContext = targetVocabularies
+    .filter((vocab) => vocab.annotations.some((ann) => ann.type === 'furigana'))
+    .map((vocab) => {
+      const furiganaAnnotation = vocab.annotations.find((ann) => ann.type === 'furigana')
+      return `${vocab.content}[${furiganaAnnotation?.content}]`
+    })
+    .join(', ')
+
+  if (!vocabularyContext) {
+    return true // No furigana to validate
+  }
+
+  const prompt = `
+You are a Japanese pronunciation expert. Check if target vocabulary maintains consistent pronunciation in the given sentence context.
+
+SENTENCE: ${sentenceContent}
+
+TARGET VOCABULARY WITH EXPECTED PRONUNCIATIONS:
+${vocabularyContext}
+
+TASK:
+For each target vocabulary item that appears in the sentence, verify that it maintains its expected pronunciation in the sentence context.
+
+VALIDATION RULES:
+- If vocabulary appears in a context where its pronunciation would change from the expected reading, mark as INVALID
+- Common pronunciation changes to watch for:
+  - Numbers with counters (e.g., 九 changes from 'きゅう' to 'ここの' in 九つ)
+  - Kanji with multiple readings in different contexts
+  - Words that change reading based on grammatical position
+- Only mark as INVALID if the pronunciation definitively changes from the stored reading
+
+OUTPUT:
+Return true if all target vocabulary maintains expected pronunciation.
+Return false if any target vocabulary would be pronounced differently than expected.`
+
+  const { object } = await generateObject({
+    model: openai('gpt-4o-mini'),
+    prompt,
+    schema: z.object({
+      valid: z.boolean(),
+      reason: z.string().optional(),
+    }),
+  })
+
+  if (!object.valid) {
+    logger.warn(
+      `Pronunciation inconsistency detected in sentence: ${sentenceContent}, reason: ${object.reason}`
+    )
+  }
+
+  return object.valid
+}
+
 export async function validateSentence(
   sentence: Omit<GeneratedSentence, 'annotations' | 'explanation'>,
   availableVocabularies: Vocabulary[]
@@ -434,6 +507,15 @@ export async function validateSentence(
   )
 
   const targetWords = targetVocabularies.map((v) => v.content).join(', ')
+
+  // First check pronunciation consistency for target vocabularies
+  const pronunciationValid = await validatePronunciationConsistency(
+    sentence.content,
+    targetVocabularies
+  )
+  if (!pronunciationValid) {
+    return false
+  }
 
   // check if the sentence is correct
   const prompt = `
@@ -474,7 +556,7 @@ Output false for sentences that would confuse students due to grammar errors, un
   const {
     object: { valid, reason },
   } = await generateObject({
-    model: openai('gpt-4.1'),
+    model: openai('gpt-4o-mini'),
     prompt,
     schema: z.object({
       valid: z.boolean(),
@@ -487,6 +569,129 @@ Output false for sentences that would confuse students due to grammar errors, un
   }
 
   return valid
+}
+
+export async function validateSentences(
+  sentences: Omit<GeneratedSentence, 'annotations' | 'explanation'>[],
+  availableVocabularies: Vocabulary[]
+): Promise<ValidationResult> {
+  if (sentences.length === 0) {
+    return { results: [] }
+  }
+
+  // Get existing sentences from ALL related knowledge points to check for duplicates
+  const allKnowledgePointIds = [
+    ...new Set(sentences.flatMap((s) => [...s.vocabularyIds, ...s.grammarIds])),
+  ]
+
+  let existingSentences: { content: string }[] = []
+  if (allKnowledgePointIds.length > 0) {
+    const courseContentService = new CourseContentService(db)
+    existingSentences =
+      await courseContentService.getSentencesByKnowledgePointIds(allKnowledgePointIds)
+  }
+
+  // Build vocabulary context for pronunciation validation
+  const allTargetVocabularyIds = [...new Set(sentences.flatMap((s) => s.vocabularyIds))]
+  const targetVocabularies = availableVocabularies.filter((v) =>
+    allTargetVocabularyIds.includes(v.id)
+  )
+
+  const vocabularyContext = targetVocabularies
+    .filter((vocab) => vocab.annotations.some((ann) => ann.type === 'furigana'))
+    .map((vocab) => {
+      const furiganaAnnotation = vocab.annotations.find((ann) => ann.type === 'furigana')
+      return `${vocab.content}[${furiganaAnnotation?.content}] (ID: ${vocab.id})`
+    })
+    .join('\n')
+
+  // Build existing sentences context for duplicate detection
+  const existingSentencesContext =
+    existingSentences.length > 0
+      ? existingSentences.map((s, i) => `${i + 1}. ${s.content}`).join('\n')
+      : 'None'
+
+  const prompt = `
+You are a Japanese language expert evaluating multiple sentences for a Japanese textbook.
+
+SENTENCES TO EVALUATE:
+${sentences
+  .map((s, i) => `${i + 1}. "${s.content}" (Uses vocabulary IDs: ${s.vocabularyIds.join(', ')})`)
+  .join('\n')}
+
+TARGET VOCABULARY WITH EXPECTED PRONUNCIATIONS:
+${vocabularyContext || 'None with furigana'}
+
+EXISTING SENTENCES (avoid duplicates):
+${existingSentencesContext}
+
+EVALUATION CRITERIA:
+Each sentence must pass ALL these checks to be valid:
+
+1. **DUPLICATE CHECK**: Not substantially similar to existing sentences (ignoring punctuation/whitespace)
+2. **GRAMMAR CHECK**: Grammatically correct with proper particles, verb conjugations, structure
+3. **PRONUNCIATION CHECK**: Target vocabulary maintains expected pronunciations in context
+4. **NATURALNESS CHECK**: Sounds like something a native speaker would actually say
+5. **EDUCATIONAL SUITABILITY**: Appropriate for language learners
+
+REJECT SENTENCES IF:
+- Grammar violations (incorrect particles, verb forms, structure)
+- Honorific misuse (using respectful language incorrectly)
+- Logical inconsistencies (tense-time mismatches)
+- Unnatural constructions native speakers wouldn't use
+- Too similar to existing sentences
+- Target vocabulary changes pronunciation from expected reading
+
+PRONUNCIATION VALIDATION RULES:
+- Check if vocabulary appears in contexts where pronunciation would change
+- Common changes: numbers with counters (九 from 'きゅう' to 'ここの' in 九つ)
+- Only mark pronunciation invalid if it definitively changes from stored reading
+
+For each sentence, provide:
+- grammaticallyValid: true/false
+- pronunciationValid: true/false
+- overallValid: true only if BOTH grammar and pronunciation are valid AND not duplicate
+- reason: Brief explanation if invalid
+`
+
+  const { object } = await generateObject({
+    model: openai('gpt-4o-mini'),
+    prompt,
+    schema: z.object({
+      results: z.array(
+        z.object({
+          sentenceIndex: z.number(),
+          grammaticallyValid: z.boolean(),
+          pronunciationValid: z.boolean(),
+          overallValid: z.boolean(),
+          reason: z.string().optional(),
+        })
+      ),
+    }),
+  })
+
+  // Validate results match input sentences
+  const results = object.results.map((result, index) => {
+    const expectedIndex = index + 1
+    if (result.sentenceIndex !== expectedIndex) {
+      logger.warn(
+        `Validation result index mismatch: expected ${expectedIndex}, got ${result.sentenceIndex}`
+      )
+    }
+    return {
+      ...result,
+      sentenceIndex: index, // Use array index for consistency
+    }
+  })
+
+  // Log validation results
+  results.forEach((result, index) => {
+    if (!result.overallValid) {
+      logger.warn(`Sentence validation failed: "${sentences[index].content}" - ${result.reason}`)
+    }
+  })
+
+  return { results }
 }
 
 interface PrioritizedBuckets {
@@ -515,10 +720,11 @@ export async function generateSentencesFromPrioritizedBuckets({
       ? `${existingSentencesList.map((s, i) => `${i + 1}. ${s}`).join('\n')}`
       : ''
 
+  const batchSize = Math.max(SENTENCE_GENERATION_BATCH_SIZE, amount * 3)
   const prompt = `
 You are a Japanese language teacher creating example sentences for students learning Japanese.
 
-Generate exactly ${SENTENCE_GENERATION_BATCH_SIZE} simple, natural Japanese sentences.
+Generate exactly ${batchSize} simple, natural Japanese sentences.
 
 PRIMARY TARGET (MUST demonstrate clearly):
 ${knowledgeDetails(target, isVocabulary(target) ? 'vocabulary' : 'grammar')}
@@ -545,17 +751,22 @@ ${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
 
 CRITICAL REQUIREMENTS:
 1. PRIMARY FOCUS: Each sentence MUST clearly demonstrate the target knowledge point
-2. SIMPLICITY: Keep sentences short and use basic grammar patterns
-3. NATURALNESS: Sound like real Japanese that natives would actually say
-4. VOCABULARY CONSTRAINT: Only use vocabulary from the provided lists above
+2. PRONUNCIATION CONSISTENCY: Use target vocabulary ONLY in contexts where it maintains its stored pronunciation
+3. SIMPLICITY: Keep sentences short and use basic grammar patterns
+4. NATURALNESS: Sound like real Japanese that natives would actually say
+5. VOCABULARY CONSTRAINT: Only use vocabulary from the provided lists above
 
 GENERATION GUIDELINES:
-- Create exactly ${SENTENCE_GENERATION_BATCH_SIZE} sentences
+- Create exactly ${batchSize} sentences
 - Each sentence should clearly show how to use the TARGET knowledge point
+- PRONUNCIATION RULE: Ensure vocabulary maintains its expected pronunciation in all contexts
+  * Avoid contexts that change vocabulary pronunciation (e.g., numbers with counters if pronunciation differs)
+  * Use vocabulary in forms that match their stored furigana readings
 - Use HIGH priority knowledge naturally when it improves the sentence
 - Use LOW priority knowledge only if it makes sentences more natural
 - Prefer simple, direct sentences over complex constructions
 - Vary sentence types: statements, questions, negative forms
+- Include natural punctuation and/or particles (e.g., "今、三時五分です" instead of "今三時五分です")
 
 TOKENIZATION OUTPUT REQUIREMENT:
 For each sentence, provide a tokenized version:
@@ -566,7 +777,8 @@ For each sentence, provide a tokenized version:
 
 EXAMPLES:
 - Sentence: "私は日本人です" → Tokens: ["私", "は", "日本人", "です"]
-- Sentence: "失礼ですが、お名前は何ですか。" → Tokens: ["失礼", "ですが", "、", "お名前は", "何", "ですか", "。"]
+- Sentence: "失礼ですが、お名前は何ですか。" → Tokens: ["失礼", "ですが", "、", "お名前", "は", "何", "ですか", "。"]
+- Sentence: "今、三時五分です" → Tokens: ["今", "、", "三時五分", "です"]
 
 Create clear, simple sentences that help students understand the target knowledge point.
   `
@@ -607,11 +819,8 @@ Create clear, simple sentences that help students understand the target knowledg
     ...low.grammar.map((g) => `g:${g.id}`),
   ])
 
-  // Validate sentences in parallel
-  logger.info(`Validating ${sentences.length} sentences`)
-
-  const validationResults = await processInParallel(sentences, async (sentence) => {
-    // Validate IDs
+  // Validate IDs first (quick check)
+  for (const sentence of sentences) {
     for (const id of sentence.vocabularyIds) {
       if (!allKnowledgePointIds.has(`v:${id}`)) {
         throw new Error(`Invalid vocabulary ID found: ${id} in sentence: ${sentence.content}`)
@@ -622,20 +831,18 @@ Create clear, simple sentences that help students understand the target knowledg
         throw new Error(`Invalid grammar ID found: ${id} in sentence: ${sentence.content}`)
       }
     }
+  }
 
-    const isValid = await validateSentence(sentence, allVocabularies)
-    if (!isValid) {
-      throw new Error('Validation failed')
-    }
-    return sentence
-  })
+  // Batch validate sentences
+  logger.info(`Validating ${sentences.length} sentences`)
+  const validationResult = await validateSentences(sentences, allVocabularies)
 
   // Get valid sentences
-  const validSentences = validationResults
-    .filter((result) => result.success)
-    .map((result) => ({
-      ...result.result,
-      content: result.result.content.replace(/ /g, '').trim(),
+  const validSentences = sentences
+    .filter((_, index) => validationResult.results[index]?.overallValid)
+    .map((sentence) => ({
+      ...sentence,
+      content: sentence.content.replace(/ /g, '').trim(),
     }))
 
   if (validSentences.length === 0) {
@@ -651,7 +858,10 @@ Create clear, simple sentences that help students understand the target knowledg
   )
 
   // Sort by score and select top sentences
-  const topRatedSentences = ratings.sort((a, b) => b.score - a.score).slice(0, amount)
+  const topRatedSentences = ratings
+    .filter((r) => r.score > 5)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, amount)
 
   logger.debug(`Sentence ratings: ${JSON.stringify(topRatedSentences, null, 2)}`)
   logger.info(`Selected ${topRatedSentences.length} top-rated sentences`)
@@ -676,7 +886,7 @@ Create clear, simple sentences that help students understand the target knowledg
 
   // Generate annotations
   logger.info(`Generating annotations for ${sentencesWithExplanations.length} sentences`)
-  const generated = await Promise.all(
+  const results = await Promise.allSettled(
     sentencesWithExplanations.map(async (sentence) => {
       const annotations = await generateCombinedAnnotations(
         sentence.content,
@@ -689,6 +899,15 @@ Create clear, simple sentences that help students understand the target knowledg
       }
     })
   )
+
+  const generated = results
+    .filter((result) => result.status === 'fulfilled')
+    .map((result) => result.value)
+
+  const failedCount = results.length - generated.length
+  if (failedCount > 0) {
+    logger.warn(`${failedCount} sentences failed to generate annotations`)
+  }
 
   return generated
 }
@@ -790,10 +1009,6 @@ export async function generateSentencesForLessonNumber(
       {
         lessonNumber,
         target: `${buckets.target.content} (${isVocabulary(buckets.target) ? 'vocab' : 'grammar'})`,
-        highVocabularies: buckets.high.vocabularies.length,
-        highGrammar: buckets.high.grammar.length,
-        lowVocabularies: buckets.low.vocabularies.length,
-        lowGrammar: buckets.low.grammar.length,
       },
       null,
       2
