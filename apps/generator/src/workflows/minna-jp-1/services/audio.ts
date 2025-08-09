@@ -1,6 +1,6 @@
 import db from '@/db'
 import { logger } from '@/lib/utils'
-import { toFullFurigana } from '@/workflows/minna-jp-1/utils'
+import { buildYomiganaPhoneme, toFullFurigana } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
 import textToSpeech from '@google-cloud/text-to-speech'
 import {
@@ -18,6 +18,7 @@ const client = new textToSpeech.TextToSpeechClient()
 interface GenerateAudioParams {
   content: string
   annotations?: Annotation[]
+  accent?: number | number[] | null
 }
 
 const TTS_PRONOUNCE_ERROR_RISK_THRESHOLD = 0.5
@@ -74,18 +75,23 @@ interface GenerateAudioReturns {
 export async function generateAudio({
   content,
   annotations,
+  accent,
 }: GenerateAudioParams): Promise<GenerateAudioReturns> {
   logger.info(`Generating audio for ${content}...`)
 
   // preprocess
 
   const fullReading = toFullFurigana(content, annotations ?? [])
-  // estimate mispronouncing risk
-  const {
-    object: { risk, reason },
-  } = await generateObject({
-    model: openai('gpt-4o-mini'),
-    prompt: `
+  const hasAccentData = accent !== undefined && accent !== null
+
+  // estimate mispronouncing risk (skip if we have accent data for more reliable pronunciation)
+  let risk = 0
+  let reason = ''
+
+  if (!hasAccentData) {
+    const result = await generateObject({
+      model: openai('gpt-4o-mini'),
+      prompt: `
 You are a Japanese TTS assistant. Given a Japanese phrase and its expected reading (kana), return a numeric confidence score between 0.0 and 1.0.
 
 The score reflects how likely a TTS engine would misread or mispronounce the phrase if spoken **in complete isolation**, compared to the expected reading. Consider risks such as:
@@ -108,20 +114,30 @@ Respond with a single number (e.g., \`0.75\`) and the reason. If the risk is low
 Text: 「${content}」
 Expected reading: 「${fullReading}」
 `,
-    schema: z.object({
-      risk: z.number(),
-      reason: z.string(),
-    }),
-  })
-
-  logger.debug(`Risk of mispronouncing: ${risk} (${reason})`)
+      schema: z.object({
+        risk: z.number(),
+        reason: z.string(),
+      }),
+    })
+    risk = result.object.risk
+    reason = result.object.reason
+    logger.debug(`Risk of mispronouncing: ${risk} (${reason})`)
+  } else {
+    logger.debug('Skipping risk assessment - using accent data')
+  }
 
   let ssml: string
-  if (risk > TTS_PRONOUNCE_ERROR_RISK_THRESHOLD) {
+
+  if (hasAccentData) {
+    // Use yomigana phoneme with pitch accent markers
+    const phonemeTag = buildYomiganaPhoneme(content, fullReading, accent)
+    ssml = `<speak>${phonemeTag}</speak>`
+    logger.info('Using yomigana phoneme with accent data')
+  } else if (risk > TTS_PRONOUNCE_ERROR_RISK_THRESHOLD) {
     logger.info(`threshold exceeded (${risk}), using full reading`)
     logger.info(`reason: ${reason}`)
-    // use full reading
-    ssml = `<speak><sub alias="${toFullFurigana(content, annotations ?? [])}">${content}</sub></speak>`
+    // use full reading fallback
+    ssml = `<speak><sub alias="${fullReading}">${content}</sub></speak>`
   } else {
     ssml = `<speak>${content}</speak>`
   }
@@ -177,6 +193,7 @@ export async function generateVocabularyAudioClips() {
       const { content } = await generateAudio({
         content: voc.content,
         annotations: voc.annotations,
+        accent: voc.accent,
       })
 
       // save audio via API and get back the calculated hash
