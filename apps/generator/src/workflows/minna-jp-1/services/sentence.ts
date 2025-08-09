@@ -23,6 +23,7 @@ import {
 } from '@kurasu-manta/content-schema/zod'
 import { generateObject } from 'ai'
 import random from 'random'
+import { isKanji } from 'wanakana'
 import { z } from 'zod'
 
 export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): string {
@@ -34,13 +35,12 @@ export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowled
 }
 
 export async function generateFuriganaAnnotations(sentence: string): Promise<Annotation[]> {
-  console.log('RUNNING THE LLM')
   const prompt = `
 You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
 
 ANNOTATION RULES:
 1. Add furigana for ALL kanji characters using the format: kanji[hiragana]
-2. Group consecutive kanji that form a single word (e.g., 家族[かぞく], not 家[か]族[ぞく])
+2. IMPORTANT: Annotate EACH kanji individually, even in compound words (e.g., 家[か]族[ぞく], NOT 家族[かぞく])
 3. Do NOT add furigana to hiragana, katakana, or punctuation
 4. Keep all other characters exactly as they are
 5. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
@@ -65,13 +65,16 @@ Input: "古い傘を買いました"
 Output: "古[ふる]い傘[かさ]を買[か]いました"
 
 Input: "私は学校に行きます"
-Output: "私[わたし]は学校[がっこう]に行[い]きます"
+Output: "私[わたし]は学[がく]校[こう]に行[い]きます"
 
 Input: "お名前は何ですか"
-Output: "お名前[なまえ]は何[なん]ですか"
+Output: "お名[な]前[まえ]は何[なん]ですか"
 
 Input: "何人いますか"
 Output: "何[なん]人[にん]いますか"
+
+Input: "中国人です"
+Output: "中[ちゅう]国[こく]人[じん]です"
 
 Return only the annotated sentence with no additional text.
   `
@@ -111,30 +114,29 @@ export function parseAnnotatedSentenceToAnnotations(
       // Extract furigana content
       const furigana = annotatedSentence.slice(annotatedPos + 1, closingBracket)
 
-      // Find the kanji that this furigana belongs to by looking backwards
-      // from the current originalPos to find the start of the kanji sequence
-      let kanjiStart = originalPos
-
-      // Look backwards to find the start of the kanji sequence
-      while (kanjiStart > 0) {
-        const prevChar = originalSentence[kanjiStart - 1]
-        if (!/[\u4e00-\u9faf]/.test(prevChar)) {
-          break
-        }
-        kanjiStart--
+      // Since we now generate individual kanji annotations, the furigana applies to the previous character
+      if (originalPos === 0) {
+        throw new Error(
+          'Furigana annotation found at beginning of sentence with no preceding kanji'
+        )
       }
 
-      // The kanji sequence ends at the current originalPos
-      const kanjiEnd = originalPos
+      const kanjiPos = originalPos - 1
+      const kanjiChar = originalSentence[kanjiPos]
 
-      if (kanjiStart < kanjiEnd) {
-        annotations.push({
-          loc: kanjiStart,
-          len: kanjiEnd - kanjiStart,
-          type: 'furigana',
-          content: furigana.trim(),
-        })
+      // Verify the previous character is actually a kanji
+      if (!isKanji(kanjiChar)) {
+        throw new Error(
+          `Furigana annotation "${furigana}" found after non-kanji character "${kanjiChar}" at position ${kanjiPos}`
+        )
       }
+
+      annotations.push({
+        loc: kanjiPos,
+        len: 1, // Always 1 for individual kanji
+        type: 'furigana',
+        content: furigana.trim(),
+      })
 
       // Move past the furigana annotation
       annotatedPos = closingBracket + 1
@@ -222,36 +224,6 @@ export async function generateSentenceExplanations(
   return withRetry(() => generateTranslationsForSentences(sentences), {
     maxAttempts: MAX_LLM_RETRY_TIMES,
   })
-}
-
-export async function generateCombinedAnnotations(
-  sentence: string,
-  tokens: string[],
-  vocabularyItems: Vocabulary[]
-): Promise<Annotation[]> {
-  // Generate vocabulary annotations from tokens
-  const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(tokens, vocabularyItems)
-
-  // Generate furigana annotations for all kanji in the sentence
-  const furiganaAnnotations = await generateFuriganaAnnotations(sentence)
-
-  // Combine and remove overlapping furigana
-  const vocabularyRanges = vocabularyAnnotations.map((a) => [a.loc, a.loc + a.len - 1])
-
-  const filteredFuriganaAnnotations = furiganaAnnotations.filter((annotation) => {
-    const furiganaStart = annotation.loc
-    const furiganaEnd = annotation.loc + annotation.len - 1
-
-    const overlapsWithVocabulary = vocabularyRanges.some(([vocabStart, vocabEnd]) => {
-      return furiganaStart <= vocabEnd && furiganaEnd >= vocabStart
-    })
-
-    return !overlapsWithVocabulary
-  })
-
-  // Combine all annotations and sort by position
-  const allAnnotations = [...vocabularyAnnotations, ...filteredFuriganaAnnotations]
-  return allAnnotations.sort((a, b) => a.loc - b.loc)
 }
 
 export function calculateVocabularyAnnotationsFromTokens(
@@ -888,14 +860,15 @@ Create clear, simple sentences that help students understand the target knowledg
   logger.info(`Generating annotations for ${sentencesWithExplanations.length} sentences`)
   const results = await Promise.allSettled(
     sentencesWithExplanations.map(async (sentence) => {
-      const annotations = await generateCombinedAnnotations(
-        sentence.content,
+      const furiganaAnnotations = await generateFuriganaAnnotations(sentence.content)
+      const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(
         sentence.tokens,
         allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
       )
+
       return {
         ...sentence,
-        annotations,
+        annotations: furiganaAnnotations.concat(vocabularyAnnotations),
       }
     })
   )

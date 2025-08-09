@@ -25,43 +25,46 @@ export function SentenceViewer({
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
-  // Sort annotations by location to process them in order
-  const sortedAnnotations = [...annotations].sort((a, b) => a.loc - b.loc)
+  // Separate furigana and non-furigana annotations
+  const furiganaAnnotations = annotations.filter(isFuriganaAnnotation).sort((a, b) => a.loc - b.loc)
+  const nonFuriganaAnnotations = getNonFuriganaAnnotations(annotations).sort(
+    (a, b) => a.loc - b.loc
+  )
 
-  // Create segments of text with annotations
+  // Create furigana map for quick lookup (individual kanji annotations)
+  const furiganaMap = new Map<number, string>()
+  for (const annotation of furiganaAnnotations) {
+    furiganaMap.set(annotation.loc, annotation.content)
+  }
+
+  // Create segments with simplified logic for individual kanji furigana
   const createSegments = () => {
     const segments: Array<{
       text: string
-      annotation?: Annotation
-      isAnnotated: boolean
+      furigana?: string
+      vocabularyAnnotations: Annotation[]
+      start: number
+      end: number
     }> = []
 
-    let currentIndex = 0
+    const currentIndex = 0
 
-    for (const annotation of sortedAnnotations) {
-      // Add text before annotation if any
-      if (currentIndex < annotation.loc) {
-        segments.push({
-          text: text.slice(currentIndex, annotation.loc),
-          isAnnotated: false,
-        })
-      }
+    // Process each character individually
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i]
+      const furigana = furiganaMap.get(i)
 
-      // Add annotated text
+      // Find vocabulary annotations that include this position
+      const vocabularyAnnotations = nonFuriganaAnnotations.filter(
+        (ann) => ann.loc <= i && i < ann.loc + ann.len
+      )
+
       segments.push({
-        text: text.slice(annotation.loc, annotation.loc + annotation.len),
-        annotation,
-        isAnnotated: true,
-      })
-
-      currentIndex = annotation.loc + annotation.len
-    }
-
-    // Add remaining text after last annotation
-    if (currentIndex < text.length) {
-      segments.push({
-        text: text.slice(currentIndex),
-        isAnnotated: false,
+        text: char,
+        furigana,
+        vocabularyAnnotations,
+        start: i,
+        end: i + 1,
       })
     }
 
@@ -77,45 +80,113 @@ export function SentenceViewer({
   const shouldPositionLeft =
     typeof window !== 'undefined' && mousePosition.x > window.innerWidth - 300
 
-  console.log(text, annotations, segments)
+  // Group consecutive segments that should be rendered together
+  const groupSegments = () => {
+    const groups: Array<{
+      segments: typeof segments
+      vocabularyAnnotation?: Annotation
+      startIndex: number
+    }> = []
+
+    let currentGroup: typeof segments = []
+    let currentVocabAnnotation: Annotation | undefined
+    let groupStartIndex = 0
+
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i]
+      const vocabularyAnnotation = segment.vocabularyAnnotations[0] // Use first vocabulary annotation
+
+      if (
+        vocabularyAnnotation &&
+        currentVocabAnnotation &&
+        vocabularyAnnotation.id === currentVocabAnnotation.id
+      ) {
+        // Continue current vocabulary group
+        currentGroup.push(segment)
+      } else if (vocabularyAnnotation && !currentVocabAnnotation) {
+        // Start new vocabulary group
+        if (currentGroup.length > 0) {
+          groups.push({
+            segments: currentGroup,
+            vocabularyAnnotation: currentVocabAnnotation,
+            startIndex: groupStartIndex,
+          })
+        }
+        currentGroup = [segment]
+        currentVocabAnnotation = vocabularyAnnotation
+        groupStartIndex = i
+      } else if (!vocabularyAnnotation && currentVocabAnnotation) {
+        // End current vocabulary group
+        groups.push({
+          segments: currentGroup,
+          vocabularyAnnotation: currentVocabAnnotation,
+          startIndex: groupStartIndex,
+        })
+        currentGroup = [segment]
+        currentVocabAnnotation = undefined
+        groupStartIndex = i
+      } else {
+        // Continue current non-vocabulary group or no annotation change
+        currentGroup.push(segment)
+      }
+    }
+
+    // Add final group
+    if (currentGroup.length > 0) {
+      groups.push({
+        segments: currentGroup,
+        vocabularyAnnotation: currentVocabAnnotation,
+        startIndex: groupStartIndex,
+      })
+    }
+
+    return groups
+  }
+
+  const renderGroup = (group: ReturnType<typeof groupSegments>[0], groupIndex: number) => {
+    // Create furigana segments for FuriganaText component
+    const furiganaSegments = group.segments.map((seg) => ({
+      text: seg.text,
+      furigana: seg.furigana,
+    }))
+
+    const content = (
+      <FuriganaText
+        key={`group-${groupIndex}-${group.startIndex}`}
+        segments={furiganaSegments}
+        className="inline-block"
+      />
+    )
+
+    if (!group.vocabularyAnnotation) {
+      return content
+    }
+
+    // Wrap with vocabulary annotation styling
+    return (
+      <span
+        key={`vocab-${groupIndex}-${group.startIndex}-${group.vocabularyAnnotation.id}`}
+        className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(group.vocabularyAnnotation.type, group.vocabularyAnnotation, highlightKnowledgePointId)}`}
+        onMouseEnter={(e) => {
+          setHoveredAnnotation(group.vocabularyAnnotation || null)
+          setMousePosition({ x: e.clientX, y: e.clientY })
+        }}
+        onMouseMove={(e) => {
+          setMousePosition({ x: e.clientX, y: e.clientY })
+        }}
+        onMouseLeave={() => setHoveredAnnotation(null)}
+      >
+        {content}
+      </span>
+    )
+  }
+
+  const groups = groupSegments()
+
   return (
     <div className="relative">
       <div className="text-lg leading-relaxed mb-4" style={{ lineHeight: '2.5' }}>
-        {segments.map((segment, index) =>
-          segment.isAnnotated && segment.annotation ? (
-            isFuriganaAnnotation(segment.annotation) ? (
-              // Use FuriganaText component for furigana display
-              <FuriganaText
-                key={`furigana-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
-                segments={[
-                  {
-                    text: segment.text,
-                    furigana: segment.annotation.content,
-                  },
-                ]}
-                className="inline-block"
-              />
-            ) : (
-              // Regular annotation - display with hover tooltip
-              <span
-                key={`annotated-${segment.annotation?.id || index}-${segment.annotation?.loc}`}
-                className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(segment.annotation.type, segment.annotation, highlightKnowledgePointId)}`}
-                onMouseEnter={(e) => {
-                  setHoveredAnnotation(segment.annotation || null)
-                  setMousePosition({ x: e.clientX, y: e.clientY })
-                }}
-                onMouseMove={(e) => {
-                  setMousePosition({ x: e.clientX, y: e.clientY })
-                }}
-                onMouseLeave={() => setHoveredAnnotation(null)}
-              >
-                {segment.text}
-              </span>
-            )
-          ) : (
-            <span key={`text-${index}-${segment.text.substring(0, 10)}`}>{segment.text}</span>
-          )
-        )}
+        {groups.map((group, index) => renderGroup(group, index))}
       </div>
 
       {/* Explanation section */}
