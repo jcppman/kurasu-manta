@@ -7,6 +7,10 @@ export const minaVocabularySchema = z.object({
   content: z.string(),
   translation: z.string(),
   pos: z.string(),
+  accent: z
+    .union([z.number(), z.array(z.number())])
+    .nullable()
+    .optional(),
   annotations: z.array(
     z.object({
       type: z.string(),

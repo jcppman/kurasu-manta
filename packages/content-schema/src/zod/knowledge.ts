@@ -13,6 +13,10 @@ export const baseKnowledgePointSchema = z.object({
 export const createVocabularySchema = baseKnowledgePointSchema.extend({
   type: z.literal(KNOWLEDGE_POINT_TYPES.VOCABULARY),
   pos: z.string(),
+  accent: z
+    .union([z.number(), z.array(z.number())])
+    .nullable()
+    .optional(),
   annotations: z.array(annotationSchema),
   audio: z.string().optional(),
 })
