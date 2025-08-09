@@ -74,6 +74,9 @@ importers:
       shelljs:
         specifier: ^0.9.2
         version: 0.9.2
+      wanakana:
+        specifier: ^5.3.1
+        version: 5.3.1
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -3428,6 +3431,10 @@ packages:
       jsdom:
         optional: true
 
+  wanakana@5.3.1:
+    resolution: {integrity: sha512-OSDqupzTlzl2LGyqTdhcXcl6ezMiFhcUwLBP8YKaBIbMYW1wAwDvupw2T9G9oVaKT9RmaSpyTXjxddFPUcFFIw==}
+    engines: {node: '>=12'}
+
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
     engines: {node: '>= 8'}
@@ -6286,6 +6293,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  wanakana@5.3.1: {}
 
   web-streams-polyfill@3.3.3: {}
 
