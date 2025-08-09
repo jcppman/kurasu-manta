@@ -115,6 +115,7 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
       explanation: {
         zhCN: v.translation,
       },
+      accent: v.accent,
     }))
   )
 }
