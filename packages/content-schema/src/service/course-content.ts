@@ -289,7 +289,7 @@ export class CourseContentService {
    * @returns Paginated result of sentences
    */
   async getSentences(
-    filters?: { minLessonNumber?: number },
+    filters?: { minLessonNumber?: number; knowledgePointId?: number },
     pagination?: PaginationParams | { limit?: number; offset?: number }
   ): Promise<PaginatedResult<Sentence>> {
     // Convert offset-based pagination to page-based if needed
@@ -307,7 +307,7 @@ export class CourseContentService {
     }
 
     // Use the repository method with filters
-    return this.sentenceRepository.getMany(filters || {}, normalizedPagination)
+    return this.sentenceRepository.getMany(filters, normalizedPagination)
   }
 
   /**

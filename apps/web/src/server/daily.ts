@@ -2,12 +2,8 @@ import { db, schema } from '@/server/db'
 import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/content-schema/common'
 import { mapDrizzleToGrammar, mapDrizzleToVocabulary } from '@kurasu-manta/content-schema/mapper'
 import { mapDrizzleToLesson } from '@kurasu-manta/content-schema/mapper'
-import {
-  type Grammar,
-  type Vocabulary,
-  isGrammar,
-  isVocabulary,
-} from '@kurasu-manta/content-schema/zod'
+import { CourseContentService } from '@kurasu-manta/content-schema/service'
+import type { Grammar, Vocabulary } from '@kurasu-manta/content-schema/zod'
 import type { Lesson } from '@kurasu-manta/content-schema/zod'
 import { and, eq, lte, sql } from 'drizzle-orm'
 
@@ -16,6 +12,7 @@ export interface DailyPractice {
   lessons: Record<string, Lesson>
   vocabularies: Vocabulary[]
   grammarList: Grammar[]
+  sentenceCountMap: Record<number, number>
 }
 
 export interface DailyPracticeOptions {
@@ -77,9 +74,22 @@ export async function getDailyPractice(options?: DailyPracticeOptions): Promise<
       {} as Record<string, Lesson>
     )
 
+  const contentService = new CourseContentService(db)
+  const sentenceCountMap = await contentService.getSentenceCountsByKnowledgePointIds([
+    ...vocabularies.map((v) => v.id),
+    ...grammarList.map((g) => g.id),
+  ])
+
   return {
     vocabularies,
     grammarList,
     lessons,
+    sentenceCountMap: [...sentenceCountMap.entries()].reduce(
+      (accum, [key, value]) => {
+        accum[key] = value
+        return accum
+      },
+      {} as Record<number, number>
+    ),
   }
 }

@@ -48,7 +48,11 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {knowledgePoints.map((kp) => (
-                <KnowledgePointCard key={kp.id} knowledgePoint={kp} />
+                <KnowledgePointCard
+                  key={kp.id}
+                  knowledgePoint={kp}
+                  sentenceCount={kp.sentenceCount}
+                />
               ))}
             </div>
           )}

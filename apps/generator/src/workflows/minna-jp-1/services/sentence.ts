@@ -923,7 +923,13 @@ async function getPrioritizedKnowledgePointsByLessonNumber(
       const deficit = Math.max(0, targetCount - currentCount)
       return { knowledgePoint: kp, deficit, currentCount, targetCount }
     })
-    .sort((a, b) => b.deficit - a.deficit)
+    .sort((a, b) => {
+      // grammar has higher priority than vocabulary
+      if (isGrammar(a.knowledgePoint) && isVocabulary(b.knowledgePoint)) return -1
+      if (isVocabulary(a.knowledgePoint) && isGrammar(b.knowledgePoint)) return 1
+      // sort by deficit
+      return b.deficit - a.deficit
+    })
 
   // Select the knowledge point with highest deficit as target
   const target = sortedByDeficit[0]?.knowledgePoint

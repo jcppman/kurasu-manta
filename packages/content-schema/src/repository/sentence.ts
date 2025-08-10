@@ -11,7 +11,7 @@ import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
-import { and, count, eq, gte, inArray, or, sql } from 'drizzle-orm'
+import { type SQL, and, count, eq, gte, inArray, or } from 'drizzle-orm'
 
 /**
  * Repository for sentences
@@ -25,21 +25,32 @@ export class SentenceRepository {
    */
   async getMany(
     conditions: {
+      knowledgePointId?: number
       minLessonNumber?: number
     } = {},
     pagination?: PaginationParams
   ): Promise<PaginatedResult<Sentence>> {
+    const filters: SQL[] = []
+
+    if (conditions.knowledgePointId) {
+      filters.push(eq(sentenceKnowledgePointsTable.knowledgePointId, conditions.knowledgePointId))
+    }
+    if (conditions.minLessonNumber !== undefined) {
+      filters.push(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+    }
     // If no pagination provided, return all results
     if (!pagination) {
-      const rows =
-        conditions.minLessonNumber !== undefined
-          ? await this.db
-              .select()
-              .from(sentencesTable)
-              .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
-          : await this.db.select().from(sentencesTable)
+      const rows = await this.db
+        .select()
+        .from(sentencesTable)
+        .innerJoin(
+          sentenceKnowledgePointsTable,
+          eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
+        )
+        .where(and(...filters))
 
-      const items = rows.map(mapDrizzleToSentence)
+      const items = rows.map((r) => mapDrizzleToSentence(r.sentences))
+
       return {
         items,
         total: items.length,
@@ -57,28 +68,30 @@ export class SentenceRepository {
     const offset = (page - 1) * limit
 
     // Get total count
-    const countResult =
-      conditions.minLessonNumber !== undefined
-        ? await this.db
-            .select({ count: count() })
-            .from(sentencesTable)
-            .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
-        : await this.db.select({ count: count() }).from(sentencesTable)
+    const countResult = await this.db
+      .select({ count: count() })
+      .from(sentencesTable)
+      .leftJoin(
+        sentenceKnowledgePointsTable,
+        eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
+      )
+      .where(and(...filters))
 
     const total = countResult[0]?.count || 0
 
     // Get paginated results
-    const rows =
-      conditions.minLessonNumber !== undefined
-        ? await this.db
-            .select()
-            .from(sentencesTable)
-            .where(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
-            .limit(limit)
-            .offset(offset)
-        : await this.db.select().from(sentencesTable).limit(limit).offset(offset)
+    const rows = await this.db
+      .select()
+      .from(sentencesTable)
+      .leftJoin(
+        sentenceKnowledgePointsTable,
+        eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
+      )
+      .where(and(...filters))
+      .limit(limit)
+      .offset(offset)
 
-    const items = rows.map(mapDrizzleToSentence)
+    const items = rows.map((r) => mapDrizzleToSentence(r.sentences))
     const totalPages = Math.ceil(total / limit)
 
     return {

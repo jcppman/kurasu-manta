@@ -2,7 +2,7 @@ import { KnowledgePointCard } from '@/components/KnowledgePointCard'
 import { getDailyPractice } from '@/server/daily'
 
 export async function DailyPractice() {
-  const { vocabularies, grammarList, lessons } = await getDailyPractice({
+  const { vocabularies, grammarList, lessons, sentenceCountMap } = await getDailyPractice({
     maxLessonNumber: 10, // Adjust as needed
     vocabularyLimit: 7, // Limit for vocabulary items
     grammarLimit: 3, // Limit for grammar items
@@ -20,10 +20,20 @@ export async function DailyPractice() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
       {grammarWithLessons.map((g) => (
-        <KnowledgePointCard key={g.id} knowledgePoint={g} lesson={g.lesson} />
+        <KnowledgePointCard
+          key={g.id}
+          knowledgePoint={g}
+          lesson={g.lesson}
+          sentenceCount={sentenceCountMap[g.id]}
+        />
       ))}
       {vocabulariesWithLessons.map((v) => (
-        <KnowledgePointCard key={v.id} knowledgePoint={v} lesson={v.lesson} />
+        <KnowledgePointCard
+          key={v.id}
+          knowledgePoint={v}
+          lesson={v.lesson}
+          sentenceCount={sentenceCountMap[v.id]}
+        />
       ))}
     </div>
   )

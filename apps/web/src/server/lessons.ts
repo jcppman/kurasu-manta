@@ -81,7 +81,7 @@ export async function getLessonById(id: number) {
     // Enhance knowledge points with sentence counts
     const knowledgePointsWithCounts = lessonWithContent.knowledgePoints.map((kp) => ({
       ...kp,
-      sentenceCount: sentenceCounts.get(kp.id) || 0,
+      sentenceCount: sentenceCounts.get(kp.id) ?? 0,
     }))
 
     return {

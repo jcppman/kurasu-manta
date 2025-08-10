@@ -95,17 +95,51 @@ describe('SentenceRepository', () => {
     })
   })
 
-  test('getAll', async () => {
-    // Create multiple sentences
-    const sentence1 = await sentenceRepo.create(createSentenceData)
-    const sentence2 = await sentenceRepo.create(createMinimalSentence)
+  describe('getMany', () => {
+    test('getAll', async () => {
+      // Create multiple sentences
+      const sentence1 = await sentenceRepo.create(createSentenceData)
+      const sentence2 = await sentenceRepo.create(createMinimalSentence)
+      // create relationship with knowledge points
+      const knowledgePoint1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
+      const knowledgePoint2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, knowledgePoint1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, knowledgePoint2.id)
 
-    const result = await sentenceRepo.getMany()
-    const allSentences = result.items
+      const result = await sentenceRepo.getMany()
+      const allSentences = result.items
 
-    expect(allSentences.length).toBe(2)
-    expect(allSentences.some((s) => s.id === sentence1.id)).toBeTruthy()
-    expect(allSentences.some((s) => s.id === sentence2.id)).toBeTruthy()
+      expect(allSentences.length).toBe(2)
+      expect(allSentences.some((s) => s.id === sentence1.id)).toBeTruthy()
+      expect(allSentences.some((s) => s.id === sentence2.id)).toBeTruthy()
+    })
+
+    test('getByIds', async () => {
+      const sentence1 = await sentenceRepo.create(createSentenceData)
+      const sentence2 = await sentenceRepo.create(createMinimalSentence)
+      // create relationship with knowledge points
+      const knowledgePoint1 = await knowledgeRepo.create(createKnowledgePoint('単語1'))
+      const knowledgePoint2 = await knowledgeRepo.create(createKnowledgePoint('単語2'))
+
+      // associate knowledge points
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, knowledgePoint1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, knowledgePoint1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, knowledgePoint2.id)
+
+      const result = await sentenceRepo.getMany({
+        knowledgePointId: knowledgePoint1.id,
+      })
+      const sentences = result.items
+
+      expect(sentences.length).toBe(2)
+      expect(sentences.some((s) => s.id === sentence1.id)).toBeTruthy()
+      expect(sentences.some((s) => s.id === sentence2.id)).toBeTruthy()
+    })
+
+    test('with pagination', () => {
+      // TODO
+      expect(true).toBe(true)
+    })
   })
 
   describe('getWithPagination', () => {
