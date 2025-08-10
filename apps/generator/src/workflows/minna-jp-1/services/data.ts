@@ -112,9 +112,7 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
       content: v.content,
       annotations: v.annotations,
       pos: v.pos,
-      explanation: {
-        zhCN: v.translation,
-      },
+      explanation: v.translation, // Now multilingual object
     }))
   )
 }
@@ -138,9 +136,7 @@ async function createGrammarLesson(lessonNumber: number, grammarItems: MinaGramm
       type: 'grammar',
       content: g.content,
       annotations: [],
-      explanation: {
-        zhCN: g.explanation,
-      },
+      explanation: g.explanation, // Now multilingual object
     }))
   )
 }

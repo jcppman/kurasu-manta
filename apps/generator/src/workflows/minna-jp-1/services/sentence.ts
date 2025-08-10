@@ -28,7 +28,11 @@ import { z } from 'zod'
 export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowledge'): string {
   let result = `<content>${sanitizeVocabularyContent(input.content)}</content>`
   if (input.explanation) {
-    result += `<explain>${input.explanation.zhCN}</explain>`
+    // Use Simplified Chinese as primary language for AI generation context
+    const explanation = typeof input.explanation === 'string' 
+      ? input.explanation 
+      : (input.explanation.zhCN || input.explanation.zhTW || input.explanation.enUS)
+    result += `<explain>${explanation}</explain>`
   }
   return `<${parentTagName} id="${input.id}">${result}</${parentTagName}>`
 }
@@ -164,18 +168,19 @@ export function parseAnnotatedSentenceToAnnotations(
 
 async function generateTranslationsForSentences(
   sentences: string[]
-): Promise<{ zhCN: string; enUS: string }[]> {
+): Promise<{ zhCN: string; zhTW: string; enUS: string }[]> {
   const prompt = `
 You are a professional translator providing accurate translations of Japanese sentences.
 
-Your task is to translate each Japanese sentence into Chinese (Simplified) and English.
+Your task is to translate each Japanese sentence into Simplified Chinese (zhCN), Traditional Chinese (zhTW), and English (enUS).
 
 SENTENCES TO TRANSLATE:
 ${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
 
 TRANSLATION GUIDELINES:
 - Provide natural, accurate translations that convey the original meaning
-- Chinese translations should use Simplified Chinese characters
+- Simplified Chinese (zhCN) should use Simplified Chinese characters
+- Traditional Chinese (zhTW) should use Traditional Chinese characters with Taiwan conventions
 - English translations should be clear and natural
 - Maintain the tone and style of the original sentence
 - For formal Japanese sentences, use appropriate formal language in translations
@@ -192,6 +197,7 @@ Return translations in the same order as the input sentences.
       translations: z.array(
         z.object({
           zhCN: z.string(),
+          zhTW: z.string(),
           enUS: z.string(),
         })
       ),
@@ -200,11 +206,12 @@ Return translations in the same order as the input sentences.
 
   // Validate all translations
   const validatedTranslations = object.translations.map((translation, index) => {
-    if (!translation?.zhCN?.trim() || !translation?.enUS?.trim()) {
+    if (!translation?.zhCN?.trim() || !translation?.zhTW?.trim() || !translation?.enUS?.trim()) {
       throw new Error(`Empty translation generated for sentence: ${sentences[index]}`)
     }
     return {
       zhCN: translation.zhCN.trim(),
+      zhTW: translation.zhTW.trim(),
       enUS: translation.enUS.trim(),
     }
   })
@@ -214,7 +221,7 @@ Return translations in the same order as the input sentences.
 
 export async function generateSentenceExplanations(
   sentences: string[]
-): Promise<{ zhCN: string; enUS: string }[]> {
+): Promise<{ zhCN: string; zhTW: string; enUS: string }[]> {
   if (sentences.length === 0) {
     return []
   }

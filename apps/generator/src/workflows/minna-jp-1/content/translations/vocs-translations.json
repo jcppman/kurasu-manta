@@ -1,0 +1,2852 @@
+{
+  "1": {
+    "zhCN": "我",
+    "zhTW": "我",
+    "enUS": "I, me"
+  },
+  "2": {
+    "zhCN": "先生、女士、同志（称呼人时，为了表示礼貌接在名字后面的接尾词）",
+    "zhTW": "先生、女士、同志（稱呼人時，為了表示禮貌接在名字後面的接尾詞）",
+    "enUS": "Mr./Ms. (polite suffix added after names)"
+  },
+  "3": {
+    "zhCN": "学生",
+    "zhTW": "學生",
+    "enUS": "student"
+  },
+  "4": {
+    "zhCN": "公司职员",
+    "zhTW": "公司職員",
+    "enUS": "company employee, office worker"
+  },
+  "5": {
+    "zhCN": "你、您",
+    "zhTW": "你、您",
+    "enUS": "you (informal/formal)"
+  },
+  "6": {
+    "zhCN": "是、对",
+    "zhTW": "是、對",
+    "enUS": "yes"
+  },
+  "7": {
+    "zhCN": "不、不是",
+    "zhTW": "不、不是",
+    "enUS": "no"
+  },
+  "8": {
+    "zhCN": "银行职员",
+    "zhTW": "銀行職員",
+    "enUS": "bank employee"
+  },
+  "9": {
+    "zhCN": "医生",
+    "zhTW": "醫生",
+    "enUS": "doctor"
+  },
+  "10": {
+    "zhCN": "他、她、那个人",
+    "zhTW": "他、她、那個人",
+    "enUS": "that person (polite)"
+  },
+  "11": {
+    "zhCN": "哪位",
+    "zhTW": "哪位",
+    "enUS": "who (polite)"
+  },
+  "12": {
+    "zhCN": "大学",
+    "zhTW": "大學",
+    "enUS": "university"
+  },
+  "13": {
+    "zhCN": "老师（在指自己的职业时不用）",
+    "zhTW": "老師（在指自己的職業時不用）",
+    "enUS": "teacher (not used when referring to one's own profession)"
+  },
+  "14": {
+    "zhCN": "代替「～さん」接在小孩子名字后面的接尾词",
+    "zhTW": "代替「～さん」接在小孩子名字後面的接尾詞",
+    "enUS": "suffix for children's names (replaces -san)"
+  },
+  "15": {
+    "zhCN": "几岁",
+    "zhTW": "幾歲",
+    "enUS": "how old"
+  },
+  "16": {
+    "zhCN": "9",
+    "zhTW": "9",
+    "enUS": "nine"
+  },
+  "17": {
+    "zhCN": "—岁",
+    "zhTW": "—歲",
+    "enUS": "— years old"
+  },
+  "18": {
+    "zhCN": "初次见面。（自我介绍时，最初讲的话）",
+    "zhTW": "初次見面。（自我介紹時，最初講的話）",
+    "enUS": "Nice to meet you (greeting used during introductions)"
+  },
+  "19": {
+    "zhCN": "早上好！",
+    "zhTW": "早安！",
+    "enUS": "Good morning!"
+  },
+  "20": {
+    "zhCN": "美国",
+    "zhTW": "美國",
+    "enUS": "America, United States"
+  },
+  "21": {
+    "zhCN": "是从～来的。",
+    "zhTW": "是從～來的。",
+    "enUS": "I came from ~ (indicating origin/hometown)"
+  },
+  "22": {
+    "zhCN": "请多关照。",
+    "zhTW": "請多關照。",
+    "enUS": "Please treat me favorably (formal introduction greeting)"
+  },
+  "23": {
+    "zhCN": "中国",
+    "zhTW": "中國",
+    "enUS": "China"
+  },
+  "24": {
+    "zhCN": "～人",
+    "zhTW": "～人",
+    "enUS": "~ person (nationality suffix)"
+  },
+  "25": {
+    "zhCN": "中国人",
+    "zhTW": "中國人",
+    "enUS": "Chinese person"
+  },
+  "26": {
+    "zhCN": "教师",
+    "zhTW": "教師",
+    "enUS": "teacher"
+  },
+  "27": {
+    "zhCN": "他、她、那个人",
+    "zhTW": "他、她、那個人",
+    "enUS": "that person (he/she/that person over there)"
+  },
+  "28": {
+    "zhCN": "谁",
+    "zhTW": "誰",
+    "enUS": "who"
+  },
+  "29": {
+    "zhCN": "公司的职员（和公司名一起使用）",
+    "zhTW": "公司的職員（和公司名一起使用）",
+    "enUS": "company employee (used with company name)"
+  },
+  "30": {
+    "zhCN": "巴西",
+    "zhTW": "巴西",
+    "enUS": "Brazil"
+  },
+  "31": {
+    "zhCN": "8 岁",
+    "zhTW": "8 歲",
+    "enUS": "8 years old"
+  },
+  "32": {
+    "zhCN": "多大岁数",
+    "zhTW": "多大歲數",
+    "enUS": "how old (polite form)"
+  },
+  "33": {
+    "zhCN": "日本",
+    "zhTW": "日本",
+    "enUS": "Japan"
+  },
+  "34": {
+    "zhCN": "英国",
+    "zhTW": "英國",
+    "enUS": "United Kingdom/Britain"
+  },
+  "35": {
+    "zhCN": "泰国",
+    "zhTW": "泰國",
+    "enUS": "Thailand"
+  },
+  "36": {
+    "zhCN": "德国",
+    "zhTW": "德國",
+    "enUS": "Germany"
+  },
+  "37": {
+    "zhCN": "研究人员",
+    "zhTW": "研究人員",
+    "enUS": "researcher"
+  },
+  "38": {
+    "zhCN": "神户",
+    "zhTW": "神戶",
+    "enUS": "Kobe (city in Japan)"
+  },
+  "39": {
+    "zhCN": "医院",
+    "zhTW": "醫院",
+    "enUS": "hospital"
+  },
+  "40": {
+    "zhCN": "印度",
+    "zhTW": "印度",
+    "enUS": "India"
+  },
+  "41": {
+    "zhCN": "韩国",
+    "zhTW": "韓國",
+    "enUS": "South Korea"
+  },
+  "42": {
+    "zhCN": "印度尼西亚",
+    "zhTW": "印度尼西亞",
+    "enUS": "Indonesia"
+  },
+  "43": {
+    "zhCN": "对不起、请问",
+    "zhTW": "對不起、請問",
+    "enUS": "excuse me (polite way to start a question)"
+  },
+  "44": {
+    "zhCN": "您贵姓？您叫什么名字？",
+    "zhTW": "您貴姓？您叫什麼名字？",
+    "enUS": "what is your name? (polite form)"
+  },
+  "45": {
+    "zhCN": "这（离说话人近的东西）",
+    "zhTW": "這（離說話人近的東西）",
+    "enUS": "this (thing close to speaker)"
+  },
+  "46": {
+    "zhCN": "字典",
+    "zhTW": "字典",
+    "enUS": "dictionary"
+  },
+  "47": {
+    "zhCN": "那（离听话人近的东西）",
+    "zhTW": "那（離聽話人近的東西）",
+    "enUS": "that (thing close to listener)"
+  },
+  "48": {
+    "zhCN": "伞",
+    "zhTW": "傘",
+    "enUS": "umbrella"
+  },
+  "49": {
+    "zhCN": "这个～",
+    "zhTW": "這個～",
+    "enUS": "this ~ (demonstrative adjective)"
+  },
+  "50": {
+    "zhCN": "圆珠笔",
+    "zhTW": "原子筆",
+    "enUS": "ballpoint pen"
+  },
+  "51": {
+    "zhCN": "是的",
+    "zhTW": "是的",
+    "enUS": "yes (informal agreement)"
+  },
+  "52": {
+    "zhCN": "是这（那）样。",
+    "zhTW": "是這（那）樣。",
+    "enUS": "that's right/correct"
+  },
+  "53": {
+    "zhCN": "笔记本",
+    "zhTW": "筆記本",
+    "enUS": "notebook"
+  },
+  "54": {
+    "zhCN": "记事本",
+    "zhTW": "記事本",
+    "enUS": "diary/planner"
+  },
+  "55": {
+    "zhCN": "什么",
+    "zhTW": "什麼",
+    "enUS": "what"
+  },
+  "56": {
+    "zhCN": "名片",
+    "zhTW": "名片",
+    "enUS": "business card"
+  },
+  "57": {
+    "zhCN": "杂志",
+    "zhTW": "雜誌",
+    "enUS": "magazine"
+  },
+  "58": {
+    "zhCN": "计算机",
+    "zhTW": "電腦",
+    "enUS": "computer"
+  },
+  "59": {
+    "zhCN": "那（离说话人、听话人都远的东西）",
+    "zhTW": "那（離說話人、聽話人都遠的東西）",
+    "enUS": "that over there (thing far from both speaker and listener)"
+  },
+  "60": {
+    "zhCN": "皮包、提包",
+    "zhTW": "皮包、提包",
+    "enUS": "bag/handbag"
+  },
+  "61": {
+    "zhCN": "钥匙",
+    "zhTW": "鑰匙",
+    "enUS": "key"
+  },
+  "62": {
+    "zhCN": "今后会给您添麻烦。",
+    "zhTW": "今後會給您添麻煩。",
+    "enUS": "I'll be in your care from now on (formal greeting)"
+  },
+  "63": {
+    "zhCN": "你好。",
+    "zhTW": "你好。",
+    "enUS": "hello (daytime greeting)"
+  },
+  "64": {
+    "zhCN": "也要请你们多多关照。（对「どうぞよろしくお願いします」的回答。）",
+    "zhTW": "也要請你們多多關照。（對「どうぞよろしくお願いします」的回答。）",
+    "enUS": "likewise, please treat me favorably (response to formal greeting)"
+  },
+  "65": {
+    "zhCN": "那个……",
+    "zhTW": "那個……",
+    "enUS": "um.../well... (hesitation word)"
+  },
+  "66": {
+    "zhCN": "欸……",
+    "zhTW": "欸……",
+    "enUS": "eh?/huh? (surprise/confusion)"
+  },
+  "67": {
+    "zhCN": "咖啡",
+    "zhTW": "咖啡",
+    "enUS": "coffee"
+  },
+  "68": {
+    "zhCN": "请。（劝别人做某事时使用）",
+    "zhTW": "請。（勸別人做某事時使用）",
+    "enUS": "please (offering/encouraging someone to do something)"
+  },
+  "69": {
+    "zhCN": "谢谢。",
+    "zhTW": "謝謝。",
+    "enUS": "thank you very much"
+  },
+  "70": {
+    "zhCN": "书桌",
+    "zhTW": "書桌",
+    "enUS": "desk"
+  },
+  "71": {
+    "zhCN": "报纸",
+    "zhTW": "報紙",
+    "enUS": "newspaper"
+  },
+  "72": {
+    "zhCN": "自动铅笔",
+    "zhTW": "自動鉛筆",
+    "enUS": "mechanical pencil"
+  },
+  "73": {
+    "zhCN": "汽车",
+    "zhTW": "汽車",
+    "enUS": "car"
+  },
+  "74": {
+    "zhCN": "书",
+    "zhTW": "書",
+    "enUS": "book"
+  },
+  "75": {
+    "zhCN": "日语",
+    "zhTW": "日語",
+    "enUS": "Japanese (language)"
+  },
+  "76": {
+    "zhCN": "～语",
+    "zhTW": "～語",
+    "enUS": "~ language"
+  },
+  "77": {
+    "zhCN": "电视",
+    "zhTW": "電視",
+    "enUS": "television"
+  },
+  "78": {
+    "zhCN": "钟表",
+    "zhTW": "鐘錶",
+    "enUS": "clock, watch"
+  },
+  "79": {
+    "zhCN": "收音机",
+    "zhTW": "收音機",
+    "enUS": "radio"
+  },
+  "80": {
+    "zhCN": "照相机",
+    "zhTW": "照相機",
+    "enUS": "camera"
+  },
+  "81": {
+    "zhCN": "铅笔",
+    "zhTW": "鉛筆",
+    "enUS": "pencil"
+  },
+  "82": {
+    "zhCN": "椅子",
+    "zhTW": "椅子",
+    "enUS": "chair"
+  },
+  "83": {
+    "zhCN": "光盘",
+    "zhTW": "光碟",
+    "enUS": "CD"
+  },
+  "84": {
+    "zhCN": "礼物",
+    "zhTW": "禮物",
+    "enUS": "souvenir, gift"
+  },
+  "85": {
+    "zhCN": "巧克力",
+    "zhTW": "巧克力",
+    "enUS": "chocolate"
+  },
+  "86": {
+    "zhCN": "英语",
+    "zhTW": "英語",
+    "enUS": "English (language)"
+  },
+  "87": {
+    "zhCN": "是吗。",
+    "zhTW": "是嗎。",
+    "enUS": "Is that so?"
+  },
+  "88": {
+    "zhCN": "卡片",
+    "zhTW": "卡片",
+    "enUS": "card"
+  },
+  "89": {
+    "zhCN": "不是。",
+    "zhTW": "不是。",
+    "enUS": "No, it isn't."
+  },
+  "90": {
+    "zhCN": "啊",
+    "zhTW": "啊",
+    "enUS": "ah (exclamation)"
+  },
+  "91": {
+    "zhCN": "那个～",
+    "zhTW": "那個～",
+    "enUS": "that ~ (near listener)"
+  },
+  "92": {
+    "zhCN": "那个～",
+    "zhTW": "那個～",
+    "enUS": "that ~ (far from both)"
+  },
+  "93": {
+    "zhCN": "这里",
+    "zhTW": "這裡",
+    "enUS": "here"
+  },
+  "94": {
+    "zhCN": "食堂",
+    "zhTW": "食堂",
+    "enUS": "cafeteria, dining hall"
+  },
+  "95": {
+    "zhCN": "电梯",
+    "zhTW": "電梯",
+    "enUS": "elevator"
+  },
+  "96": {
+    "zhCN": "那里（离说话人、听话人都远的场所）",
+    "zhTW": "那裡（離說話人、聽話人都遠的場所）",
+    "enUS": "over there (far from both speaker and listener)"
+  },
+  "97": {
+    "zhCN": "新大阪（大阪的车站名）",
+    "zhTW": "新大阪（大阪的車站名）",
+    "enUS": "Shin-Osaka (station name in Osaka)"
+  },
+  "98": {
+    "zhCN": "厕所",
+    "zhTW": "廁所",
+    "enUS": "toilet, restroom"
+  },
+  "99": {
+    "zhCN": "洗手间",
+    "zhTW": "洗手間",
+    "enUS": "restroom, washroom"
+  },
+  "100": {
+    "zhCN": "哪里",
+    "zhTW": "哪裡",
+    "enUS": "where"
+  },
+  "101": {
+    "zhCN": "会议室",
+    "zhTW": "會議室",
+    "enUS": "conference room"
+  },
+  "102": {
+    "zhCN": "办事处、事务所",
+    "zhTW": "辦事處、事務所",
+    "enUS": "office, branch office"
+  },
+  "103": {
+    "zhCN": "哪里（「どこ」的礼貌用语）",
+    "zhTW": "哪裡（「どこ」的禮貌用語）",
+    "enUS": "where (polite form of どこ)"
+  },
+  "104": {
+    "zhCN": "那边（「あそこ」的礼貌用语）",
+    "zhTW": "那邊（「あそこ」的禮貌用語）",
+    "enUS": "that way (polite form of あそこ)"
+  },
+  "105": {
+    "zhCN": "国家、故乡",
+    "zhTW": "國家、故鄉",
+    "enUS": "country, homeland"
+  },
+  "106": {
+    "zhCN": "鞋",
+    "zhTW": "鞋",
+    "enUS": "shoes"
+  },
+  "107": {
+    "zhCN": "意大利",
+    "zhTW": "義大利",
+    "enUS": "Italy"
+  },
+  "108": {
+    "zhCN": "多少钱",
+    "zhTW": "多少錢",
+    "enUS": "how much (money)"
+  },
+  "109": {
+    "zhCN": "万",
+    "zhTW": "萬",
+    "enUS": "ten thousand"
+  },
+  "110": {
+    "zhCN": "千",
+    "zhTW": "千",
+    "enUS": "thousand"
+  },
+  "111": {
+    "zhCN": "百",
+    "zhTW": "百",
+    "enUS": "hundred"
+  },
+  "112": {
+    "zhCN": "―日元",
+    "zhTW": "―日圓",
+    "enUS": "~ yen"
+  },
+  "113": {
+    "zhCN": "请给我～。",
+    "zhTW": "請給我～。",
+    "enUS": "Please give me ~."
+  },
+  "114": {
+    "zhCN": "请给我这个。",
+    "zhTW": "請給我這個。",
+    "enUS": "Please give me this."
+  },
+  "115": {
+    "zhCN": "欢迎光临。",
+    "zhTW": "歡迎光臨。",
+    "enUS": "Welcome! (shop greeting)"
+  },
+  "116": {
+    "zhCN": "对不起。",
+    "zhTW": "對不起。",
+    "enUS": "Excuse me. Sorry."
+  },
+  "117": {
+    "zhCN": "谢谢。",
+    "zhTW": "謝謝。",
+    "enUS": "Thank you."
+  },
+  "118": {
+    "zhCN": "葡萄酒",
+    "zhTW": "葡萄酒",
+    "enUS": "wine"
+  },
+  "119": {
+    "zhCN": "销售柜台",
+    "zhTW": "銷售櫃檯",
+    "enUS": "sales counter, department"
+  },
+  "120": {
+    "zhCN": "地下",
+    "zhTW": "地下",
+    "enUS": "basement, underground"
+  },
+  "121": {
+    "zhCN": "—层",
+    "zhTW": "—樓",
+    "enUS": "—floor"
+  },
+  "122": {
+    "zhCN": "几层",
+    "zhTW": "幾樓",
+    "enUS": "which floor"
+  },
+  "123": {
+    "zhCN": "请让我看一下～。",
+    "zhTW": "請讓我看一下～。",
+    "enUS": "Please show me ~ / Please let me see ~"
+  },
+  "124": {
+    "zhCN": "那么",
+    "zhTW": "那麼",
+    "enUS": "well then / in that case"
+  },
+  "125": {
+    "zhCN": "教室",
+    "zhTW": "教室",
+    "enUS": "classroom"
+  },
+  "126": {
+    "zhCN": "广岛",
+    "zhTW": "廣島",
+    "enUS": "Hiroshima"
+  },
+  "127": {
+    "zhCN": "接待处",
+    "zhTW": "接待處",
+    "enUS": "reception desk"
+  },
+  "128": {
+    "zhCN": "那里（离听话人近的场所）",
+    "zhTW": "那裡（離聽話人近的場所）",
+    "enUS": "there (place near the listener)"
+  },
+  "129": {
+    "zhCN": "自动贩卖机",
+    "zhTW": "自動販賣機",
+    "enUS": "vending machine"
+  },
+  "130": {
+    "zhCN": "大厅、休息室",
+    "zhTW": "大廳、休息室",
+    "enUS": "lobby / lounge"
+  },
+  "131": {
+    "zhCN": "这边",
+    "zhTW": "這邊",
+    "enUS": "this way / this side"
+  },
+  "132": {
+    "zhCN": "那边",
+    "zhTW": "那邊",
+    "enUS": "that way / that side"
+  },
+  "133": {
+    "zhCN": "法国",
+    "zhTW": "法國",
+    "enUS": "France"
+  },
+  "134": {
+    "zhCN": "领带",
+    "zhTW": "領帶",
+    "enUS": "necktie"
+  },
+  "135": {
+    "zhCN": "楼梯",
+    "zhTW": "樓梯",
+    "enUS": "stairs"
+  },
+  "136": {
+    "zhCN": "自动扶梯",
+    "zhTW": "自動扶梯",
+    "enUS": "escalator"
+  },
+  "137": {
+    "zhCN": "电话",
+    "zhTW": "電話",
+    "enUS": "telephone / phone"
+  },
+  "138": {
+    "zhCN": "房间",
+    "zhTW": "房間",
+    "enUS": "room"
+  },
+  "139": {
+    "zhCN": "家",
+    "zhTW": "家",
+    "enUS": "house / home"
+  },
+  "140": {
+    "zhCN": "大阪",
+    "zhTW": "大阪",
+    "enUS": "Osaka"
+  },
+  "141": {
+    "zhCN": "公司",
+    "zhTW": "公司",
+    "enUS": "company"
+  },
+  "142": {
+    "zhCN": "曼谷",
+    "zhTW": "曼谷",
+    "enUS": "Bangkok"
+  },
+  "143": {
+    "zhCN": "柏林",
+    "zhTW": "柏林",
+    "enUS": "Berlin"
+  },
+  "144": {
+    "zhCN": "雅加达",
+    "zhTW": "雅加達",
+    "enUS": "Jakarta"
+  },
+  "145": {
+    "zhCN": "瑞士",
+    "zhTW": "瑞士",
+    "enUS": "Switzerland"
+  },
+  "146": {
+    "zhCN": "现在",
+    "zhTW": "現在",
+    "enUS": "now"
+  },
+  "147": {
+    "zhCN": "―点",
+    "zhTW": "―點",
+    "enUS": "—o'clock"
+  },
+  "148": {
+    "zhCN": "―分",
+    "zhTW": "―分",
+    "enUS": "—minute(s)"
+  },
+  "149": {
+    "zhCN": "每天早晨",
+    "zhTW": "每天早晨",
+    "enUS": "every morning"
+  },
+  "150": {
+    "zhCN": "起床",
+    "zhTW": "起床",
+    "enUS": "to get up / to wake up"
+  },
+  "151": {
+    "zhCN": "昨天",
+    "zhTW": "昨天",
+    "enUS": "yesterday"
+  },
+  "152": {
+    "zhCN": "学习",
+    "zhTW": "學習",
+    "enUS": "to study"
+  },
+  "153": {
+    "zhCN": "几点",
+    "zhTW": "幾點",
+    "enUS": "what time"
+  },
+  "154": {
+    "zhCN": "几分",
+    "zhTW": "幾分",
+    "enUS": "how many minutes"
+  },
+  "155": {
+    "zhCN": "纽约",
+    "zhTW": "紐約",
+    "enUS": "New York"
+  },
+  "156": {
+    "zhCN": "上午",
+    "zhTW": "上午",
+    "enUS": "morning / a.m."
+  },
+  "157": {
+    "zhCN": "休息、休假",
+    "zhTW": "休息、休假",
+    "enUS": "rest / break / holiday"
+  },
+  "158": {
+    "zhCN": "星期几",
+    "zhTW": "星期幾",
+    "enUS": "what day of the week"
+  },
+  "159": {
+    "zhCN": "星期六",
+    "zhTW": "星期六",
+    "enUS": "Saturday"
+  },
+  "160": {
+    "zhCN": "～和～",
+    "zhTW": "～和～",
+    "enUS": "and (connecting nouns)"
+  },
+  "161": {
+    "zhCN": "星期天",
+    "zhTW": "星期天",
+    "enUS": "Sunday"
+  },
+  "162": {
+    "zhCN": "从～",
+    "zhTW": "從～",
+    "enUS": "from ~"
+  },
+  "163": {
+    "zhCN": "到～",
+    "zhTW": "到～",
+    "enUS": "until ~ / to ~"
+  },
+  "164": {
+    "zhCN": "每天晚上",
+    "zhTW": "每天晚上",
+    "enUS": "every evening / every night"
+  },
+  "165": {
+    "zhCN": "睡觉",
+    "zhTW": "睡覺",
+    "enUS": "to sleep / to go to bed"
+  },
+  "166": {
+    "zhCN": "每天",
+    "zhTW": "每天",
+    "enUS": "every day"
+  },
+  "167": {
+    "zhCN": "早晨",
+    "zhTW": "早晨",
+    "enUS": "morning"
+  },
+  "168": {
+    "zhCN": "下午",
+    "zhTW": "下午",
+    "enUS": "afternoon / p.m."
+  },
+  "169": {
+    "zhCN": "工作、劳动",
+    "zhTW": "工作、勞動",
+    "enUS": "to work"
+  },
+  "170": {
+    "zhCN": "号码",
+    "zhTW": "號碼",
+    "enUS": "number"
+  },
+  "171": {
+    "zhCN": "几号",
+    "zhTW": "幾號",
+    "enUS": "what number"
+  },
+  "172": {
+    "zhCN": "半",
+    "zhTW": "半",
+    "enUS": "half"
+  },
+  "173": {
+    "zhCN": "9点半",
+    "zhTW": "九點半",
+    "enUS": "9:30"
+  },
+  "174": {
+    "zhCN": "星期三",
+    "zhTW": "星期三",
+    "enUS": "Wednesday"
+  },
+  "175": {
+    "zhCN": "午休",
+    "zhTW": "午休",
+    "enUS": "lunch break"
+  },
+  "176": {
+    "zhCN": "星期一",
+    "zhTW": "星期一",
+    "enUS": "Monday"
+  },
+  "177": {
+    "zhCN": "星期五",
+    "zhTW": "星期五",
+    "enUS": "Friday"
+  },
+  "178": {
+    "zhCN": "明天",
+    "zhTW": "明天",
+    "enUS": "tomorrow"
+  },
+  "179": {
+    "zhCN": "前天",
+    "zhTW": "前天",
+    "enUS": "day before yesterday"
+  },
+  "180": {
+    "zhCN": "东京",
+    "zhTW": "東京",
+    "enUS": "Tokyo"
+  },
+  "181": {
+    "zhCN": "北京",
+    "zhTW": "北京",
+    "enUS": "Beijing"
+  },
+  "182": {
+    "zhCN": "伦敦",
+    "zhTW": "倫敦",
+    "enUS": "London"
+  },
+  "183": {
+    "zhCN": "洛杉矶",
+    "zhTW": "洛杉磯",
+    "enUS": "Los Angeles"
+  },
+  "184": {
+    "zhCN": "今天",
+    "zhTW": "今天",
+    "enUS": "today"
+  },
+  "185": {
+    "zhCN": "星期二",
+    "zhTW": "星期二",
+    "enUS": "Tuesday"
+  },
+  "186": {
+    "zhCN": "会议",
+    "zhTW": "會議",
+    "enUS": "meeting"
+  },
+  "187": {
+    "zhCN": "考试",
+    "zhTW": "考試",
+    "enUS": "exam"
+  },
+  "188": {
+    "zhCN": "银行",
+    "zhTW": "銀行",
+    "enUS": "bank"
+  },
+  "189": {
+    "zhCN": "邮局",
+    "zhTW": "郵局",
+    "enUS": "post office"
+  },
+  "190": {
+    "zhCN": "百货商店",
+    "zhTW": "百貨公司",
+    "enUS": "department store"
+  },
+  "191": {
+    "zhCN": "图书馆",
+    "zhTW": "圖書館",
+    "enUS": "library"
+  },
+  "192": {
+    "zhCN": "今晚、今天晚上",
+    "zhTW": "今晚",
+    "enUS": "tonight"
+  },
+  "193": {
+    "zhCN": "白天",
+    "zhTW": "白天",
+    "enUS": "daytime"
+  },
+  "194": {
+    "zhCN": "休息",
+    "zhTW": "休息",
+    "enUS": "to rest"
+  },
+  "195": {
+    "zhCN": "晚上",
+    "zhTW": "晚上",
+    "enUS": "evening"
+  },
+  "196": {
+    "zhCN": "后天",
+    "zhTW": "後天",
+    "enUS": "day after tomorrow"
+  },
+  "197": {
+    "zhCN": "今天早上",
+    "zhTW": "今天早上",
+    "enUS": "this morning"
+  },
+  "198": {
+    "zhCN": "星期四",
+    "zhTW": "星期四",
+    "enUS": "Thursday"
+  },
+  "199": {
+    "zhCN": "结束",
+    "zhTW": "結束",
+    "enUS": "to end"
+  },
+  "200": {
+    "zhCN": "电影",
+    "zhTW": "電影",
+    "enUS": "movie"
+  },
+  "201": {
+    "zhCN": "够辛苦的啊。够累人的啊。",
+    "zhTW": "夠辛苦的啊",
+    "enUS": "That's tough"
+  },
+  "202": {
+    "zhCN": "美术馆",
+    "zhTW": "美術館",
+    "enUS": "art museum"
+  },
+  "203": {
+    "zhCN": "京都",
+    "zhTW": "京都",
+    "enUS": "Kyoto"
+  },
+  "204": {
+    "zhCN": "去",
+    "zhTW": "去",
+    "enUS": "to go"
+  },
+  "205": {
+    "zhCN": "出租车",
+    "zhTW": "計程車",
+    "enUS": "taxi"
+  },
+  "206": {
+    "zhCN": "回",
+    "zhTW": "回",
+    "enUS": "to return"
+  },
+  "207": {
+    "zhCN": "家族、家里人",
+    "zhTW": "家族",
+    "enUS": "family"
+  },
+  "208": {
+    "zhCN": "来",
+    "zhTW": "來",
+    "enUS": "to come"
+  },
+  "209": {
+    "zhCN": "奈良",
+    "zhTW": "奈良",
+    "enUS": "Nara"
+  },
+  "210": {
+    "zhCN": "新干线",
+    "zhTW": "新幹線",
+    "enUS": "Shinkansen"
+  },
+  "211": {
+    "zhCN": "什么时候",
+    "zhTW": "什麼時候",
+    "enUS": "what time"
+  },
+  "212": {
+    "zhCN": "―月",
+    "zhTW": "―月",
+    "enUS": "— month"
+  },
+  "213": {
+    "zhCN": "几月",
+    "zhTW": "幾月",
+    "enUS": "what month"
+  },
+  "214": {
+    "zhCN": "―号、―天",
+    "zhTW": "―號",
+    "enUS": "— day"
+  },
+  "215": {
+    "zhCN": "几号、几天",
+    "zhTW": "幾號",
+    "enUS": "what day"
+  },
+  "216": {
+    "zhCN": "生日",
+    "zhTW": "生日",
+    "enUS": "birthday"
+  },
+  "217": {
+    "zhCN": "电车",
+    "zhTW": "電車",
+    "enUS": "train"
+  },
+  "218": {
+    "zhCN": "甲子园（大阪附近的街名）",
+    "zhTW": "甲子園",
+    "enUS": "Koshien"
+  },
+  "219": {
+    "zhCN": "非常感谢。",
+    "zhTW": "非常感謝",
+    "enUS": "Thank you very much"
+  },
+  "220": {
+    "zhCN": "别客气。",
+    "zhTW": "不客氣",
+    "enUS": "You're welcome"
+  },
+  "221": {
+    "zhCN": "第―站台",
+    "zhTW": "第―月台",
+    "enUS": "Platform number ―"
+  },
+  "222": {
+    "zhCN": "下一个、下面",
+    "zhTW": "下一個、下面",
+    "enUS": "next, following"
+  },
+  "223": {
+    "zhCN": "普通列车、慢车",
+    "zhTW": "普通列車、慢車",
+    "enUS": "local train, slow train"
+  },
+  "224": {
+    "zhCN": "快车",
+    "zhTW": "快車",
+    "enUS": "express train"
+  },
+  "225": {
+    "zhCN": "特快",
+    "zhTW": "特快",
+    "enUS": "limited express"
+  },
+  "226": {
+    "zhCN": "超市（「スーパーマーケット」的略称）",
+    "zhTW": "超市（「超級市場」的簡稱）",
+    "enUS": "supermarket (abbreviation of \"supermarket\")"
+  },
+  "227": {
+    "zhCN": "公共汽车",
+    "zhTW": "公車",
+    "enUS": "bus"
+  },
+  "228": {
+    "zhCN": "地铁",
+    "zhTW": "捷運",
+    "enUS": "subway, metro"
+  },
+  "229": {
+    "zhCN": "自行车",
+    "zhTW": "腳踏車",
+    "enUS": "bicycle"
+  },
+  "230": {
+    "zhCN": "朋友",
+    "zhTW": "朋友",
+    "enUS": "friend"
+  },
+  "231": {
+    "zhCN": "下周",
+    "zhTW": "下週",
+    "enUS": "next week"
+  },
+  "232": {
+    "zhCN": "上个月",
+    "zhTW": "上個月",
+    "enUS": "last month"
+  },
+  "233": {
+    "zhCN": "这个月",
+    "zhTW": "這個月",
+    "enUS": "this month"
+  },
+  "234": {
+    "zhCN": "上周",
+    "zhTW": "上週",
+    "enUS": "last week"
+  },
+  "235": {
+    "zhCN": "学校",
+    "zhTW": "學校",
+    "enUS": "school"
+  },
+  "236": {
+    "zhCN": "飞机",
+    "zhTW": "飛機",
+    "enUS": "airplane"
+  },
+  "237": {
+    "zhCN": "九州、九州地区",
+    "zhTW": "九州、九州地區",
+    "enUS": "Kyushu, Kyushu region"
+  },
+  "238": {
+    "zhCN": "船",
+    "zhTW": "船",
+    "enUS": "ship, boat"
+  },
+  "239": {
+    "zhCN": "车站",
+    "zhTW": "車站",
+    "enUS": "station"
+  },
+  "240": {
+    "zhCN": "走路",
+    "zhTW": "走路",
+    "enUS": "on foot, walking"
+  },
+  "241": {
+    "zhCN": "她、女朋友",
+    "zhTW": "她、女朋友",
+    "enUS": "she, girlfriend"
+  },
+  "242": {
+    "zhCN": "他、男朋友",
+    "zhTW": "他、男朋友",
+    "enUS": "he, boyfriend"
+  },
+  "243": {
+    "zhCN": "人",
+    "zhTW": "人",
+    "enUS": "person"
+  },
+  "244": {
+    "zhCN": "一个人、自己",
+    "zhTW": "一個人、自己",
+    "enUS": "alone, by oneself"
+  },
+  "245": {
+    "zhCN": "3号、3天",
+    "zhTW": "3號、3天",
+    "enUS": "3rd (day of month), 3 days"
+  },
+  "246": {
+    "zhCN": "14号、14天",
+    "zhTW": "14號、14天",
+    "enUS": "14th (day of month), 14 days"
+  },
+  "247": {
+    "zhCN": "明年",
+    "zhTW": "明年",
+    "enUS": "next year"
+  },
+  "248": {
+    "zhCN": "下个月",
+    "zhTW": "下個月",
+    "enUS": "next month"
+  },
+  "249": {
+    "zhCN": "这周",
+    "zhTW": "這週",
+    "enUS": "this week"
+  },
+  "250": {
+    "zhCN": "去年",
+    "zhTW": "去年",
+    "enUS": "last year"
+  },
+  "251": {
+    "zhCN": "―年",
+    "zhTW": "―年",
+    "enUS": "― year(s)"
+  },
+  "252": {
+    "zhCN": "几年",
+    "zhTW": "幾年",
+    "enUS": "how many years"
+  },
+  "253": {
+    "zhCN": "大阪城（大阪有名的城郭）",
+    "zhTW": "大阪城（大阪有名的城郭）",
+    "enUS": "Osaka Castle (famous castle in Osaka)"
+  },
+  "254": {
+    "zhCN": "6号、6天",
+    "zhTW": "6號、6天",
+    "enUS": "6th (day of month), 6 days"
+  },
+  "255": {
+    "zhCN": "10号、10天",
+    "zhTW": "10號、10天",
+    "enUS": "10th (day of month), 10 days"
+  },
+  "256": {
+    "zhCN": "9号、9天",
+    "zhTW": "9號、9天",
+    "enUS": "9th (day of month), 9 days"
+  },
+  "257": {
+    "zhCN": "1号",
+    "zhTW": "1號",
+    "enUS": "1st (day of month)"
+  },
+  "258": {
+    "zhCN": "是啊。",
+    "zhTW": "是啊。",
+    "enUS": "That's right. Yes, indeed."
+  },
+  "259": {
+    "zhCN": "8号、8天",
+    "zhTW": "8號、8天",
+    "enUS": "8th (day of month), 8 days"
+  },
+  "260": {
+    "zhCN": "4号、4天",
+    "zhTW": "4號、4天",
+    "enUS": "4th (day of month), 4 days"
+  },
+  "261": {
+    "zhCN": "2号、2天",
+    "zhTW": "2號、2天",
+    "enUS": "2nd (day of month), 2 days"
+  },
+  "262": {
+    "zhCN": "5号、5天",
+    "zhTW": "5號、5天",
+    "enUS": "5th (day of month), 5 days"
+  },
+  "263": {
+    "zhCN": "7号、7天",
+    "zhTW": "7號、7天",
+    "enUS": "7th (day of month), 7 days"
+  },
+  "264": {
+    "zhCN": "20号、20天",
+    "zhTW": "20號、20天",
+    "enUS": "20th (day of month), 20 days"
+  },
+  "265": {
+    "zhCN": "24号、24天",
+    "zhTW": "24號、24天",
+    "enUS": "24th (day of month), 24 days"
+  },
+  "266": {
+    "zhCN": "今年",
+    "zhTW": "今年",
+    "enUS": "this year"
+  },
+  "267": {
+    "zhCN": "读",
+    "zhTW": "讀",
+    "enUS": "to read"
+  },
+  "268": {
+    "zhCN": "买",
+    "zhTW": "買",
+    "enUS": "to buy"
+  },
+  "269": {
+    "zhCN": "一起",
+    "zhTW": "一起",
+    "enUS": "together"
+  },
+  "270": {
+    "zhCN": "一会儿、一点儿",
+    "zhTW": "一會兒、一點兒",
+    "enUS": "a little while, a little bit"
+  },
+  "271": {
+    "zhCN": "酒、日本酒",
+    "zhTW": "酒、日本酒",
+    "enUS": "alcohol, Japanese sake"
+  },
+  "272": {
+    "zhCN": "喝",
+    "zhTW": "喝",
+    "enUS": "to drink"
+  },
+  "273": {
+    "zhCN": "什么",
+    "zhTW": "什麼",
+    "enUS": "what"
+  },
+  "274": {
+    "zhCN": "吃",
+    "zhTW": "吃",
+    "enUS": "to eat"
+  },
+  "275": {
+    "zhCN": "面包",
+    "zhTW": "麵包",
+    "enUS": "bread"
+  },
+  "276": {
+    "zhCN": "鸡蛋",
+    "zhTW": "雞蛋",
+    "enUS": "egg"
+  },
+  "277": {
+    "zhCN": "做、干",
+    "zhTW": "做、幹",
+    "enUS": "to do"
+  },
+  "278": {
+    "zhCN": "然后",
+    "zhTW": "然後",
+    "enUS": "then, after that"
+  },
+  "279": {
+    "zhCN": "看",
+    "zhTW": "看",
+    "enUS": "to see, to watch"
+  },
+  "280": {
+    "zhCN": "墨西哥",
+    "zhTW": "墨西哥",
+    "enUS": "Mexico"
+  },
+  "281": {
+    "zhCN": "嗯、是",
+    "zhTW": "嗯、是",
+    "enUS": "yes, uh-huh"
+  },
+  "282": {
+    "zhCN": "好啊。",
+    "zhTW": "好啊。",
+    "enUS": "That's good. That sounds nice."
+  },
+  "283": {
+    "zhCN": "见面",
+    "zhTW": "見面",
+    "enUS": "to meet"
+  },
+  "284": {
+    "zhCN": "跟朋友见面。",
+    "zhTW": "跟朋友見面。",
+    "enUS": "to meet with friends"
+  },
+  "285": {
+    "zhCN": "明白了。",
+    "zhTW": "明白了。",
+    "enUS": "I understand. Got it."
+  },
+  "286": {
+    "zhCN": "什么（事儿）？",
+    "zhTW": "什麼（事兒）？",
+    "enUS": "What (is it)?"
+  },
+  "287": {
+    "zhCN": "看花、赏花",
+    "zhTW": "看花、賞花",
+    "enUS": "cherry blossom viewing"
+  },
+  "288": {
+    "zhCN": "那明天见。",
+    "zhTW": "那明天見。",
+    "enUS": "See you tomorrow then."
+  },
+  "289": {
+    "zhCN": "水果",
+    "zhTW": "水果",
+    "enUS": "fruit"
+  },
+  "290": {
+    "zhCN": "肉",
+    "zhTW": "肉",
+    "enUS": "meat"
+  },
+  "291": {
+    "zhCN": "蔬菜",
+    "zhTW": "蔬菜",
+    "enUS": "vegetables"
+  },
+  "292": {
+    "zhCN": "足球",
+    "zhTW": "足球",
+    "enUS": "soccer, football"
+  },
+  "293": {
+    "zhCN": "录像带、录像机",
+    "zhTW": "錄影帶、錄影機",
+    "enUS": "video, video recorder"
+  },
+  "294": {
+    "zhCN": "红茶",
+    "zhTW": "紅茶",
+    "enUS": "black tea"
+  },
+  "295": {
+    "zhCN": "店",
+    "zhTW": "店",
+    "enUS": "shop, store"
+  },
+  "296": {
+    "zhCN": "茶、日本茶",
+    "zhTW": "茶、日本茶",
+    "enUS": "tea, Japanese tea"
+  },
+  "297": {
+    "zhCN": "听",
+    "zhTW": "聽",
+    "enUS": "to listen"
+  },
+  "298": {
+    "zhCN": "水",
+    "zhTW": "水",
+    "enUS": "water"
+  },
+  "299": {
+    "zhCN": "信",
+    "zhTW": "信",
+    "enUS": "letter"
+  },
+  "300": {
+    "zhCN": "写",
+    "zhTW": "寫",
+    "enUS": "to write"
+  },
+  "301": {
+    "zhCN": "照片",
+    "zhTW": "照片",
+    "enUS": "photograph, picture"
+  },
+  "302": {
+    "zhCN": "照、拍摄",
+    "zhTW": "照、拍攝",
+    "enUS": "to take (a photo), to shoot"
+  },
+  "303": {
+    "zhCN": "照相。",
+    "zhTW": "照相。",
+    "enUS": "to take a picture"
+  },
+  "304": {
+    "zhCN": "香烟",
+    "zhTW": "香菸",
+    "enUS": "cigarette, tobacco"
+  },
+  "305": {
+    "zhCN": "吸、抽（烟）",
+    "zhTW": "吸、抽（菸）",
+    "enUS": "to smoke, to inhale"
+  },
+  "306": {
+    "zhCN": "抽烟。",
+    "zhTW": "抽菸。",
+    "enUS": "to smoke cigarettes"
+  },
+  "307": {
+    "zhCN": "果汁",
+    "zhTW": "果汁",
+    "enUS": "juice"
+  },
+  "308": {
+    "zhCN": "鱼",
+    "zhTW": "魚",
+    "enUS": "fish"
+  },
+  "309": {
+    "zhCN": "报告、小论文",
+    "zhTW": "報告、小論文",
+    "enUS": "report, essay"
+  },
+  "310": {
+    "zhCN": "庭院、院子",
+    "zhTW": "庭院、院子",
+    "enUS": "garden, yard"
+  },
+  "311": {
+    "zhCN": "午饭",
+    "zhTW": "午飯",
+    "enUS": "lunch"
+  },
+  "312": {
+    "zhCN": "牛奶",
+    "zhTW": "牛奶",
+    "enUS": "milk"
+  },
+  "313": {
+    "zhCN": "作业",
+    "zhTW": "作業",
+    "enUS": "homework"
+  },
+  "314": {
+    "zhCN": "米饭、饭",
+    "zhTW": "米飯、飯",
+    "enUS": "rice, meal"
+  },
+  "315": {
+    "zhCN": "啤酒",
+    "zhTW": "啤酒",
+    "enUS": "beer"
+  },
+  "316": {
+    "zhCN": "经常、总是",
+    "zhTW": "經常、總是",
+    "enUS": "always, often"
+  },
+  "317": {
+    "zhCN": "有时",
+    "zhTW": "有時",
+    "enUS": "sometimes"
+  },
+  "318": {
+    "zhCN": "网球",
+    "zhTW": "網球",
+    "enUS": "tennis"
+  },
+  "319": {
+    "zhCN": "早饭",
+    "zhTW": "早飯",
+    "enUS": "breakfast"
+  },
+  "320": {
+    "zhCN": "晚饭",
+    "zhTW": "晚飯",
+    "enUS": "dinner"
+  },
+  "321": {
+    "zhCN": "电脑",
+    "zhTW": "電腦",
+    "enUS": "computer"
+  },
+  "322": {
+    "zhCN": "花",
+    "zhTW": "花",
+    "enUS": "flower"
+  },
+  "323": {
+    "zhCN": "给（你）",
+    "zhTW": "給（你）",
+    "enUS": "to give"
+  },
+  "324": {
+    "zhCN": "得到",
+    "zhTW": "得到",
+    "enUS": "to receive"
+  },
+  "325": {
+    "zhCN": "电子邮件",
+    "zhTW": "電子郵件",
+    "enUS": "email"
+  },
+  "326": {
+    "zhCN": "再见",
+    "zhTW": "再見",
+    "enUS": "goodbye"
+  },
+  "327": {
+    "zhCN": "贺年卡",
+    "zhTW": "賀年卡",
+    "enUS": "New Year's card"
+  },
+  "328": {
+    "zhCN": "已经",
+    "zhTW": "已經",
+    "enUS": "already"
+  },
+  "329": {
+    "zhCN": "已经6点了啊。",
+    "zhTW": "已經6點了啊。",
+    "enUS": "It's already 6 o'clock."
+  },
+  "330": {
+    "zhCN": "车票",
+    "zhTW": "車票",
+    "enUS": "ticket"
+  },
+  "331": {
+    "zhCN": "还、尚未",
+    "zhTW": "還、尚未",
+    "enUS": "still; not yet"
+  },
+  "332": {
+    "zhCN": "现在（马上去做某事）",
+    "zhTW": "現在（馬上去做某事）",
+    "enUS": "from now; about to do"
+  },
+  "333": {
+    "zhCN": "欢迎。",
+    "zhTW": "歡迎。",
+    "enUS": "Welcome."
+  },
+  "334": {
+    "zhCN": "请进。",
+    "zhTW": "請進。",
+    "enUS": "Please come in."
+  },
+  "335": {
+    "zhCN": "打搅了。",
+    "zhTW": "打擾了。",
+    "enUS": "Excuse me. (when entering)"
+  },
+  "336": {
+    "zhCN": "～怎么样？",
+    "zhTW": "～怎麼樣？",
+    "enUS": "How about ~?"
+  },
+  "337": {
+    "zhCN": "我开动啦。",
+    "zhTW": "我開動啦。",
+    "enUS": "Let's eat. (before meal)"
+  },
+  "338": {
+    "zhCN": "我吃好了。",
+    "zhTW": "我吃好了。",
+    "enUS": "Thank you for the meal. (after meal)"
+  },
+  "339": {
+    "zhCN": "勺子",
+    "zhTW": "湯匙",
+    "enUS": "spoon"
+  },
+  "340": {
+    "zhCN": "～，真棒啊！",
+    "zhTW": "～，真棒啊！",
+    "enUS": "~, how nice!"
+  },
+  "341": {
+    "zhCN": "筷子",
+    "zhTW": "筷子",
+    "enUS": "chopsticks"
+  },
+  "342": {
+    "zhCN": "叉子",
+    "zhTW": "叉子",
+    "enUS": "fork"
+  },
+  "343": {
+    "zhCN": "刀子",
+    "zhTW": "刀子",
+    "enUS": "knife"
+  },
+  "344": {
+    "zhCN": "西班牙",
+    "zhTW": "西班牙",
+    "enUS": "Spain"
+  },
+  "345": {
+    "zhCN": "行李、包裹",
+    "zhTW": "行李、包裹",
+    "enUS": "luggage; package"
+  },
+  "346": {
+    "zhCN": "寄、送",
+    "zhTW": "寄、送",
+    "enUS": "to send; to mail"
+  },
+  "347": {
+    "zhCN": "礼物",
+    "zhTW": "禮物",
+    "enUS": "present; gift"
+  },
+  "348": {
+    "zhCN": "纸",
+    "zhTW": "紙",
+    "enUS": "paper"
+  },
+  "349": {
+    "zhCN": "切、剪",
+    "zhTW": "切、剪",
+    "enUS": "to cut"
+  },
+  "350": {
+    "zhCN": "剪子",
+    "zhTW": "剪刀",
+    "enUS": "scissors"
+  },
+  "351": {
+    "zhCN": "手",
+    "zhTW": "手",
+    "enUS": "hand"
+  },
+  "352": {
+    "zhCN": "手机",
+    "zhTW": "手機",
+    "enUS": "mobile phone"
+  },
+  "353": {
+    "zhCN": "打孔机",
+    "zhTW": "打孔機",
+    "enUS": "hole punch"
+  },
+  "354": {
+    "zhCN": "透明胶带",
+    "zhTW": "透明膠帶",
+    "enUS": "clear tape; cellophane tape"
+  },
+  "355": {
+    "zhCN": "订书机",
+    "zhTW": "訂書機",
+    "enUS": "stapler"
+  },
+  "356": {
+    "zhCN": "橡皮",
+    "zhTW": "橡皮擦",
+    "enUS": "eraser"
+  },
+  "357": {
+    "zhCN": "借给、借出",
+    "zhTW": "借給、借出",
+    "enUS": "to lend"
+  },
+  "358": {
+    "zhCN": "借钱给小李。",
+    "zhTW": "借錢給小李。",
+    "enUS": "Lend money to Xiao Li."
+  },
+  "359": {
+    "zhCN": "教、告诉",
+    "zhTW": "教、告訴",
+    "enUS": "to teach; to tell"
+  },
+  "360": {
+    "zhCN": "教学生日语。",
+    "zhTW": "教學生日語。",
+    "enUS": "Teach students Japanese."
+  },
+  "361": {
+    "zhCN": "（自己的）母亲",
+    "zhTW": "（自己的）母親",
+    "enUS": "(one's own) mother"
+  },
+  "362": {
+    "zhCN": "（自己的）父亲",
+    "zhTW": "（自己的）父親",
+    "enUS": "(one's own) father"
+  },
+  "363": {
+    "zhCN": "衬衫",
+    "zhTW": "襯衫",
+    "enUS": "shirt"
+  },
+  "364": {
+    "zhCN": "借入",
+    "zhTW": "借入",
+    "enUS": "to borrow"
+  },
+  "365": {
+    "zhCN": "找小王借书。",
+    "zhTW": "找小王借書。",
+    "enUS": "Borrow a book from Xiao Wang."
+  },
+  "366": {
+    "zhCN": "学习",
+    "zhTW": "學習",
+    "enUS": "to learn; to study"
+  },
+  "367": {
+    "zhCN": "打（电话）",
+    "zhTW": "打（電話）",
+    "enUS": "to make (a phone call)"
+  },
+  "368": {
+    "zhCN": "打电话。",
+    "zhTW": "打電話。",
+    "enUS": "Make a phone call."
+  },
+  "369": {
+    "zhCN": "钱",
+    "zhTW": "錢",
+    "enUS": "money"
+  },
+  "370": {
+    "zhCN": "（别人的）母亲（叫自己的母亲时也可以使用）",
+    "zhTW": "（別人的）母親（叫自己的母親時也可以使用）",
+    "enUS": "(someone else's) mother (can also be used for one's own mother)"
+  },
+  "371": {
+    "zhCN": "（别人的）父亲（叫自己的父亲时也可以使用）",
+    "zhTW": "（別人的）父親（叫自己的父親時也可以使用）",
+    "enUS": "(Someone else's) father (can also be used when addressing one's own father)"
+  },
+  "372": {
+    "zhCN": "圣诞节",
+    "zhTW": "聖誕節",
+    "enUS": "Christmas"
+  },
+  "373": {
+    "zhCN": "圣诞贺卡",
+    "zhTW": "聖誕賀卡",
+    "enUS": "Christmas card"
+  },
+  "374": {
+    "zhCN": "樱花",
+    "zhTW": "櫻花",
+    "enUS": "cherry blossom"
+  },
+  "375": {
+    "zhCN": "漂亮",
+    "zhTW": "漂亮",
+    "enUS": "beautiful, pretty"
+  },
+  "376": {
+    "zhCN": "富士山",
+    "zhTW": "富士山",
+    "enUS": "Mount Fuji"
+  },
+  "377": {
+    "zhCN": "贵、高",
+    "zhTW": "貴、高",
+    "enUS": "expensive, high"
+  },
+  "378": {
+    "zhCN": "山",
+    "zhTW": "山",
+    "enUS": "mountain"
+  },
+  "379": {
+    "zhCN": "热闹",
+    "zhTW": "熱鬧",
+    "enUS": "lively, bustling"
+  },
+  "380": {
+    "zhCN": "有名",
+    "zhTW": "有名",
+    "enUS": "famous"
+  },
+  "381": {
+    "zhCN": "冷",
+    "zhTW": "冷",
+    "enUS": "cold"
+  },
+  "382": {
+    "zhCN": "非常",
+    "zhTW": "非常",
+    "enUS": "very, extremely"
+  },
+  "383": {
+    "zhCN": "上海",
+    "zhTW": "上海",
+    "enUS": "Shanghai"
+  },
+  "384": {
+    "zhCN": "太～（与否定式一起使用）",
+    "zhTW": "太～（與否定式一起使用）",
+    "enUS": "too ~ (used with negative forms)"
+  },
+  "385": {
+    "zhCN": "宿舍",
+    "zhTW": "宿舍",
+    "enUS": "dormitory"
+  },
+  "386": {
+    "zhCN": "怎么样",
+    "zhTW": "怎麼樣",
+    "enUS": "how, what kind of"
+  },
+  "387": {
+    "zhCN": "旧",
+    "zhTW": "舊",
+    "enUS": "old"
+  },
+  "388": {
+    "zhCN": "方便",
+    "zhTW": "方便",
+    "enUS": "convenient"
+  },
+  "389": {
+    "zhCN": "～，但是～",
+    "zhTW": "～，但是～",
+    "enUS": "~, but ~"
+  },
+  "390": {
+    "zhCN": "很旧，但很方便。",
+    "zhTW": "很舊，但很方便。",
+    "enUS": "It's old, but convenient."
+  },
+  "391": {
+    "zhCN": "什么样的～",
+    "zhTW": "什麼樣的～",
+    "enUS": "what kind of ~"
+  },
+  "392": {
+    "zhCN": "于是（连接句子时使用）",
+    "zhTW": "於是（連接句子時使用）",
+    "enUS": "then, and then (used to connect sentences)"
+  },
+  "393": {
+    "zhCN": "有意思",
+    "zhTW": "有意思",
+    "enUS": "interesting, fun"
+  },
+  "394": {
+    "zhCN": "大",
+    "zhTW": "大",
+    "enUS": "big, large"
+  },
+  "395": {
+    "zhCN": "《七武士》（黑泽明导演的电影）",
+    "zhTW": "《七武士》（黑澤明導演的電影）",
+    "enUS": "Seven Samurai (film directed by Akira Kurosawa)"
+  },
+  "396": {
+    "zhCN": "该告辞了。",
+    "zhTW": "該告辭了。",
+    "enUS": "It's time to take my leave."
+  },
+  "397": {
+    "zhCN": "生活",
+    "zhTW": "生活",
+    "enUS": "life, living"
+  },
+  "398": {
+    "zhCN": "愉快、高兴",
+    "zhTW": "愉快、高興",
+    "enUS": "enjoyable, fun, happy"
+  },
+  "399": {
+    "zhCN": "工作",
+    "zhTW": "工作",
+    "enUS": "work, job"
+  },
+  "400": {
+    "zhCN": "嗯。",
+    "zhTW": "嗯。",
+    "enUS": "Yes, that's right."
+  },
+  "401": {
+    "zhCN": "忙",
+    "zhTW": "忙",
+    "enUS": "busy"
+  },
+  "402": {
+    "zhCN": "已经～了吧。",
+    "zhTW": "已經～了吧。",
+    "enUS": "It's already ~, isn't it?"
+  },
+  "403": {
+    "zhCN": "一杯、一碗",
+    "zhTW": "一杯、一碗",
+    "enUS": "one cup, one bowl"
+  },
+  "404": {
+    "zhCN": "再来一杯～怎么样？",
+    "zhTW": "再來一杯～怎麼樣？",
+    "enUS": "How about another cup/drink?"
+  },
+  "405": {
+    "zhCN": "不，已经够了，谢谢。",
+    "zhTW": "不，已經夠了，謝謝。",
+    "enUS": "No, that's enough, thank you."
+  },
+  "406": {
+    "zhCN": "不。没什么。",
+    "zhTW": "不。沒什麼。",
+    "enUS": "No. It's nothing."
+  },
+  "407": {
+    "zhCN": "又、再",
+    "zhTW": "又、再",
+    "enUS": "again, also"
+  },
+  "408": {
+    "zhCN": "请再来。",
+    "zhTW": "請再來。",
+    "enUS": "Please come again."
+  },
+  "409": {
+    "zhCN": "好",
+    "zhTW": "好",
+    "enUS": "good"
+  },
+  "410": {
+    "zhCN": "坏",
+    "zhTW": "壞",
+    "enUS": "bad"
+  },
+  "411": {
+    "zhCN": "健康",
+    "zhTW": "健康",
+    "enUS": "healthy, well"
+  },
+  "412": {
+    "zhCN": "好吃",
+    "zhTW": "好吃",
+    "enUS": "delicious, tasty"
+  },
+  "413": {
+    "zhCN": "市镇、街道",
+    "zhTW": "市鎮、街道",
+    "enUS": "town, street"
+  },
+  "414": {
+    "zhCN": "安静",
+    "zhTW": "安靜",
+    "enUS": "quiet"
+  },
+  "415": {
+    "zhCN": "亲切（不用于自己的亲属）",
+    "zhTW": "親切（不用於自己的親屬）",
+    "enUS": "kind, friendly (not used for one's own relatives)"
+  },
+  "416": {
+    "zhCN": "（体感）热",
+    "zhTW": "（體感）熱",
+    "enUS": "(weather/ambient) hot"
+  },
+  "417": {
+    "zhCN": "（接触的东西）热",
+    "zhTW": "（接觸的東西）熱",
+    "enUS": "(to touch) hot"
+  },
+  "418": {
+    "zhCN": "有时间、有空儿",
+    "zhTW": "有時間、有空兒",
+    "enUS": "free time, leisure"
+  },
+  "419": {
+    "zhCN": "新、新鲜",
+    "zhTW": "新、新鮮",
+    "enUS": "new, fresh"
+  },
+  "420": {
+    "zhCN": "容易",
+    "zhTW": "容易",
+    "enUS": "easy"
+  },
+  "421": {
+    "zhCN": "英俊、美男子",
+    "zhTW": "英俊、美男子",
+    "enUS": "handsome, good-looking man"
+  },
+  "422": {
+    "zhCN": "餐厅",
+    "zhTW": "餐廳",
+    "enUS": "restaurant"
+  },
+  "423": {
+    "zhCN": "便宜",
+    "zhTW": "便宜",
+    "enUS": "cheap, inexpensive"
+  },
+  "424": {
+    "zhCN": "低、矮",
+    "zhTW": "低、矮",
+    "enUS": "low, short"
+  },
+  "425": {
+    "zhCN": "食物",
+    "zhTW": "食物",
+    "enUS": "food"
+  },
+  "426": {
+    "zhCN": "蓝色",
+    "zhTW": "藍色",
+    "enUS": "blue"
+  },
+  "427": {
+    "zhCN": "凉",
+    "zhTW": "涼",
+    "enUS": "cold, cool"
+  },
+  "428": {
+    "zhCN": "特别好",
+    "zhTW": "特別好",
+    "enUS": "wonderful, lovely"
+  },
+  "429": {
+    "zhCN": "你身体好吗？",
+    "zhTW": "你身體好嗎？",
+    "enUS": "How are you?"
+  },
+  "430": {
+    "zhCN": "难",
+    "zhTW": "難",
+    "enUS": "difficult"
+  },
+  "431": {
+    "zhCN": "红色",
+    "zhTW": "紅色",
+    "enUS": "red"
+  },
+  "432": {
+    "zhCN": "白色",
+    "zhTW": "白色",
+    "enUS": "white"
+  },
+  "433": {
+    "zhCN": "黑色",
+    "zhTW": "黑色",
+    "enUS": "black"
+  },
+  "434": {
+    "zhCN": "金阁寺",
+    "zhTW": "金閣寺",
+    "enUS": "Kinkaku-ji (Golden Pavilion)"
+  },
+  "435": {
+    "zhCN": "地方",
+    "zhTW": "地方",
+    "enUS": "place"
+  },
+  "436": {
+    "zhCN": "长崎",
+    "zhTW": "長崎",
+    "enUS": "Nagasaki"
+  },
+  "437": {
+    "zhCN": "奈良公园",
+    "zhTW": "奈良公園",
+    "enUS": "Nara Park"
+  },
+  "438": {
+    "zhCN": "小",
+    "zhTW": "小",
+    "enUS": "small"
+  },
+  "439": {
+    "zhCN": "菜肴",
+    "zhTW": "菜餚",
+    "enUS": "cuisine, cooking"
+  },
+  "440": {
+    "zhCN": "喜欢",
+    "zhTW": "喜歡",
+    "enUS": "like, love"
+  },
+  "441": {
+    "zhCN": "喜欢日语。",
+    "zhTW": "喜歡日語。",
+    "enUS": "I like Japanese."
+  },
+  "442": {
+    "zhCN": "一些、一点儿",
+    "zhTW": "一些、一點兒",
+    "enUS": "a little, a bit"
+  },
+  "443": {
+    "zhCN": "懂、明白",
+    "zhTW": "懂、明白",
+    "enUS": "understand, know"
+  },
+  "444": {
+    "zhCN": "孩子",
+    "zhTW": "孩子",
+    "enUS": "child, children"
+  },
+  "445": {
+    "zhCN": "因为～",
+    "zhTW": "因為～",
+    "enUS": "because"
+  },
+  "446": {
+    "zhCN": "早、快",
+    "zhTW": "早、快",
+    "enUS": "early, fast"
+  },
+  "447": {
+    "zhCN": "体育、运动",
+    "zhTW": "體育、運動",
+    "enUS": "sports"
+  },
+  "448": {
+    "zhCN": "画",
+    "zhTW": "畫",
+    "enUS": "picture, painting"
+  },
+  "449": {
+    "zhCN": "好、擅长",
+    "zhTW": "好、擅長",
+    "enUS": "good at, skilled"
+  },
+  "450": {
+    "zhCN": "完全～（后接否定式）",
+    "zhTW": "完全～（後接否定式）",
+    "enUS": "not at all (used with negative)"
+  },
+  "451": {
+    "zhCN": "细小、零碎",
+    "zhTW": "細小、零碎",
+    "enUS": "small, detailed"
+  },
+  "452": {
+    "zhCN": "零钱",
+    "zhTW": "零錢",
+    "enUS": "small change"
+  },
+  "453": {
+    "zhCN": "在、有（不会活动的东西）",
+    "zhTW": "在、有（不會活動的東西）",
+    "enUS": "there is/are (for inanimate objects)"
+  },
+  "454": {
+    "zhCN": "时间",
+    "zhTW": "時間",
+    "enUS": "time"
+  },
+  "455": {
+    "zhCN": "怎么、为什么",
+    "zhTW": "怎麼、為什麼",
+    "enUS": "why, how"
+  },
+  "456": {
+    "zhCN": "事情",
+    "zhTW": "事情",
+    "enUS": "business, matter"
+  },
+  "457": {
+    "zhCN": "啊",
+    "zhTW": "啊",
+    "enUS": "ah, oh"
+  },
+  "458": {
+    "zhCN": "古典音乐",
+    "zhTW": "古典音樂",
+    "enUS": "classical music"
+  },
+  "459": {
+    "zhCN": "音乐会、演唱会",
+    "zhTW": "音樂會、演唱會",
+    "enUS": "concert"
+  },
+  "460": {
+    "zhCN": "一起来怎么样？",
+    "zhTW": "一起來怎麼樣？",
+    "enUS": "How about going together?"
+  },
+  "461": {
+    "zhCN": "有点儿……（委婉拒绝别人时使用）",
+    "zhTW": "有點兒……（委婉拒絕別人時使用）",
+    "enUS": "a little... (used for polite refusal)"
+  },
+  "462": {
+    "zhCN": "不行、不好",
+    "zhTW": "不行、不好",
+    "enUS": "no good, not allowed"
+  },
+  "463": {
+    "zhCN": "不行吗？",
+    "zhTW": "不行嗎？",
+    "enUS": "Is it no good?"
+  },
+  "464": {
+    "zhCN": "非常遗憾，不过～",
+    "zhTW": "非常遺憾，不過～",
+    "enUS": "I'm sorry, but..."
+  },
+  "465": {
+    "zhCN": "约定",
+    "zhTW": "約定",
+    "enUS": "appointment, promise"
+  },
+  "466": {
+    "zhCN": "下次、这次、上次",
+    "zhTW": "下次、這次、上次",
+    "enUS": "next time, this time, last time"
+  },
+  "467": {
+    "zhCN": "那下次再多多关照吧。（考虑到对方的心情用来间接拒绝对方时的说法）",
+    "zhTW": "那下次再多多關照吧。（考慮到對方的心情用來間接拒絕對方時的說法）",
+    "enUS": "Please ask me again next time. (polite way to decline while considering the other person's feelings)"
+  },
+  "468": {
+    "zhCN": "平假名",
+    "zhTW": "平假名",
+    "enUS": "hiragana"
+  },
+  "469": {
+    "zhCN": "字",
+    "zhTW": "字",
+    "enUS": "character, letter"
+  },
+  "470": {
+    "zhCN": "汉字",
+    "zhTW": "漢字",
+    "enUS": "Chinese characters, kanji"
+  },
+  "471": {
+    "zhCN": "舞",
+    "zhTW": "舞蹈",
+    "enUS": "dance"
+  },
+  "472": {
+    "zhCN": "卡拉OK",
+    "zhTW": "卡拉OK",
+    "enUS": "karaoke"
+  },
+  "473": {
+    "zhCN": "旅行",
+    "zhTW": "旅行",
+    "enUS": "travel"
+  },
+  "474": {
+    "zhCN": "棒球",
+    "zhTW": "棒球",
+    "enUS": "baseball"
+  },
+  "475": {
+    "zhCN": "饮料",
+    "zhTW": "飲料",
+    "enUS": "beverage"
+  },
+  "476": {
+    "zhCN": "爵士乐",
+    "zhTW": "爵士樂",
+    "enUS": "jazz"
+  },
+  "477": {
+    "zhCN": "音乐",
+    "zhTW": "音樂",
+    "enUS": "music"
+  },
+  "478": {
+    "zhCN": "歌",
+    "zhTW": "歌",
+    "enUS": "song"
+  },
+  "479": {
+    "zhCN": "片假名",
+    "zhTW": "片假名",
+    "enUS": "katakana"
+  },
+  "480": {
+    "zhCN": "罗马字",
+    "zhTW": "羅馬字",
+    "enUS": "Roman letters"
+  },
+  "481": {
+    "zhCN": "很",
+    "zhTW": "很",
+    "enUS": "well, often"
+  },
+  "482": {
+    "zhCN": "大致、大略",
+    "zhTW": "大致、大略",
+    "enUS": "mostly, roughly"
+  },
+  "483": {
+    "zhCN": "（别人的）妻子",
+    "zhTW": "（別人的）妻子",
+    "enUS": "(someone else's) wife"
+  },
+  "484": {
+    "zhCN": "临时工",
+    "zhTW": "臨時工",
+    "enUS": "part-time job"
+  },
+  "485": {
+    "zhCN": "（自己的）妻子",
+    "zhTW": "（自己的）妻子",
+    "enUS": "(one's own) wife"
+  },
+  "486": {
+    "zhCN": "不好、不擅长",
+    "zhTW": "不好、不擅長",
+    "enUS": "poor at, not good at"
+  },
+  "487": {
+    "zhCN": "（别人的）丈夫",
+    "zhTW": "（別人的）丈夫",
+    "enUS": "(someone else's) husband"
+  },
+  "488": {
+    "zhCN": "（自己的）丈夫",
+    "zhTW": "（自己的）丈夫",
+    "enUS": "(one's own) husband"
+  },
+  "489": {
+    "zhCN": "不喜欢",
+    "zhTW": "不喜歡",
+    "enUS": "dislike"
+  },
+  "490": {
+    "zhCN": "很多",
+    "zhTW": "很多",
+    "enUS": "a lot, many"
+  },
+  "491": {
+    "zhCN": "请借给我吧。",
+    "zhTW": "請借給我吧。",
+    "enUS": "Please lend it to me."
+  },
+  "492": {
+    "zhCN": "可以。",
+    "zhTW": "可以。",
+    "enUS": "Sure, it's okay."
+  },
+  "493": {
+    "zhCN": "票",
+    "zhTW": "票",
+    "enUS": "ticket"
+  },
+  "494": {
+    "zhCN": "歌舞伎（日本传统剧种之一）",
+    "zhTW": "歌舞伎（日本傳統劇種之一）",
+    "enUS": "kabuki (traditional Japanese theater)"
+  },
+  "495": {
+    "zhCN": "便利店",
+    "zhTW": "便利商店",
+    "enUS": "convenience store"
+  },
+  "496": {
+    "zhCN": "在、有（会活动的人、动物）",
+    "zhTW": "在、有（會活動的人、動物）",
+    "enUS": "to be, to exist (for living beings)"
+  },
+  "497": {
+    "zhCN": "东京迪士尼乐园",
+    "zhTW": "東京迪士尼樂園",
+    "enUS": "Tokyo Disneyland"
+  },
+  "498": {
+    "zhCN": "县",
+    "zhTW": "縣",
+    "enUS": "prefecture"
+  },
+  "499": {
+    "zhCN": "千叶县",
+    "zhTW": "千葉縣",
+    "enUS": "Chiba Prefecture"
+  },
+  "500": {
+    "zhCN": "自动柜员机",
+    "zhTW": "自動櫃員機",
+    "enUS": "ATM"
+  },
+  "501": {
+    "zhCN": "男人",
+    "zhTW": "男人",
+    "enUS": "man"
+  },
+  "502": {
+    "zhCN": "猫",
+    "zhTW": "貓",
+    "enUS": "cat"
+  },
+  "503": {
+    "zhCN": "箱子",
+    "zhTW": "箱子",
+    "enUS": "box"
+  },
+  "504": {
+    "zhCN": "中间、里面",
+    "zhTW": "中間、裡面",
+    "enUS": "inside, middle"
+  },
+  "505": {
+    "zhCN": "外边",
+    "zhTW": "外邊",
+    "enUS": "outside"
+  },
+  "506": {
+    "zhCN": "～什么的、等、和",
+    "zhTW": "～什麼的、等、和",
+    "enUS": "and so on, etc."
+  },
+  "507": {
+    "zhCN": "附近",
+    "zhTW": "附近",
+    "enUS": "nearby"
+  },
+  "508": {
+    "zhCN": "前",
+    "zhTW": "前",
+    "enUS": "front"
+  },
+  "509": {
+    "zhCN": "鱼酱",
+    "zhTW": "魚醬",
+    "enUS": "fish sauce"
+  },
+  "510": {
+    "zhCN": "商店",
+    "zhTW": "商店",
+    "enUS": "store"
+  },
+  "511": {
+    "zhCN": "谢谢。",
+    "zhTW": "謝謝。",
+    "enUS": "Thank you very much."
+  },
+  "512": {
+    "zhCN": "柜台",
+    "zhTW": "櫃台",
+    "enUS": "counter, corner"
+  },
+  "513": {
+    "zhCN": "最下边",
+    "zhTW": "最下邊",
+    "enUS": "bottom"
+  },
+  "514": {
+    "zhCN": "下",
+    "zhTW": "下",
+    "enUS": "below, under"
+  },
+  "515": {
+    "zhCN": "高楼",
+    "zhTW": "高樓",
+    "enUS": "building"
+  },
+  "516": {
+    "zhCN": "公园",
+    "zhTW": "公園",
+    "enUS": "park"
+  },
+  "517": {
+    "zhCN": "女人",
+    "zhTW": "女人",
+    "enUS": "woman"
+  },
+  "518": {
+    "zhCN": "旁边、隔壁",
+    "zhTW": "旁邊、隔壁",
+    "enUS": "next to, neighbor"
+  },
+  "519": {
+    "zhCN": "咖啡馆",
+    "zhTW": "咖啡館",
+    "enUS": "coffee shop"
+  },
+  "520": {
+    "zhCN": "右",
+    "zhTW": "右",
+    "enUS": "right"
+  },
+  "521": {
+    "zhCN": "左",
+    "zhTW": "左",
+    "enUS": "left"
+  },
+  "522": {
+    "zhCN": "信箱",
+    "zhTW": "信箱",
+    "enUS": "mailbox, post box"
+  },
+  "523": {
+    "zhCN": "门",
+    "zhTW": "門",
+    "enUS": "door"
+  },
+  "524": {
+    "zhCN": "开关",
+    "zhTW": "開關",
+    "enUS": "switch"
+  },
+  "525": {
+    "zhCN": "树木",
+    "zhTW": "樹木",
+    "enUS": "tree, wood"
+  },
+  "526": {
+    "zhCN": "男孩儿",
+    "zhTW": "男孩兒",
+    "enUS": "boy"
+  },
+  "527": {
+    "zhCN": "女孩儿",
+    "zhTW": "女孩兒",
+    "enUS": "girl"
+  },
+  "528": {
+    "zhCN": "冰箱",
+    "zhTW": "冰箱",
+    "enUS": "refrigerator"
+  },
+  "529": {
+    "zhCN": "各种各样",
+    "zhTW": "各種各樣",
+    "enUS": "various, all kinds of"
+  },
+  "530": {
+    "zhCN": "东西",
+    "zhTW": "東西",
+    "enUS": "thing, object"
+  },
+  "531": {
+    "zhCN": "上",
+    "zhTW": "上",
+    "enUS": "above, on top"
+  },
+  "532": {
+    "zhCN": "桌子",
+    "zhTW": "桌子",
+    "enUS": "table"
+  },
+  "533": {
+    "zhCN": "床",
+    "zhTW": "床",
+    "enUS": "bed"
+  },
+  "534": {
+    "zhCN": "窗",
+    "zhTW": "窗",
+    "enUS": "window"
+  },
+  "535": {
+    "zhCN": "后",
+    "zhTW": "後",
+    "enUS": "behind, back"
+  },
+  "536": {
+    "zhCN": "狗",
+    "zhTW": "狗",
+    "enUS": "dog"
+  },
+  "537": {
+    "zhCN": "站（指出租车站、电车站等）",
+    "zhTW": "站（指計程車站、電車站等）",
+    "enUS": "platform, station (for taxi, train, etc.)"
+  },
+  "538": {
+    "zhCN": "熊猫",
+    "zhTW": "熊貓",
+    "enUS": "panda"
+  },
+  "539": {
+    "zhCN": "大象",
+    "zhTW": "大象",
+    "enUS": "elephant"
+  },
+  "540": {
+    "zhCN": "～店",
+    "zhTW": "～店",
+    "enUS": "~ shop, ~ store"
+  },
+  "541": {
+    "zhCN": "礼品店",
+    "zhTW": "禮品店",
+    "enUS": "souvenir shop, gift shop"
+  },
+  "542": {
+    "zhCN": "电池",
+    "zhTW": "電池",
+    "enUS": "battery"
+  },
+  "543": {
+    "zhCN": "书店、书店老板",
+    "zhTW": "書店、書店老闆",
+    "enUS": "bookstore, bookstore owner"
+  },
+  "544": {
+    "zhCN": "之间",
+    "zhTW": "之間",
+    "enUS": "between, among"
+  },
+  "545": {
+    "zhCN": "架子",
+    "zhTW": "架子",
+    "enUS": "shelf, rack"
+  },
+  "546": {
+    "zhCN": "七个",
+    "zhTW": "七個",
+    "enUS": "seven (things)"
+  },
+  "547": {
+    "zhCN": "在日本。",
+    "zhTW": "在日本。",
+    "enUS": "I am in Japan."
+  },
+  "548": {
+    "zhCN": "有孩子。",
+    "zhTW": "有孩子。",
+    "enUS": "I have children."
+  },
+  "549": {
+    "zhCN": "苹果",
+    "zhTW": "蘋果",
+    "enUS": "apple"
+  },
+  "550": {
+    "zhCN": "多少",
+    "zhTW": "多少",
+    "enUS": "how many, how much"
+  },
+  "551": {
+    "zhCN": "四个",
+    "zhTW": "四個",
+    "enUS": "four (things)"
+  },
+  "552": {
+    "zhCN": "邮票",
+    "zhTW": "郵票",
+    "enUS": "postage stamp"
+  },
+  "553": {
+    "zhCN": "―枚、―张（数纸张、邮票等的量词）",
+    "zhTW": "―枚、―張（數紙張、郵票等的量詞）",
+    "enUS": "counter for thin flat objects (sheets, stamps, etc.)"
+  },
+  "554": {
+    "zhCN": "明信片",
+    "zhTW": "明信片",
+    "enUS": "postcard"
+  },
+  "555": {
+    "zhCN": "一共、合计",
+    "zhTW": "一共、合計",
+    "enUS": "in total, altogether"
+  },
+  "556": {
+    "zhCN": "外国",
+    "zhTW": "外國",
+    "enUS": "foreign country"
+  },
+  "557": {
+    "zhCN": "―个人",
+    "zhTW": "―個人",
+    "enUS": "~ person(s)"
+  },
+  "558": {
+    "zhCN": "几个人",
+    "zhTW": "幾個人",
+    "enUS": "how many people"
+  },
+  "559": {
+    "zhCN": "全部、大家",
+    "zhTW": "全部、大家",
+    "enUS": "all, everyone"
+  },
+  "560": {
+    "zhCN": "兄弟姐妹",
+    "zhTW": "兄弟姊妹",
+    "enUS": "siblings, brothers and sisters"
+  },
+  "561": {
+    "zhCN": "四个人",
+    "zhTW": "四個人",
+    "enUS": "four people"
+  },
+  "562": {
+    "zhCN": "（自己的）姐姐",
+    "zhTW": "（自己的）姊姊",
+    "enUS": "(one's own) older sister"
+  },
+  "563": {
+    "zhCN": "（别人的）姐姐",
+    "zhTW": "（別人的）姊姊",
+    "enUS": "(someone else's) older sister"
+  },
+  "564": {
+    "zhCN": "两个人",
+    "zhTW": "兩個人",
+    "enUS": "two people"
+  },
+  "565": {
+    "zhCN": "（自己的）哥哥",
+    "zhTW": "（自己的）哥哥",
+    "enUS": "(one's own) older brother"
+  },
+  "566": {
+    "zhCN": "（别人的）哥哥",
+    "zhTW": "（別人的）哥哥",
+    "enUS": "(someone else's) older brother"
+  },
+  "567": {
+    "zhCN": "一个人",
+    "zhTW": "一個人",
+    "enUS": "one person, alone"
+  },
+  "568": {
+    "zhCN": "―周",
+    "zhTW": "―週",
+    "enUS": "~ week(s)"
+  },
+  "569": {
+    "zhCN": "―次",
+    "zhTW": "―次",
+    "enUS": "~ time(s)"
+  },
+  "570": {
+    "zhCN": "～左右、大约～",
+    "zhTW": "～左右、大約～",
+    "enUS": "about ~, approximately ~"
+  }
+}
