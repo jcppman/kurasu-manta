@@ -142,6 +142,284 @@ describe('SentenceRepository', () => {
     })
   })
 
+  describe('getMany - Duplicate Fix Tests', () => {
+    test('should return unique sentences when no knowledgePointId filter is applied', async () => {
+      // Create sentences and knowledge points
+      const sentence1 = await sentenceRepo.create({
+        content: '重複テスト文1',
+        explanation: { en: 'Duplicate test sentence 1', cn: '重复测试句子1' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: '重複テスト文2',
+        explanation: { en: 'Duplicate test sentence 2', cn: '重复测试句子2' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('単語A'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('単語B'))
+      const kp3 = await knowledgeRepo.create(createKnowledgePoint('単語C'))
+
+      // Associate each sentence with multiple knowledge points
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp3.id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp2.id)
+
+      // Query without knowledgePointId filter - should return unique sentences
+      const result = await sentenceRepo.getMany()
+      const sentenceIds = result.items.map((s) => s.id)
+
+      expect(result.items.length).toBe(2)
+      expect(sentenceIds).toContain(sentence1.id)
+      expect(sentenceIds).toContain(sentence2.id)
+      // Ensure no duplicates
+      expect(new Set(sentenceIds).size).toBe(sentenceIds.length)
+    })
+
+    test('should return unique sentences when filtering by knowledgePointId', async () => {
+      // Create sentences
+      const sentence1 = await sentenceRepo.create({
+        content: 'フィルターテスト文1',
+        explanation: { en: 'Filter test sentence 1', cn: '过滤测试句子1' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: 'フィルターテスト文2',
+        explanation: { en: 'Filter test sentence 2', cn: '过滤测试句子2' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+      const sentence3 = await sentenceRepo.create({
+        content: 'フィルターテスト文3',
+        explanation: { en: 'Filter test sentence 3', cn: '过滤测试句子3' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('共通単語'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('別の単語'))
+
+      // Associate sentences with knowledge points
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id) // Multiple associations for sentence1
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp2.id) // Multiple associations for sentence2
+
+      // sentence3 only associated with kp2
+      await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp2.id)
+
+      // Filter by kp1 - should return sentences 1 and 2, each appearing only once
+      const result = await sentenceRepo.getMany({ knowledgePointId: kp1.id })
+      const sentenceIds = result.items.map((s) => s.id)
+
+      expect(result.items.length).toBe(2)
+      expect(sentenceIds).toContain(sentence1.id)
+      expect(sentenceIds).toContain(sentence2.id)
+      expect(sentenceIds).not.toContain(sentence3.id)
+      // Ensure no duplicates
+      expect(new Set(sentenceIds).size).toBe(sentenceIds.length)
+    })
+
+    test('should return unique sentences with minLessonNumber filter (no knowledgePointId)', async () => {
+      // Create sentences with different lesson numbers
+      const sentence1 = await sentenceRepo.create({
+        content: 'レッスン1の文',
+        explanation: { en: 'Lesson 1 sentence', cn: '第1课句子' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: 'レッスン2の文',
+        explanation: { en: 'Lesson 2 sentence', cn: '第2课句子' },
+        minLessonNumber: 2,
+        annotations: [],
+      })
+      const sentence3 = await sentenceRepo.create({
+        content: 'レッスン3の文',
+        explanation: { en: 'Lesson 3 sentence', cn: '第3课句子' },
+        minLessonNumber: 3,
+        annotations: [],
+      })
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('レッスン単語1'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('レッスン単語2'))
+
+      // Associate sentences with multiple knowledge points
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp2.id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp1.id)
+
+      // Filter by minLessonNumber = 2 (should include lessons 1 and 2)
+      const result = await sentenceRepo.getMany({ minLessonNumber: 2 })
+      const sentenceIds = result.items.map((s) => s.id)
+
+      expect(result.items.length).toBe(2)
+      expect(sentenceIds).toContain(sentence1.id)
+      expect(sentenceIds).toContain(sentence2.id)
+      expect(sentenceIds).not.toContain(sentence3.id)
+      // Ensure no duplicates
+      expect(new Set(sentenceIds).size).toBe(sentenceIds.length)
+    })
+
+    test('should return unique sentences with combined knowledgePointId and minLessonNumber filters', async () => {
+      // Create sentences with different lesson numbers
+      const sentence1 = await sentenceRepo.create({
+        content: '組み合わせテスト文1',
+        explanation: { en: 'Combined test sentence 1', cn: '组合测试句子1' },
+        minLessonNumber: 1,
+        annotations: [],
+      })
+      const sentence2 = await sentenceRepo.create({
+        content: '組み合わせテスト文2',
+        explanation: { en: 'Combined test sentence 2', cn: '组合测试句子2' },
+        minLessonNumber: 2,
+        annotations: [],
+      })
+      const sentence3 = await sentenceRepo.create({
+        content: '組み合わせテスト文3',
+        explanation: { en: 'Combined test sentence 3', cn: '组合测试句子3' },
+        minLessonNumber: 3,
+        annotations: [],
+      })
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('組み合わせ単語1'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('組み合わせ単語2'))
+
+      // Associate sentences with knowledge points
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence1.id, kp2.id)
+
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp1.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentence2.id, kp2.id)
+
+      // sentence3 associated with kp1 but has minLessonNumber=3
+      await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp1.id)
+
+      // Filter by both knowledgePointId=kp1 and minLessonNumber=2
+      // Should return sentences 1 and 2 (both associated with kp1 and have minLessonNumber <= 2)
+      const result = await sentenceRepo.getMany({
+        knowledgePointId: kp1.id,
+        minLessonNumber: 2,
+      })
+      const sentenceIds = result.items.map((s) => s.id)
+
+      expect(result.items.length).toBe(2)
+      expect(sentenceIds).toContain(sentence1.id)
+      expect(sentenceIds).toContain(sentence2.id)
+      expect(sentenceIds).not.toContain(sentence3.id) // Excluded by minLessonNumber filter
+      // Ensure no duplicates
+      expect(new Set(sentenceIds).size).toBe(sentenceIds.length)
+    })
+
+    test('should return unique sentences with pagination when no knowledgePointId filter', async () => {
+      // Create multiple sentences
+      const sentences = []
+      for (let i = 1; i <= 5; i++) {
+        const sentence = await sentenceRepo.create({
+          content: `ページネーション文${i}`,
+          explanation: { en: `Pagination sentence ${i}`, cn: `分页句子${i}` },
+          minLessonNumber: 1,
+          annotations: [],
+        })
+        sentences.push(sentence)
+      }
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('ページ単語1'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('ページ単語2'))
+
+      // Associate each sentence with multiple knowledge points to test for duplicates
+      for (const sentence of sentences) {
+        await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp1.id)
+        await sentenceRepo.associateWithKnowledgePoint(sentence.id, kp2.id)
+      }
+
+      // Test pagination without knowledgePointId filter
+      const page1 = await sentenceRepo.getMany({}, { page: 1, limit: 2 })
+      const page2 = await sentenceRepo.getMany({}, { page: 2, limit: 2 })
+      const page3 = await sentenceRepo.getMany({}, { page: 3, limit: 2 })
+
+      // Page 1: 2 items
+      expect(page1.items.length).toBe(2)
+      expect(page1.total).toBe(5)
+      expect(page1.totalPages).toBe(3)
+
+      // Page 2: 2 items
+      expect(page2.items.length).toBe(2)
+      expect(page2.total).toBe(5)
+
+      // Page 3: 1 item
+      expect(page3.items.length).toBe(1)
+      expect(page3.total).toBe(5)
+
+      // Collect all sentence IDs across pages
+      const allIds = [
+        ...page1.items.map((s) => s.id),
+        ...page2.items.map((s) => s.id),
+        ...page3.items.map((s) => s.id),
+      ]
+
+      // Ensure no duplicates across pages
+      expect(new Set(allIds).size).toBe(allIds.length)
+      expect(allIds.length).toBe(5)
+    })
+
+    test('should return unique sentences with pagination when filtering by knowledgePointId', async () => {
+      // Create sentences
+      const sentences = []
+      for (let i = 1; i <= 4; i++) {
+        const sentence = await sentenceRepo.create({
+          content: `フィルターページ文${i}`,
+          explanation: { en: `Filter page sentence ${i}`, cn: `过滤分页句子${i}` },
+          minLessonNumber: 1,
+          annotations: [],
+        })
+        sentences.push(sentence)
+      }
+
+      const kp1 = await knowledgeRepo.create(createKnowledgePoint('フィルターページ単語1'))
+      const kp2 = await knowledgeRepo.create(createKnowledgePoint('フィルターページ単語2'))
+
+      // Associate first 3 sentences with kp1 (and also with kp2 to test duplicates)
+      for (let i = 0; i < 3; i++) {
+        await sentenceRepo.associateWithKnowledgePoint(sentences[i].id, kp1.id)
+        await sentenceRepo.associateWithKnowledgePoint(sentences[i].id, kp2.id)
+      }
+      // Last sentence only with kp2
+      await sentenceRepo.associateWithKnowledgePoint(sentences[3].id, kp2.id)
+
+      // Test pagination with knowledgePointId filter
+      const page1 = await sentenceRepo.getMany({ knowledgePointId: kp1.id }, { page: 1, limit: 2 })
+      const page2 = await sentenceRepo.getMany({ knowledgePointId: kp1.id }, { page: 2, limit: 2 })
+
+      // Should return 3 sentences total (first 3 associated with kp1)
+      expect(page1.items.length).toBe(2)
+      expect(page1.total).toBe(3)
+      expect(page1.totalPages).toBe(2)
+
+      expect(page2.items.length).toBe(1)
+      expect(page2.total).toBe(3)
+
+      // Collect all sentence IDs
+      const allIds = [...page1.items.map((s) => s.id), ...page2.items.map((s) => s.id)]
+
+      // Ensure no duplicates and correct filtering
+      expect(new Set(allIds).size).toBe(allIds.length)
+      expect(allIds.length).toBe(3)
+      expect(allIds).not.toContain(sentences[3].id) // Last sentence should be excluded
+    })
+  })
+
   describe('getWithPagination', () => {
     test('should paginate sentences correctly', async () => {
       // Create 5 sentences

@@ -11,7 +11,7 @@ import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
-import { type SQL, and, count, eq, gte, inArray, or } from 'drizzle-orm'
+import { type SQL, and, count, eq, gte, inArray, lte, or } from 'drizzle-orm'
 
 /**
  * Repository for sentences
@@ -33,23 +33,25 @@ export class SentenceRepository {
     const filters: SQL[] = []
 
     if (conditions.knowledgePointId) {
-      filters.push(eq(sentenceKnowledgePointsTable.knowledgePointId, conditions.knowledgePointId))
+      const subquery = this.db
+        .select({ id: sentenceKnowledgePointsTable.sentenceId })
+        .from(sentenceKnowledgePointsTable)
+        .where(eq(sentenceKnowledgePointsTable.knowledgePointId, conditions.knowledgePointId))
+
+      filters.push(inArray(sentencesTable.id, subquery))
     }
     if (conditions.minLessonNumber !== undefined) {
-      filters.push(gte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+      filters.push(lte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
     }
+
     // If no pagination provided, return all results
     if (!pagination) {
       const rows = await this.db
         .select()
         .from(sentencesTable)
-        .innerJoin(
-          sentenceKnowledgePointsTable,
-          eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
-        )
-        .where(and(...filters))
+        .where(filters.length > 0 ? and(...filters) : undefined)
 
-      const items = rows.map((r) => mapDrizzleToSentence(r.sentences))
+      const items = rows.map((r) => mapDrizzleToSentence(r))
 
       return {
         items,
@@ -71,11 +73,7 @@ export class SentenceRepository {
     const countResult = await this.db
       .select({ count: count() })
       .from(sentencesTable)
-      .leftJoin(
-        sentenceKnowledgePointsTable,
-        eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
-      )
-      .where(and(...filters))
+      .where(filters.length > 0 ? and(...filters) : undefined)
 
     const total = countResult[0]?.count || 0
 
@@ -83,15 +81,11 @@ export class SentenceRepository {
     const rows = await this.db
       .select()
       .from(sentencesTable)
-      .leftJoin(
-        sentenceKnowledgePointsTable,
-        eq(sentencesTable.id, sentenceKnowledgePointsTable.sentenceId)
-      )
-      .where(and(...filters))
+      .where(filters.length > 0 ? and(...filters) : undefined)
       .limit(limit)
       .offset(offset)
 
-    const items = rows.map((r) => mapDrizzleToSentence(r.sentences))
+    const items = rows.map((r) => mapDrizzleToSentence(r))
     const totalPages = Math.ceil(total / limit)
 
     return {
