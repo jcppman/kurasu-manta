@@ -29,9 +29,10 @@ export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowled
   let result = `<content>${sanitizeVocabularyContent(input.content)}</content>`
   if (input.explanation) {
     // Use Simplified Chinese as primary language for AI generation context
-    const explanation = typeof input.explanation === 'string' 
-      ? input.explanation 
-      : (input.explanation.zhCN || input.explanation.zhTW || input.explanation.enUS)
+    const explanation =
+      typeof input.explanation === 'string'
+        ? input.explanation
+        : input.explanation.zhCN || input.explanation.zhTW || input.explanation.enUS
     result += `<explain>${explanation}</explain>`
   }
   return `<${parentTagName} id="${input.id}">${result}</${parentTagName}>`

@@ -2848,5 +2848,9090 @@
     "zhCN": "～左右、大约～",
     "zhTW": "～左右、大約～",
     "enUS": "about ~, approximately ~"
+  },
+  "571": {
+    "zhCN": "多长时间",
+    "zhTW": "多長時間",
+    "enUS": "How long?"
+  },
+  "572": {
+    "zhCN": "―个月",
+    "zhTW": "―個月",
+    "enUS": "- months"
+  },
+  "573": {
+    "zhCN": "只～",
+    "zhTW": "只～",
+    "enUS": "only ~"
+  },
+  "574": {
+    "zhCN": "花费（时间、金钱等）",
+    "zhTW": "花費（時間、金錢等）",
+    "enUS": "takes (time, money, etc.)"
+  },
+  "575": {
+    "zhCN": "拜托了。恳请您。",
+    "zhTW": "拜託了。懇請您。",
+    "enUS": "Please."
+  },
+  "576": {
+    "zhCN": "天气真好啊。",
+    "zhTW": "天氣真好啊。",
+    "enUS": "The weather is nice, isn't it?"
+  },
+  "577": {
+    "zhCN": "出门啊？（碰到附近的人打招呼时使用）",
+    "zhTW": "出門啊？（碰到附近的人打招呼時使用）",
+    "enUS": "Are you going out?"
+  },
+  "578": {
+    "zhCN": "到～去一下。（对 「お出かけですか。」的回答）",
+    "zhTW": "到～去一下。（對「出門啊？」的回答）",
+    "enUS": "Just going to ~ for a bit."
+  },
+  "579": {
+    "zhCN": "走好。（送人出门时使用）",
+    "zhTW": "走好。（送人出門時使用）",
+    "enUS": "Take care."
+  },
+  "580": {
+    "zhCN": "我走了。（自己出门时使用）",
+    "zhTW": "我走了。（自己出門時使用）",
+    "enUS": "I'm off."
+  },
+  "581": {
+    "zhCN": "澳大利亚",
+    "zhTW": "澳大利亞",
+    "enUS": "Australia"
+  },
+  "582": {
+    "zhCN": "平邮、海运",
+    "zhTW": "平郵、海運",
+    "enUS": "Surface mail, sea freight"
+  },
+  "583": {
+    "zhCN": "航邮、航运",
+    "zhTW": "航郵、航運",
+    "enUS": "Air mail, air freight"
+  },
+  "584": {
+    "zhCN": "橘子",
+    "zhTW": "橘子",
+    "enUS": "Mandarin orange"
+  },
+  "585": {
+    "zhCN": "五个",
+    "zhTW": "五個",
+    "enUS": "five"
+  },
+  "586": {
+    "zhCN": "八个",
+    "zhTW": "八個",
+    "enUS": "eight"
+  },
+  "587": {
+    "zhCN": "十个",
+    "zhTW": "十個",
+    "enUS": "ten"
+  },
+  "588": {
+    "zhCN": "班级",
+    "zhTW": "班級",
+    "enUS": "class"
+  },
+  "589": {
+    "zhCN": "留学生",
+    "zhTW": "留學生",
+    "enUS": "international student"
+  },
+  "590": {
+    "zhCN": "―小时",
+    "zhTW": "―小時",
+    "enUS": "- hours"
+  },
+  "591": {
+    "zhCN": "三个",
+    "zhTW": "三個",
+    "enUS": "three"
+  },
+  "592": {
+    "zhCN": "一个",
+    "zhTW": "一個",
+    "enUS": "one"
+  },
+  "593": {
+    "zhCN": "二个",
+    "zhTW": "二個",
+    "enUS": "two"
+  },
+  "594": {
+    "zhCN": "六个",
+    "zhTW": "六個",
+    "enUS": "six"
+  },
+  "595": {
+    "zhCN": "―台（数机械、车辆等的量词）",
+    "zhTW": "―台（數機械、車輛等的量詞）",
+    "enUS": "- units (counter for machines, vehicles, etc.)"
+  },
+  "596": {
+    "zhCN": "信封",
+    "zhTW": "信封",
+    "enUS": "envelope"
+  },
+  "597": {
+    "zhCN": "九个",
+    "zhTW": "九個",
+    "enUS": "nine"
+  },
+  "598": {
+    "zhCN": "请假",
+    "zhTW": "請假",
+    "enUS": "take a leave"
+  },
+  "599": {
+    "zhCN": "跟公司请假。",
+    "zhTW": "跟公司請假。",
+    "enUS": "Take leave from work."
+  },
+  "600": {
+    "zhCN": "三明治",
+    "zhTW": "三明治",
+    "enUS": "sandwich"
+  },
+  "601": {
+    "zhCN": "明白了。（服务行业的人对顾客使用的礼貌用语）",
+    "zhTW": "明白了。（服務行業的人對顧客使用的禮貌用語）",
+    "enUS": "Understood."
+  },
+  "602": {
+    "zhCN": "咖喱饭",
+    "zhTW": "咖哩飯",
+    "enUS": "curry rice"
+  },
+  "603": {
+    "zhCN": "冰激凌",
+    "zhTW": "冰淇淋",
+    "enUS": "ice cream"
+  },
+  "604": {
+    "zhCN": "（自己的）弟弟",
+    "zhTW": "（自己的）弟弟",
+    "enUS": "(one's own) younger brother"
+  },
+  "605": {
+    "zhCN": "（别人的）弟弟",
+    "zhTW": "（別人的）弟弟",
+    "enUS": "(someone else's) younger brother"
+  },
+  "606": {
+    "zhCN": "（自己的）妹妹",
+    "zhTW": "（自己的）妹妹",
+    "enUS": "(one's own) younger sister"
+  },
+  "607": {
+    "zhCN": "（别人的）妹妹",
+    "zhTW": "（別人的）妹妹",
+    "enUS": "(someone else's) younger sister"
+  },
+  "608": {
+    "zhCN": "鹿儿岛（日本九州最南端的县）",
+    "zhTW": "鹿兒島（日本九州最南端的縣）",
+    "enUS": "Kagoshima (the southernmost prefecture of Kyushu, Japan)"
+  },
+  "609": {
+    "zhCN": "父母",
+    "zhTW": "父母",
+    "enUS": "parents"
+  },
+  "610": {
+    "zhCN": "雨",
+    "zhTW": "雨",
+    "enUS": "rain"
+  },
+  "611": {
+    "zhCN": "北海道",
+    "zhTW": "北海道",
+    "enUS": "Hokkaido"
+  },
+  "612": {
+    "zhCN": "比～",
+    "zhTW": "比～",
+    "enUS": "than ~"
+  },
+  "613": {
+    "zhCN": "夏天",
+    "zhTW": "夏天",
+    "enUS": "summer"
+  },
+  "614": {
+    "zhCN": "最",
+    "zhTW": "最",
+    "enUS": "most"
+  },
+  "615": {
+    "zhCN": "晚会、派对",
+    "zhTW": "晚會、派對",
+    "enUS": "party"
+  },
+  "616": {
+    "zhCN": "～得多",
+    "zhTW": "～得多",
+    "enUS": "much ~"
+  },
+  "617": {
+    "zhCN": "机场",
+    "zhTW": "機場",
+    "enUS": "airport"
+  },
+  "618": {
+    "zhCN": "哪一个？（从两个中间选择一个）",
+    "zhTW": "哪一個？（從兩個中間選擇一個）",
+    "enUS": "Which one?"
+  },
+  "619": {
+    "zhCN": "快",
+    "zhTW": "快",
+    "enUS": "fast"
+  },
+  "620": {
+    "zhCN": "早",
+    "zhTW": "早",
+    "enUS": "early"
+  },
+  "621": {
+    "zhCN": "慢",
+    "zhTW": "慢",
+    "enUS": "slow"
+  },
+  "622": {
+    "zhCN": "海",
+    "zhTW": "海",
+    "enUS": "sea"
+  },
+  "623": {
+    "zhCN": "两个都～",
+    "zhTW": "兩個都～",
+    "enUS": "both"
+  },
+  "624": {
+    "zhCN": "天妇罗（一种日本菜）",
+    "zhTW": "天婦羅（一種日本菜）",
+    "enUS": "tempura (a type of Japanese dish)"
+  },
+  "625": {
+    "zhCN": "祇园祭（京都最有名的庙会）",
+    "zhTW": "祇園祭（京都最有名的廟會）",
+    "enUS": "Gion Matsuri (Kyoto's most famous festival)"
+  },
+  "626": {
+    "zhCN": "我回来了。",
+    "zhTW": "我回來了。",
+    "enUS": "I'm back."
+  },
+  "627": {
+    "zhCN": "回来啦。",
+    "zhTW": "回來啦。",
+    "enUS": "Welcome back."
+  },
+  "628": {
+    "zhCN": "庙会、庆典、节庆",
+    "zhTW": "廟會、慶典、節慶",
+    "enUS": "festival, celebration"
+  },
+  "629": {
+    "zhCN": "哇，人好多啊！",
+    "zhTW": "哇，人好多啊！",
+    "enUS": "Wow, there are so many people!"
+  },
+  "630": {
+    "zhCN": "我累了。",
+    "zhTW": "我累了。",
+    "enUS": "I'm tired."
+  },
+  "631": {
+    "zhCN": "雪",
+    "zhTW": "雪",
+    "enUS": "snow"
+  },
+  "632": {
+    "zhCN": "世界",
+    "zhTW": "世界",
+    "enUS": "world"
+  },
+  "633": {
+    "zhCN": "天气",
+    "zhTW": "天氣",
+    "enUS": "weather"
+  },
+  "634": {
+    "zhCN": "凉快",
+    "zhTW": "涼快",
+    "enUS": "cool"
+  },
+  "635": {
+    "zhCN": "冬天",
+    "zhTW": "冬天",
+    "enUS": "winter"
+  },
+  "636": {
+    "zhCN": "（体感）暖和",
+    "zhTW": "（體感）暖和",
+    "enUS": "(feels) warm"
+  },
+  "637": {
+    "zhCN": "（接触的东西）温",
+    "zhTW": "（接觸的東西）溫",
+    "enUS": "(touch) warm"
+  },
+  "638": {
+    "zhCN": "多",
+    "zhTW": "多",
+    "enUS": "many"
+  },
+  "639": {
+    "zhCN": "人多。",
+    "zhTW": "人多。",
+    "enUS": "There are many people."
+  },
+  "640": {
+    "zhCN": "简单",
+    "zhTW": "簡單",
+    "enUS": "easy"
+  },
+  "641": {
+    "zhCN": "阴",
+    "zhTW": "陰",
+    "enUS": "cloudy"
+  },
+  "642": {
+    "zhCN": "辣",
+    "zhTW": "辣",
+    "enUS": "spicy"
+  },
+  "643": {
+    "zhCN": "酒店",
+    "zhTW": "飯店",
+    "enUS": "hotel"
+  },
+  "644": {
+    "zhCN": "重",
+    "zhTW": "重",
+    "enUS": "heavy"
+  },
+  "645": {
+    "zhCN": "牛肉",
+    "zhTW": "牛肉",
+    "enUS": "beef"
+  },
+  "646": {
+    "zhCN": "鸡肉",
+    "zhTW": "雞肉",
+    "enUS": "chicken"
+  },
+  "647": {
+    "zhCN": "猪肉",
+    "zhTW": "豬肉",
+    "enUS": "pork"
+  },
+  "648": {
+    "zhCN": "香港",
+    "zhTW": "香港",
+    "enUS": "Hong Kong"
+  },
+  "649": {
+    "zhCN": "新加坡",
+    "zhTW": "新加坡",
+    "enUS": "Singapore"
+  },
+  "650": {
+    "zhCN": "近",
+    "zhTW": "近",
+    "enUS": "near"
+  },
+  "651": {
+    "zhCN": "甜",
+    "zhTW": "甜",
+    "enUS": "sweet"
+  },
+  "652": {
+    "zhCN": "春天",
+    "zhTW": "春天",
+    "enUS": "spring"
+  },
+  "653": {
+    "zhCN": "秋天",
+    "zhTW": "秋天",
+    "enUS": "autumn"
+  },
+  "654": {
+    "zhCN": "初次",
+    "zhTW": "初次",
+    "enUS": "first time"
+  },
+  "655": {
+    "zhCN": "寿司",
+    "zhTW": "壽司",
+    "enUS": "sushi"
+  },
+  "656": {
+    "zhCN": "插花",
+    "zhTW": "插花",
+    "enUS": "flower arrangement"
+  },
+  "657": {
+    "zhCN": "柠檬",
+    "zhTW": "檸檬",
+    "enUS": "lemon"
+  },
+  "658": {
+    "zhCN": "红叶",
+    "zhTW": "紅葉",
+    "enUS": "autumn leaves"
+  },
+  "659": {
+    "zhCN": "轻",
+    "zhTW": "輕",
+    "enUS": "light"
+  },
+  "660": {
+    "zhCN": "少",
+    "zhTW": "少",
+    "enUS": "few"
+  },
+  "661": {
+    "zhCN": "人少。",
+    "zhTW": "人少。",
+    "enUS": "There are few people."
+  },
+  "662": {
+    "zhCN": "远",
+    "zhTW": "遠",
+    "enUS": "far"
+  },
+  "663": {
+    "zhCN": "生鱼片",
+    "zhTW": "生魚片",
+    "enUS": "sashimi"
+  },
+  "664": {
+    "zhCN": "鸡素烧（日本菜）",
+    "zhTW": "牛肉燒（日本菜）",
+    "enUS": "sukiyaki (Japanese dish)"
+  },
+  "665": {
+    "zhCN": "咖啡好。（从两种物品中选择时）",
+    "zhTW": "咖啡好。（從兩種物品中選擇時）",
+    "enUS": "Coffee is good. (when choosing between two items)"
+  },
+  "666": {
+    "zhCN": "季节",
+    "zhTW": "季節",
+    "enUS": "season"
+  },
+  "667": {
+    "zhCN": "想要",
+    "zhTW": "想要",
+    "enUS": "want"
+  },
+  "668": {
+    "zhCN": "暑假",
+    "zhTW": "暑假",
+    "enUS": "summer vacation"
+  },
+  "669": {
+    "zhCN": "冲绳",
+    "zhTW": "沖繩",
+    "enUS": "Okinawa"
+  },
+  "670": {
+    "zhCN": "累",
+    "zhTW": "累",
+    "enUS": "tired"
+  },
+  "671": {
+    "zhCN": "很（累人）、相当（辛苦）",
+    "zhTW": "很（累人）、相當（辛苦）",
+    "enUS": "very (tiring), quite (hard)"
+  },
+  "672": {
+    "zhCN": "周末",
+    "zhTW": "週末",
+    "enUS": "weekend"
+  },
+  "673": {
+    "zhCN": "美术",
+    "zhTW": "美術",
+    "enUS": "fine arts"
+  },
+  "674": {
+    "zhCN": "寒假",
+    "zhTW": "寒假",
+    "enUS": "winter vacation"
+  },
+  "675": {
+    "zhCN": "哪里（表示不特定的某个地方）",
+    "zhTW": "哪裡（表示不特定的某個地方）",
+    "enUS": "somewhere (indicating an unspecified place)"
+  },
+  "676": {
+    "zhCN": "滑雪",
+    "zhTW": "滑雪",
+    "enUS": "skiing"
+  },
+  "677": {
+    "zhCN": "分别",
+    "zhTW": "分開",
+    "enUS": "separately"
+  },
+  "678": {
+    "zhCN": "订货",
+    "zhTW": "訂貨",
+    "enUS": "order"
+  },
+  "679": {
+    "zhCN": "您点什么？",
+    "zhTW": "您點什麼？",
+    "enUS": "What would you like to order?"
+  },
+  "680": {
+    "zhCN": "套餐",
+    "zhTW": "定食",
+    "enUS": "set meal"
+  },
+  "681": {
+    "zhCN": "牛肉盖饭",
+    "zhTW": "牛肉蓋飯",
+    "enUS": "beef bowl"
+  },
+  "682": {
+    "zhCN": "稍微",
+    "zhTW": "稍微",
+    "enUS": "a little"
+  },
+  "683": {
+    "zhCN": "请稍等。",
+    "zhTW": "請稍等。",
+    "enUS": "Please wait a moment."
+  },
+  "684": {
+    "zhCN": "「です」的礼貌用语",
+    "zhTW": "「です」的禮貌用語",
+    "enUS": "a polite expression of 'desu'"
+  },
+  "685": {
+    "zhCN": "结婚",
+    "zhTW": "結婚",
+    "enUS": "get married"
+  },
+  "686": {
+    "zhCN": "玩、玩耍",
+    "zhTW": "玩、玩耍",
+    "enUS": "play"
+  },
+  "687": {
+    "zhCN": "宽",
+    "zhTW": "寬",
+    "enUS": "wide"
+  },
+  "688": {
+    "zhCN": "迎接",
+    "zhTW": "迎接",
+    "enUS": "welcome"
+  },
+  "689": {
+    "zhCN": "接朋友。",
+    "zhTW": "接朋友。",
+    "enUS": "Pick up a friend."
+  },
+  "690": {
+    "zhCN": "散步",
+    "zhTW": "散步",
+    "enUS": "take a walk"
+  },
+  "691": {
+    "zhCN": "在公园散步。",
+    "zhTW": "在公園散步。",
+    "enUS": "Take a walk in the park."
+  },
+  "692": {
+    "zhCN": "买东西、购物",
+    "zhTW": "買東西、購物",
+    "enUS": "shopping"
+  },
+  "693": {
+    "zhCN": "吃饭、用餐",
+    "zhTW": "吃飯、用餐",
+    "enUS": "have a meal"
+  },
+  "694": {
+    "zhCN": "河流",
+    "zhTW": "河流",
+    "enUS": "river"
+  },
+  "695": {
+    "zhCN": "钓鱼",
+    "zhTW": "釣魚",
+    "enUS": "fishing"
+  },
+  "696": {
+    "zhCN": "游泳",
+    "zhTW": "游泳",
+    "enUS": "swimming"
+  },
+  "697": {
+    "zhCN": "游泳池",
+    "zhTW": "游泳池",
+    "enUS": "swimming pool"
+  },
+  "698": {
+    "zhCN": "在泳池游泳。",
+    "zhTW": "在泳池游泳。",
+    "enUS": "Swim in the pool."
+  },
+  "699": {
+    "zhCN": "～左右（表示时间）",
+    "zhTW": "～左右（表示時間）",
+    "enUS": "around (indicating time)"
+  },
+  "700": {
+    "zhCN": "两点左右",
+    "zhTW": "兩點左右",
+    "enUS": "around two o'clock"
+  },
+  "701": {
+    "zhCN": "窄",
+    "zhTW": "窄",
+    "enUS": "narrow"
+  },
+  "702": {
+    "zhCN": "喉咙",
+    "zhTW": "喉嚨",
+    "enUS": "throat"
+  },
+  "703": {
+    "zhCN": "干、渴",
+    "zhTW": "乾、渴",
+    "enUS": "dry, thirsty"
+  },
+  "704": {
+    "zhCN": "口渴",
+    "zhTW": "口渴",
+    "enUS": "thirsty"
+  },
+  "705": {
+    "zhCN": "什么（表示不特定的某件事情或某一物品）",
+    "zhTW": "什麼（表示不特定的某件事情或某一物品）",
+    "enUS": "something (indicating an unspecified matter or item)"
+  },
+  "706": {
+    "zhCN": "就这样干吧。",
+    "zhTW": "就這樣做吧。",
+    "enUS": "Let's do it this way."
+  },
+  "707": {
+    "zhCN": "肚子",
+    "zhTW": "肚子",
+    "enUS": "belly"
+  },
+  "708": {
+    "zhCN": "空、饿",
+    "zhTW": "空、餓",
+    "enUS": "empty, hungry"
+  },
+  "709": {
+    "zhCN": "肚子饿",
+    "zhTW": "肚子餓",
+    "enUS": "I'm hungry."
+  },
+  "710": {
+    "zhCN": "新年",
+    "zhTW": "新年",
+    "enUS": "New Year"
+  },
+  "711": {
+    "zhCN": "等",
+    "zhTW": "等",
+    "enUS": "wait"
+  },
+  "712": {
+    "zhCN": "拿",
+    "zhTW": "拿",
+    "enUS": "hold"
+  },
+  "713": {
+    "zhCN": "姓名、名字",
+    "zhTW": "姓名、名字",
+    "enUS": "name"
+  },
+  "714": {
+    "zhCN": "读法、念法",
+    "zhTW": "讀法、念法",
+    "enUS": "reading"
+  },
+  "715": {
+    "zhCN": "～法",
+    "zhTW": "～法",
+    "enUS": "~method"
+  },
+  "716": {
+    "zhCN": "告诉",
+    "zhTW": "告訴",
+    "enUS": "teach"
+  },
+  "717": {
+    "zhCN": "地址",
+    "zhTW": "地址",
+    "enUS": "address"
+  },
+  "718": {
+    "zhCN": "告诉地址。",
+    "zhTW": "告訴地址。",
+    "enUS": "Tell the address."
+  },
+  "719": {
+    "zhCN": "开（门、窗等）",
+    "zhTW": "開（門、窗等）",
+    "enUS": "open (door, window, etc.)"
+  },
+  "720": {
+    "zhCN": "开窗户。",
+    "zhTW": "開窗戶。",
+    "enUS": "Open the window."
+  },
+  "721": {
+    "zhCN": "说话",
+    "zhTW": "說話",
+    "enUS": "to speak"
+  },
+  "722": {
+    "zhCN": "再",
+    "zhTW": "再",
+    "enUS": "again"
+  },
+  "723": {
+    "zhCN": "回头、一会儿",
+    "zhTW": "回頭、一會兒",
+    "enUS": "later"
+  },
+  "724": {
+    "zhCN": "下（雨、雪）",
+    "zhTW": "下（雨、雪）",
+    "enUS": "to fall (rain, snow)"
+  },
+  "725": {
+    "zhCN": "下雨。",
+    "zhTW": "下雨。",
+    "enUS": "It's raining."
+  },
+  "726": {
+    "zhCN": "绿町（虚构的城市）",
+    "zhTW": "綠町（虛構的城市）",
+    "enUS": "Green Town (a fictional city)"
+  },
+  "727": {
+    "zhCN": "在红绿灯处往右拐。",
+    "zhTW": "在紅綠燈處往右轉。",
+    "enUS": "Please turn right at the traffic light."
+  },
+  "728": {
+    "zhCN": "一直",
+    "zhTW": "一直",
+    "enUS": "straight"
+  },
+  "729": {
+    "zhCN": "停、止",
+    "zhTW": "停、止",
+    "enUS": "to stop"
+  },
+  "730": {
+    "zhCN": "给您（钱）。",
+    "zhTW": "給您（錢）。",
+    "enUS": "Here you go (money)."
+  },
+  "731": {
+    "zhCN": "（找）零钱",
+    "zhTW": "（找）零錢",
+    "enUS": "(change)"
+  },
+  "732": {
+    "zhCN": "练习题、问题",
+    "zhTW": "練習題、問題",
+    "enUS": "problem"
+  },
+  "733": {
+    "zhCN": "回答",
+    "zhTW": "回答",
+    "enUS": "answer"
+  },
+  "734": {
+    "zhCN": "急、急忙",
+    "zhTW": "急、急忙",
+    "enUS": "to hurry"
+  },
+  "735": {
+    "zhCN": "盐",
+    "zhTW": "鹽",
+    "enUS": "salt"
+  },
+  "736": {
+    "zhCN": "取",
+    "zhTW": "取",
+    "enUS": "to take"
+  },
+  "737": {
+    "zhCN": "慢慢地、充分、安稳",
+    "zhTW": "慢慢地、充分、安穩",
+    "enUS": "slowly"
+  },
+  "738": {
+    "zhCN": "帮忙",
+    "zhTW": "幫忙",
+    "enUS": "to help"
+  },
+  "739": {
+    "zhCN": "关（门、窗等）",
+    "zhTW": "關（門、窗等）",
+    "enUS": "to close (door, window, etc.)"
+  },
+  "740": {
+    "zhCN": "关门。",
+    "zhTW": "關門。",
+    "enUS": "Close the door."
+  },
+  "741": {
+    "zhCN": "护照",
+    "zhTW": "護照",
+    "enUS": "passport"
+  },
+  "742": {
+    "zhCN": "显示、给～看",
+    "zhTW": "顯示、給～看",
+    "enUS": "to show"
+  },
+  "743": {
+    "zhCN": "复印",
+    "zhTW": "複印",
+    "enUS": "to copy"
+  },
+  "744": {
+    "zhCN": "空调",
+    "zhTW": "空調",
+    "enUS": "air conditioner"
+  },
+  "745": {
+    "zhCN": "开（空调、电灯等）",
+    "zhTW": "開（空調、電燈等）",
+    "enUS": "to turn on (air conditioner, light, etc.)"
+  },
+  "746": {
+    "zhCN": "开空调。",
+    "zhTW": "開空調。",
+    "enUS": "Turn on the air conditioner."
+  },
+  "747": {
+    "zhCN": "再～一点儿，还～一点儿",
+    "zhTW": "再～一點兒，還～一點兒",
+    "enUS": "a little more"
+  },
+  "748": {
+    "zhCN": "再～、还～",
+    "zhTW": "再～、還～",
+    "enUS": "again, still"
+  },
+  "749": {
+    "zhCN": "进",
+    "zhTW": "進",
+    "enUS": "to enter"
+  },
+  "750": {
+    "zhCN": "进咖啡馆。",
+    "zhTW": "進咖啡館。",
+    "enUS": "Enter the café."
+  },
+  "751": {
+    "zhCN": "出",
+    "zhTW": "出",
+    "enUS": "to exit"
+  },
+  "752": {
+    "zhCN": "出咖啡馆。",
+    "zhTW": "出咖啡館。",
+    "enUS": "Exit the café."
+  },
+  "753": {
+    "zhCN": "坐",
+    "zhTW": "坐",
+    "enUS": "to sit"
+  },
+  "754": {
+    "zhCN": "站",
+    "zhTW": "站",
+    "enUS": "to stand"
+  },
+  "755": {
+    "zhCN": "使用",
+    "zhTW": "使用",
+    "enUS": "to use"
+  },
+  "756": {
+    "zhCN": "关（空调、电灯等）",
+    "zhTW": "關（空調、電燈等）",
+    "enUS": "to turn off (air conditioner, light, etc.)"
+  },
+  "757": {
+    "zhCN": "电灯、电气",
+    "zhTW": "電燈、電氣",
+    "enUS": "light, electricity"
+  },
+  "758": {
+    "zhCN": "地图",
+    "zhTW": "地圖",
+    "enUS": "map"
+  },
+  "759": {
+    "zhCN": "马上",
+    "zhTW": "馬上",
+    "enUS": "right away"
+  },
+  "760": {
+    "zhCN": "叫",
+    "zhTW": "叫",
+    "enUS": "to call"
+  },
+  "761": {
+    "zhCN": "糖",
+    "zhTW": "糖",
+    "enUS": "sugar"
+  },
+  "762": {
+    "zhCN": "喂（提议、催促做某事时使用）",
+    "zhTW": "喂（提議、催促做某事時使用）",
+    "enUS": "Hey (used to suggest or urge someone to do something)"
+  },
+  "763": {
+    "zhCN": "哎呀！咦？（感到吃惊、不可思议时发出的声音）",
+    "zhTW": "哎呀！咦？（感到驚訝、不可思議時發出的聲音）",
+    "enUS": "Oh! Huh? (a sound made when feeling surprised or incredulous)"
+  },
+  "764": {
+    "zhCN": "电子辞典",
+    "zhTW": "電子辭典",
+    "enUS": "electronic dictionary"
+  },
+  "765": {
+    "zhCN": "目录",
+    "zhTW": "目錄",
+    "enUS": "catalog"
+  },
+  "766": {
+    "zhCN": "知道",
+    "zhTW": "知道",
+    "enUS": "to know"
+  },
+  "767": {
+    "zhCN": "住、居住",
+    "zhTW": "住、居住",
+    "enUS": "to live"
+  },
+  "768": {
+    "zhCN": "住在北京。",
+    "zhTW": "住在北京。",
+    "enUS": "I live in Beijing."
+  },
+  "769": {
+    "zhCN": "单身",
+    "zhTW": "單身",
+    "enUS": "single"
+  },
+  "770": {
+    "zhCN": "专业",
+    "zhTW": "專業",
+    "enUS": "specialty"
+  },
+  "771": {
+    "zhCN": "高中",
+    "zhTW": "高中",
+    "enUS": "high school"
+  },
+  "772": {
+    "zhCN": "想起",
+    "zhTW": "想起",
+    "enUS": "to remember"
+  },
+  "773": {
+    "zhCN": "有、在（「います」的敬语）",
+    "zhTW": "有、在（「います」的敬語）",
+    "enUS": "to be (honorific form of 'imasu')"
+  },
+  "774": {
+    "zhCN": "放",
+    "zhTW": "放",
+    "enUS": "to put"
+  },
+  "775": {
+    "zhCN": "资料",
+    "zhTW": "資料",
+    "enUS": "materials"
+  },
+  "776": {
+    "zhCN": "产品",
+    "zhTW": "產品",
+    "enUS": "product"
+  },
+  "777": {
+    "zhCN": "电器产品",
+    "zhTW": "電器產品",
+    "enUS": "electrical products"
+  },
+  "778": {
+    "zhCN": "卖",
+    "zhTW": "賣",
+    "enUS": "to sell"
+  },
+  "779": {
+    "zhCN": "日本桥（大阪的商业地区）",
+    "zhTW": "日本橋（大阪的商業區）",
+    "enUS": "Nihonbashi (commercial area in Osaka)"
+  },
+  "780": {
+    "zhCN": "做、制造（小东西）",
+    "zhTW": "做、製造（小東西）",
+    "enUS": "to make (small things)"
+  },
+  "781": {
+    "zhCN": "做、制造（大东西）",
+    "zhTW": "做、製造（大東西）",
+    "enUS": "to make (large things)"
+  },
+  "782": {
+    "zhCN": "软件",
+    "zhTW": "軟體",
+    "enUS": "software"
+  },
+  "783": {
+    "zhCN": "计算机软件",
+    "zhTW": "計算機軟體",
+    "enUS": "computer software"
+  },
+  "784": {
+    "zhCN": "研究",
+    "zhTW": "研究",
+    "enUS": "to research"
+  },
+  "785": {
+    "zhCN": "经济",
+    "zhTW": "經濟",
+    "enUS": "economy"
+  },
+  "786": {
+    "zhCN": "时刻表",
+    "zhTW": "時刻表",
+    "enUS": "timetable"
+  },
+  "787": {
+    "zhCN": "牙医",
+    "zhTW": "牙醫",
+    "enUS": "dentist"
+  },
+  "788": {
+    "zhCN": "市政府",
+    "zhTW": "市政府",
+    "enUS": "city hall"
+  },
+  "789": {
+    "zhCN": "大家",
+    "zhTW": "大家",
+    "enUS": "everyone"
+  },
+  "790": {
+    "zhCN": "衣服",
+    "zhTW": "衣服",
+    "enUS": "clothes"
+  },
+  "791": {
+    "zhCN": "慢跑",
+    "zhTW": "慢跑",
+    "enUS": "jogging"
+  },
+  "792": {
+    "zhCN": "淋浴",
+    "zhTW": "淋浴",
+    "enUS": "shower"
+  },
+  "793": {
+    "zhCN": "浇、淋",
+    "zhTW": "澆、淋",
+    "enUS": "to pour, to shower"
+  },
+  "794": {
+    "zhCN": "淋浴。",
+    "zhTW": "淋浴。",
+    "enUS": "to take a shower."
+  },
+  "795": {
+    "zhCN": "明亮",
+    "zhTW": "明亮",
+    "enUS": "bright"
+  },
+  "796": {
+    "zhCN": "怎么～（询问怎么做时使用）",
+    "zhTW": "怎麼～（詢問怎麼做時使用）",
+    "enUS": "how to ~ (used when asking how to do something)"
+  },
+  "797": {
+    "zhCN": "―号",
+    "zhTW": "―號",
+    "enUS": "- number"
+  },
+  "798": {
+    "zhCN": "坐、乘",
+    "zhTW": "坐、乘",
+    "enUS": "to ride"
+  },
+  "799": {
+    "zhCN": "乘电车。",
+    "zhTW": "乘電車。",
+    "enUS": "to ride the train."
+  },
+  "800": {
+    "zhCN": "下（车）",
+    "zhTW": "下（車）",
+    "enUS": "to get off (a vehicle)"
+  },
+  "801": {
+    "zhCN": "下电车。",
+    "zhTW": "下電車。",
+    "enUS": "to get off the train."
+  },
+  "802": {
+    "zhCN": "参观",
+    "zhTW": "參觀",
+    "enUS": "to visit"
+  },
+  "803": {
+    "zhCN": "哪个～（有三个以上的东西时）",
+    "zhTW": "哪個～（有三個以上的東西時）",
+    "enUS": "which ~ (when there are three or more items)"
+  },
+  "804": {
+    "zhCN": "头发",
+    "zhTW": "頭髮",
+    "enUS": "hair"
+  },
+  "805": {
+    "zhCN": "脸",
+    "zhTW": "臉",
+    "enUS": "face"
+  },
+  "806": {
+    "zhCN": "长",
+    "zhTW": "長",
+    "enUS": "long"
+  },
+  "807": {
+    "zhCN": "哪个（有三个以上的东西时）",
+    "zhTW": "哪個（有三個以上的東西時）",
+    "enUS": "which (when there are three or more items)"
+  },
+  "808": {
+    "zhCN": "您是取钱吗？",
+    "zhTW": "您是取錢嗎？",
+    "enUS": "Are you withdrawing money?"
+  },
+  "809": {
+    "zhCN": "首先",
+    "zhTW": "首先",
+    "enUS": "first"
+  },
+  "810": {
+    "zhCN": "按、押、推",
+    "zhTW": "按、壓、推",
+    "enUS": "to press, to push"
+  },
+  "811": {
+    "zhCN": "其次",
+    "zhTW": "其次",
+    "enUS": "next"
+  },
+  "812": {
+    "zhCN": "提款卡、借记卡",
+    "zhTW": "提款卡、借記卡",
+    "enUS": "cash card, debit card"
+  },
+  "813": {
+    "zhCN": "放入、插入",
+    "zhTW": "放入、插入",
+    "enUS": "to insert"
+  },
+  "814": {
+    "zhCN": "密码",
+    "zhTW": "密碼",
+    "enUS": "password"
+  },
+  "815": {
+    "zhCN": "金额",
+    "zhTW": "金額",
+    "enUS": "amount"
+  },
+  "816": {
+    "zhCN": "确认",
+    "zhTW": "確認",
+    "enUS": "confirmation"
+  },
+  "817": {
+    "zhCN": "按键、开关",
+    "zhTW": "按鍵、開關",
+    "enUS": "button, switch"
+  },
+  "818": {
+    "zhCN": "个子",
+    "zhTW": "個子",
+    "enUS": "height"
+  },
+  "819": {
+    "zhCN": "个子高",
+    "zhTW": "個子高",
+    "enUS": "tall"
+  },
+  "820": {
+    "zhCN": "眼睛",
+    "zhTW": "眼睛",
+    "enUS": "eyes"
+  },
+  "821": {
+    "zhCN": "耳朵",
+    "zhTW": "耳朵",
+    "enUS": "ear"
+  },
+  "822": {
+    "zhCN": "鼻子",
+    "zhTW": "鼻子",
+    "enUS": "nose"
+  },
+  "823": {
+    "zhCN": "嘴巴",
+    "zhTW": "嘴巴",
+    "enUS": "mouth"
+  },
+  "824": {
+    "zhCN": "牙齿",
+    "zhTW": "牙齒",
+    "enUS": "tooth"
+  },
+  "825": {
+    "zhCN": "脚、腿",
+    "zhTW": "腳、腿",
+    "enUS": "foot, leg"
+  },
+  "826": {
+    "zhCN": "短",
+    "zhTW": "短",
+    "enUS": "short"
+  },
+  "827": {
+    "zhCN": "年轻",
+    "zhTW": "年輕",
+    "enUS": "young"
+  },
+  "828": {
+    "zhCN": "头、脑子",
+    "zhTW": "頭、腦子",
+    "enUS": "head, brain"
+  },
+  "829": {
+    "zhCN": "聪明",
+    "zhTW": "聰明",
+    "enUS": "smart"
+  },
+  "830": {
+    "zhCN": "身体",
+    "zhTW": "身體",
+    "enUS": "body"
+  },
+  "831": {
+    "zhCN": "梅田（大阪的街名）",
+    "zhTW": "梅田（大阪的街名）",
+    "enUS": "Umeda (a street name in Osaka)"
+  },
+  "832": {
+    "zhCN": "JR（日本铁道公司）",
+    "zhTW": "JR（日本鐵道公司）",
+    "enUS": "JR (Japan Railways)"
+  },
+  "833": {
+    "zhCN": "换乘",
+    "zhTW": "換乘",
+    "enUS": "transfer"
+  },
+  "834": {
+    "zhCN": "取（钱）",
+    "zhTW": "取（錢）",
+    "enUS": "withdraw (money)"
+  },
+  "835": {
+    "zhCN": "取款。",
+    "zhTW": "取款。",
+    "enUS": "withdraw money."
+  },
+  "836": {
+    "zhCN": "开始",
+    "zhTW": "開始",
+    "enUS": "start"
+  },
+  "837": {
+    "zhCN": "拿出、取出、提交、寄",
+    "zhTW": "拿出、取出、提交、寄",
+    "enUS": "take out, withdraw, submit, send"
+  },
+  "838": {
+    "zhCN": "打电话",
+    "zhTW": "打電話",
+    "enUS": "make a phone call"
+  },
+  "839": {
+    "zhCN": "冰雪节",
+    "zhTW": "冰雪節",
+    "enUS": "snow festival"
+  },
+  "840": {
+    "zhCN": "昏暗",
+    "zhTW": "昏暗",
+    "enUS": "dark"
+  },
+  "841": {
+    "zhCN": "服务",
+    "zhTW": "服務",
+    "enUS": "service"
+  },
+  "842": {
+    "zhCN": "寺庙",
+    "zhTW": "寺廟",
+    "enUS": "temple"
+  },
+  "843": {
+    "zhCN": "真了不起。真棒。",
+    "zhTW": "真了不起。真棒。",
+    "enUS": "That's amazing. That's great."
+  },
+  "844": {
+    "zhCN": "不，还差得远。",
+    "zhTW": "不，還差得遠。",
+    "enUS": "No, I'm still far from it."
+  },
+  "845": {
+    "zhCN": "万隆（印度尼西亚地名）",
+    "zhTW": "萬隆（印度尼西亞地名）",
+    "enUS": "Bandung (a place name in Indonesia)"
+  },
+  "846": {
+    "zhCN": "绿色、绿树绿草",
+    "zhTW": "綠色、綠樹綠草",
+    "enUS": "green, green trees and grass"
+  },
+  "847": {
+    "zhCN": "韦拉克鲁斯（墨西哥地名）",
+    "zhTW": "韋拉克魯斯（墨西哥地名）",
+    "enUS": "Veracruz (a place name in Mexico)"
+  },
+  "848": {
+    "zhCN": "弗兰肯（德国地名）",
+    "zhTW": "弗蘭肯（德國地名）",
+    "enUS": "Franken (a place name in Germany)"
+  },
+  "849": {
+    "zhCN": "上（学）、进（公司）",
+    "zhTW": "上（學）、進（公司）",
+    "enUS": "enter (school), join (company)"
+  },
+  "850": {
+    "zhCN": "上大学。",
+    "zhTW": "上大學。",
+    "enUS": "go to university."
+  },
+  "851": {
+    "zhCN": "出去、离开",
+    "zhTW": "出去、離開",
+    "enUS": "go out, leave"
+  },
+  "852": {
+    "zhCN": "大学毕业。",
+    "zhTW": "大學畢業。",
+    "enUS": "graduate from university."
+  },
+  "853": {
+    "zhCN": "神社",
+    "zhTW": "神社",
+    "enUS": "shrine"
+  },
+  "854": {
+    "zhCN": "喝（特指喝酒）",
+    "zhTW": "喝（特指喝酒）",
+    "enUS": "drink (specifically alcohol)"
+  },
+  "855": {
+    "zhCN": "没问题、不要紧",
+    "zhTW": "沒問題、不要緊",
+    "enUS": "no problem, it's okay"
+  },
+  "856": {
+    "zhCN": "担心",
+    "zhTW": "擔心",
+    "enUS": "worry"
+  },
+  "857": {
+    "zhCN": "因此",
+    "zhTW": "因此",
+    "enUS": "therefore"
+  },
+  "858": {
+    "zhCN": "付（钱）",
+    "zhTW": "付（錢）",
+    "enUS": "pay (money)"
+  },
+  "859": {
+    "zhCN": "付钱。",
+    "zhTW": "付錢。",
+    "enUS": "pay money."
+  },
+  "860": {
+    "zhCN": "到～为止（指时间期限）",
+    "zhTW": "到～為止（指時間期限）",
+    "enUS": "by ~ (referring to a deadline)"
+  },
+  "861": {
+    "zhCN": "怎么了？",
+    "zhTW": "怎麼了？",
+    "enUS": "What happened?"
+  },
+  "862": {
+    "zhCN": "嗓子",
+    "zhTW": "喉嚨",
+    "enUS": "throat"
+  },
+  "863": {
+    "zhCN": "疼、痛",
+    "zhTW": "疼、痛",
+    "enUS": "hurt, pain"
+  },
+  "864": {
+    "zhCN": "～疼。",
+    "zhTW": "～疼。",
+    "enUS": "~ hurts."
+  },
+  "865": {
+    "zhCN": "喉咙疼。",
+    "zhTW": "喉嚨疼。",
+    "enUS": "My throat hurts."
+  },
+  "866": {
+    "zhCN": "发烧",
+    "zhTW": "發燒",
+    "enUS": "fever"
+  },
+  "867": {
+    "zhCN": "发烧。",
+    "zhTW": "發燒。",
+    "enUS": "I have a fever."
+  },
+  "868": {
+    "zhCN": "感冒",
+    "zhTW": "感冒",
+    "enUS": "cold"
+  },
+  "869": {
+    "zhCN": "两三天",
+    "zhTW": "兩三天",
+    "enUS": "two or three days"
+  },
+  "870": {
+    "zhCN": "两三～",
+    "zhTW": "兩三～",
+    "enUS": "two or three ~"
+  },
+  "871": {
+    "zhCN": "出差",
+    "zhTW": "出差",
+    "enUS": "business trip"
+  },
+  "872": {
+    "zhCN": "药",
+    "zhTW": "藥",
+    "enUS": "medicine"
+  },
+  "873": {
+    "zhCN": "吃（药）",
+    "zhTW": "吃（藥）",
+    "enUS": "take (medicine)"
+  },
+  "874": {
+    "zhCN": "吃药。",
+    "zhTW": "吃藥。",
+    "enUS": "I take medicine."
+  },
+  "875": {
+    "zhCN": "还有",
+    "zhTW": "還有",
+    "enUS": "and then"
+  },
+  "876": {
+    "zhCN": "洗澡、澡盆",
+    "zhTW": "洗澡、澡盆",
+    "enUS": "bath, bathtub"
+  },
+  "877": {
+    "zhCN": "进、入、洗（澡）",
+    "zhTW": "進、入、洗（澡）",
+    "enUS": "enter, go in, take (a bath)"
+  },
+  "878": {
+    "zhCN": "洗澡。",
+    "zhTW": "洗澡。",
+    "enUS": "I take a bath."
+  },
+  "879": {
+    "zhCN": "珍贵、重要",
+    "zhTW": "珍貴、重要",
+    "enUS": "precious, important"
+  },
+  "880": {
+    "zhCN": "多保重。（对患病、受伤的人说）",
+    "zhTW": "多保重。（對患病、受傷的人說）",
+    "enUS": "Take care."
+  },
+  "881": {
+    "zhCN": "忘记",
+    "zhTW": "忘記",
+    "enUS": "forget"
+  },
+  "882": {
+    "zhCN": "归还、返回",
+    "zhTW": "歸還、返回",
+    "enUS": "return"
+  },
+  "883": {
+    "zhCN": "加班",
+    "zhTW": "加班",
+    "enUS": "work overtime"
+  },
+  "884": {
+    "zhCN": "脱（衣服、鞋等）",
+    "zhTW": "脫（衣服、鞋等）",
+    "enUS": "take off (clothes, shoes, etc.)"
+  },
+  "885": {
+    "zhCN": "脱鞋。",
+    "zhTW": "脫鞋。",
+    "enUS": "I take off my shoes."
+  },
+  "886": {
+    "zhCN": "禁烟",
+    "zhTW": "禁煙",
+    "enUS": "no smoking"
+  },
+  "887": {
+    "zhCN": "危险",
+    "zhTW": "危險",
+    "enUS": "dangerous"
+  },
+  "888": {
+    "zhCN": "重要",
+    "zhTW": "重要",
+    "enUS": "important"
+  },
+  "889": {
+    "zhCN": "丢失",
+    "zhTW": "丟失",
+    "enUS": "lose"
+  },
+  "890": {
+    "zhCN": "记住",
+    "zhTW": "記住",
+    "enUS": "remember"
+  },
+  "891": {
+    "zhCN": "带去、拿去",
+    "zhTW": "帶去、拿去",
+    "enUS": "take (something)"
+  },
+  "892": {
+    "zhCN": "出门、外出",
+    "zhTW": "出門、外出",
+    "enUS": "go out"
+  },
+  "893": {
+    "zhCN": "疾病",
+    "zhTW": "疾病",
+    "enUS": "illness"
+  },
+  "894": {
+    "zhCN": "健康保险证",
+    "zhTW": "健康保險證",
+    "enUS": "health insurance card"
+  },
+  "895": {
+    "zhCN": "带来、拿来",
+    "zhTW": "帶來、拿來",
+    "enUS": "bring (something)"
+  },
+  "896": {
+    "zhCN": "外套",
+    "zhTW": "外套",
+    "enUS": "coat"
+  },
+  "897": {
+    "zhCN": "内衣",
+    "zhTW": "內衣",
+    "enUS": "underwear"
+  },
+  "898": {
+    "zhCN": "能、会、可以",
+    "zhTW": "能、會、可以",
+    "enUS": "can, be able to"
+  },
+  "899": {
+    "zhCN": "爱好",
+    "zhTW": "愛好",
+    "enUS": "hobby"
+  },
+  "900": {
+    "zhCN": "日记",
+    "zhTW": "日記",
+    "enUS": "diary"
+  },
+  "901": {
+    "zhCN": "驾驶",
+    "zhTW": "駕駛",
+    "enUS": "drive"
+  },
+  "902": {
+    "zhCN": "汽车驾驶",
+    "zhTW": "汽車駕駛",
+    "enUS": "car driving"
+  },
+  "903": {
+    "zhCN": "现金",
+    "zhTW": "現金",
+    "enUS": "cash"
+  },
+  "904": {
+    "zhCN": "收集、收藏",
+    "zhTW": "收集、收藏",
+    "enUS": "collect"
+  },
+  "905": {
+    "zhCN": "动物",
+    "zhTW": "動物",
+    "enUS": "animal"
+  },
+  "906": {
+    "zhCN": "特别",
+    "zhTW": "特別",
+    "enUS": "especially"
+  },
+  "907": {
+    "zhCN": "马",
+    "zhTW": "馬",
+    "enUS": "horse"
+  },
+  "908": {
+    "zhCN": "嘿（表示钦佩、惊讶时）",
+    "zhTW": "嘿（表示欽佩、驚訝時）",
+    "enUS": "hey (used to express admiration or surprise)"
+  },
+  "909": {
+    "zhCN": "那很有意思啊。",
+    "zhTW": "那很有意思啊。",
+    "enUS": "That's interesting."
+  },
+  "910": {
+    "zhCN": "后接否定式，表示（不）轻易、（不）容易、（不）简单",
+    "zhTW": "後接否定式，表示（不）輕易、（不）容易、（不）簡單",
+    "enUS": "not easily, not simple (used with negative forms)"
+  },
+  "911": {
+    "zhCN": "真的吗？",
+    "zhTW": "真的嗎？",
+    "enUS": "Really?"
+  },
+  "912": {
+    "zhCN": "一定",
+    "zhTW": "一定",
+    "enUS": "definitely"
+  },
+  "913": {
+    "zhCN": "钢琴",
+    "zhTW": "鋼琴",
+    "enUS": "piano"
+  },
+  "914": {
+    "zhCN": "弹奏、弹",
+    "zhTW": "彈奏、彈",
+    "enUS": "play (an instrument)"
+  },
+  "915": {
+    "zhCN": "弹钢琴。",
+    "zhTW": "彈鋼琴。",
+    "enUS": "I play the piano."
+  },
+  "916": {
+    "zhCN": "预订",
+    "zhTW": "預訂",
+    "enUS": "reserve"
+  },
+  "917": {
+    "zhCN": "预订酒店",
+    "zhTW": "預訂飯店",
+    "enUS": "hotel reservation"
+  },
+  "918": {
+    "zhCN": "换",
+    "zhTW": "換",
+    "enUS": "change"
+  },
+  "919": {
+    "zhCN": "洗",
+    "zhTW": "洗",
+    "enUS": "wash"
+  },
+  "920": {
+    "zhCN": "―米",
+    "zhTW": "―米",
+    "enUS": "- meter"
+  },
+  "921": {
+    "zhCN": "唱",
+    "zhTW": "唱",
+    "enUS": "to sing"
+  },
+  "922": {
+    "zhCN": "《故乡》（歌名）",
+    "zhTW": "《故鄉》（歌名）",
+    "enUS": "\"Hometown\" (song title)"
+  },
+  "923": {
+    "zhCN": "因特网、互联网",
+    "zhTW": "因特網、互聯網",
+    "enUS": "Internet"
+  },
+  "924": {
+    "zhCN": "秋叶原（东京的街名）",
+    "zhTW": "秋葉原（東京的街名）",
+    "enUS": "Akihabara (a street name in Tokyo)"
+  },
+  "925": {
+    "zhCN": "祈愿、祈祷",
+    "zhTW": "祈願、祈禱",
+    "enUS": "prayer"
+  },
+  "926": {
+    "zhCN": "披头士乐队（英国著名的乐队）",
+    "zhTW": "披頭士樂隊（英國著名的樂隊）",
+    "enUS": "The Beatles (a famous British band)"
+  },
+  "927": {
+    "zhCN": "部长",
+    "zhTW": "部長",
+    "enUS": "department head"
+  },
+  "928": {
+    "zhCN": "科长",
+    "zhTW": "課長",
+    "enUS": "section chief"
+  },
+  "929": {
+    "zhCN": "社长、总经理",
+    "zhTW": "社長、總經理",
+    "enUS": "president, general manager"
+  },
+  "930": {
+    "zhCN": "丢弃、扔",
+    "zhTW": "丟棄、扔",
+    "enUS": "to throw away"
+  },
+  "931": {
+    "zhCN": "相扑",
+    "zhTW": "相撲",
+    "enUS": "sumo"
+  },
+  "932": {
+    "zhCN": "日子",
+    "zhTW": "日子",
+    "enUS": "day"
+  },
+  "933": {
+    "zhCN": "渐渐",
+    "zhTW": "漸漸",
+    "enUS": "gradually"
+  },
+  "934": {
+    "zhCN": "变成、成为",
+    "zhTW": "變成、成為",
+    "enUS": "to become"
+  },
+  "935": {
+    "zhCN": "一次",
+    "zhTW": "一次",
+    "enUS": "once"
+  },
+  "936": {
+    "zhCN": "后接否定式，表示一次也（没有）～",
+    "zhTW": "後接否定式，表示一次也（沒有）～",
+    "enUS": "followed by a negative form, meaning not even once"
+  },
+  "937": {
+    "zhCN": "情况、状态",
+    "zhTW": "情況、狀態",
+    "enUS": "condition, state"
+  },
+  "938": {
+    "zhCN": "情况好、状态好",
+    "zhTW": "情況好、狀態好",
+    "enUS": "condition is good, state is good"
+  },
+  "939": {
+    "zhCN": "情况不好、状态不好",
+    "zhTW": "情況不好、狀態不好",
+    "enUS": "condition is bad, state is bad"
+  },
+  "940": {
+    "zhCN": "托您的福（在得到帮助或热情对待后表示感谢时使用）",
+    "zhTW": "托您的福（在得到幫助或熱情對待後表示感謝時使用）",
+    "enUS": "thanks to you (used to express gratitude after receiving help or warm treatment)"
+  },
+  "941": {
+    "zhCN": "减肥",
+    "zhTW": "減肥",
+    "enUS": "dieting"
+  },
+  "942": {
+    "zhCN": "干杯",
+    "zhTW": "乾杯",
+    "enUS": "cheers"
+  },
+  "943": {
+    "zhCN": "不过",
+    "zhTW": "不過",
+    "enUS": "but"
+  },
+  "944": {
+    "zhCN": "勉强",
+    "zhTW": "勉強",
+    "enUS": "impossible"
+  },
+  "945": {
+    "zhCN": "对身体好。",
+    "zhTW": "對身體好。",
+    "enUS": "good for the body."
+  },
+  "946": {
+    "zhCN": "登（有意图、坚持着向高处前进）",
+    "zhTW": "登（有意圖、堅持著向高處前進）",
+    "enUS": "to climb (with intention, persistently moving upwards)"
+  },
+  "947": {
+    "zhCN": "上（从下到上一步一步升高）",
+    "zhTW": "上（從下到上一步一步升高）",
+    "enUS": "to go up (to rise step by step from below to above)"
+  },
+  "948": {
+    "zhCN": "东京晴空塔（位于东京的有眺望台的电波塔）",
+    "zhTW": "東京晴空塔（位於東京的有眺望台的電波塔）",
+    "enUS": "Tokyo Skytree (a broadcasting tower with an observation deck in Tokyo)"
+  },
+  "949": {
+    "zhCN": "住",
+    "zhTW": "住",
+    "enUS": "to stay"
+  },
+  "950": {
+    "zhCN": "住酒店。",
+    "zhTW": "住飯店。",
+    "enUS": "to stay at a hotel."
+  },
+  "951": {
+    "zhCN": "打扫",
+    "zhTW": "打掃",
+    "enUS": "to clean"
+  },
+  "952": {
+    "zhCN": "洗衣服",
+    "zhTW": "洗衣服",
+    "enUS": "to do laundry"
+  },
+  "953": {
+    "zhCN": "高尔夫",
+    "zhTW": "高爾夫",
+    "enUS": "golf"
+  },
+  "954": {
+    "zhCN": "练习",
+    "zhTW": "練習",
+    "enUS": "practice"
+  },
+  "955": {
+    "zhCN": "强",
+    "zhTW": "強",
+    "enUS": "strong"
+  },
+  "956": {
+    "zhCN": "弱",
+    "zhTW": "弱",
+    "enUS": "weak"
+  },
+  "957": {
+    "zhCN": "困",
+    "zhTW": "困",
+    "enUS": "sleepy"
+  },
+  "958": {
+    "zhCN": "马上、就",
+    "zhTW": "馬上、就",
+    "enUS": "soon, just"
+  },
+  "959": {
+    "zhCN": "静冈县",
+    "zhTW": "靜岡縣",
+    "enUS": "Shizuoka Prefecture"
+  },
+  "960": {
+    "zhCN": "山梨县",
+    "zhTW": "山梨縣",
+    "enUS": "Yamanashi Prefecture"
+  },
+  "961": {
+    "zhCN": "葛饰北斎（江户时代有名的浮世绘画家）",
+    "zhTW": "葛飾北齊（江戶時代有名的浮世繪畫家）",
+    "enUS": "Katsushika Hokusai (a famous ukiyo-e painter from the Edo period)"
+  },
+  "962": {
+    "zhCN": "我（男子用语，比「わたし」随意）",
+    "zhTW": "我（男子用語，比「わたし」隨意）",
+    "enUS": "I (masculine term, more casual than \"watashi\")"
+  },
+  "963": {
+    "zhCN": "你（用于同辈、部下、晚辈，比「あなた」随意）",
+    "zhTW": "你（用於同輩、部下、晚輩，比「あなた」隨意）",
+    "enUS": "you (used among peers, subordinates, juniors, more casual than \"anata\")"
+  },
+  "964": {
+    "zhCN": "嗯（比「はい」随意）",
+    "zhTW": "嗯（比「はい」隨意）",
+    "enUS": "uh-huh (more casual than \"hai\")"
+  },
+  "965": {
+    "zhCN": "不（比いいえ随意）",
+    "zhTW": "不（比「いいえ」隨意）",
+    "enUS": "no (more casual than \"iie\")"
+  },
+  "966": {
+    "zhCN": "大家一起",
+    "zhTW": "大家一起",
+    "enUS": "everyone together"
+  },
+  "967": {
+    "zhCN": "肚子饱了。",
+    "zhTW": "肚子飽了。",
+    "enUS": "I'm full."
+  },
+  "968": {
+    "zhCN": "～，但是（比「が」随意）",
+    "zhTW": "～，但是（比「が」隨意）",
+    "enUS": "~, but (more casual than \"ga\")"
+  },
+  "969": {
+    "zhCN": "～君（用于同辈、部下、晚辈，有时在叫男孩名字时使用，比「さん」随意）",
+    "zhTW": "～君（用於同輩、部下、晚輩，有時在叫男孩名字時使用，比「さん」隨意）",
+    "enUS": "~kun (used among peers, subordinates, juniors, sometimes used when calling a boy's name, more casual than \"san\")"
+  },
+  "970": {
+    "zhCN": "如果（你觉得）可以的话～",
+    "zhTW": "如果（你覺得）可以的話～",
+    "enUS": "if (you think) it's okay, then ~"
+  },
+  "971": {
+    "zhCN": "开始",
+    "zhTW": "開始",
+    "enUS": "beginning"
+  },
+  "972": {
+    "zhCN": "开始的时候",
+    "zhTW": "開始的時候",
+    "enUS": "around the beginning"
+  },
+  "973": {
+    "zhCN": "各种各样",
+    "zhTW": "各式各樣",
+    "enUS": "various kinds"
+  },
+  "974": {
+    "zhCN": "查、调查",
+    "zhTW": "查、調查",
+    "enUS": "to investigate"
+  },
+  "975": {
+    "zhCN": "和服",
+    "zhTW": "和服",
+    "enUS": "kimono"
+  },
+  "976": {
+    "zhCN": "那边（指离听话人近的场所，比「そちら」随意）",
+    "zhTW": "那邊（指離聽話人近的場所，比「那邊」隨意）",
+    "enUS": "over there (referring to a place close to the listener, more casual than 'sore')"
+  },
+  "977": {
+    "zhCN": "这边（比「こちら」随意）",
+    "zhTW": "這邊（比「這邊」隨意）",
+    "enUS": "this way (more casual than 'kochira')"
+  },
+  "978": {
+    "zhCN": "那边（指离说话人、听话人都远的场所，比「あちら」随意）",
+    "zhTW": "那邊（指離說話人、聽話人都遠的場所，比「那邊」隨意）",
+    "enUS": "over there (referring to a place far from both the speaker and listener, more casual than 'achira')"
+  },
+  "979": {
+    "zhCN": "签证",
+    "zhTW": "簽證",
+    "enUS": "visa"
+  },
+  "980": {
+    "zhCN": "要",
+    "zhTW": "要",
+    "enUS": "to need"
+  },
+  "981": {
+    "zhCN": "要签证。",
+    "zhTW": "要簽證。",
+    "enUS": "I need a visa."
+  },
+  "982": {
+    "zhCN": "结束",
+    "zhTW": "結束",
+    "enUS": "end"
+  },
+  "983": {
+    "zhCN": "结束的时候",
+    "zhTW": "結束的時候",
+    "enUS": "around the end"
+  },
+  "984": {
+    "zhCN": "哪一个（用于从两个中间选择一个时）、哪边（比「どちら」随意）",
+    "zhTW": "哪一個（用於從兩個中間選擇一個時）、哪邊（比「哪邊」隨意）",
+    "enUS": "which one (used when choosing between two), which side (more casual than 'dochira')"
+  },
+  "985": {
+    "zhCN": "修理",
+    "zhTW": "修理",
+    "enUS": "to repair"
+  },
+  "986": {
+    "zhCN": "词汇、单词",
+    "zhTW": "詞彙、單詞",
+    "enUS": "words, vocabulary"
+  },
+  "987": {
+    "zhCN": "想、觉得",
+    "zhTW": "想、覺得",
+    "enUS": "to think, to feel"
+  },
+  "988": {
+    "zhCN": "留学",
+    "zhTW": "留學",
+    "enUS": "to study abroad"
+  },
+  "989": {
+    "zhCN": "说、讲",
+    "zhTW": "說、講",
+    "enUS": "to say, to speak"
+  },
+  "990": {
+    "zhCN": "大概、也许",
+    "zhTW": "大概、也許",
+    "enUS": "probably, maybe"
+  },
+  "991": {
+    "zhCN": "新闻",
+    "zhTW": "新聞",
+    "enUS": "news"
+  },
+  "992": {
+    "zhCN": "关于～",
+    "zhTW": "關於～",
+    "enUS": "about ~"
+  },
+  "993": {
+    "zhCN": "物价",
+    "zhTW": "物價",
+    "enUS": "prices"
+  },
+  "994": {
+    "zhCN": "辉夜姬（日本传说《竹取物语》中的主人公）",
+    "zhTW": "輝夜姬（日本傳說《竹取物語》中的主角）",
+    "enUS": "Kaguya-hime (the protagonist of the Japanese tale 'The Tale of the Bamboo Cutter')"
+  },
+  "995": {
+    "zhCN": "月亮",
+    "zhTW": "月亮",
+    "enUS": "moon"
+  },
+  "996": {
+    "zhCN": "意见",
+    "zhTW": "意見",
+    "enUS": "opinion"
+  },
+  "997": {
+    "zhCN": "浪费",
+    "zhTW": "浪費",
+    "enUS": "waste"
+  },
+  "998": {
+    "zhCN": "举行、有",
+    "zhTW": "舉行、有",
+    "enUS": "to have, to hold"
+  },
+  "999": {
+    "zhCN": "有节庆活动。",
+    "zhTW": "有節慶活動。",
+    "enUS": "There is a festival."
+  },
+  "1000": {
+    "zhCN": "好久不见。",
+    "zhTW": "好久不見。",
+    "enUS": "Long time no see."
+  },
+  "1001": {
+    "zhCN": "喝点儿～什么吗？",
+    "zhTW": "喝點兒～什麼嗎？",
+    "enUS": "Would you like to drink something ~?"
+  },
+  "1002": {
+    "zhCN": "啤酒什么的",
+    "zhTW": "啤酒什麼的",
+    "enUS": "beer or something"
+  },
+  "1003": {
+    "zhCN": "比赛",
+    "zhTW": "比賽",
+    "enUS": "match, game"
+  },
+  "1004": {
+    "zhCN": "赢",
+    "zhTW": "贏",
+    "enUS": "to win"
+  },
+  "1005": {
+    "zhCN": "输",
+    "zhTW": "輸",
+    "enUS": "to lose"
+  },
+  "1006": {
+    "zhCN": "当然",
+    "zhTW": "當然",
+    "enUS": "of course"
+  },
+  "1007": {
+    "zhCN": "最近",
+    "zhTW": "最近",
+    "enUS": "recently"
+  },
+  "1008": {
+    "zhCN": "该回去了……",
+    "zhTW": "該回去了……",
+    "enUS": "I should be going back..."
+  },
+  "1009": {
+    "zhCN": "漫画",
+    "zhTW": "漫畫",
+    "enUS": "manga"
+  },
+  "1010": {
+    "zhCN": "真的",
+    "zhTW": "真的",
+    "enUS": "really"
+  },
+  "1011": {
+    "zhCN": "假话",
+    "zhTW": "假話",
+    "enUS": "lie"
+  },
+  "1012": {
+    "zhCN": "辞职、退休、戒（烟、酒）",
+    "zhTW": "辭職、退休、戒（煙、酒）",
+    "enUS": "to quit, to retire, to quit (smoking, drinking)"
+  },
+  "1013": {
+    "zhCN": "跟公司辞职。",
+    "zhTW": "跟公司辭職。",
+    "enUS": "I quit the company."
+  },
+  "1014": {
+    "zhCN": "一定、必定",
+    "zhTW": "一定、必定",
+    "enUS": "certainly, definitely"
+  },
+  "1015": {
+    "zhCN": "设计",
+    "zhTW": "設計",
+    "enUS": "design"
+  },
+  "1016": {
+    "zhCN": "有用、起作用",
+    "zhTW": "有用、起作用",
+    "enUS": "useful, effective"
+  },
+  "1017": {
+    "zhCN": "汽车",
+    "zhTW": "汽車",
+    "enUS": "car"
+  },
+  "1018": {
+    "zhCN": "动画",
+    "zhTW": "動畫",
+    "enUS": "animation"
+  },
+  "1019": {
+    "zhCN": "交通",
+    "zhTW": "交通",
+    "enUS": "traffic"
+  },
+  "1020": {
+    "zhCN": "梦、梦想",
+    "zhTW": "夢、夢想",
+    "enUS": "dream, aspiration"
+  },
+  "1021": {
+    "zhCN": "马丁・路德・金",
+    "zhTW": "馬丁·路德·金",
+    "enUS": "Martin Luther King"
+  },
+  "1022": {
+    "zhCN": "地球",
+    "zhTW": "地球",
+    "enUS": "Earth"
+  },
+  "1023": {
+    "zhCN": "转动、动",
+    "zhTW": "轉動、動",
+    "enUS": "Move"
+  },
+  "1024": {
+    "zhCN": "伽利略",
+    "zhTW": "伽利略",
+    "enUS": "Galileo"
+  },
+  "1025": {
+    "zhCN": "天才",
+    "zhTW": "天才",
+    "enUS": "Genius"
+  },
+  "1026": {
+    "zhCN": "爱因斯坦",
+    "zhTW": "愛因斯坦",
+    "enUS": "Einstein"
+  },
+  "1027": {
+    "zhCN": "本杰明・富兰克林",
+    "zhTW": "本傑明·富蘭克林",
+    "enUS": "Benjamin Franklin"
+  },
+  "1028": {
+    "zhCN": "加加林",
+    "zhTW": "加加林",
+    "enUS": "Gagarin"
+  },
+  "1029": {
+    "zhCN": "话、谈话",
+    "zhTW": "話、談話",
+    "enUS": "Talk, Conversation"
+  },
+  "1030": {
+    "zhCN": "没那么（后接否定式）",
+    "zhTW": "沒那麼（後接否定式）",
+    "enUS": "Not that much (followed by a negative form)"
+  },
+  "1031": {
+    "zhCN": "厉害（在表示惊讶和感叹时使用）",
+    "zhTW": "厲害（在表示驚訝和感嘆時使用）",
+    "enUS": "Amazing (used to express surprise and admiration)"
+  },
+  "1032": {
+    "zhCN": "真的",
+    "zhTW": "真的",
+    "enUS": "Really"
+  },
+  "1033": {
+    "zhCN": "小心、注意",
+    "zhTW": "小心、注意",
+    "enUS": "Be careful, Pay attention"
+  },
+  "1034": {
+    "zhCN": "不方便",
+    "zhTW": "不方便",
+    "enUS": "Inconvenient"
+  },
+  "1035": {
+    "zhCN": "广播",
+    "zhTW": "廣播",
+    "enUS": "Broadcast"
+  },
+  "1036": {
+    "zhCN": "游乐园",
+    "zhTW": "遊樂園",
+    "enUS": "Amusement Park"
+  },
+  "1037": {
+    "zhCN": "天神祭（大阪的庙会）",
+    "zhTW": "天神祭（大阪的廟會）",
+    "enUS": "Tenjin Matsuri (a festival in Osaka)"
+  },
+  "1038": {
+    "zhCN": "吉野山（位于奈良的山）",
+    "zhTW": "吉野山（位於奈良的山）",
+    "enUS": "Yoshino Mountain (a mountain located in Nara)"
+  },
+  "1039": {
+    "zhCN": "袋鼠",
+    "zhTW": "袋鼠",
+    "enUS": "Kangaroo"
+  },
+  "1040": {
+    "zhCN": "库克船长",
+    "zhTW": "庫克船長",
+    "enUS": "Captain Cook"
+  },
+  "1041": {
+    "zhCN": "蛋糕",
+    "zhTW": "蛋糕",
+    "enUS": "Cake"
+  },
+  "1042": {
+    "zhCN": "万里长城",
+    "zhTW": "萬里長城",
+    "enUS": "Great Wall of China"
+  },
+  "1043": {
+    "zhCN": "穿（衬衫等上衣、外衣）",
+    "zhTW": "穿（襯衫等上衣、外衣）",
+    "enUS": "Wear (shirts, outerwear, etc.)"
+  },
+  "1044": {
+    "zhCN": "穿和服。",
+    "zhTW": "穿和服。",
+    "enUS": "Wear a kimono."
+  },
+  "1045": {
+    "zhCN": "您在找～吗？",
+    "zhTW": "您在找～嗎？",
+    "enUS": "Are you looking for ~?"
+  },
+  "1046": {
+    "zhCN": "房屋中介",
+    "zhTW": "房屋仲介",
+    "enUS": "Real estate agent"
+  },
+  "1047": {
+    "zhCN": "房租",
+    "zhTW": "房租",
+    "enUS": "Rent"
+  },
+  "1048": {
+    "zhCN": "那么",
+    "zhTW": "那麼",
+    "enUS": "Then"
+  },
+  "1049": {
+    "zhCN": "这（「これ」的礼貌用语）",
+    "zhTW": "這（「これ」的禮貌用語）",
+    "enUS": "This (polite form of 'kore')"
+  },
+  "1050": {
+    "zhCN": "带餐厅的厨房",
+    "zhTW": "帶餐廳的廚房",
+    "enUS": "Kitchen with dining area"
+  },
+  "1051": {
+    "zhCN": "日式房间",
+    "zhTW": "日式房間",
+    "enUS": "Japanese-style room"
+  },
+  "1052": {
+    "zhCN": "日式壁橱",
+    "zhTW": "日式壁櫥",
+    "enUS": "Japanese closet"
+  },
+  "1053": {
+    "zhCN": "被褥",
+    "zhTW": "被褥",
+    "enUS": "Futon"
+  },
+  "1054": {
+    "zhCN": "眼镜",
+    "zhTW": "眼鏡",
+    "enUS": "Glasses"
+  },
+  "1055": {
+    "zhCN": "戴、佩戴",
+    "zhTW": "戴、佩戴",
+    "enUS": "Wear"
+  },
+  "1056": {
+    "zhCN": "戴眼镜。",
+    "zhTW": "戴眼鏡。",
+    "enUS": "Wear glasses."
+  },
+  "1057": {
+    "zhCN": "巴黎",
+    "zhTW": "巴黎",
+    "enUS": "Paris"
+  },
+  "1058": {
+    "zhCN": "帽子",
+    "zhTW": "帽子",
+    "enUS": "Hat"
+  },
+  "1059": {
+    "zhCN": "大衣",
+    "zhTW": "大衣",
+    "enUS": "Coat"
+  },
+  "1060": {
+    "zhCN": "穿（鞋子、裤子等）",
+    "zhTW": "穿（鞋子、褲子等）",
+    "enUS": "Wear (shoes, pants, etc.)"
+  },
+  "1061": {
+    "zhCN": "穿鞋。",
+    "zhTW": "穿鞋。",
+    "enUS": "Wear shoes."
+  },
+  "1062": {
+    "zhCN": "穿、戴",
+    "zhTW": "穿、戴",
+    "enUS": "Wear"
+  },
+  "1063": {
+    "zhCN": "系领带。",
+    "zhTW": "繫領帶。",
+    "enUS": "Tie a necktie."
+  },
+  "1064": {
+    "zhCN": "戴（帽子等）",
+    "zhTW": "戴（帽子等）",
+    "enUS": "Wear (hats, etc.)"
+  },
+  "1065": {
+    "zhCN": "戴帽子。",
+    "zhTW": "戴帽子。",
+    "enUS": "Wear a hat."
+  },
+  "1066": {
+    "zhCN": "出生",
+    "zhTW": "出生",
+    "enUS": "Be born"
+  },
+  "1067": {
+    "zhCN": "盒饭",
+    "zhTW": "便當",
+    "enUS": "Bento"
+  },
+  "1068": {
+    "zhCN": "我们",
+    "zhTW": "我們",
+    "enUS": "We"
+  },
+  "1069": {
+    "zhCN": "幽默",
+    "zhTW": "幽默",
+    "enUS": "Humor"
+  },
+  "1070": {
+    "zhCN": "机器人",
+    "zhTW": "機器人",
+    "enUS": "Robot"
+  },
+  "1071": {
+    "zhCN": "方便、凑巧",
+    "zhTW": "方便、湊巧",
+    "enUS": "convenience, coincidence"
+  },
+  "1072": {
+    "zhCN": "经常",
+    "zhTW": "經常",
+    "enUS": "often"
+  },
+  "1073": {
+    "zhCN": "毛衣",
+    "zhTW": "毛衣",
+    "enUS": "sweater"
+  },
+  "1074": {
+    "zhCN": "套装",
+    "zhTW": "套裝",
+    "enUS": "suit"
+  },
+  "1075": {
+    "zhCN": "那个……（用于思考时）",
+    "zhTW": "那個……（用於思考時）",
+    "enUS": "um... (used while thinking)"
+  },
+  "1076": {
+    "zhCN": "祝你～快乐。（生日、结婚、过年等时候使用）",
+    "zhTW": "祝你～快樂。（生日、結婚、過年等時候使用）",
+    "enUS": "Congratulations on your ~ (used for birthdays, weddings, New Year, etc.)"
+  },
+  "1077": {
+    "zhCN": "成人礼",
+    "zhTW": "成人禮",
+    "enUS": "coming-of-age ceremony"
+  },
+  "1078": {
+    "zhCN": "热水、开水",
+    "zhTW": "熱水、開水",
+    "enUS": "hot water, boiled water"
+  },
+  "1079": {
+    "zhCN": "找（钱）",
+    "zhTW": "找（錢）",
+    "enUS": "to give change"
+  },
+  "1080": {
+    "zhCN": "找零钱。",
+    "zhTW": "找零錢。",
+    "enUS": "to give change."
+  },
+  "1081": {
+    "zhCN": "第―（指顺序）",
+    "zhTW": "第―（指順序）",
+    "enUS": "-th (indicating order)"
+  },
+  "1082": {
+    "zhCN": "第三个",
+    "zhTW": "第三個",
+    "enUS": "the third one"
+  },
+  "1083": {
+    "zhCN": "建筑物",
+    "zhTW": "建築物",
+    "enUS": "building"
+  },
+  "1084": {
+    "zhCN": "道路",
+    "zhTW": "道路",
+    "enUS": "road"
+  },
+  "1085": {
+    "zhCN": "渡过、过",
+    "zhTW": "渡過、過",
+    "enUS": "to cross"
+  },
+  "1086": {
+    "zhCN": "过桥。",
+    "zhTW": "過橋。",
+    "enUS": "to cross the bridge."
+  },
+  "1087": {
+    "zhCN": "过马路。",
+    "zhTW": "過馬路。",
+    "enUS": "to cross the street."
+  },
+  "1088": {
+    "zhCN": "问",
+    "zhTW": "問",
+    "enUS": "to ask"
+  },
+  "1089": {
+    "zhCN": "问老师。",
+    "zhTW": "問老師。",
+    "enUS": "to ask the teacher."
+  },
+  "1090": {
+    "zhCN": "问路。",
+    "zhTW": "問路。",
+    "enUS": "to ask for directions."
+  },
+  "1091": {
+    "zhCN": "传递、转",
+    "zhTW": "傳遞、轉",
+    "enUS": "to pass, to turn"
+  },
+  "1092": {
+    "zhCN": "（物体发出的）声音",
+    "zhTW": "（物體發出的）聲音",
+    "enUS": "(sound produced by an object)"
+  },
+  "1093": {
+    "zhCN": "寂寞",
+    "zhTW": "寂寞",
+    "enUS": "lonely"
+  },
+  "1094": {
+    "zhCN": "多次、好几次",
+    "zhTW": "多次、好幾次",
+    "enUS": "many times, several times"
+  },
+  "1095": {
+    "zhCN": "拉、拽",
+    "zhTW": "拉、拽",
+    "enUS": "to pull"
+  },
+  "1096": {
+    "zhCN": "摸、碰",
+    "zhTW": "摸、碰",
+    "enUS": "to touch"
+  },
+  "1097": {
+    "zhCN": "碰到门。",
+    "zhTW": "碰到門。",
+    "enUS": "to touch the door."
+  },
+  "1098": {
+    "zhCN": "十字路口",
+    "zhTW": "十字路口",
+    "enUS": "intersection"
+  },
+  "1099": {
+    "zhCN": "停车场",
+    "zhTW": "停車場",
+    "enUS": "parking lot"
+  },
+  "1100": {
+    "zhCN": "桥",
+    "zhTW": "橋",
+    "enUS": "bridge"
+  },
+  "1101": {
+    "zhCN": "走",
+    "zhTW": "走",
+    "enUS": "to walk"
+  },
+  "1102": {
+    "zhCN": "号码、尺寸",
+    "zhTW": "號碼、尺寸",
+    "enUS": "size, dimension"
+  },
+  "1103": {
+    "zhCN": "改变",
+    "zhTW": "改變",
+    "enUS": "to change"
+  },
+  "1104": {
+    "zhCN": "故障",
+    "zhTW": "故障",
+    "enUS": "malfunction"
+  },
+  "1105": {
+    "zhCN": "红绿灯",
+    "zhTW": "紅綠燈",
+    "enUS": "traffic light"
+  },
+  "1106": {
+    "zhCN": "拐、转弯",
+    "zhTW": "轉彎",
+    "enUS": "to turn"
+  },
+  "1107": {
+    "zhCN": "往右拐。",
+    "zhTW": "往右轉。",
+    "enUS": "to turn right."
+  },
+  "1108": {
+    "zhCN": "拐角、路口",
+    "zhTW": "轉角、路口",
+    "enUS": "corner, intersection"
+  },
+  "1109": {
+    "zhCN": "圣德太子（日本飞鸟时期政治家）",
+    "zhTW": "聖德太子（日本飛鳥時期政治家）",
+    "enUS": "Prince Shōtoku (Japanese politician of the Asuka period)"
+  },
+  "1110": {
+    "zhCN": "给（我、我方）",
+    "zhTW": "給（我、我方）",
+    "enUS": "to give (to me, to us)"
+  },
+  "1111": {
+    "zhCN": "修理、修改",
+    "zhTW": "修理、修改",
+    "enUS": "to repair, to modify"
+  },
+  "1112": {
+    "zhCN": "送人。",
+    "zhTW": "送人。",
+    "enUS": "to send someone."
+  },
+  "1113": {
+    "zhCN": "请别人为自己做某事",
+    "zhTW": "請別人為自己做某事",
+    "enUS": "to have someone do something for me"
+  },
+  "1114": {
+    "zhCN": "别人为我做某事",
+    "zhTW": "別人為我做某事",
+    "enUS": "someone does something for me"
+  },
+  "1115": {
+    "zhCN": "为别人做某事",
+    "zhTW": "為別人做某事",
+    "enUS": "to do something for someone"
+  },
+  "1116": {
+    "zhCN": "点心",
+    "zhTW": "點心",
+    "enUS": "snack"
+  },
+  "1117": {
+    "zhCN": "全部",
+    "zhTW": "全部",
+    "enUS": "all"
+  },
+  "1118": {
+    "zhCN": "自己、本人",
+    "zhTW": "自己、本人",
+    "enUS": "oneself, the person"
+  },
+  "1119": {
+    "zhCN": "自己来～",
+    "zhTW": "自己來～",
+    "enUS": "to do ~ by oneself"
+  },
+  "1120": {
+    "zhCN": "母亲节",
+    "zhTW": "母親節",
+    "enUS": "Mother's Day"
+  },
+  "1121": {
+    "zhCN": "搬家",
+    "zhTW": "搬家",
+    "enUS": "moving house"
+  },
+  "1122": {
+    "zhCN": "另外",
+    "zhTW": "另外",
+    "enUS": "besides"
+  },
+  "1123": {
+    "zhCN": "领着去",
+    "zhTW": "帶著去",
+    "enUS": "take (someone) along"
+  },
+  "1124": {
+    "zhCN": "带孩子去。",
+    "zhTW": "帶孩子去。",
+    "enUS": "take the child (to go)."
+  },
+  "1125": {
+    "zhCN": "领着来",
+    "zhTW": "帶著來",
+    "enUS": "bring (someone) along"
+  },
+  "1126": {
+    "zhCN": "介绍",
+    "zhTW": "介紹",
+    "enUS": "introduce"
+  },
+  "1127": {
+    "zhCN": "介绍老师。",
+    "zhTW": "介紹老師。",
+    "enUS": "introduce the teacher."
+  },
+  "1128": {
+    "zhCN": "导游、领路",
+    "zhTW": "導遊、領路",
+    "enUS": "guide"
+  },
+  "1129": {
+    "zhCN": "陪同参观学校。",
+    "zhTW": "陪同參觀學校。",
+    "enUS": "accompany to visit the school."
+  },
+  "1130": {
+    "zhCN": "爷爷、姥爷",
+    "zhTW": "爺爺、外公",
+    "enUS": "grandfather"
+  },
+  "1131": {
+    "zhCN": "爷爷、姥爷",
+    "zhTW": "爺爺、外公",
+    "enUS": "grandpa"
+  },
+  "1132": {
+    "zhCN": "奶奶、姥姥",
+    "zhTW": "奶奶、外婆",
+    "enUS": "grandmother"
+  },
+  "1133": {
+    "zhCN": "奶奶、姥姥",
+    "zhTW": "奶奶、外婆",
+    "enUS": "grandma"
+  },
+  "1134": {
+    "zhCN": "准备",
+    "zhTW": "準備",
+    "enUS": "preparation"
+  },
+  "1135": {
+    "zhCN": "（旅游或留学时等）寄宿在当地人家里",
+    "zhTW": "（旅遊或留學時等）寄宿在當地人家裡",
+    "enUS": "homestay (staying with locals during travel or study abroad)"
+  },
+  "1136": {
+    "zhCN": "说明、讲解",
+    "zhTW": "說明、講解",
+    "enUS": "explain"
+  },
+  "1137": {
+    "zhCN": "如果、要是",
+    "zhTW": "如果、要是",
+    "enUS": "if"
+  },
+  "1138": {
+    "zhCN": "如果、要是",
+    "zhTW": "如果、要是",
+    "enUS": "if"
+  },
+  "1139": {
+    "zhCN": "亿",
+    "zhTW": "億",
+    "enUS": "hundred million"
+  },
+  "1140": {
+    "zhCN": "考虑、想",
+    "zhTW": "考慮、想",
+    "enUS": "consider"
+  },
+  "1141": {
+    "zhCN": "意思",
+    "zhTW": "意思",
+    "enUS": "meaning"
+  },
+  "1142": {
+    "zhCN": "调动工作",
+    "zhTW": "調動工作",
+    "enUS": "job transfer"
+  },
+  "1143": {
+    "zhCN": "事情",
+    "zhTW": "事情",
+    "enUS": "thing"
+  },
+  "1144": {
+    "zhCN": "空闲、有空儿",
+    "zhTW": "空閒、有空",
+    "enUS": "free time"
+  },
+  "1145": {
+    "zhCN": "承蒙（多方）关照。",
+    "zhTW": "承蒙（多方）關照。",
+    "enUS": "Thank you for your (various) support."
+  },
+  "1146": {
+    "zhCN": "加油、努力",
+    "zhTW": "加油、努力",
+    "enUS": "do your best"
+  },
+  "1147": {
+    "zhCN": "请多保重。祝你健康。（长期分别时使用）",
+    "zhTW": "請多保重。祝你健康。（長期分別時使用）",
+    "enUS": "Please take care. Wish you health. (used for long-term separation)"
+  },
+  "1148": {
+    "zhCN": "乡下、老家",
+    "zhTW": "鄉下、老家",
+    "enUS": "countryside, hometown"
+  },
+  "1149": {
+    "zhCN": "到、到达",
+    "zhTW": "到、到達",
+    "enUS": "arrive"
+  },
+  "1150": {
+    "zhCN": "够",
+    "zhTW": "夠",
+    "enUS": "enough"
+  },
+  "1151": {
+    "zhCN": "机会",
+    "zhTW": "機會",
+    "enUS": "chance"
+  },
+  "1152": {
+    "zhCN": "上（年纪）",
+    "zhTW": "上（年紀）",
+    "enUS": "get older"
+  },
+  "1153": {
+    "zhCN": "上年纪。",
+    "zhTW": "上年紀。",
+    "enUS": "getting older."
+  },
+  "1154": {
+    "zhCN": "喂（打电话时的用语）",
+    "zhTW": "喂（打電話時的用語）",
+    "enUS": "Hello (used when answering the phone)"
+  },
+  "1155": {
+    "zhCN": "越南",
+    "zhTW": "越南",
+    "enUS": "Vietnam"
+  },
+  "1156": {
+    "zhCN": "～方言",
+    "zhTW": "～方言",
+    "enUS": "~ dialect"
+  },
+  "1157": {
+    "zhCN": "大阪话、大阪方言",
+    "zhTW": "大阪話、大阪方言",
+    "enUS": "Osaka dialect"
+  },
+  "1158": {
+    "zhCN": "江户屋（虚构的商店）",
+    "zhTW": "江戶屋（虛構的商店）",
+    "enUS": "Edoya Store (fictional shop)"
+  },
+  "1159": {
+    "zhCN": "晚了、没赶上",
+    "zhTW": "晚了、沒趕上",
+    "enUS": "late, missed"
+  },
+  "1160": {
+    "zhCN": "没赶上时间。",
+    "zhTW": "沒趕上時間。",
+    "enUS": "did not make it on time."
+  },
+  "1161": {
+    "zhCN": "诊断",
+    "zhTW": "診斷",
+    "enUS": "diagnose"
+  },
+  "1162": {
+    "zhCN": "国会议事堂",
+    "zhTW": "國會議事堂",
+    "enUS": "National Diet Building"
+  },
+  "1163": {
+    "zhCN": "直接",
+    "zhTW": "直接",
+    "enUS": "direct"
+  },
+  "1164": {
+    "zhCN": "平日",
+    "zhTW": "平日",
+    "enUS": "weekday"
+  },
+  "1165": {
+    "zhCN": "随时",
+    "zhTW": "隨時",
+    "enUS": "anytime"
+  },
+  "1166": {
+    "zhCN": "在任何地方都～",
+    "zhTW": "在任何地方都～",
+    "enUS": "anywhere"
+  },
+  "1167": {
+    "zhCN": "任何人都～",
+    "zhTW": "任何人都～",
+    "enUS": "anyone"
+  },
+  "1168": {
+    "zhCN": "什么都～",
+    "zhTW": "什麼都～",
+    "enUS": "anything"
+  },
+  "1169": {
+    "zhCN": "垃圾",
+    "zhTW": "垃圾",
+    "enUS": "garbage"
+  },
+  "1170": {
+    "zhCN": "扔",
+    "zhTW": "丟",
+    "enUS": "throw"
+  },
+  "1171": {
+    "zhCN": "扔垃圾。",
+    "zhTW": "丟垃圾。",
+    "enUS": "Take out the trash."
+  },
+  "1172": {
+    "zhCN": "收拾",
+    "zhTW": "整理",
+    "enUS": "Clean up."
+  },
+  "1173": {
+    "zhCN": "收拾行李。",
+    "zhTW": "整理行李。",
+    "enUS": "Pack up the luggage."
+  },
+  "1174": {
+    "zhCN": "可燃垃圾",
+    "zhTW": "可燃垃圾",
+    "enUS": "Burnable waste."
+  },
+  "1175": {
+    "zhCN": "放置场所",
+    "zhTW": "放置場所",
+    "enUS": "Storage place."
+  },
+  "1176": {
+    "zhCN": "垃圾场",
+    "zhTW": "垃圾場",
+    "enUS": "Garbage dump."
+  },
+  "1177": {
+    "zhCN": "旁边",
+    "zhTW": "旁邊",
+    "enUS": "Beside."
+  },
+  "1178": {
+    "zhCN": "瓶",
+    "zhTW": "瓶子",
+    "enUS": "Bottle."
+  },
+  "1179": {
+    "zhCN": "罐",
+    "zhTW": "罐子",
+    "enUS": "Can."
+  },
+  "1180": {
+    "zhCN": "煤气",
+    "zhTW": "瓦斯",
+    "enUS": "Gas."
+  },
+  "1181": {
+    "zhCN": "～公司",
+    "zhTW": "～公司",
+    "enUS": "~ Company."
+  },
+  "1182": {
+    "zhCN": "煤气公司",
+    "zhTW": "瓦斯公司",
+    "enUS": "Gas company."
+  },
+  "1183": {
+    "zhCN": "联系",
+    "zhTW": "聯絡",
+    "enUS": "Contact."
+  },
+  "1184": {
+    "zhCN": "运动会",
+    "zhTW": "運動會",
+    "enUS": "Sports festival."
+  },
+  "1185": {
+    "zhCN": "时机不好、不方便",
+    "zhTW": "不方便",
+    "enUS": "Inconvenient."
+  },
+  "1186": {
+    "zhCN": "跳蚤市场",
+    "zhTW": "跳蚤市場",
+    "enUS": "Flea market."
+  },
+  "1187": {
+    "zhCN": "极其、相当",
+    "zhTW": "相當",
+    "enUS": "Very."
+  },
+  "1188": {
+    "zhCN": "做、干、搞",
+    "zhTW": "做",
+    "enUS": "Do."
+  },
+  "1189": {
+    "zhCN": "盂兰盆会舞",
+    "zhTW": "盂蘭盆舞",
+    "enUS": "Bon Odori."
+  },
+  "1190": {
+    "zhCN": "钱包",
+    "zhTW": "錢包",
+    "enUS": "Wallet."
+  },
+  "1191": {
+    "zhCN": "舒服",
+    "zhTW": "舒服",
+    "enUS": "Feeling good."
+  },
+  "1192": {
+    "zhCN": "不舒服",
+    "zhTW": "不舒服",
+    "enUS": "Feeling unwell."
+  },
+  "1193": {
+    "zhCN": "赶上",
+    "zhTW": "趕上",
+    "enUS": "Catch up."
+  },
+  "1194": {
+    "zhCN": "赶上时间。",
+    "zhTW": "趕上時間。",
+    "enUS": "Catch up on time."
+  },
+  "1195": {
+    "zhCN": "这次、下次",
+    "zhTW": "這次、下次",
+    "enUS": "This time, next time."
+  },
+  "1196": {
+    "zhCN": "拾、捡",
+    "zhTW": "撿",
+    "enUS": "Pick up."
+  },
+  "1197": {
+    "zhCN": "场所、地点",
+    "zhTW": "場所",
+    "enUS": "Place."
+  },
+  "1198": {
+    "zhCN": "那样的（离听话人较近）",
+    "zhTW": "那樣的（離聽話人較近）",
+    "enUS": "Such (close to the listener)."
+  },
+  "1199": {
+    "zhCN": "那样的人",
+    "zhTW": "那樣的人",
+    "enUS": "Such a person."
+  },
+  "1200": {
+    "zhCN": "这样的～",
+    "zhTW": "這樣的～",
+    "enUS": "Such a ~."
+  },
+  "1201": {
+    "zhCN": "那样的（离说话人和听话人都较远）",
+    "zhTW": "那樣的（離說話人和聽話人都較遠）",
+    "enUS": "Such (far from both speaker and listener)."
+  },
+  "1202": {
+    "zhCN": "寻找（想要的事物或人）",
+    "zhTW": "尋找（想要的事物或人）",
+    "enUS": "Search for (desired things or people)."
+  },
+  "1203": {
+    "zhCN": "寻找（不见的事物或人）",
+    "zhTW": "搜尋（不見的事物或人）",
+    "enUS": "Search for (missing things or people)."
+  },
+  "1204": {
+    "zhCN": "义工、志愿者",
+    "zhTW": "志工、志願者",
+    "enUS": "Volunteer."
+  },
+  "1205": {
+    "zhCN": "宇宙",
+    "zhTW": "宇宙",
+    "enUS": "Universe."
+  },
+  "1206": {
+    "zhCN": "星出彰彦（日本宇航员）",
+    "zhTW": "星出彰彥（日本宇航員）",
+    "enUS": "Akihiko Hoshide (Japanese astronaut)."
+  },
+  "1207": {
+    "zhCN": "～先生、～女士（「～さん」的尊敬语）",
+    "zhTW": "～先生、～女士（「～さん」的尊敬語）",
+    "enUS": "~ Mr./Ms. (respectful form of ~san)."
+  },
+  "1208": {
+    "zhCN": "宇宙飞船",
+    "zhTW": "太空船",
+    "enUS": "Spaceship."
+  },
+  "1209": {
+    "zhCN": "害怕、可怕",
+    "zhTW": "可怕",
+    "enUS": "Scary."
+  },
+  "1210": {
+    "zhCN": "航天站",
+    "zhTW": "太空站",
+    "enUS": "Space station."
+  },
+  "1211": {
+    "zhCN": "不一样",
+    "zhTW": "不一樣",
+    "enUS": "Different."
+  },
+  "1212": {
+    "zhCN": "宇航员",
+    "zhTW": "宇航員",
+    "enUS": "Astronaut."
+  },
+  "1213": {
+    "zhCN": "清楚地",
+    "zhTW": "清楚地",
+    "enUS": "Clearly."
+  },
+  "1214": {
+    "zhCN": "看见",
+    "zhTW": "看見",
+    "enUS": "See."
+  },
+  "1215": {
+    "zhCN": "看见山。",
+    "zhTW": "看見山。",
+    "enUS": "See the mountain."
+  },
+  "1216": {
+    "zhCN": "建好、交上（朋友）、做好（饭）",
+    "zhTW": "做好、交上（朋友）、做好（飯）",
+    "enUS": "Complete, make (friends), cook (meal)."
+  },
+  "1217": {
+    "zhCN": "建好道路。",
+    "zhTW": "建好道路。",
+    "enUS": "Build the road."
+  },
+  "1218": {
+    "zhCN": "鸟",
+    "zhTW": "鳥",
+    "enUS": "Bird."
+  },
+  "1219": {
+    "zhCN": "（人或动物发出的）声音",
+    "zhTW": "（人或動物發出的）聲音",
+    "enUS": "(Sound made by people or animals)."
+  },
+  "1220": {
+    "zhCN": "听见",
+    "zhTW": "聽見",
+    "enUS": "Hear."
+  },
+  "1221": {
+    "zhCN": "听见声音。",
+    "zhTW": "聽見聲音。",
+    "enUS": "I can hear a sound."
+  },
+  "1222": {
+    "zhCN": "只（后接否定形）",
+    "zhTW": "只（後接否定形）",
+    "enUS": "only (used with negative form)"
+  },
+  "1223": {
+    "zhCN": "公寓",
+    "zhTW": "公寓",
+    "enUS": "apartment"
+  },
+  "1224": {
+    "zhCN": "宠物",
+    "zhTW": "寵物",
+    "enUS": "pet"
+  },
+  "1225": {
+    "zhCN": "饲养",
+    "zhTW": "飼養",
+    "enUS": "to raise"
+  },
+  "1226": {
+    "zhCN": "养狗",
+    "zhTW": "養狗",
+    "enUS": "to raise a dog"
+  },
+  "1227": {
+    "zhCN": "家具",
+    "zhTW": "家具",
+    "enUS": "furniture"
+  },
+  "1228": {
+    "zhCN": "书架",
+    "zhTW": "書架",
+    "enUS": "bookshelf"
+  },
+  "1229": {
+    "zhCN": "什么时候",
+    "zhTW": "什麼時候",
+    "enUS": "when"
+  },
+  "1230": {
+    "zhCN": "家、住宅",
+    "zhTW": "家、住宅",
+    "enUS": "home, residence"
+  },
+  "1231": {
+    "zhCN": "建、盖",
+    "zhTW": "建、蓋",
+    "enUS": "to build"
+  },
+  "1232": {
+    "zhCN": "很棒、很好",
+    "zhTW": "很棒、很好",
+    "enUS": "wonderful, very good"
+  },
+  "1233": {
+    "zhCN": "烟花",
+    "zhTW": "煙火",
+    "enUS": "fireworks"
+  },
+  "1234": {
+    "zhCN": "跑、奔驰",
+    "zhTW": "跑、奔馳",
+    "enUS": "to run"
+  },
+  "1235": {
+    "zhCN": "奔跑在路上。",
+    "zhTW": "奔跑在路上。",
+    "enUS": "Running on the road."
+  },
+  "1236": {
+    "zhCN": "担心",
+    "zhTW": "擔心",
+    "enUS": "worried"
+  },
+  "1237": {
+    "zhCN": "波浪",
+    "zhTW": "波浪",
+    "enUS": "wave"
+  },
+  "1238": {
+    "zhCN": "（干）洗、洗衣",
+    "zhTW": "（乾）洗、洗衣",
+    "enUS": "(dry) cleaning, laundry"
+  },
+  "1239": {
+    "zhCN": "其他的",
+    "zhTW": "其他的",
+    "enUS": "other"
+  },
+  "1240": {
+    "zhCN": "～教室",
+    "zhTW": "～教室",
+    "enUS": "~ classroom"
+  },
+  "1241": {
+    "zhCN": "烹饪教室",
+    "zhTW": "烹飪教室",
+    "enUS": "cooking classroom"
+  },
+  "1242": {
+    "zhCN": "开、举办（奥运会）",
+    "zhTW": "開、舉辦（奧運會）",
+    "enUS": "to open, to hold (Olympics)"
+  },
+  "1243": {
+    "zhCN": "开设教室。",
+    "zhTW": "開設教室。",
+    "enUS": "Opening a classroom."
+  },
+  "1244": {
+    "zhCN": "厨房",
+    "zhTW": "廚房",
+    "enUS": "kitchen"
+  },
+  "1245": {
+    "zhCN": "工具",
+    "zhTW": "工具",
+    "enUS": "tool"
+  },
+  "1246": {
+    "zhCN": "宴会厅",
+    "zhTW": "宴會廳",
+    "enUS": "banquet hall"
+  },
+  "1247": {
+    "zhCN": "人（「ひと」的尊敬语）",
+    "zhTW": "人（「ひと」的尊敬語）",
+    "enUS": "person (respectful form of 'hito')"
+  },
+  "1248": {
+    "zhCN": "～后（指时间上）",
+    "zhTW": "～後（指時間上）",
+    "enUS": "~ later (in terms of time)"
+  },
+  "1249": {
+    "zhCN": "一小时后",
+    "zhTW": "一小時後",
+    "enUS": "one hour later"
+  },
+  "1250": {
+    "zhCN": "自己",
+    "zhTW": "自己",
+    "enUS": "oneself"
+  },
+  "1251": {
+    "zhCN": "哆啦A梦",
+    "zhTW": "哆啦A夢",
+    "enUS": "Doraemon"
+  },
+  "1252": {
+    "zhCN": "（接名词后）表示复数",
+    "zhTW": "（接名詞後）表示複數",
+    "enUS": "(attached to nouns to indicate plural)"
+  },
+  "1253": {
+    "zhCN": "孩子们",
+    "zhTW": "孩子們",
+    "enUS": "children"
+  },
+  "1254": {
+    "zhCN": "非常喜欢",
+    "zhTW": "非常喜歡",
+    "enUS": "really like"
+  },
+  "1255": {
+    "zhCN": "主人公",
+    "zhTW": "主人公",
+    "enUS": "protagonist"
+  },
+  "1256": {
+    "zhCN": "形状、样子",
+    "zhTW": "形狀、樣子",
+    "enUS": "shape, form"
+  },
+  "1257": {
+    "zhCN": "不可思议",
+    "zhTW": "不可思議",
+    "enUS": "mysterious"
+  },
+  "1258": {
+    "zhCN": "口袋、兜",
+    "zhTW": "口袋、兜",
+    "enUS": "pocket"
+  },
+  "1259": {
+    "zhCN": "例如",
+    "zhTW": "例如",
+    "enUS": "for example"
+  },
+  "1260": {
+    "zhCN": "竹蜻蜓",
+    "zhTW": "竹蜻蜓",
+    "enUS": "bamboo copter"
+  },
+  "1261": {
+    "zhCN": "时间电视",
+    "zhTW": "時間電視",
+    "enUS": "time television"
+  },
+  "1262": {
+    "zhCN": "戴上",
+    "zhTW": "戴上",
+    "enUS": "to put on"
+  },
+  "1263": {
+    "zhCN": "自由地、随意地",
+    "zhTW": "自由地、隨意地",
+    "enUS": "freely, at will"
+  },
+  "1264": {
+    "zhCN": "天空",
+    "zhTW": "天空",
+    "enUS": "sky"
+  },
+  "1265": {
+    "zhCN": "飞、飞翔",
+    "zhTW": "飛、飛翔",
+    "enUS": "to fly"
+  },
+  "1266": {
+    "zhCN": "过去、以前",
+    "zhTW": "過去、以前",
+    "enUS": "the past, before"
+  },
+  "1267": {
+    "zhCN": "将来",
+    "zhTW": "將來",
+    "enUS": "future"
+  },
+  "1268": {
+    "zhCN": "任意门",
+    "zhTW": "任意門",
+    "enUS": "Anywhere Door"
+  },
+  "1269": {
+    "zhCN": "口香糖",
+    "zhTW": "口香糖",
+    "enUS": "gum"
+  },
+  "1270": {
+    "zhCN": "嚼、咬",
+    "zhTW": "嚼、咬",
+    "enUS": "to chew, to bite"
+  },
+  "1271": {
+    "zhCN": "嚼口香糖。",
+    "zhTW": "嚼口香糖。",
+    "enUS": "I chew gum."
+  },
+  "1272": {
+    "zhCN": "一会儿、不久",
+    "zhTW": "一會兒、不久",
+    "enUS": "for a while, soon"
+  },
+  "1273": {
+    "zhCN": "伟大、了不起",
+    "zhTW": "偉大、了不起",
+    "enUS": "great, admirable"
+  },
+  "1274": {
+    "zhCN": "大部分、大体、普通",
+    "zhTW": "大部分、大體、普通",
+    "enUS": "most, generally, usually"
+  },
+  "1275": {
+    "zhCN": "热心",
+    "zhTW": "熱心",
+    "enUS": "enthusiastic"
+  },
+  "1276": {
+    "zhCN": "而且",
+    "zhTW": "而且",
+    "enUS": "and also"
+  },
+  "1277": {
+    "zhCN": "经验",
+    "zhTW": "經驗",
+    "enUS": "experience"
+  },
+  "1278": {
+    "zhCN": "选择",
+    "zhTW": "選擇",
+    "enUS": "choose"
+  },
+  "1279": {
+    "zhCN": "有件事想麻烦一下",
+    "zhTW": "有件事想麻煩一下",
+    "enUS": "I have a favor to ask."
+  },
+  "1280": {
+    "zhCN": "其实、实际上",
+    "zhTW": "其實、實際上",
+    "enUS": "actually, in fact"
+  },
+  "1281": {
+    "zhCN": "会话",
+    "zhTW": "會話",
+    "enUS": "conversation"
+  },
+  "1282": {
+    "zhCN": "嗯……",
+    "zhTW": "嗯……",
+    "enUS": "Hmm..."
+  },
+  "1283": {
+    "zhCN": "（自己的）儿子",
+    "zhTW": "（自己的）兒子",
+    "enUS": "(my) son"
+  },
+  "1284": {
+    "zhCN": "（别人的）儿子",
+    "zhTW": "（別人的）兒子",
+    "enUS": "(someone else's) son"
+  },
+  "1285": {
+    "zhCN": "（自己的）女儿",
+    "zhTW": "（自己的）女兒",
+    "enUS": "(my) daughter"
+  },
+  "1286": {
+    "zhCN": "（别人的）女儿",
+    "zhTW": "（別人的）女兒",
+    "enUS": "(someone else's) daughter"
+  },
+  "1287": {
+    "zhCN": "认真",
+    "zhTW": "認真",
+    "enUS": "serious"
+  },
+  "1288": {
+    "zhCN": "力量、力气",
+    "zhTW": "力量、力氣",
+    "enUS": "strength, power"
+  },
+  "1289": {
+    "zhCN": "力气大、有力气、有力量",
+    "zhTW": "力氣大、有力氣、有力量",
+    "enUS": "strong, powerful"
+  },
+  "1290": {
+    "zhCN": "价钱",
+    "zhTW": "價錢",
+    "enUS": "price"
+  },
+  "1291": {
+    "zhCN": "味道（指味觉）",
+    "zhTW": "味道（指味覺）",
+    "enUS": "taste (referring to flavor)"
+  },
+  "1292": {
+    "zhCN": "跳舞",
+    "zhTW": "跳舞",
+    "enUS": "dance"
+  },
+  "1293": {
+    "zhCN": "记笔记",
+    "zhTW": "記筆記",
+    "enUS": "take notes"
+  },
+  "1294": {
+    "zhCN": "游戏、电子游戏",
+    "zhTW": "遊戲、電子遊戲",
+    "enUS": "game, video game"
+  },
+  "1295": {
+    "zhCN": "节目",
+    "zhTW": "節目",
+    "enUS": "program"
+  },
+  "1296": {
+    "zhCN": "电视剧",
+    "zhTW": "電視劇",
+    "enUS": "TV drama"
+  },
+  "1297": {
+    "zhCN": "电视剧",
+    "zhTW": "電視劇",
+    "enUS": "TV drama"
+  },
+  "1298": {
+    "zhCN": "广播剧",
+    "zhTW": "廣播劇",
+    "enUS": "radio drama"
+  },
+  "1299": {
+    "zhCN": "上（学）、定期往返",
+    "zhTW": "上（學）、定期往返",
+    "enUS": "attend (school), commute regularly"
+  },
+  "1300": {
+    "zhCN": "上大学。",
+    "zhTW": "上大學。",
+    "enUS": "I attend university."
+  },
+  "1301": {
+    "zhCN": "～机（接尾词，表示某种机械）",
+    "zhTW": "～機（接尾詞，表示某種機械）",
+    "enUS": "~ machine (suffix indicating a type of machine)"
+  },
+  "1302": {
+    "zhCN": "美容院",
+    "zhTW": "美容院",
+    "enUS": "beauty salon"
+  },
+  "1303": {
+    "zhCN": "厨房",
+    "zhTW": "廚房",
+    "enUS": "kitchen"
+  },
+  "1304": {
+    "zhCN": "颜色",
+    "zhTW": "顏色",
+    "enUS": "color"
+  },
+  "1305": {
+    "zhCN": "物品、商品",
+    "zhTW": "物品、商品",
+    "enUS": "item, goods"
+  },
+  "1306": {
+    "zhCN": "正好",
+    "zhTW": "正好",
+    "enUS": "just right"
+  },
+  "1307": {
+    "zhCN": "景色",
+    "zhTW": "景色",
+    "enUS": "scenery"
+  },
+  "1308": {
+    "zhCN": "卖得好、畅销",
+    "zhTW": "賣得好、暢銷",
+    "enUS": "sell well, popular"
+  },
+  "1309": {
+    "zhCN": "面包很畅销。",
+    "zhTW": "麵包很暢銷。",
+    "enUS": "The bread sells well."
+  },
+  "1310": {
+    "zhCN": "歌手",
+    "zhTW": "歌手",
+    "enUS": "singer"
+  },
+  "1311": {
+    "zhCN": "受欢迎、有人缘",
+    "zhTW": "受歡迎、有人人緣",
+    "enUS": "popular, well-liked"
+  },
+  "1312": {
+    "zhCN": "奖金",
+    "zhTW": "獎金",
+    "enUS": "bonus"
+  },
+  "1313": {
+    "zhCN": "工资",
+    "zhTW": "工資",
+    "enUS": "salary"
+  },
+  "1314": {
+    "zhCN": "～家（接尾词，表示专门研究某一学问或从事某种艺术行业的人）",
+    "zhTW": "～家（接尾詞，表示專門研究某一學問或從事某種藝術行業的人）",
+    "enUS": "~ expert (suffix indicating a person specialized in a certain field or art)"
+  },
+  "1315": {
+    "zhCN": "小说家",
+    "zhTW": "小說家",
+    "enUS": "novelist"
+  },
+  "1316": {
+    "zhCN": "小说",
+    "zhTW": "小說",
+    "enUS": "novel"
+  },
+  "1317": {
+    "zhCN": "因此",
+    "zhTW": "因此",
+    "enUS": "therefore"
+  },
+  "1318": {
+    "zhCN": "通知",
+    "zhTW": "通知",
+    "enUS": "notification"
+  },
+  "1319": {
+    "zhCN": "参加",
+    "zhTW": "參加",
+    "enUS": "participate"
+  },
+  "1320": {
+    "zhCN": "日期",
+    "zhTW": "日期",
+    "enUS": "date"
+  },
+  "1321": {
+    "zhCN": "星期六",
+    "zhTW": "星期六",
+    "enUS": "Saturday"
+  },
+  "1322": {
+    "zhCN": "体育馆",
+    "zhTW": "體育館",
+    "enUS": "Gymnasium"
+  },
+  "1323": {
+    "zhCN": "免费",
+    "zhTW": "免費",
+    "enUS": "Free"
+  },
+  "1324": {
+    "zhCN": "劝诱、邀请",
+    "zhTW": "勸誘、邀請",
+    "enUS": "To persuade, to invite"
+  },
+  "1325": {
+    "zhCN": "活动",
+    "zhTW": "活動",
+    "enUS": "Event"
+  },
+  "1326": {
+    "zhCN": "关着",
+    "zhTW": "關著",
+    "enUS": "Closed"
+  },
+  "1327": {
+    "zhCN": "门关着。",
+    "zhTW": "門關著。",
+    "enUS": "The door is closed."
+  },
+  "1328": {
+    "zhCN": "上着（锁）",
+    "zhTW": "上著（鎖）",
+    "enUS": "Locked"
+  },
+  "1329": {
+    "zhCN": "上着锁。",
+    "zhTW": "上著鎖。",
+    "enUS": "It is locked."
+  },
+  "1330": {
+    "zhCN": "请先走吧。",
+    "zhTW": "請先走吧。",
+    "enUS": "Please go ahead."
+  },
+  "1331": {
+    "zhCN": "弄错",
+    "zhTW": "弄錯",
+    "enUS": "To make a mistake"
+  },
+  "1332": {
+    "zhCN": "遗失物品",
+    "zhTW": "遺失物品",
+    "enUS": "Lost items"
+  },
+  "1333": {
+    "zhCN": "刚才（指离现在很近的时间）",
+    "zhTW": "剛才（指離現在很近的時間）",
+    "enUS": "Just now (referring to a time very close to now)"
+  },
+  "1334": {
+    "zhCN": "刚发车的那趟电车",
+    "zhTW": "剛發車的那趟電車",
+    "enUS": "The train that just departed"
+  },
+  "1335": {
+    "zhCN": "这样大小的",
+    "zhTW": "這樣大小的",
+    "enUS": "About this size"
+  },
+  "1336": {
+    "zhCN": "～侧",
+    "zhTW": "～側",
+    "enUS": "~side"
+  },
+  "1337": {
+    "zhCN": "外侧",
+    "zhTW": "外側",
+    "enUS": "Outer side"
+  },
+  "1338": {
+    "zhCN": "带有",
+    "zhTW": "帶有",
+    "enUS": "Comes with"
+  },
+  "1339": {
+    "zhCN": "带有口袋。",
+    "zhTW": "帶有口袋。",
+    "enUS": "It comes with pockets."
+  },
+  "1340": {
+    "zhCN": "～边",
+    "zhTW": "～邊",
+    "enUS": "~side"
+  },
+  "1341": {
+    "zhCN": "哪边",
+    "zhTW": "哪邊",
+    "enUS": "Which side?"
+  },
+  "1342": {
+    "zhCN": "不记得了。",
+    "zhTW": "不記得了。",
+    "enUS": "I don't remember."
+  },
+  "1343": {
+    "zhCN": "（车上用网做成的）行李架",
+    "zhTW": "（車上用網做成的）行李架",
+    "enUS": "(A luggage rack made of net on the train)"
+  },
+  "1344": {
+    "zhCN": "似乎是、大概是",
+    "zhTW": "似乎是、大概是",
+    "enUS": "It seems like, probably"
+  },
+  "1345": {
+    "zhCN": "啊，太好了。（表示安心时使用）",
+    "zhTW": "啊，太好了。（表示安心時使用）",
+    "enUS": "Ah, that's great. (Used to express relief)"
+  },
+  "1346": {
+    "zhCN": "新宿（东京的地名、车站名）",
+    "zhTW": "新宿（東京的地名、車站名）",
+    "enUS": "Shinjuku (a place name and station name in Tokyo)"
+  },
+  "1347": {
+    "zhCN": "开着",
+    "zhTW": "開著",
+    "enUS": "Open"
+  },
+  "1348": {
+    "zhCN": "门开着。",
+    "zhTW": "門開著。",
+    "enUS": "The door is open."
+  },
+  "1349": {
+    "zhCN": "停了、停着",
+    "zhTW": "停了、停著",
+    "enUS": "Stopped"
+  },
+  "1350": {
+    "zhCN": "车停着。",
+    "zhTW": "車停著。",
+    "enUS": "The car is stopped."
+  },
+  "1351": {
+    "zhCN": "玻璃",
+    "zhTW": "玻璃",
+    "enUS": "Glass"
+  },
+  "1352": {
+    "zhCN": "碎了",
+    "zhTW": "碎了",
+    "enUS": "Broken"
+  },
+  "1353": {
+    "zhCN": "杯子碎了。",
+    "zhTW": "杯子碎了。",
+    "enUS": "The cup is broken."
+  },
+  "1354": {
+    "zhCN": "袋子",
+    "zhTW": "袋子",
+    "enUS": "Bag"
+  },
+  "1355": {
+    "zhCN": "破了",
+    "zhTW": "破了",
+    "enUS": "Torn"
+  },
+  "1356": {
+    "zhCN": "纸破了。",
+    "zhTW": "紙破了。",
+    "enUS": "The paper is torn."
+  },
+  "1357": {
+    "zhCN": "折断",
+    "zhTW": "折斷",
+    "enUS": "Broken"
+  },
+  "1358": {
+    "zhCN": "树折断了。",
+    "zhTW": "樹折斷了。",
+    "enUS": "The tree is broken."
+  },
+  "1359": {
+    "zhCN": "《源氏物语》（平安时代紫式部写的小说）",
+    "zhTW": "《源氏物語》（平安時代紫式部寫的小說）",
+    "enUS": "The Tale of Genji (a novel written by Murasaki Shikibu during the Heian period)"
+  },
+  "1360": {
+    "zhCN": "落下、弄丢",
+    "zhTW": "落下、弄丟",
+    "enUS": "To drop, to lose"
+  },
+  "1361": {
+    "zhCN": "坏了",
+    "zhTW": "壞了",
+    "enUS": "Broken"
+  },
+  "1362": {
+    "zhCN": "椅子坏了",
+    "zhTW": "椅子壞了",
+    "enUS": "The chair is broken."
+  },
+  "1363": {
+    "zhCN": "盘子、碟子",
+    "zhTW": "盤子、碟子",
+    "enUS": "Plate, dish"
+  },
+  "1364": {
+    "zhCN": "饭碗、茶碗",
+    "zhTW": "飯碗、茶碗",
+    "enUS": "Rice bowl, tea bowl"
+  },
+  "1365": {
+    "zhCN": "树枝",
+    "zhTW": "樹枝",
+    "enUS": "Branch"
+  },
+  "1366": {
+    "zhCN": "开着",
+    "zhTW": "開著",
+    "enUS": "On"
+  },
+  "1367": {
+    "zhCN": "灯开着。",
+    "zhTW": "燈開著。",
+    "enUS": "The light is on."
+  },
+  "1368": {
+    "zhCN": "脏了",
+    "zhTW": "髒了",
+    "enUS": "Dirty"
+  },
+  "1369": {
+    "zhCN": "衣服脏了。",
+    "zhTW": "衣服髒了。",
+    "enUS": "The clothes are dirty."
+  },
+  "1370": {
+    "zhCN": "擦",
+    "zhTW": "擦",
+    "enUS": "To wipe"
+  },
+  "1371": {
+    "zhCN": "更换",
+    "zhTW": "更換",
+    "enUS": "replace"
+  },
+  "1372": {
+    "zhCN": "杯子",
+    "zhTW": "杯子",
+    "enUS": "cup"
+  },
+  "1373": {
+    "zhCN": "演讲",
+    "zhTW": "演講",
+    "enUS": "speech"
+  },
+  "1374": {
+    "zhCN": "收拾",
+    "zhTW": "收拾",
+    "enUS": "tidy up"
+  },
+  "1375": {
+    "zhCN": "回信",
+    "zhTW": "回信",
+    "enUS": "reply"
+  },
+  "1376": {
+    "zhCN": "掉了",
+    "zhTW": "掉了",
+    "enUS": "fell off"
+  },
+  "1377": {
+    "zhCN": "纽扣掉了。",
+    "zhTW": "鈕扣掉了。",
+    "enUS": "The button fell off."
+  },
+  "1378": {
+    "zhCN": "派出所",
+    "zhTW": "派出所",
+    "enUS": "police box"
+  },
+  "1379": {
+    "zhCN": "文件、材料",
+    "zhTW": "文件、材料",
+    "enUS": "documents, materials"
+  },
+  "1380": {
+    "zhCN": "站务员",
+    "zhTW": "站務員",
+    "enUS": "station staff"
+  },
+  "1381": {
+    "zhCN": "关着",
+    "zhTW": "關著",
+    "enUS": "is off"
+  },
+  "1382": {
+    "zhCN": "灯关着。",
+    "zhTW": "燈關著。",
+    "enUS": "The light is off."
+  },
+  "1383": {
+    "zhCN": "地震",
+    "zhTW": "地震",
+    "enUS": "earthquake"
+  },
+  "1384": {
+    "zhCN": "墙壁",
+    "zhTW": "牆壁",
+    "enUS": "wall"
+  },
+  "1385": {
+    "zhCN": "（钟表的）走针",
+    "zhTW": "（鐘表的）走針",
+    "enUS": "(clock's) hand"
+  },
+  "1386": {
+    "zhCN": "指在～",
+    "zhTW": "指在～",
+    "enUS": "pointing at ~"
+  },
+  "1387": {
+    "zhCN": "车站前",
+    "zhTW": "車站前",
+    "enUS": "in front of the station"
+  },
+  "1388": {
+    "zhCN": "倒、倒下来、倒塌",
+    "zhTW": "倒、倒下來、倒塌",
+    "enUS": "fall, collapse"
+  },
+  "1389": {
+    "zhCN": "西",
+    "zhTW": "西",
+    "enUS": "west"
+  },
+  "1390": {
+    "zhCN": "～面、～方",
+    "zhTW": "～面、～方",
+    "enUS": "~ side, ~ direction"
+  },
+  "1391": {
+    "zhCN": "燃烧",
+    "zhTW": "燃燒",
+    "enUS": "burn"
+  },
+  "1392": {
+    "zhCN": "采访记者",
+    "zhTW": "採訪記者",
+    "enUS": "reporter"
+  },
+  "1393": {
+    "zhCN": "贴",
+    "zhTW": "貼",
+    "enUS": "stick"
+  },
+  "1394": {
+    "zhCN": "抽屉",
+    "zhTW": "抽屜",
+    "enUS": "drawer"
+  },
+  "1395": {
+    "zhCN": "收拾整理",
+    "zhTW": "收拾整理",
+    "enUS": "put away"
+  },
+  "1396": {
+    "zhCN": "以前、过去、原来",
+    "zhTW": "以前、過去、原來",
+    "enUS": "before, past, original"
+  },
+  "1397": {
+    "zhCN": "原处",
+    "zhTW": "原處",
+    "enUS": "original place"
+  },
+  "1398": {
+    "zhCN": "返还、还原",
+    "zhTW": "返還、還原",
+    "enUS": "return, restore"
+  },
+  "1399": {
+    "zhCN": "原来的状态",
+    "zhTW": "原來的狀態",
+    "enUS": "original state"
+  },
+  "1400": {
+    "zhCN": "保持原状",
+    "zhTW": "保持原狀",
+    "enUS": "keep as is"
+  },
+  "1401": {
+    "zhCN": "还",
+    "zhTW": "還",
+    "enUS": "still"
+  },
+  "1402": {
+    "zhCN": "还在使用。",
+    "zhTW": "還在使用。",
+    "enUS": "still in use."
+  },
+  "1403": {
+    "zhCN": "应急备用包",
+    "zhTW": "應急備用包",
+    "enUS": "emergency kit"
+  },
+  "1404": {
+    "zhCN": "帆布背包",
+    "zhTW": "帆布背包",
+    "enUS": "canvas backpack"
+  },
+  "1405": {
+    "zhCN": "发生紧急情况时",
+    "zhTW": "發生緊急情況時",
+    "enUS": "in case of emergency"
+  },
+  "1406": {
+    "zhCN": "生活",
+    "zhTW": "生活",
+    "enUS": "live"
+  },
+  "1407": {
+    "zhCN": "手电",
+    "zhTW": "手電",
+    "enUS": "flashlight"
+  },
+  "1408": {
+    "zhCN": "～啦，～啦（表示列举）",
+    "zhTW": "～啦，～啦（表示列舉）",
+    "enUS": "~ and so on (indicating enumeration)"
+  },
+  "1409": {
+    "zhCN": "月历",
+    "zhTW": "月曆",
+    "enUS": "calendar"
+  },
+  "1410": {
+    "zhCN": "预定、计划",
+    "zhTW": "預定、計畫",
+    "enUS": "schedule, plan"
+  },
+  "1411": {
+    "zhCN": "挂",
+    "zhTW": "掛",
+    "enUS": "hang"
+  },
+  "1412": {
+    "zhCN": "把画挂在墙上。",
+    "zhTW": "把畫掛在牆上。",
+    "enUS": "Hang the picture on the wall."
+  },
+  "1413": {
+    "zhCN": "排列",
+    "zhTW": "排列",
+    "enUS": "arrange"
+  },
+  "1414": {
+    "zhCN": "垃圾箱",
+    "zhTW": "垃圾桶",
+    "enUS": "trash can"
+  },
+  "1415": {
+    "zhCN": "角落",
+    "zhTW": "角落",
+    "enUS": "corner"
+  },
+  "1416": {
+    "zhCN": "计划表",
+    "zhTW": "計畫表",
+    "enUS": "schedule"
+  },
+  "1417": {
+    "zhCN": "决定",
+    "zhTW": "決定",
+    "enUS": "decide"
+  },
+  "1418": {
+    "zhCN": "决定名字。",
+    "zhTW": "決定名字。",
+    "enUS": "Decide on a name."
+  },
+  "1419": {
+    "zhCN": "偶人",
+    "zhTW": "偶人",
+    "enUS": "puppet"
+  },
+  "1420": {
+    "zhCN": "装饰",
+    "zhTW": "裝飾",
+    "enUS": "decorate"
+  },
+  "1421": {
+    "zhCN": "镜子",
+    "zhTW": "鏡子",
+    "enUS": "mirror"
+  },
+  "1422": {
+    "zhCN": "花瓶",
+    "zhTW": "花瓶",
+    "enUS": "vase"
+  },
+  "1423": {
+    "zhCN": "正中间",
+    "zhTW": "正中間",
+    "enUS": "in the middle"
+  },
+  "1424": {
+    "zhCN": "种植",
+    "zhTW": "種植",
+    "enUS": "to plant"
+  },
+  "1425": {
+    "zhCN": "植树",
+    "zhTW": "植樹",
+    "enUS": "to plant trees"
+  },
+  "1426": {
+    "zhCN": "池塘、水池",
+    "zhTW": "池塘、水池",
+    "enUS": "pond, water pool"
+  },
+  "1427": {
+    "zhCN": "周围",
+    "zhTW": "周圍",
+    "enUS": "surroundings"
+  },
+  "1428": {
+    "zhCN": "课、课程",
+    "zhTW": "課、課程",
+    "enUS": "class, course"
+  },
+  "1429": {
+    "zhCN": "预习",
+    "zhTW": "預習",
+    "enUS": "to preview"
+  },
+  "1430": {
+    "zhCN": "复习",
+    "zhTW": "複習",
+    "enUS": "to review"
+  },
+  "1431": {
+    "zhCN": "指南、入门书",
+    "zhTW": "指南、入門書",
+    "enUS": "guidebook, introductory book"
+  },
+  "1432": {
+    "zhCN": "讲义、上课",
+    "zhTW": "講義、上課",
+    "enUS": "lecture notes, to attend class"
+  },
+  "1433": {
+    "zhCN": "收拾（行李）、完成（报告）",
+    "zhTW": "收拾（行李）、完成（報告）",
+    "enUS": "to tidy up (luggage), to complete (report)"
+  },
+  "1434": {
+    "zhCN": "海报、招贴画",
+    "zhTW": "海報、招貼畫",
+    "enUS": "poster, placard"
+  },
+  "1435": {
+    "zhCN": "走廊",
+    "zhTW": "走廊",
+    "enUS": "corridor"
+  },
+  "1436": {
+    "zhCN": "门口、入口",
+    "zhTW": "門口、入口",
+    "enUS": "entrance"
+  },
+  "1437": {
+    "zhCN": "会议",
+    "zhTW": "會議",
+    "enUS": "meeting"
+  },
+  "1438": {
+    "zhCN": "圆的",
+    "zhTW": "圓的",
+    "enUS": "round"
+  },
+  "1439": {
+    "zhCN": "某～、某个～",
+    "zhTW": "某～、某個～",
+    "enUS": "some ~, a certain ~"
+  },
+  "1440": {
+    "zhCN": "某天",
+    "zhTW": "某天",
+    "enUS": "one day"
+  },
+  "1441": {
+    "zhCN": "做梦",
+    "zhTW": "做夢",
+    "enUS": "to dream"
+  },
+  "1442": {
+    "zhCN": "高兴",
+    "zhTW": "高興",
+    "enUS": "happy"
+  },
+  "1443": {
+    "zhCN": "讨厌、不喜欢",
+    "zhTW": "討厭、不喜歡",
+    "enUS": "dislike, not like"
+  },
+  "1444": {
+    "zhCN": "于是",
+    "zhTW": "於是",
+    "enUS": "so, therefore"
+  },
+  "1445": {
+    "zhCN": "醒来、恢复到意识清醒的状态",
+    "zhTW": "醒來、恢復到意識清醒的狀態",
+    "enUS": "to wake up, to regain consciousness"
+  },
+  "1446": {
+    "zhCN": "醒来、睁眼",
+    "zhTW": "醒來、睜眼",
+    "enUS": "to wake up, to open eyes"
+  },
+  "1447": {
+    "zhCN": "温泉",
+    "zhTW": "溫泉",
+    "enUS": "hot spring"
+  },
+  "1448": {
+    "zhCN": "继续",
+    "zhTW": "繼續",
+    "enUS": "to continue"
+  },
+  "1449": {
+    "zhCN": "继续练柔道。",
+    "zhTW": "繼續練柔道。",
+    "enUS": "to continue practicing judo."
+  },
+  "1450": {
+    "zhCN": "研究生院",
+    "zhTW": "研究所",
+    "enUS": "graduate school"
+  },
+  "1451": {
+    "zhCN": "参加（考试等）",
+    "zhTW": "參加（考試等）",
+    "enUS": "to take (an exam, etc.)"
+  },
+  "1452": {
+    "zhCN": "参加考试。",
+    "zhTW": "參加考試。",
+    "enUS": "to take an exam."
+  },
+  "1453": {
+    "zhCN": "总公司、本公司",
+    "zhTW": "總公司、本公司",
+    "enUS": "head office, our company"
+  },
+  "1454": {
+    "zhCN": "留下、剩下",
+    "zhTW": "留下、剩下",
+    "enUS": "to remain, to be left over"
+  },
+  "1455": {
+    "zhCN": "留在东京。",
+    "zhTW": "留在東京。",
+    "enUS": "to stay in Tokyo."
+  },
+  "1456": {
+    "zhCN": "入学考试",
+    "zhTW": "入學考試",
+    "enUS": "entrance exam"
+  },
+  "1457": {
+    "zhCN": "每个月、每月",
+    "zhTW": "每個月、每月",
+    "enUS": "every month"
+  },
+  "1458": {
+    "zhCN": "休息",
+    "zhTW": "休息",
+    "enUS": "to rest"
+  },
+  "1459": {
+    "zhCN": "找到、找出",
+    "zhTW": "找到、找出",
+    "enUS": "to find"
+  },
+  "1460": {
+    "zhCN": "找到工作。",
+    "zhTW": "找到工作。",
+    "enUS": "to find a job."
+  },
+  "1461": {
+    "zhCN": "一直",
+    "zhTW": "一直",
+    "enUS": "continuously"
+  },
+  "1462": {
+    "zhCN": "分公司、分店",
+    "zhTW": "分公司、分店",
+    "enUS": "branch office, branch store"
+  },
+  "1463": {
+    "zhCN": "动物园",
+    "zhTW": "動物園",
+    "enUS": "zoo"
+  },
+  "1464": {
+    "zhCN": "教会",
+    "zhTW": "教會",
+    "enUS": "church"
+  },
+  "1465": {
+    "zhCN": "连续休假、长假",
+    "zhTW": "連續休假、長假",
+    "enUS": "consecutive holidays, long vacation"
+  },
+  "1466": {
+    "zhCN": "申请",
+    "zhTW": "申請",
+    "enUS": "to apply"
+  },
+  "1467": {
+    "zhCN": "作文、写作",
+    "zhTW": "作文、寫作",
+    "enUS": "composition, writing"
+  },
+  "1468": {
+    "zhCN": "毕加索",
+    "zhTW": "畢卡索",
+    "enUS": "Picasso"
+  },
+  "1469": {
+    "zhCN": "展览会",
+    "zhTW": "展覽會",
+    "enUS": "exhibition"
+  },
+  "1470": {
+    "zhCN": "（别人的）孩子",
+    "zhTW": "（別人的）孩子",
+    "enUS": "(someone else's) child"
+  },
+  "1471": {
+    "zhCN": "典礼、仪式",
+    "zhTW": "典禮、儀式",
+    "enUS": "ceremony, ritual"
+  },
+  "1472": {
+    "zhCN": "婚礼",
+    "zhTW": "婚禮",
+    "enUS": "wedding"
+  },
+  "1473": {
+    "zhCN": "葬礼",
+    "zhTW": "葬禮",
+    "enUS": "funeral"
+  },
+  "1474": {
+    "zhCN": "巴厘岛",
+    "zhTW": "峇里島",
+    "enUS": "Bali"
+  },
+  "1475": {
+    "zhCN": "取得",
+    "zhTW": "取得",
+    "enUS": "to obtain"
+  },
+  "1476": {
+    "zhCN": "取得假期",
+    "zhTW": "取得假期",
+    "enUS": "to take a vacation"
+  },
+  "1477": {
+    "zhCN": "―号（电车车辆的编号、台风的编号）",
+    "zhTW": "―號（電車車輛的編號、颱風的編號）",
+    "enUS": "- number (train vehicle number, typhoon number)"
+  },
+  "1478": {
+    "zhCN": "希望号（新干线名称）",
+    "zhTW": "希望號（新幹線名稱）",
+    "enUS": "Nozomi (Shinkansen name)"
+  },
+  "1479": {
+    "zhCN": "回来",
+    "zhTW": "回來",
+    "enUS": "return"
+  },
+  "1480": {
+    "zhCN": "新神户（兵库县的车站名）",
+    "zhTW": "新神戶（兵庫縣的車站名）",
+    "enUS": "Shin-Kobe (station name in Hyogo Prefecture)"
+  },
+  "1481": {
+    "zhCN": "发表、公布",
+    "zhTW": "發表、公布",
+    "enUS": "to announce, to publish"
+  },
+  "1482": {
+    "zhCN": "上野公园",
+    "zhTW": "上野公園",
+    "enUS": "Ueno Park"
+  },
+  "1483": {
+    "zhCN": "村庄",
+    "zhTW": "村莊",
+    "enUS": "village"
+  },
+  "1484": {
+    "zhCN": "毕业",
+    "zhTW": "畢業",
+    "enUS": "to graduate"
+  },
+  "1485": {
+    "zhCN": "电影院",
+    "zhTW": "電影院",
+    "enUS": "cinema"
+  },
+  "1486": {
+    "zhCN": "闭上、关上",
+    "zhTW": "閉上、關上",
+    "enUS": "to close"
+  },
+  "1487": {
+    "zhCN": "闭上眼睛。",
+    "zhTW": "閉上眼睛。",
+    "enUS": "close your eyes."
+  },
+  "1488": {
+    "zhCN": "都会、城市",
+    "zhTW": "都會、城市",
+    "enUS": "metropolis, city"
+  },
+  "1489": {
+    "zhCN": "运动",
+    "zhTW": "運動",
+    "enUS": "to exercise"
+  },
+  "1490": {
+    "zhCN": "欧洲",
+    "zhTW": "歐洲",
+    "enUS": "Europe"
+  },
+  "1491": {
+    "zhCN": "充分",
+    "zhTW": "充分",
+    "enUS": "sufficient"
+  },
+  "1492": {
+    "zhCN": "大夫、医生",
+    "zhTW": "醫生、醫師",
+    "enUS": "doctor"
+  },
+  "1493": {
+    "zhCN": "流感",
+    "zhTW": "流感",
+    "enUS": "influenza"
+  },
+  "1494": {
+    "zhCN": "持续",
+    "zhTW": "持續",
+    "enUS": "to continue"
+  },
+  "1495": {
+    "zhCN": "持续发烧。",
+    "zhTW": "持續發燒。",
+    "enUS": "to have a persistent fever."
+  },
+  "1496": {
+    "zhCN": "发动机、马达",
+    "zhTW": "引擎、馬達",
+    "enUS": "engine, motor"
+  },
+  "1497": {
+    "zhCN": "奇怪、可疑",
+    "zhTW": "奇怪、可疑",
+    "enUS": "strange, suspicious"
+  },
+  "1498": {
+    "zhCN": "精神、健康",
+    "zhTW": "精神、健康",
+    "enUS": "energetic, healthy"
+  },
+  "1499": {
+    "zhCN": "胃",
+    "zhTW": "胃",
+    "enUS": "stomach"
+  },
+  "1500": {
+    "zhCN": "那可不太好。",
+    "zhTW": "那可不太好。",
+    "enUS": "That's not good."
+  },
+  "1501": {
+    "zhCN": "（精神上的）紧张、疲劳",
+    "zhTW": "（精神上的）緊張、疲勞",
+    "enUS": "(mental) stress, fatigue"
+  },
+  "1502": {
+    "zhCN": "勉强",
+    "zhTW": "勉強",
+    "enUS": "to overdo it"
+  },
+  "1503": {
+    "zhCN": "今天晚上、今夜",
+    "zhTW": "今晚、今夜",
+    "enUS": "tonight"
+  },
+  "1504": {
+    "zhCN": "星星",
+    "zhTW": "星星",
+    "enUS": "star"
+  },
+  "1505": {
+    "zhCN": "晚（指时间晚）",
+    "zhTW": "晚（指時間晚）",
+    "enUS": "late (referring to time)"
+  },
+  "1506": {
+    "zhCN": "咳嗽",
+    "zhTW": "咳嗽",
+    "enUS": "cough"
+  },
+  "1507": {
+    "zhCN": "烫伤、烧伤",
+    "zhTW": "燙傷、燒傷",
+    "enUS": "burn"
+  },
+  "1508": {
+    "zhCN": "使～凉下来",
+    "zhTW": "使～涼下來",
+    "enUS": "to cool down"
+  },
+  "1509": {
+    "zhCN": "伤、受伤",
+    "zhTW": "傷、受傷",
+    "enUS": "injury, to be injured"
+  },
+  "1510": {
+    "zhCN": "患、得（感冒）",
+    "zhTW": "患、得（感冒）",
+    "enUS": "to catch (a cold)"
+  },
+  "1511": {
+    "zhCN": "得感冒。",
+    "zhTW": "得感冒。",
+    "enUS": "to catch a cold."
+  },
+  "1512": {
+    "zhCN": "黄昏、傍晚",
+    "zhTW": "黃昏、傍晚",
+    "enUS": "evening, dusk"
+  },
+  "1513": {
+    "zhCN": "停了",
+    "zhTW": "停了",
+    "enUS": "has stopped"
+  },
+  "1514": {
+    "zhCN": "雨停了。",
+    "zhTW": "雨停了。",
+    "enUS": "The rain has stopped."
+  },
+  "1515": {
+    "zhCN": "太阳",
+    "zhTW": "太陽",
+    "enUS": "sun"
+  },
+  "1516": {
+    "zhCN": "晴",
+    "zhTW": "晴",
+    "enUS": "clear"
+  },
+  "1517": {
+    "zhCN": "阴",
+    "zhTW": "陰",
+    "enUS": "cloudy"
+  },
+  "1518": {
+    "zhCN": "风",
+    "zhTW": "風",
+    "enUS": "wind"
+  },
+  "1519": {
+    "zhCN": "空、通畅",
+    "zhTW": "空、通暢",
+    "enUS": "clear, unobstructed"
+  },
+  "1520": {
+    "zhCN": "道路通畅。",
+    "zhTW": "道路通暢。",
+    "enUS": "The road is clear."
+  },
+  "1521": {
+    "zhCN": "参加",
+    "zhTW": "參加",
+    "enUS": "to participate"
+  },
+  "1522": {
+    "zhCN": "参加比赛。",
+    "zhTW": "參加比賽。",
+    "enUS": "to participate in a match."
+  },
+  "1523": {
+    "zhCN": "参加宴会。",
+    "zhTW": "參加宴會。",
+    "enUS": "to participate in a party."
+  },
+  "1524": {
+    "zhCN": "南",
+    "zhTW": "南",
+    "enUS": "south"
+  },
+  "1525": {
+    "zhCN": "北",
+    "zhTW": "北",
+    "enUS": "north"
+  },
+  "1526": {
+    "zhCN": "吵闹、烦人",
+    "zhTW": "吵鬧、煩人",
+    "enUS": "noisy, annoying"
+  },
+  "1527": {
+    "zhCN": "拥挤",
+    "zhTW": "擁擠",
+    "enUS": "crowded"
+  },
+  "1528": {
+    "zhCN": "道路拥挤。",
+    "zhTW": "道路擁擠。",
+    "enUS": "The road is crowded."
+  },
+  "1529": {
+    "zhCN": "自来水、自来水管",
+    "zhTW": "自來水、自來水管",
+    "enUS": "tap water, water pipe"
+  },
+  "1530": {
+    "zhCN": "合格、及格",
+    "zhTW": "合格、及格",
+    "enUS": "to pass, to qualify"
+  },
+  "1531": {
+    "zhCN": "考试合格。",
+    "zhTW": "考試合格。",
+    "enUS": "to pass the exam."
+  },
+  "1532": {
+    "zhCN": "队、团队",
+    "zhTW": "隊、團隊",
+    "enUS": "team"
+  },
+  "1533": {
+    "zhCN": "那么（指与说话人、听话人都无关的事，形容程度之甚）",
+    "zhTW": "那麼（指與說話人、聽話人都無關的事，形容程度之甚）",
+    "enUS": "that much (referring to something unrelated to both the speaker and listener, indicating a high degree)"
+  },
+  "1534": {
+    "zhCN": "那么（指与听话人有关的事，形容程度之甚）",
+    "zhTW": "那麼（指與聽話人有關的事，形容程度之甚）",
+    "enUS": "that much (referring to something related to the listener, indicating a high degree)"
+  },
+  "1535": {
+    "zhCN": "国际～",
+    "zhTW": "國際～",
+    "enUS": "international ~"
+  },
+  "1536": {
+    "zhCN": "成功",
+    "zhTW": "成功",
+    "enUS": "to succeed"
+  },
+  "1537": {
+    "zhCN": "失败",
+    "zhTW": "失敗",
+    "enUS": "to fail"
+  },
+  "1538": {
+    "zhCN": "考试失败",
+    "zhTW": "考試失敗",
+    "enUS": "to fail the exam"
+  },
+  "1539": {
+    "zhCN": "以前、从前",
+    "zhTW": "以前、從前",
+    "enUS": "before, in the past"
+  },
+  "1540": {
+    "zhCN": "从很早之前",
+    "zhTW": "從很早之前",
+    "enUS": "from a long time ago"
+  },
+  "1541": {
+    "zhCN": "这么（形容程度之甚）",
+    "zhTW": "這麼（形容程度之甚）",
+    "enUS": "so much (indicating a high degree)"
+  },
+  "1542": {
+    "zhCN": "占星术、星相",
+    "zhTW": "占星術、星相",
+    "enUS": "astrology"
+  },
+  "1543": {
+    "zhCN": "金牛座",
+    "zhTW": "金牛座",
+    "enUS": "Taurus"
+  },
+  "1544": {
+    "zhCN": "超量工作",
+    "zhTW": "超量工作",
+    "enUS": "overworking"
+  },
+  "1545": {
+    "zhCN": "为难、困惑",
+    "zhTW": "為難、困惑",
+    "enUS": "to be troubled, confused"
+  },
+  "1546": {
+    "zhCN": "彩票",
+    "zhTW": "彩票",
+    "enUS": "lottery"
+  },
+  "1547": {
+    "zhCN": "中（彩票）",
+    "zhTW": "中（彩票）",
+    "enUS": "to win (the lottery)"
+  },
+  "1548": {
+    "zhCN": "中彩票。",
+    "zhTW": "中獎。",
+    "enUS": "to win the lottery."
+  },
+  "1549": {
+    "zhCN": "健康",
+    "zhTW": "健康",
+    "enUS": "health"
+  },
+  "1550": {
+    "zhCN": "东",
+    "zhTW": "東",
+    "enUS": "east"
+  },
+  "1551": {
+    "zhCN": "恋爱",
+    "zhTW": "戀愛",
+    "enUS": "romance"
+  },
+  "1552": {
+    "zhCN": "恋人",
+    "zhTW": "戀人",
+    "enUS": "lover"
+  },
+  "1553": {
+    "zhCN": "吉祥物",
+    "zhTW": "吉祥物",
+    "enUS": "lucky item"
+  },
+  "1554": {
+    "zhCN": "石头",
+    "zhTW": "石頭",
+    "enUS": "stone"
+  },
+  "1555": {
+    "zhCN": "占卜",
+    "zhTW": "占卜",
+    "enUS": "divination"
+  },
+  "1556": {
+    "zhCN": "禁止入内",
+    "zhTW": "禁止入內",
+    "enUS": "no entry"
+  },
+  "1557": {
+    "zhCN": "不行",
+    "zhTW": "不行",
+    "enUS": "not allowed"
+  },
+  "1558": {
+    "zhCN": "已经、不再（与否定形一起使用）",
+    "zhTW": "已經、不再（與否定形一起使用）",
+    "enUS": "already, no longer (used with negative forms)"
+  },
+  "1559": {
+    "zhCN": "还有～",
+    "zhTW": "還有～",
+    "enUS": "still have ~"
+  },
+  "1560": {
+    "zhCN": "放弃、死心",
+    "zhTW": "放棄、死心",
+    "enUS": "to give up"
+  },
+  "1561": {
+    "zhCN": "标记、标志",
+    "zhTW": "標記、標誌",
+    "enUS": "mark, sign"
+  },
+  "1562": {
+    "zhCN": "怎么样的～、什么样的～",
+    "zhTW": "怎麼樣的～、什麼樣的～",
+    "enUS": "what kind of ~"
+  },
+  "1563": {
+    "zhCN": "什么意思",
+    "zhTW": "什麼意思",
+    "enUS": "what does it mean"
+  },
+  "1564": {
+    "zhCN": "传达、转告",
+    "zhTW": "傳達、轉告",
+    "enUS": "to convey, to inform"
+  },
+  "1565": {
+    "zhCN": "违章停车",
+    "zhTW": "違章停車",
+    "enUS": "illegal parking"
+  },
+  "1566": {
+    "zhCN": "罚款",
+    "zhTW": "罰款",
+    "enUS": "fine"
+  },
+  "1567": {
+    "zhCN": "逃走",
+    "zhTW": "逃走",
+    "enUS": "to escape"
+  },
+  "1568": {
+    "zhCN": "规则",
+    "zhTW": "規則",
+    "enUS": "rule"
+  },
+  "1569": {
+    "zhCN": "交通规则",
+    "zhTW": "交通規則",
+    "enUS": "traffic rules"
+  },
+  "1570": {
+    "zhCN": "遵守",
+    "zhTW": "遵守",
+    "enUS": "to obey"
+  },
+  "1571": {
+    "zhCN": "吵闹、吵嚷",
+    "zhTW": "吵鬧、吵嚷",
+    "enUS": "to make noise, to shout"
+  },
+  "1572": {
+    "zhCN": "入口",
+    "zhTW": "入口",
+    "enUS": "entrance"
+  },
+  "1573": {
+    "zhCN": "再利用、资源回收",
+    "zhTW": "再利用、資源回收",
+    "enUS": "recycle, resource recovery"
+  },
+  "1574": {
+    "zhCN": "大体～、大约～",
+    "zhTW": "大體～、大約～",
+    "enUS": "approximately ~"
+  },
+  "1575": {
+    "zhCN": "截止、截止日期",
+    "zhTW": "截止、截止日期",
+    "enUS": "deadline"
+  },
+  "1576": {
+    "zhCN": "回来",
+    "zhTW": "回來",
+    "enUS": "to return"
+  },
+  "1577": {
+    "zhCN": "球",
+    "zhTW": "球",
+    "enUS": "ball"
+  },
+  "1578": {
+    "zhCN": "扔、投",
+    "zhTW": "扔、投",
+    "enUS": "to throw"
+  },
+  "1579": {
+    "zhCN": "出口",
+    "zhTW": "出口",
+    "enUS": "exit"
+  },
+  "1580": {
+    "zhCN": "预订的座位",
+    "zhTW": "預訂的座位",
+    "enUS": "reserved seat"
+  },
+  "1581": {
+    "zhCN": "紧急出口",
+    "zhTW": "緊急出口",
+    "enUS": "emergency exit"
+  },
+  "1582": {
+    "zhCN": "注意、小心",
+    "zhTW": "注意、小心",
+    "enUS": "to pay attention, to be careful"
+  },
+  "1583": {
+    "zhCN": "小心汽车。",
+    "zhTW": "小心汽車。",
+    "enUS": "be careful of cars."
+  },
+  "1584": {
+    "zhCN": "慢行",
+    "zhTW": "慢行",
+    "enUS": "slow down"
+  },
+  "1585": {
+    "zhCN": "禁止使用",
+    "zhTW": "禁止使用",
+    "enUS": "no entry"
+  },
+  "1586": {
+    "zhCN": "正在～",
+    "zhTW": "正在～",
+    "enUS": "in the process of ~"
+  },
+  "1587": {
+    "zhCN": "正在使用",
+    "zhTW": "正在使用",
+    "enUS": "in use"
+  },
+  "1588": {
+    "zhCN": "正在招募",
+    "zhTW": "正在招募",
+    "enUS": "now recruiting"
+  },
+  "1589": {
+    "zhCN": "危险",
+    "zhTW": "危險",
+    "enUS": "danger"
+  },
+  "1590": {
+    "zhCN": "出席",
+    "zhTW": "出席",
+    "enUS": "to attend"
+  },
+  "1591": {
+    "zhCN": "出席会议。",
+    "zhTW": "出席會議。",
+    "enUS": "to attend the meeting."
+  },
+  "1592": {
+    "zhCN": "警察、警察局",
+    "zhTW": "警察、警察局",
+    "enUS": "police, police station"
+  },
+  "1593": {
+    "zhCN": "开始",
+    "zhTW": "開始",
+    "enUS": "to start"
+  },
+  "1594": {
+    "zhCN": "典礼开始。",
+    "zhTW": "典禮開始。",
+    "enUS": "the ceremony begins."
+  },
+  "1595": {
+    "zhCN": "折扣",
+    "zhTW": "折扣",
+    "enUS": "discount"
+  },
+  "1596": {
+    "zhCN": "学生折扣",
+    "zhTW": "學生折扣",
+    "enUS": "student discount"
+  },
+  "1597": {
+    "zhCN": "饮料自助",
+    "zhTW": "飲料自助",
+    "enUS": "all-you-can-drink"
+  },
+  "1598": {
+    "zhCN": "怎么～也～、无论～也～",
+    "zhTW": "怎麼～也～、無論～也～",
+    "enUS": "no matter how ~"
+  },
+  "1599": {
+    "zhCN": "一样、同样",
+    "zhTW": "一樣、同樣",
+    "enUS": "the same"
+  },
+  "1600": {
+    "zhCN": "招聘",
+    "zhTW": "招聘",
+    "enUS": "recruitment"
+  },
+  "1601": {
+    "zhCN": "有",
+    "zhTW": "有",
+    "enUS": "there is"
+  },
+  "1602": {
+    "zhCN": "有电话。",
+    "zhTW": "有電話。",
+    "enUS": "there is a phone."
+  },
+  "1603": {
+    "zhCN": "座位",
+    "zhTW": "座位",
+    "enUS": "seat"
+  },
+  "1604": {
+    "zhCN": "离开",
+    "zhTW": "離開",
+    "enUS": "to leave"
+  },
+  "1605": {
+    "zhCN": "离开座位。",
+    "zhTW": "離開座位。",
+    "enUS": "to leave the seat."
+  },
+  "1606": {
+    "zhCN": "发生",
+    "zhTW": "發生",
+    "enUS": "to happen"
+  },
+  "1607": {
+    "zhCN": "互助",
+    "zhTW": "互助",
+    "enUS": "mutual assistance"
+  },
+  "1608": {
+    "zhCN": "原来、原本",
+    "zhTW": "原來、原本",
+    "enUS": "originally"
+  },
+  "1609": {
+    "zhCN": "悲伤",
+    "zhTW": "悲傷",
+    "enUS": "sad"
+  },
+  "1610": {
+    "zhCN": "更加",
+    "zhTW": "更加",
+    "enUS": "more"
+  },
+  "1611": {
+    "zhCN": "寒暄、问候、贺词",
+    "zhTW": "寒暄、問候、賀詞",
+    "enUS": "greetings, salutations"
+  },
+  "1612": {
+    "zhCN": "对方",
+    "zhTW": "對方",
+    "enUS": "the other party"
+  },
+  "1613": {
+    "zhCN": "心情、情绪",
+    "zhTW": "心情、情緒",
+    "enUS": "feelings, emotions"
+  },
+  "1614": {
+    "zhCN": "刷",
+    "zhTW": "刷",
+    "enUS": "to brush"
+  },
+  "1615": {
+    "zhCN": "刷牙",
+    "zhTW": "刷牙",
+    "enUS": "to brush teeth"
+  },
+  "1616": {
+    "zhCN": "组装",
+    "zhTW": "組裝",
+    "enUS": "to assemble"
+  },
+  "1617": {
+    "zhCN": "说明书",
+    "zhTW": "說明書",
+    "enUS": "instruction manual"
+  },
+  "1618": {
+    "zhCN": "体育俱乐部",
+    "zhTW": "體育俱樂部",
+    "enUS": "sports club"
+  },
+  "1619": {
+    "zhCN": "黑色",
+    "zhTW": "黑色",
+    "enUS": "black"
+  },
+  "1620": {
+    "zhCN": "白色",
+    "zhTW": "白色",
+    "enUS": "white"
+  },
+  "1621": {
+    "zhCN": "红色",
+    "zhTW": "紅色",
+    "enUS": "red"
+  },
+  "1622": {
+    "zhCN": "蓝色",
+    "zhTW": "藍色",
+    "enUS": "blue"
+  },
+  "1623": {
+    "zhCN": "～或～",
+    "zhTW": "～或～",
+    "enUS": "~ or ~"
+  },
+  "1624": {
+    "zhCN": "深蓝色",
+    "zhTW": "深藍色",
+    "enUS": "navy blue"
+  },
+  "1625": {
+    "zhCN": "黄色",
+    "zhTW": "黃色",
+    "enUS": "yellow"
+  },
+  "1626": {
+    "zhCN": "棕色",
+    "zhTW": "茶色",
+    "enUS": "brown"
+  },
+  "1627": {
+    "zhCN": "沙司、辣椒酱",
+    "zhTW": "沙司、辣椒醬",
+    "enUS": "sauce, chili sauce"
+  },
+  "1628": {
+    "zhCN": "蘸",
+    "zhTW": "沾",
+    "enUS": "dip"
+  },
+  "1629": {
+    "zhCN": "蘸酱油。",
+    "zhTW": "沾醬油。",
+    "enUS": "dip in soy sauce."
+  },
+  "1630": {
+    "zhCN": "茶道",
+    "zhTW": "茶道",
+    "enUS": "tea ceremony"
+  },
+  "1631": {
+    "zhCN": "（茶道的）泡茶、沏茶",
+    "zhTW": "（茶道的）泡茶、沏茶",
+    "enUS": "(tea ceremony) brewing tea"
+  },
+  "1632": {
+    "zhCN": "先、首先",
+    "zhTW": "先、首先",
+    "enUS": "first, firstly"
+  },
+  "1633": {
+    "zhCN": "载、放",
+    "zhTW": "載、放",
+    "enUS": "place, put"
+  },
+  "1634": {
+    "zhCN": "这样可以吗？",
+    "zhTW": "這樣可以嗎？",
+    "enUS": "Is this okay?"
+  },
+  "1635": {
+    "zhCN": "怎么样？",
+    "zhTW": "怎麼樣？",
+    "enUS": "How is it?"
+  },
+  "1636": {
+    "zhCN": "苦",
+    "zhTW": "苦",
+    "enUS": "bitter"
+  },
+  "1637": {
+    "zhCN": "刚才",
+    "zhTW": "剛才",
+    "enUS": "just now"
+  },
+  "1638": {
+    "zhCN": "折弯、折断",
+    "zhTW": "折彎、折斷",
+    "enUS": "bend, break"
+  },
+  "1639": {
+    "zhCN": "折断树枝。",
+    "zhTW": "折斷樹枝。",
+    "enUS": "Break the branch."
+  },
+  "1640": {
+    "zhCN": "图",
+    "zhTW": "圖",
+    "enUS": "diagram"
+  },
+  "1641": {
+    "zhCN": "线",
+    "zhTW": "線",
+    "enUS": "line"
+  },
+  "1642": {
+    "zhCN": "箭头、箭头符号",
+    "zhTW": "箭頭、箭頭符號",
+    "enUS": "arrow, arrow symbol"
+  },
+  "1643": {
+    "zhCN": "城",
+    "zhTW": "城",
+    "enUS": "castle"
+  },
+  "1644": {
+    "zhCN": "提问",
+    "zhTW": "提問",
+    "enUS": "ask a question"
+  },
+  "1645": {
+    "zhCN": "向老师提问。",
+    "zhTW": "向老師提問。",
+    "enUS": "Ask the teacher."
+  },
+  "1646": {
+    "zhCN": "找到",
+    "zhTW": "找到",
+    "enUS": "find"
+  },
+  "1647": {
+    "zhCN": "找到钥匙。",
+    "zhTW": "找到鑰匙。",
+    "enUS": "Found the key."
+  },
+  "1648": {
+    "zhCN": "发现、发觉",
+    "zhTW": "發現、發覺",
+    "enUS": "notice, realize"
+  },
+  "1649": {
+    "zhCN": "发现忘了东西。",
+    "zhTW": "發現忘了東西。",
+    "enUS": "Noticed I forgot something."
+  },
+  "1650": {
+    "zhCN": "打（伞）",
+    "zhTW": "撐（傘）",
+    "enUS": "open (an umbrella)"
+  },
+  "1651": {
+    "zhCN": "打伞。",
+    "zhTW": "撐傘。",
+    "enUS": "Open an umbrella."
+  },
+  "1652": {
+    "zhCN": "昨晚",
+    "zhTW": "昨晚",
+    "enUS": "last night"
+  },
+  "1653": {
+    "zhCN": "顾客、客户",
+    "zhTW": "顧客、客戶",
+    "enUS": "customer"
+  },
+  "1654": {
+    "zhCN": "鸡肉鸡蛋盖浇饭",
+    "zhTW": "雞肉雞蛋蓋飯",
+    "enUS": "chicken and egg rice bowl"
+  },
+  "1655": {
+    "zhCN": "材料",
+    "zhTW": "材料",
+    "enUS": "ingredients"
+  },
+  "1656": {
+    "zhCN": "～份（表示量）",
+    "zhTW": "～份（表示量）",
+    "enUS": "~ portion (measure word)"
+  },
+  "1657": {
+    "zhCN": "―克",
+    "zhTW": "―克",
+    "enUS": "― grams"
+  },
+  "1658": {
+    "zhCN": "―个（数小件物品时使用的量词）",
+    "zhTW": "―個（數小件物品時使用的量詞）",
+    "enUS": "― pieces (measure word for small items)"
+  },
+  "1659": {
+    "zhCN": "洋葱",
+    "zhTW": "洋蔥",
+    "enUS": "onion"
+  },
+  "1660": {
+    "zhCN": "四分之一",
+    "zhTW": "四分之一",
+    "enUS": "one fourth"
+  },
+  "1661": {
+    "zhCN": "调料",
+    "zhTW": "調味料",
+    "enUS": "seasoning"
+  },
+  "1662": {
+    "zhCN": "酱油",
+    "zhTW": "醬油",
+    "enUS": "soy sauce"
+  },
+  "1663": {
+    "zhCN": "适当",
+    "zhTW": "適當",
+    "enUS": "appropriate"
+  },
+  "1664": {
+    "zhCN": "大小",
+    "zhTW": "大小",
+    "enUS": "size"
+  },
+  "1665": {
+    "zhCN": "适当的大小",
+    "zhTW": "適當的大小",
+    "enUS": "appropriate size"
+  },
+  "1666": {
+    "zhCN": "锅",
+    "zhTW": "鍋",
+    "enUS": "pot"
+  },
+  "1667": {
+    "zhCN": "火",
+    "zhTW": "火",
+    "enUS": "fire"
+  },
+  "1668": {
+    "zhCN": "放在火上",
+    "zhTW": "放在火上",
+    "enUS": "put on the fire"
+  },
+  "1669": {
+    "zhCN": "煮、炖",
+    "zhTW": "煮、燉",
+    "enUS": "boil, stew"
+  },
+  "1670": {
+    "zhCN": "煮熟",
+    "zhTW": "煮熟",
+    "enUS": "cooked"
+  },
+  "1671": {
+    "zhCN": "流逝、过去",
+    "zhTW": "流逝、過去",
+    "enUS": "to pass (time)"
+  },
+  "1672": {
+    "zhCN": "大碗",
+    "zhTW": "大碗",
+    "enUS": "bowl"
+  },
+  "1673": {
+    "zhCN": "开（花）",
+    "zhTW": "開（花）",
+    "enUS": "to bloom"
+  },
+  "1674": {
+    "zhCN": "开花",
+    "zhTW": "開花",
+    "enUS": "to bloom (flowers)"
+  },
+  "1675": {
+    "zhCN": "对面、那边",
+    "zhTW": "對面、那邊",
+    "enUS": "over there"
+  },
+  "1676": {
+    "zhCN": "岛",
+    "zhTW": "島",
+    "enUS": "island"
+  },
+  "1677": {
+    "zhCN": "到此结束吧。",
+    "zhTW": "到此結束吧。",
+    "enUS": "Let's end it here."
+  },
+  "1678": {
+    "zhCN": "箱根（位于神奈川县的疗养地、旅游景点）",
+    "zhTW": "箱根（位於神奈川縣的療養地、旅遊景點）",
+    "enUS": "Hakone (a resort and tourist spot in Kanagawa Prefecture)"
+  },
+  "1679": {
+    "zhCN": "日光（位于栃木县的旅游景点）",
+    "zhTW": "日光（位於栃木縣的旅遊景點）",
+    "enUS": "Nikko (a tourist spot in Tochigi Prefecture)"
+  },
+  "1680": {
+    "zhCN": "如果那样的话、如果那样",
+    "zhTW": "如果那樣的話、如果那樣",
+    "enUS": "If that's the case"
+  },
+  "1681": {
+    "zhCN": "草津（位于群马县的疗养地）",
+    "zhTW": "草津（位於群馬縣的療養地）",
+    "enUS": "Kusatsu (a resort in Gunma Prefecture)"
+  },
+  "1682": {
+    "zhCN": "志贺高原（位于长野县一个国立公园内的高原）",
+    "zhTW": "志賀高原（位於長野縣一個國立公園內的高原）",
+    "enUS": "Shiga Kogen (a plateau in a national park in Nagano Prefecture)"
+  },
+  "1683": {
+    "zhCN": "夜行巴士",
+    "zhTW": "夜行巴士",
+    "enUS": "night bus"
+  },
+  "1684": {
+    "zhCN": "哎（表示对一些情况不太清楚）",
+    "zhTW": "哎（表示對一些情況不太清楚）",
+    "enUS": "Well (indicating uncertainty about a situation)"
+  },
+  "1685": {
+    "zhCN": "旅行社",
+    "zhTW": "旅行社",
+    "enUS": "travel agency"
+  },
+  "1686": {
+    "zhCN": "更、更加",
+    "zhTW": "更、更加",
+    "enUS": "more"
+  },
+  "1687": {
+    "zhCN": "详细",
+    "zhTW": "詳細",
+    "enUS": "detailed"
+  },
+  "1688": {
+    "zhCN": "滑雪场",
+    "zhTW": "滑雪場",
+    "enUS": "ski resort"
+  },
+  "1689": {
+    "zhCN": "登山",
+    "zhTW": "登山",
+    "enUS": "mountain climbing"
+  },
+  "1690": {
+    "zhCN": "大家的学校（虚构的日语学校）",
+    "zhTW": "大家的學校（虛構的日語學校）",
+    "enUS": "Everyone's School (a fictional Japanese language school)"
+  },
+  "1691": {
+    "zhCN": "叶子",
+    "zhTW": "葉子",
+    "enUS": "leaf"
+  },
+  "1692": {
+    "zhCN": "变",
+    "zhTW": "變",
+    "enUS": "to change"
+  },
+  "1693": {
+    "zhCN": "变色",
+    "zhTW": "變色",
+    "enUS": "to change color"
+  },
+  "1694": {
+    "zhCN": "机会",
+    "zhTW": "機會",
+    "enUS": "opportunity"
+  },
+  "1695": {
+    "zhCN": "非洲",
+    "zhTW": "非洲",
+    "enUS": "Africa"
+  },
+  "1696": {
+    "zhCN": "窗帘",
+    "zhTW": "窗簾",
+    "enUS": "curtain"
+  },
+  "1697": {
+    "zhCN": "绳子",
+    "zhTW": "繩子",
+    "enUS": "string"
+  },
+  "1698": {
+    "zhCN": "杆、操纵杆",
+    "zhTW": "桿、操縱桿",
+    "enUS": "lever"
+  },
+  "1699": {
+    "zhCN": "（疾病或受伤）治好",
+    "zhTW": "（疾病或受傷）治好",
+    "enUS": "to heal (illness or injury)"
+  },
+  "1700": {
+    "zhCN": "（人的性格，或坏掉的东西）治好",
+    "zhTW": "（人的性格，或壞掉的東西）治好",
+    "enUS": "to fix (personality or broken things)"
+  },
+  "1701": {
+    "zhCN": "病治好了。",
+    "zhTW": "病治好了。",
+    "enUS": "The illness has been cured."
+  },
+  "1702": {
+    "zhCN": "故障修好了。",
+    "zhTW": "故障修好了。",
+    "enUS": "The malfunction has been fixed."
+  },
+  "1703": {
+    "zhCN": "海外",
+    "zhTW": "海外",
+    "enUS": "overseas"
+  },
+  "1704": {
+    "zhCN": "正确",
+    "zhTW": "正確",
+    "enUS": "correct"
+  },
+  "1705": {
+    "zhCN": "圆圈",
+    "zhTW": "圓圈",
+    "enUS": "circle"
+  },
+  "1706": {
+    "zhCN": "画",
+    "zhTW": "畫",
+    "enUS": "to draw"
+  },
+  "1707": {
+    "zhCN": "画圈",
+    "zhTW": "畫圈",
+    "enUS": "to draw a circle"
+  },
+  "1708": {
+    "zhCN": "许可、批准",
+    "zhTW": "許可、批准",
+    "enUS": "permission, approval"
+  },
+  "1709": {
+    "zhCN": "屋顶上",
+    "zhTW": "屋頂上",
+    "enUS": "on the roof"
+  },
+  "1710": {
+    "zhCN": "港口",
+    "zhTW": "港口",
+    "enUS": "port"
+  },
+  "1711": {
+    "zhCN": "邻居、附近",
+    "zhTW": "鄰居、附近",
+    "enUS": "neighbor, nearby"
+  },
+  "1712": {
+    "zhCN": "大黑寿司（虚构的寿司店）",
+    "zhTW": "大黑壽司（虛構的壽司店）",
+    "enUS": "Daikoku Sushi (a fictional sushi restaurant)"
+  },
+  "1713": {
+    "zhCN": "电饭锅",
+    "zhTW": "電飯鍋",
+    "enUS": "rice cooker"
+  },
+  "1714": {
+    "zhCN": "妈妈的味道（虚构的书名）",
+    "zhTW": "媽媽的味道（虛構的書名）",
+    "enUS": "Mother's Taste (a fictional book title)"
+  },
+  "1715": {
+    "zhCN": "输入",
+    "zhTW": "輸入",
+    "enUS": "to input"
+  },
+  "1716": {
+    "zhCN": "点击",
+    "zhTW": "點擊",
+    "enUS": "to click"
+  },
+  "1717": {
+    "zhCN": "按键",
+    "zhTW": "按鍵",
+    "enUS": "key"
+  },
+  "1718": {
+    "zhCN": "表示汉字读法的注音假名",
+    "zhTW": "表示漢字讀法的注音假名",
+    "enUS": "furigana (phonetic guide for kanji)"
+  },
+  "1719": {
+    "zhCN": "京都国际漫画博物馆",
+    "zhTW": "京都國際漫畫博物館",
+    "enUS": "Kyoto International Manga Museum"
+  },
+  "1720": {
+    "zhCN": "历史",
+    "zhTW": "歷史",
+    "enUS": "history"
+  },
+  "1721": {
+    "zhCN": "佐藤牙科（虚构的牙科医院）",
+    "zhTW": "佐藤牙科（虛構的牙科醫院）",
+    "enUS": "Sato Dental Clinic (a fictional dental clinic)"
+  },
+  "1722": {
+    "zhCN": "设备",
+    "zhTW": "設備",
+    "enUS": "Equipment"
+  },
+  "1723": {
+    "zhCN": "每日烹饪课堂（虚构的厨艺教室）",
+    "zhTW": "每日烹飪課堂（虛構的廚藝教室）",
+    "enUS": "Daily Cooking Class (a fictional cooking school)"
+  },
+  "1724": {
+    "zhCN": "发廊",
+    "zhTW": "髮廊",
+    "enUS": "Hair Salon"
+  },
+  "1725": {
+    "zhCN": "朱红色、红色",
+    "zhTW": "朱紅色、紅色",
+    "enUS": "Vermilion, Red"
+  },
+  "1726": {
+    "zhCN": "交际",
+    "zhTW": "交際",
+    "enUS": "Socialize"
+  },
+  "1727": {
+    "zhCN": "谚语",
+    "zhTW": "諺語",
+    "enUS": "Proverb"
+  },
+  "1728": {
+    "zhCN": "关系",
+    "zhTW": "關係",
+    "enUS": "Relationship"
+  },
+  "1729": {
+    "zhCN": "搞好关系、友好交往",
+    "zhTW": "搞好關係、友好交往",
+    "enUS": "Maintain good relations, friendly interactions"
+  },
+  "1730": {
+    "zhCN": "必要、需要",
+    "zhTW": "必要、需要",
+    "enUS": "Necessary, Need"
+  },
+  "1731": {
+    "zhCN": "终于、总算",
+    "zhTW": "終於、總算",
+    "enUS": "Finally, At last"
+  },
+  "1732": {
+    "zhCN": "习惯",
+    "zhTW": "習慣",
+    "enUS": "Get used to"
+  },
+  "1733": {
+    "zhCN": "习惯工作。",
+    "zhTW": "習慣工作。",
+    "enUS": "Get used to work."
+  },
+  "1734": {
+    "zhCN": "开始、起初",
+    "zhTW": "開始、起初",
+    "enUS": "Beginning, Initially"
+  },
+  "1735": {
+    "zhCN": "肖邦",
+    "zhTW": "蕭邦",
+    "enUS": "Chopin"
+  },
+  "1736": {
+    "zhCN": "曲子",
+    "zhTW": "曲子",
+    "enUS": "Piece (of music)"
+  },
+  "1737": {
+    "zhCN": "尽可能、尽量",
+    "zhTW": "儘可能、儘量",
+    "enUS": "As much as possible"
+  },
+  "1738": {
+    "zhCN": "绝对地",
+    "zhTW": "絕對地",
+    "enUS": "Absolutely"
+  },
+  "1739": {
+    "zhCN": "绝对没有错。",
+    "zhTW": "絕對沒有錯。",
+    "enUS": "There is absolutely no mistake."
+  },
+  "1740": {
+    "zhCN": "顾客（尊敬语）",
+    "zhTW": "顧客（尊敬語）",
+    "enUS": "Customer (respectful language)"
+  },
+  "1741": {
+    "zhCN": "特别",
+    "zhTW": "特別",
+    "enUS": "Special"
+  },
+  "1742": {
+    "zhCN": "正在做～（尊敬语）",
+    "zhTW": "正在做～（尊敬語）",
+    "enUS": "Doing ~ (respectful language)"
+  },
+  "1743": {
+    "zhCN": "游泳",
+    "zhTW": "游泳",
+    "enUS": "Swimming"
+  },
+  "1744": {
+    "zhCN": "不同、不一样、不对",
+    "zhTW": "不同、不一樣、不對",
+    "enUS": "Different, Not the same, Incorrect"
+  },
+  "1745": {
+    "zhCN": "用着～啊。（尊敬语）",
+    "zhTW": "用著～啊。（尊敬語）",
+    "enUS": "Using ~, huh? (respectful language)"
+  },
+  "1746": {
+    "zhCN": "挑战",
+    "zhTW": "挑戰",
+    "enUS": "Challenge"
+  },
+  "1747": {
+    "zhCN": "上下班高峰期",
+    "zhTW": "上下班高峰期",
+    "enUS": "Rush hour"
+  },
+  "1748": {
+    "zhCN": "遇到",
+    "zhTW": "遇到",
+    "enUS": "Encounter"
+  },
+  "1749": {
+    "zhCN": "遇到事故。",
+    "zhTW": "遇到事故。",
+    "enUS": "Encounter an accident."
+  },
+  "1750": {
+    "zhCN": "相当",
+    "zhTW": "相當",
+    "enUS": "Quite"
+  },
+  "1751": {
+    "zhCN": "一定",
+    "zhTW": "一定",
+    "enUS": "Definitely"
+  },
+  "1752": {
+    "zhCN": "存钱",
+    "zhTW": "存錢",
+    "enUS": "Save money"
+  },
+  "1753": {
+    "zhCN": "腐烂",
+    "zhTW": "腐爛",
+    "enUS": "Rot"
+  },
+  "1754": {
+    "zhCN": "食物腐烂。",
+    "zhTW": "食物腐爛。",
+    "enUS": "Food rots."
+  },
+  "1755": {
+    "zhCN": "几乎（肯定句）、几乎完全（否定句）",
+    "zhTW": "幾乎（肯定句）、幾乎完全（否定句）",
+    "enUS": "Almost (affirmative), Almost completely (negative)"
+  },
+  "1756": {
+    "zhCN": "最近",
+    "zhTW": "最近",
+    "enUS": "Recently"
+  },
+  "1757": {
+    "zhCN": "过（时间）",
+    "zhTW": "過（時間）",
+    "enUS": "Pass (time)"
+  },
+  "1758": {
+    "zhCN": "7点多",
+    "zhTW": "7點多",
+    "enUS": "After 7 o'clock"
+  },
+  "1759": {
+    "zhCN": "好、熟练",
+    "zhTW": "好、熟練",
+    "enUS": "Good, Skilled"
+  },
+  "1760": {
+    "zhCN": "剑道（日本式击剑）",
+    "zhTW": "劍道（日本式擊劍）",
+    "enUS": "Kendo (Japanese fencing)"
+  },
+  "1761": {
+    "zhCN": "柔道",
+    "zhTW": "柔道",
+    "enUS": "Judo"
+  },
+  "1762": {
+    "zhCN": "每周",
+    "zhTW": "每週",
+    "enUS": "Every week"
+  },
+  "1763": {
+    "zhCN": "每月",
+    "zhTW": "每月",
+    "enUS": "Every month"
+  },
+  "1764": {
+    "zhCN": "每年",
+    "zhTW": "每年",
+    "enUS": "Every year"
+  },
+  "1765": {
+    "zhCN": "每年",
+    "zhTW": "每年",
+    "enUS": "Every year"
+  },
+  "1766": {
+    "zhCN": "交通工具",
+    "zhTW": "交通工具",
+    "enUS": "Means of transportation"
+  },
+  "1767": {
+    "zhCN": "―世纪",
+    "zhTW": "―世紀",
+    "enUS": "- Century"
+  },
+  "1768": {
+    "zhCN": "远处",
+    "zhTW": "遠處",
+    "enUS": "Far away"
+  },
+  "1769": {
+    "zhCN": "珍奇、罕见",
+    "zhTW": "珍奇、罕見",
+    "enUS": "Rare, Uncommon"
+  },
+  "1770": {
+    "zhCN": "火车",
+    "zhTW": "火車",
+    "enUS": "Train"
+  },
+  "1771": {
+    "zhCN": "汽船",
+    "zhTW": "汽船",
+    "enUS": "steamship"
+  },
+  "1772": {
+    "zhCN": "很多的～（人）",
+    "zhTW": "很多的～（人）",
+    "enUS": "many (people)"
+  },
+  "1773": {
+    "zhCN": "很多人",
+    "zhTW": "很多人",
+    "enUS": "many people"
+  },
+  "1774": {
+    "zhCN": "运送",
+    "zhTW": "運送",
+    "enUS": "transport"
+  },
+  "1775": {
+    "zhCN": "利用",
+    "zhTW": "利用",
+    "enUS": "utilize"
+  },
+  "1776": {
+    "zhCN": "批评",
+    "zhTW": "批評",
+    "enUS": "criticize"
+  },
+  "1777": {
+    "zhCN": "踩",
+    "zhTW": "踩",
+    "enUS": "step on"
+  },
+  "1778": {
+    "zhCN": "踩到脚。",
+    "zhTW": "踩到腳。",
+    "enUS": "step on (someone's) foot."
+  },
+  "1779": {
+    "zhCN": "提醒、警告",
+    "zhTW": "提醒、警告",
+    "enUS": "notice, warn"
+  },
+  "1780": {
+    "zhCN": "有谁～",
+    "zhTW": "有誰～",
+    "enUS": "who (is there)"
+  },
+  "1781": {
+    "zhCN": "发现",
+    "zhTW": "發現",
+    "enUS": "discover"
+  },
+  "1782": {
+    "zhCN": "发现星星。",
+    "zhTW": "發現星星。",
+    "enUS": "discover stars."
+  },
+  "1783": {
+    "zhCN": "麦子",
+    "zhTW": "麥子",
+    "enUS": "wheat"
+  },
+  "1784": {
+    "zhCN": "大米",
+    "zhTW": "大米",
+    "enUS": "rice"
+  },
+  "1785": {
+    "zhCN": "原料",
+    "zhTW": "原料",
+    "enUS": "raw material"
+  },
+  "1786": {
+    "zhCN": "哪种语言",
+    "zhTW": "哪種語言",
+    "enUS": "which language"
+  },
+  "1787": {
+    "zhCN": "葡萄牙",
+    "zhTW": "葡萄牙",
+    "enUS": "Portugal"
+  },
+  "1788": {
+    "zhCN": "各位（尊敬语）",
+    "zhTW": "各位（尊敬語）",
+    "enUS": "everyone (respectful)"
+  },
+  "1789": {
+    "zhCN": "起火、燃烧",
+    "zhTW": "起火、燃燒",
+    "enUS": "catch fire, burn"
+  },
+  "1790": {
+    "zhCN": "那之后、后来",
+    "zhTW": "那之後、後來",
+    "enUS": "after that, later"
+  },
+  "1791": {
+    "zhCN": "世界遗产",
+    "zhTW": "世界遺產",
+    "enUS": "world heritage"
+  },
+  "1792": {
+    "zhCN": "～之一",
+    "zhTW": "～之一",
+    "enUS": "one of ~"
+  },
+  "1793": {
+    "zhCN": "金色",
+    "zhTW": "金色",
+    "enUS": "gold color"
+  },
+  "1794": {
+    "zhCN": "真货、真的",
+    "zhTW": "真貨、真的",
+    "enUS": "genuine, real"
+  },
+  "1795": {
+    "zhCN": "金子",
+    "zhTW": "金子",
+    "enUS": "gold"
+  },
+  "1796": {
+    "zhCN": "―公斤、―公里（略称）",
+    "zhTW": "―公斤、―公里（略稱）",
+    "enUS": "- kilogram, - kilometer (abbreviation)"
+  },
+  "1797": {
+    "zhCN": "美丽、好看",
+    "zhTW": "美麗、好看",
+    "enUS": "beautiful, good-looking"
+  },
+  "1798": {
+    "zhCN": "表扬",
+    "zhTW": "表揚",
+    "enUS": "praise"
+  },
+  "1799": {
+    "zhCN": "请求、委托",
+    "zhTW": "請求、委託",
+    "enUS": "request, entrust"
+  },
+  "1800": {
+    "zhCN": "举行、举办",
+    "zhTW": "舉行、舉辦",
+    "enUS": "hold, host"
+  },
+  "1801": {
+    "zhCN": "举办国际会议。",
+    "zhTW": "舉辦國際會議。",
+    "enUS": "host an international conference."
+  },
+  "1802": {
+    "zhCN": "弄坏",
+    "zhTW": "弄壞",
+    "enUS": "break"
+  },
+  "1803": {
+    "zhCN": "出口",
+    "zhTW": "出口",
+    "enUS": "export"
+  },
+  "1804": {
+    "zhCN": "全～、整个～",
+    "zhTW": "全～、整個～",
+    "enUS": "whole ~"
+  },
+  "1805": {
+    "zhCN": "全世界",
+    "zhTW": "全世界",
+    "enUS": "the whole world"
+  },
+  "1806": {
+    "zhCN": "招待",
+    "zhTW": "招待",
+    "enUS": "invite"
+  },
+  "1807": {
+    "zhCN": "警官",
+    "zhTW": "警官",
+    "enUS": "police officer"
+  },
+  "1808": {
+    "zhCN": "小偷",
+    "zhTW": "小偷",
+    "enUS": "thief"
+  },
+  "1809": {
+    "zhCN": "弄脏",
+    "zhTW": "弄髒",
+    "enUS": "dirty"
+  },
+  "1810": {
+    "zhCN": "污染大海。",
+    "zhTW": "污染大海。",
+    "enUS": "pollute the ocean."
+  },
+  "1811": {
+    "zhCN": "东大寺",
+    "zhTW": "東大寺",
+    "enUS": "Todai-ji Temple"
+  },
+  "1812": {
+    "zhCN": "大佛",
+    "zhTW": "大佛",
+    "enUS": "Great Buddha"
+  },
+  "1813": {
+    "zhCN": "发明",
+    "zhTW": "發明",
+    "enUS": "invent"
+  },
+  "1814": {
+    "zhCN": "方便面",
+    "zhTW": "方便麵",
+    "enUS": "instant noodles"
+  },
+  "1815": {
+    "zhCN": "奥运会",
+    "zhTW": "奧運會",
+    "enUS": "Olympics"
+  },
+  "1816": {
+    "zhCN": "世界杯",
+    "zhTW": "世界盃",
+    "enUS": "World Cup"
+  },
+  "1817": {
+    "zhCN": "江户时代",
+    "zhTW": "江戶時代",
+    "enUS": "Edo period"
+  },
+  "1818": {
+    "zhCN": "俄罗斯",
+    "zhTW": "俄羅斯",
+    "enUS": "Russia"
+  },
+  "1819": {
+    "zhCN": "笔译",
+    "zhTW": "筆譯",
+    "enUS": "translation (written)"
+  },
+  "1820": {
+    "zhCN": "沙特阿拉伯",
+    "zhTW": "沙烏地阿拉伯",
+    "enUS": "Saudi Arabia"
+  },
+  "1821": {
+    "zhCN": "石油",
+    "zhTW": "石油",
+    "enUS": "petroleum"
+  },
+  "1822": {
+    "zhCN": "进口",
+    "zhTW": "進口",
+    "enUS": "import"
+  },
+  "1823": {
+    "zhCN": "太好了。",
+    "zhTW": "太好了。",
+    "enUS": "That's great."
+  },
+  "1824": {
+    "zhCN": "约会",
+    "zhTW": "約會",
+    "enUS": "date"
+  },
+  "1825": {
+    "zhCN": "偷、抢",
+    "zhTW": "偷、搶",
+    "enUS": "steal, rob"
+  },
+  "1826": {
+    "zhCN": "东照宫（祭奠德川家康的神社）",
+    "zhTW": "東照宮（祭奠德川家康的神社）",
+    "enUS": "Toshogu Shrine (shrine dedicated to Tokugawa Ieyasu)"
+  },
+  "1827": {
+    "zhCN": "睡猫（雕刻的名称）",
+    "zhTW": "睡貓（雕刻的名稱）",
+    "enUS": "Sleeping Cat (name of a sculpture)"
+  },
+  "1828": {
+    "zhCN": "豪华",
+    "zhTW": "豪華",
+    "enUS": "luxurious"
+  },
+  "1829": {
+    "zhCN": "雕刻",
+    "zhTW": "雕刻",
+    "enUS": "sculpture"
+  },
+  "1830": {
+    "zhCN": "传说",
+    "zhTW": "傳說",
+    "enUS": "legend"
+  },
+  "1831": {
+    "zhCN": "睡、睡眠",
+    "zhTW": "睡、睡眠",
+    "enUS": "sleep"
+  },
+  "1832": {
+    "zhCN": "左甚五郎（江户时代的著名雕刻家）",
+    "zhTW": "左甚五郎（江戶時代的著名雕刻家）",
+    "enUS": "Zōshimigorō (famous sculptor of the Edo period)"
+  },
+  "1833": {
+    "zhCN": "雕刻",
+    "zhTW": "雕刻",
+    "enUS": "carve"
+  },
+  "1834": {
+    "zhCN": "朋友、伙伴",
+    "zhTW": "朋友、夥伴",
+    "enUS": "friend, companion"
+  },
+  "1835": {
+    "zhCN": "但是",
+    "zhTW": "但是",
+    "enUS": "but"
+  },
+  "1836": {
+    "zhCN": "那之后、后来",
+    "zhTW": "那之後、後來",
+    "enUS": "after that, later"
+  },
+  "1837": {
+    "zhCN": "努力、拼命",
+    "zhTW": "努力、拼命",
+    "enUS": "with all one's might"
+  },
+  "1838": {
+    "zhCN": "老鼠",
+    "zhTW": "老鼠",
+    "enUS": "mouse"
+  },
+  "1839": {
+    "zhCN": "一只也没有。",
+    "zhTW": "一隻也沒有。",
+    "enUS": "Not a single one."
+  },
+  "1840": {
+    "zhCN": "参加旅行。",
+    "zhTW": "參加旅行。",
+    "enUS": "Participate in the trip."
+  },
+  "1841": {
+    "zhCN": "培育、养",
+    "zhTW": "培育、養",
+    "enUS": "raise, cultivate"
+  },
+  "1842": {
+    "zhCN": "搬、搬运",
+    "zhTW": "搬、搬運",
+    "enUS": "carry, transport"
+  },
+  "1843": {
+    "zhCN": "啊，糟了。（在做错了什么或失败时使用）",
+    "zhTW": "啊，糟了。（在做錯了什麼或失敗時使用）",
+    "enUS": "Oh no! (used when something goes wrong or fails)"
+  },
+  "1844": {
+    "zhCN": "婴儿",
+    "zhTW": "嬰兒",
+    "enUS": "baby"
+  },
+  "1845": {
+    "zhCN": "小学",
+    "zhTW": "小學",
+    "enUS": "elementary school"
+  },
+  "1846": {
+    "zhCN": "初中",
+    "zhTW": "初中",
+    "enUS": "junior high school"
+  },
+  "1847": {
+    "zhCN": "传阅（文件等）",
+    "zhTW": "傳閱（文件等）",
+    "enUS": "circulate (documents, etc.)"
+  },
+  "1848": {
+    "zhCN": "研究室",
+    "zhTW": "研究室",
+    "enUS": "laboratory"
+  },
+  "1849": {
+    "zhCN": "整齐、干净",
+    "zhTW": "整齊、乾淨",
+    "enUS": "neat, clean"
+  },
+  "1850": {
+    "zhCN": "整理、收拾",
+    "zhTW": "整理、收拾",
+    "enUS": "organize, tidy up"
+  },
+  "1851": {
+    "zhCN": "叫～、名为～",
+    "zhTW": "叫～、名為～",
+    "enUS": "called ~, named ~"
+  },
+  "1852": {
+    "zhCN": "―本、―册",
+    "zhTW": "―本、―冊",
+    "enUS": "―volume, ―copy"
+  },
+  "1853": {
+    "zhCN": "方法",
+    "zhTW": "方法",
+    "enUS": "method"
+  },
+  "1854": {
+    "zhCN": "章、印章",
+    "zhTW": "章、印章",
+    "enUS": "seal, stamp"
+  },
+  "1855": {
+    "zhCN": "盖",
+    "zhTW": "蓋",
+    "enUS": "press"
+  },
+  "1856": {
+    "zhCN": "盖章。",
+    "zhTW": "蓋章。",
+    "enUS": "Stamp."
+  },
+  "1857": {
+    "zhCN": "舒服",
+    "zhTW": "舒服",
+    "enUS": "comfortable"
+  },
+  "1858": {
+    "zhCN": "不舒服",
+    "zhTW": "不舒服",
+    "enUS": "uncomfortable"
+  },
+  "1859": {
+    "zhCN": "出院",
+    "zhTW": "出院",
+    "enUS": "discharge from hospital"
+  },
+  "1860": {
+    "zhCN": "大的",
+    "zhTW": "大的",
+    "enUS": "big"
+  },
+  "1861": {
+    "zhCN": "小的",
+    "zhTW": "小的",
+    "enUS": "small"
+  },
+  "1862": {
+    "zhCN": "村、村庄",
+    "zhTW": "村、村莊",
+    "enUS": "village"
+  },
+  "1863": {
+    "zhCN": "～制造",
+    "zhTW": "～製造",
+    "enUS": "~ made"
+  },
+  "1864": {
+    "zhCN": "习惯",
+    "zhTW": "習慣",
+    "enUS": "habit"
+  },
+  "1865": {
+    "zhCN": "海岸",
+    "zhTW": "海岸",
+    "enUS": "coast"
+  },
+  "1866": {
+    "zhCN": "说（谎）",
+    "zhTW": "說（謊）",
+    "enUS": "lie"
+  },
+  "1867": {
+    "zhCN": "说谎。",
+    "zhTW": "說謊。",
+    "enUS": "Lie."
+  },
+  "1868": {
+    "zhCN": "住院",
+    "zhTW": "住院",
+    "enUS": "hospitalization"
+  },
+  "1869": {
+    "zhCN": "假名",
+    "zhTW": "假名",
+    "enUS": "kana"
+  },
+  "1870": {
+    "zhCN": "戒指",
+    "zhTW": "戒指",
+    "enUS": "ring"
+  },
+  "1871": {
+    "zhCN": "出云大社（位于岛根县出云市的神社）",
+    "zhTW": "出雲大社（位於島根縣出雲市的神社）",
+    "enUS": "Izumo Taisha (a shrine located in Izumo City, Shimane Prefecture)"
+  },
+  "1872": {
+    "zhCN": "清迈",
+    "zhTW": "清邁",
+    "enUS": "Chiang Mai"
+  },
+  "1873": {
+    "zhCN": "前年",
+    "zhTW": "前年",
+    "enUS": "the year before last"
+  },
+  "1874": {
+    "zhCN": "上锁",
+    "zhTW": "上鎖",
+    "enUS": "to lock"
+  },
+  "1875": {
+    "zhCN": "上锁。",
+    "zhTW": "上鎖。",
+    "enUS": "to lock."
+  },
+  "1876": {
+    "zhCN": "我先告辞了。",
+    "zhTW": "我先告辭了。",
+    "enUS": "I will take my leave first."
+  },
+  "1877": {
+    "zhCN": "电源",
+    "zhTW": "電源",
+    "enUS": "power supply"
+  },
+  "1878": {
+    "zhCN": "切断",
+    "zhTW": "切斷",
+    "enUS": "to cut off"
+  },
+  "1879": {
+    "zhCN": "切断电源。",
+    "zhTW": "切斷電源。",
+    "enUS": "Cut off the power."
+  },
+  "1880": {
+    "zhCN": "打开",
+    "zhTW": "打開",
+    "enUS": "to turn on"
+  },
+  "1881": {
+    "zhCN": "打开电源。",
+    "zhTW": "打開電源。",
+    "enUS": "Turn on the power."
+  },
+  "1882": {
+    "zhCN": "广岛原子弹爆炸纪念馆",
+    "zhTW": "廣島原子彈爆炸紀念館",
+    "enUS": "Hiroshima Atomic Bomb Dome"
+  },
+  "1883": {
+    "zhCN": "工厂",
+    "zhTW": "工廠",
+    "enUS": "factory"
+  },
+  "1884": {
+    "zhCN": "双胞胎",
+    "zhTW": "雙胞胎",
+    "enUS": "twins"
+  },
+  "1885": {
+    "zhCN": "姐妹",
+    "zhTW": "姐妹",
+    "enUS": "sisters"
+  },
+  "1886": {
+    "zhCN": "五年级学生",
+    "zhTW": "五年級學生",
+    "enUS": "fifth-grade student"
+  },
+  "1887": {
+    "zhCN": "相似、相像",
+    "zhTW": "相似、相像",
+    "enUS": "similar, resemble"
+  },
+  "1888": {
+    "zhCN": "性格",
+    "zhTW": "性格",
+    "enUS": "character"
+  },
+  "1889": {
+    "zhCN": "老实、温顺",
+    "zhTW": "老實、溫順",
+    "enUS": "gentle, docile"
+  },
+  "1890": {
+    "zhCN": "温柔、亲切",
+    "zhTW": "溫柔、親切",
+    "enUS": "gentle, kind"
+  },
+  "1891": {
+    "zhCN": "照顾、照料",
+    "zhTW": "照顧、照料",
+    "enUS": "to take care of"
+  },
+  "1892": {
+    "zhCN": "时间流逝",
+    "zhTW": "時間流逝",
+    "enUS": "time passes"
+  },
+  "1893": {
+    "zhCN": "―分（指考试的分数）",
+    "zhTW": "―分（指考試的分數）",
+    "enUS": "- points (referring to exam scores)"
+  },
+  "1894": {
+    "zhCN": "好强、刚强",
+    "zhTW": "好強、剛強",
+    "enUS": "strong-willed, tough"
+  },
+  "1895": {
+    "zhCN": "吵架、打架",
+    "zhTW": "吵架、打架",
+    "enUS": "to quarrel, to fight"
+  },
+  "1896": {
+    "zhCN": "年龄",
+    "zhTW": "年齡",
+    "enUS": "age"
+  },
+  "1897": {
+    "zhCN": "方法、办法",
+    "zhTW": "方法、辦法",
+    "enUS": "method, way"
+  },
+  "1898": {
+    "zhCN": "吃惊",
+    "zhTW": "吃驚",
+    "enUS": "to be surprised"
+  },
+  "1899": {
+    "zhCN": "大厦倒塌。",
+    "zhTW": "大廈倒塌。",
+    "enUS": "The building collapsed."
+  },
+  "1900": {
+    "zhCN": "相亲",
+    "zhTW": "相親",
+    "enUS": "arranged marriage meeting"
+  },
+  "1901": {
+    "zhCN": "失望",
+    "zhTW": "失望",
+    "enUS": "to be disappointed"
+  },
+  "1902": {
+    "zhCN": "远足、徒步旅行",
+    "zhTW": "遠足、徒步旅行",
+    "enUS": "hiking"
+  },
+  "1903": {
+    "zhCN": "复杂",
+    "zhTW": "複雜",
+    "enUS": "complex"
+  },
+  "1904": {
+    "zhCN": "事故",
+    "zhTW": "事故",
+    "enUS": "accident"
+  },
+  "1905": {
+    "zhCN": "辛苦了。（慰劳同事或部下时用的话）",
+    "zhTW": "辛苦了。（慰勞同事或部下時用的話）",
+    "enUS": "Thank you for your hard work."
+  },
+  "1906": {
+    "zhCN": "碍事",
+    "zhTW": "礙事",
+    "enUS": "to be in the way"
+  },
+  "1907": {
+    "zhCN": "中途、途中",
+    "zhTW": "中途、途中",
+    "enUS": "on the way"
+  },
+  "1908": {
+    "zhCN": "途中、路上、中途",
+    "zhTW": "途中、路上、中途",
+    "enUS": "on the way, en route"
+  },
+  "1909": {
+    "zhCN": "卡车",
+    "zhTW": "卡車",
+    "enUS": "truck"
+  },
+  "1910": {
+    "zhCN": "撞、碰",
+    "zhTW": "撞、碰",
+    "enUS": "to collide"
+  },
+  "1911": {
+    "zhCN": "安心、放心",
+    "zhTW": "安心、放心",
+    "enUS": "to feel relieved"
+  },
+  "1912": {
+    "zhCN": "很多（人）",
+    "zhTW": "很多（人）",
+    "enUS": "many (people)"
+  },
+  "1913": {
+    "zhCN": "死",
+    "zhTW": "死",
+    "enUS": "to die"
+  },
+  "1914": {
+    "zhCN": "海啸",
+    "zhTW": "海嘯",
+    "enUS": "tsunami"
+  },
+  "1915": {
+    "zhCN": "害羞、不好意思",
+    "zhTW": "害羞、不好意思",
+    "enUS": "shy, embarrassed"
+  },
+  "1916": {
+    "zhCN": "硬、坚硬",
+    "zhTW": "硬、堅硬",
+    "enUS": "hard, solid"
+  },
+  "1917": {
+    "zhCN": "软、柔软",
+    "zhTW": "軟、柔軟",
+    "enUS": "soft, tender"
+  },
+  "1918": {
+    "zhCN": "答、回答",
+    "zhTW": "答、回答",
+    "enUS": "to answer"
+  },
+  "1919": {
+    "zhCN": "回答问题。",
+    "zhTW": "回答問題。",
+    "enUS": "Answer the question."
+  },
+  "1920": {
+    "zhCN": "通过、过",
+    "zhTW": "通過、過",
+    "enUS": "to pass through"
+  },
+  "1921": {
+    "zhCN": "过路",
+    "zhTW": "過路",
+    "enUS": "to pass through the road"
+  },
+  "1922": {
+    "zhCN": "火灾",
+    "zhTW": "火災",
+    "enUS": "fire disaster"
+  },
+  "1923": {
+    "zhCN": "开～店的",
+    "zhTW": "開～店的",
+    "enUS": "~store owner"
+  },
+  "1924": {
+    "zhCN": "胖、发胖",
+    "zhTW": "胖、發胖",
+    "enUS": "to gain weight"
+  },
+  "1925": {
+    "zhCN": "瘦、变瘦",
+    "zhTW": "瘦、變瘦",
+    "enUS": "to lose weight"
+  },
+  "1926": {
+    "zhCN": "～费",
+    "zhTW": "～費",
+    "enUS": "~cost"
+  },
+  "1927": {
+    "zhCN": "电费",
+    "zhTW": "電費",
+    "enUS": "electricity bill"
+  },
+  "1928": {
+    "zhCN": "脏、肮脏",
+    "zhTW": "髒、骯髒",
+    "enUS": "dirty"
+  },
+  "1929": {
+    "zhCN": "操作",
+    "zhTW": "操作",
+    "enUS": "operation"
+  },
+  "1930": {
+    "zhCN": "台风",
+    "zhTW": "颱風",
+    "enUS": "typhoon"
+  },
+  "1931": {
+    "zhCN": "雷",
+    "zhTW": "雷",
+    "enUS": "thunder"
+  },
+  "1932": {
+    "zhCN": "会场",
+    "zhTW": "會場",
+    "enUS": "venue"
+  },
+  "1933": {
+    "zhCN": "首相",
+    "zhTW": "首相",
+    "enUS": "prime minister"
+  },
+  "1934": {
+    "zhCN": "离婚",
+    "zhTW": "離婚",
+    "enUS": "to divorce"
+  },
+  "1935": {
+    "zhCN": "（酒店等的）前台",
+    "zhTW": "（飯店等的）前台",
+    "enUS": "front desk"
+  },
+  "1936": {
+    "zhCN": "―号房间",
+    "zhTW": "―號房間",
+    "enUS": "room number -"
+  },
+  "1937": {
+    "zhCN": "去拜访（「いきます」的谦逊语）",
+    "zhTW": "去拜訪（「いきます」的謙遜語）",
+    "enUS": "to visit (humble form of 'ikimasu')"
+  },
+  "1938": {
+    "zhCN": "毛巾",
+    "zhTW": "毛巾",
+    "enUS": "towel"
+  },
+  "1939": {
+    "zhCN": "肥皂",
+    "zhTW": "肥皂",
+    "enUS": "soap"
+  },
+  "1940": {
+    "zhCN": "大人、成年人",
+    "zhTW": "大人、成年人",
+    "enUS": "adult"
+  },
+  "1941": {
+    "zhCN": "还、更",
+    "zhTW": "還、更",
+    "enUS": "also, more"
+  },
+  "1942": {
+    "zhCN": "西式服装",
+    "zhTW": "西式服裝",
+    "enUS": "Western-style clothing"
+  },
+  "1943": {
+    "zhCN": "西化",
+    "zhTW": "西化",
+    "enUS": "Westernization"
+  },
+  "1944": {
+    "zhCN": "适合、合适",
+    "zhTW": "適合、合適",
+    "enUS": "to fit, suitable"
+  },
+  "1945": {
+    "zhCN": "现在",
+    "zhTW": "現在",
+    "enUS": "now"
+  },
+  "1946": {
+    "zhCN": "成人仪式",
+    "zhTW": "成人儀式",
+    "enUS": "coming-of-age ceremony"
+  },
+  "1947": {
+    "zhCN": "传统的",
+    "zhTW": "傳統的",
+    "enUS": "traditional"
+  },
+  "1948": {
+    "zhCN": "日本航空公司",
+    "zhTW": "日本航空公司",
+    "enUS": "Japan Airlines"
+  },
+  "1949": {
+    "zhCN": "―航班",
+    "zhTW": "―航班",
+    "enUS": "flight number -"
+  },
+  "1950": {
+    "zhCN": "到达",
+    "zhTW": "到達",
+    "enUS": "to arrive"
+  },
+  "1951": {
+    "zhCN": "出发",
+    "zhTW": "出發",
+    "enUS": "to depart"
+  },
+  "1952": {
+    "zhCN": "在正式宴会结束后再次聚会喝酒",
+    "zhTW": "在正式宴會結束後再次聚會喝酒",
+    "enUS": "after-party"
+  },
+  "1953": {
+    "zhCN": "醉",
+    "zhTW": "醉",
+    "enUS": "to get drunk"
+  },
+  "1954": {
+    "zhCN": "高度",
+    "zhTW": "高度",
+    "enUS": "height"
+  },
+  "1955": {
+    "zhCN": "长度",
+    "zhTW": "長度",
+    "enUS": "length"
+  },
+  "1956": {
+    "zhCN": "测量（长度、面积、温度、速度等）",
+    "zhTW": "測量（長度、面積、溫度、速度等）",
+    "enUS": "to measure (length, area, temperature, speed, etc.)"
+  },
+  "1957": {
+    "zhCN": "量（容积）、称（重量）",
+    "zhTW": "量（容積）、稱（重量）",
+    "enUS": "to measure (volume), to weigh"
+  },
+  "1958": {
+    "zhCN": "辞旧迎新会",
+    "zhTW": "辭舊迎新會",
+    "enUS": "year-end party"
+  },
+  "1959": {
+    "zhCN": "新年联欢会",
+    "zhTW": "新年聯歡會",
+    "enUS": "New Year's party"
+  },
+  "1960": {
+    "zhCN": "错、错误",
+    "zhTW": "錯、錯誤",
+    "enUS": "mistake, error"
+  },
+  "1961": {
+    "zhCN": "长崎（长崎县县政府所在地）",
+    "zhTW": "長崎（長崎縣縣政府所在地）",
+    "enUS": "Nagasaki (capital of Nagasaki Prefecture)"
+  },
+  "1962": {
+    "zhCN": "怎么样？（「どうですか」的礼貌用语）",
+    "zhTW": "怎麼樣？（「どうですか」的禮貌用語）",
+    "enUS": "How is it? (polite form of 'dou desu ka')"
+  },
+  "1963": {
+    "zhCN": "测验、考试",
+    "zhTW": "測驗、考試",
+    "enUS": "test, exam"
+  },
+  "1964": {
+    "zhCN": "成绩",
+    "zhTW": "成績",
+    "enUS": "grade, score"
+  },
+  "1965": {
+    "zhCN": "可是（转移话题时使用）",
+    "zhTW": "可是（轉移話題時使用）",
+    "enUS": "but (used to change the topic)"
+  },
+  "1966": {
+    "zhCN": "来（「きます」的尊敬用语）",
+    "zhTW": "來（「きます」的尊敬用語）",
+    "enUS": "to come (respectful form of 'kimasu')"
+  },
+  "1967": {
+    "zhCN": "样子、情况、情形",
+    "zhTW": "樣子、情況、情形",
+    "enUS": "appearance, situation"
+  },
+  "1968": {
+    "zhCN": "出（考题）",
+    "zhTW": "出（考題）",
+    "enUS": "to appear (exam questions)"
+  },
+  "1969": {
+    "zhCN": "出考题",
+    "zhTW": "出考題",
+    "enUS": "to present exam questions"
+  },
+  "1970": {
+    "zhCN": "确认",
+    "zhTW": "確認",
+    "enUS": "to confirm"
+  },
+  "1971": {
+    "zhCN": "伤、损伤",
+    "zhTW": "傷、損傷",
+    "enUS": "injury, damage"
+  },
+  "1972": {
+    "zhCN": "表面、正面",
+    "zhTW": "表面、正面",
+    "enUS": "surface, front"
+  },
+  "1973": {
+    "zhCN": "反面、里面",
+    "zhTW": "反面、裡面",
+    "enUS": "reverse side, inside"
+  },
+  "1974": {
+    "zhCN": "商量、商议",
+    "zhTW": "商量、商議",
+    "enUS": "discuss, consult"
+  },
+  "1975": {
+    "zhCN": "数",
+    "zhTW": "數",
+    "enUS": "count"
+  },
+  "1976": {
+    "zhCN": "―根、―条（数细长物品时的量词）",
+    "zhTW": "―根、―條（數細長物品時的量詞）",
+    "enUS": "- (counter for long, thin objects)"
+  },
+  "1977": {
+    "zhCN": "―杯（数装在玻璃杯中的饮料时的量词）",
+    "zhTW": "―杯（數裝在玻璃杯中的飲料時的量詞）",
+    "enUS": "- (counter for drinks in glasses)"
+  },
+  "1978": {
+    "zhCN": "―厘米",
+    "zhTW": "―公分",
+    "enUS": "- centimeters"
+  },
+  "1979": {
+    "zhCN": "―毫米",
+    "zhTW": "―毫米",
+    "enUS": "- millimeters"
+  },
+  "1980": {
+    "zhCN": "进展顺利",
+    "zhTW": "進展順利",
+    "enUS": "goes well"
+  },
+  "1981": {
+    "zhCN": "天气预报",
+    "zhTW": "天氣預報",
+    "enUS": "weather forecast"
+  },
+  "1982": {
+    "zhCN": "重量",
+    "zhTW": "重量",
+    "enUS": "weight"
+  },
+  "1983": {
+    "zhCN": "～以下、低于～",
+    "zhTW": "～以下、低於～",
+    "enUS": "~ or less, below ~"
+  },
+  "1984": {
+    "zhCN": "～以上、超过～",
+    "zhTW": "～以上、超過～",
+    "enUS": "~ or more, above ~"
+  },
+  "1985": {
+    "zhCN": "裤子",
+    "zhTW": "褲子",
+    "enUS": "pants"
+  },
+  "1986": {
+    "zhCN": "尺码合适。",
+    "zhTW": "尺碼合適。",
+    "enUS": "size fits."
+  },
+  "1987": {
+    "zhCN": "发表会",
+    "zhTW": "發表會",
+    "enUS": "presentation"
+  },
+  "1988": {
+    "zhCN": "老人",
+    "zhTW": "老人",
+    "enUS": "elderly person"
+  },
+  "1989": {
+    "zhCN": "比赛、竞赛",
+    "zhTW": "比賽、競賽",
+    "enUS": "contest, competition"
+  },
+  "1990": {
+    "zhCN": "马拉松",
+    "zhTW": "馬拉松",
+    "enUS": "marathon"
+  },
+  "1991": {
+    "zhCN": "大会",
+    "zhTW": "大會",
+    "enUS": "conference"
+  },
+  "1992": {
+    "zhCN": "仙台（宫城县县政府所在地）",
+    "zhTW": "仙台（宮城縣縣政府所在地）",
+    "enUS": "Sendai (capital of Miyagi Prefecture)"
+  },
+  "1993": {
+    "zhCN": "七夕",
+    "zhTW": "七夕",
+    "enUS": "Tanabata Festival"
+  },
+  "1994": {
+    "zhCN": "事件、案件",
+    "zhTW": "事件、案件",
+    "enUS": "incident, case"
+  },
+  "1995": {
+    "zhCN": "摩托车",
+    "zhTW": "摩托車",
+    "enUS": "motorcycle"
+  },
+  "1996": {
+    "zhCN": "炸弹",
+    "zhTW": "炸彈",
+    "enUS": "bomb"
+  },
+  "1997": {
+    "zhCN": "堆积、装载",
+    "zhTW": "堆積、裝載",
+    "enUS": "pile up, load"
+  },
+  "1998": {
+    "zhCN": "司机",
+    "zhTW": "司機",
+    "enUS": "driver"
+  },
+  "1999": {
+    "zhCN": "离开一段距离的～",
+    "zhTW": "離開一段距離的～",
+    "enUS": "~ that is a distance away"
+  },
+  "2000": {
+    "zhCN": "突然",
+    "zhTW": "突然",
+    "enUS": "suddenly"
+  },
+  "2001": {
+    "zhCN": "开动、发动",
+    "zhTW": "開動、發動",
+    "enUS": "move, start"
+  },
+  "2002": {
+    "zhCN": "努力、拼命",
+    "zhTW": "努力、拼命",
+    "enUS": "do one's best, work hard"
+  },
+  "2003": {
+    "zhCN": "犯人",
+    "zhTW": "犯人",
+    "enUS": "criminal"
+  },
+  "2004": {
+    "zhCN": "男人、男子",
+    "zhTW": "男人、男子",
+    "enUS": "man"
+  },
+  "2005": {
+    "zhCN": "到手、得到",
+    "zhTW": "到手、得到",
+    "enUS": "obtain, get"
+  },
+  "2006": {
+    "zhCN": "现在仍然",
+    "zhTW": "現在仍然",
+    "enUS": "still now"
+  },
+  "2007": {
+    "zhCN": "得到、收到（「もらいます」的谦逊语）",
+    "zhTW": "得到、收到（「もらいます」的謙遜語）",
+    "enUS": "receive (humble form of 'morai masu')"
+  },
+  "2008": {
+    "zhCN": "给我（「くれます」的尊敬语）",
+    "zhTW": "給我（「くれます」的尊敬語）",
+    "enUS": "give me (respectful form of 'kuremasu')"
+  },
+  "2009": {
+    "zhCN": "纸飞机",
+    "zhTW": "紙飛機",
+    "enUS": "paper airplane"
+  },
+  "2010": {
+    "zhCN": "给（用于给比自己年纪小、职位低的人或动植物等某物时）",
+    "zhTW": "給（用於給比自己年紀小、職位低的人或動植物等某物時）",
+    "enUS": "give (used for giving something to someone younger or of lower status)"
+  },
+  "2011": {
+    "zhCN": "祝贺、贺礼",
+    "zhTW": "祝賀、賀禮",
+    "enUS": "congratulations, gift"
+  },
+  "2012": {
+    "zhCN": "猴子",
+    "zhTW": "猴子",
+    "enUS": "monkey"
+  },
+  "2013": {
+    "zhCN": "饵料",
+    "zhTW": "餌料",
+    "enUS": "bait"
+  },
+  "2014": {
+    "zhCN": "前些天、前几天",
+    "zhTW": "前些天、前幾天",
+    "enUS": "a few days ago"
+  },
+  "2015": {
+    "zhCN": "和气、热情",
+    "zhTW": "和氣、熱情",
+    "enUS": "kind, warm-hearted"
+  },
+  "2016": {
+    "zhCN": "（说上）一句",
+    "zhTW": "（說上）一句",
+    "enUS": "(say) a word"
+  },
+  "2017": {
+    "zhCN": "每～（表示固定的同数量的分配）",
+    "zhTW": "每～（表示固定的同數量的分配）",
+    "enUS": "each ~ (indicating fixed distribution of the same quantity)"
+  },
+  "2018": {
+    "zhCN": "两人（可指情侣、夫妻）",
+    "zhTW": "兩人（可指情侶、夫妻）",
+    "enUS": "two people (can refer to a couple or spouses)"
+  },
+  "2019": {
+    "zhCN": "府上（「うち」和「いえ」的尊敬语）",
+    "zhTW": "府上（「うち」和「いえ」的尊敬語）",
+    "enUS": "your home (respectful form of 'uchi' and 'ie')"
+  },
+  "2020": {
+    "zhCN": "祝你们幸福。",
+    "zhTW": "祝你們幸福。",
+    "enUS": "wish you happiness."
+  },
+  "2021": {
+    "zhCN": "（自己的）孙子、外孙",
+    "zhTW": "（自己的）孫子、外孫",
+    "enUS": "(one's own) grandson, granddaughter"
+  },
+  "2022": {
+    "zhCN": "幼儿园",
+    "zhTW": "幼稚園",
+    "enUS": "kindergarten"
+  },
+  "2023": {
+    "zhCN": "袜子",
+    "zhTW": "靴下",
+    "enUS": "socks"
+  },
+  "2024": {
+    "zhCN": "明信片",
+    "zhTW": "絵葉書",
+    "enUS": "postcard"
+  },
+  "2025": {
+    "zhCN": "（自己的）姑姑、姨、伯母、婶婶、舅妈",
+    "zhTW": "（自己的）叔母",
+    "enUS": "(one's own) aunt"
+  },
+  "2026": {
+    "zhCN": "（别人的）姑姑、姨、伯母、婶婶、舅妈",
+    "zhTW": "おばさん",
+    "enUS": "(someone else's) aunt"
+  },
+  "2027": {
+    "zhCN": "（自己的）叔叔、伯父、舅舅",
+    "zhTW": "おじ",
+    "enUS": "(one's own) uncle"
+  },
+  "2028": {
+    "zhCN": "（别人的）叔叔、伯父、舅舅",
+    "zhTW": "おじさん",
+    "enUS": "(someone else's) uncle"
+  },
+  "2029": {
+    "zhCN": "手套",
+    "zhTW": "手袋",
+    "enUS": "gloves"
+  },
+  "2030": {
+    "zhCN": "手绢",
+    "zhTW": "ハンカチ",
+    "enUS": "handkerchief"
+  },
+  "2031": {
+    "zhCN": "（自己的）祖母、外祖母",
+    "zhTW": "祖母",
+    "enUS": "(one's own) grandmother"
+  },
+  "2032": {
+    "zhCN": "（自己的）祖父、外祖父",
+    "zhTW": "祖父",
+    "enUS": "(one's own) grandfather"
+  },
+  "2033": {
+    "zhCN": "压岁钱",
+    "zhTW": "お年玉",
+    "enUS": "New Year's money"
+  },
+  "2034": {
+    "zhCN": "语法",
+    "zhTW": "文法",
+    "enUS": "grammar"
+  },
+  "2035": {
+    "zhCN": "发音",
+    "zhTW": "發音",
+    "enUS": "pronunciation"
+  },
+  "2036": {
+    "zhCN": "玩具",
+    "zhTW": "玩具",
+    "enUS": "toys"
+  },
+  "2037": {
+    "zhCN": "图画书、小人书",
+    "zhTW": "繪本",
+    "enUS": "picture book, children's book"
+  },
+  "2038": {
+    "zhCN": "（衣服的）穿法",
+    "zhTW": "著法",
+    "enUS": "(method of) wearing (clothes)"
+  },
+  "2039": {
+    "zhCN": "（别人的）孙子、外孙",
+    "zhTW": "お孫さん",
+    "enUS": "(someone else's) grandson, granddaughter"
+  },
+  "2040": {
+    "zhCN": "爱好、兴趣",
+    "zhTW": "興趣",
+    "enUS": "hobby, interest"
+  },
+  "2041": {
+    "zhCN": "暖气",
+    "zhTW": "暖房",
+    "enUS": "heating"
+  },
+  "2042": {
+    "zhCN": "冷气",
+    "zhTW": "冷房",
+    "enUS": "air conditioning"
+  },
+  "2043": {
+    "zhCN": "温度",
+    "zhTW": "溫度",
+    "enUS": "temperature"
+  },
+  "2044": {
+    "zhCN": "调高、提高、改善",
+    "zhTW": "上升",
+    "enUS": "to raise, to increase, to improve"
+  },
+  "2045": {
+    "zhCN": "调低、降低、放低",
+    "zhTW": "下降",
+    "enUS": "to lower, to decrease, to drop"
+  },
+  "2046": {
+    "zhCN": "信息",
+    "zhTW": "資訊",
+    "enUS": "information"
+  },
+  "2047": {
+    "zhCN": "可爱",
+    "zhTW": "可愛",
+    "enUS": "cute"
+  },
+  "2048": {
+    "zhCN": "（公寓等的）管理员",
+    "zhTW": "管理人",
+    "enUS": "(apartment, etc.) manager"
+  },
+  "2049": {
+    "zhCN": "为了表示礼貌，接续在职业名、职务名称之后的接尾词",
+    "zhTW": "さん",
+    "enUS": "a suffix added to names or titles for politeness"
+  },
+  "2050": {
+    "zhCN": "改锥",
+    "zhTW": "螺絲起子",
+    "enUS": "screwdriver"
+  },
+  "2051": {
+    "zhCN": "探视（病人）、慰问品",
+    "zhTW": "慰問",
+    "enUS": "visiting (a patient), gift of consolation"
+  },
+  "2052": {
+    "zhCN": "浦岛太郎（传说故事中主人公的名字）",
+    "zhTW": "浦島太郎",
+    "enUS": "Urashima Taro (the name of the protagonist in a legend)"
+  },
+  "2053": {
+    "zhCN": "传说、故事",
+    "zhTW": "昔話",
+    "enUS": "legend, story"
+  },
+  "2054": {
+    "zhCN": "欺负",
+    "zhTW": "虐待",
+    "enUS": "to bully"
+  },
+  "2055": {
+    "zhCN": "乌龟",
+    "zhTW": "龜",
+    "enUS": "turtle"
+  },
+  "2056": {
+    "zhCN": "帮助、救助",
+    "zhTW": "幫助",
+    "enUS": "to help, to assist"
+  },
+  "2057": {
+    "zhCN": "公主",
+    "zhTW": "公主",
+    "enUS": "princess"
+  },
+  "2058": {
+    "zhCN": "生活、度日",
+    "zhTW": "生活",
+    "enUS": "to live, to get by"
+  },
+  "2059": {
+    "zhCN": "陆地",
+    "zhTW": "陸地",
+    "enUS": "land"
+  },
+  "2060": {
+    "zhCN": "烟",
+    "zhTW": "煙",
+    "enUS": "smoke"
+  },
+  "2061": {
+    "zhCN": "雪白、纯白",
+    "zhTW": "真白",
+    "enUS": "pure white"
+  },
+  "2062": {
+    "zhCN": "装在其中的东西、内容",
+    "zhTW": "內容",
+    "enUS": "contents, what is contained"
+  },
+  "2063": {
+    "zhCN": "《致爱丽丝》",
+    "zhTW": "艾莉絲的禮物",
+    "enUS": "\"For Elise\""
+  },
+  "2064": {
+    "zhCN": "贝多芬",
+    "zhTW": "貝多芬",
+    "enUS": "Beethoven"
+  },
+  "2065": {
+    "zhCN": "发（钱）",
+    "zhTW": "發（錢）",
+    "enUS": "to issue (money)"
+  },
+  "2066": {
+    "zhCN": "发奖金。",
+    "zhTW": "發獎金。",
+    "enUS": "to issue a bonus."
+  },
+  "2067": {
+    "zhCN": "消遣、盼望、兴趣",
+    "zhTW": "樂趣",
+    "enUS": "enjoyment, anticipation, interest"
+  },
+  "2068": {
+    "zhCN": "一半",
+    "zhTW": "一半",
+    "enUS": "half"
+  },
+  "2069": {
+    "zhCN": "贷款",
+    "zhTW": "貸款",
+    "enUS": "loan"
+  },
+  "2070": {
+    "zhCN": "律师",
+    "zhTW": "律師",
+    "enUS": "lawyer"
+  },
+  "2071": {
+    "zhCN": "法律",
+    "zhTW": "法律",
+    "enUS": "law"
+  },
+  "2072": {
+    "zhCN": "教育",
+    "zhTW": "教育",
+    "enUS": "education"
+  },
+  "2073": {
+    "zhCN": "排列",
+    "zhTW": "排列",
+    "enUS": "arrange"
+  },
+  "2074": {
+    "zhCN": "为什么、怎么",
+    "zhTW": "為什麼、怎麼",
+    "enUS": "why, how"
+  },
+  "2075": {
+    "zhCN": "自然",
+    "zhTW": "自然",
+    "enUS": "nature"
+  },
+  "2076": {
+    "zhCN": "和平",
+    "zhTW": "和平",
+    "enUS": "peace"
+  },
+  "2077": {
+    "zhCN": "战争",
+    "zhTW": "戰爭",
+    "enUS": "war"
+  },
+  "2078": {
+    "zhCN": "联合国",
+    "zhTW": "聯合國",
+    "enUS": "United Nations"
+  },
+  "2079": {
+    "zhCN": "音乐家",
+    "zhTW": "音樂家",
+    "enUS": "musician"
+  },
+  "2080": {
+    "zhCN": "搅拌、混合",
+    "zhTW": "攪拌、混合",
+    "enUS": "mix, blend"
+  },
+  "2081": {
+    "zhCN": "搅拌器",
+    "zhTW": "攪拌器",
+    "enUS": "mixer"
+  },
+  "2082": {
+    "zhCN": "包、包上",
+    "zhTW": "包、包上",
+    "enUS": "wrap, cover"
+  },
+  "2083": {
+    "zhCN": "计算",
+    "zhTW": "計算",
+    "enUS": "calculate"
+  },
+  "2084": {
+    "zhCN": "赠款袋（装赠款的专用信封）",
+    "zhTW": "贈款袋（裝贈款的專用信封）",
+    "enUS": "envelope for gifts"
+  },
+  "2085": {
+    "zhCN": "体温计",
+    "zhTW": "體溫計",
+    "enUS": "thermometer"
+  },
+  "2086": {
+    "zhCN": "包袱皮",
+    "zhTW": "包袱皮",
+    "enUS": "furoshiki (wrapping cloth)"
+  },
+  "2087": {
+    "zhCN": "算盘",
+    "zhTW": "算盤",
+    "enUS": "abacus"
+  },
+  "2088": {
+    "zhCN": "儿童新闻（虚构的新闻）",
+    "zhTW": "兒童新聞（虛構的新聞）",
+    "enUS": "children's news (fictional news)"
+  },
+  "2089": {
+    "zhCN": "结实",
+    "zhTW": "結實",
+    "enUS": "sturdy"
+  },
+  "2090": {
+    "zhCN": "多少",
+    "zhTW": "多少",
+    "enUS": "how much"
+  },
+  "2091": {
+    "zhCN": "目的",
+    "zhTW": "目的",
+    "enUS": "purpose"
+  },
+  "2092": {
+    "zhCN": "政治",
+    "zhTW": "政治",
+    "enUS": "politics"
+  },
+  "2093": {
+    "zhCN": "文化",
+    "zhTW": "文化",
+    "enUS": "culture"
+  },
+  "2094": {
+    "zhCN": "社会",
+    "zhTW": "社會",
+    "enUS": "society"
+  },
+  "2095": {
+    "zhCN": "论文",
+    "zhTW": "論文",
+    "enUS": "thesis"
+  },
+  "2096": {
+    "zhCN": "罐头",
+    "zhTW": "罐頭",
+    "enUS": "canned food"
+  },
+  "2097": {
+    "zhCN": "罐头起子",
+    "zhTW": "罐頭起子",
+    "enUS": "can opener"
+  },
+  "2098": {
+    "zhCN": "盖子",
+    "zhTW": "蓋子",
+    "enUS": "lid"
+  },
+  "2099": {
+    "zhCN": "瓶起子",
+    "zhTW": "瓶起子",
+    "enUS": "bottle opener"
+  },
+  "2100": {
+    "zhCN": "烧开",
+    "zhTW": "燒開",
+    "enUS": "boil"
+  },
+  "2101": {
+    "zhCN": "烧开水。",
+    "zhTW": "燒開水。",
+    "enUS": "boil water."
+  },
+  "2102": {
+    "zhCN": "水壶",
+    "zhTW": "水壺",
+    "enUS": "kettle"
+  },
+  "2103": {
+    "zhCN": "公共住宅、公寓",
+    "zhTW": "公共住宅、公寓",
+    "enUS": "apartment"
+  },
+  "2104": {
+    "zhCN": "杯面（放在可以扔掉的杯装容器中的方便面）",
+    "zhTW": "杯麵（放在可以丟掉的杯裝容器中的方便麵）",
+    "enUS": "cup noodles (instant noodles in disposable cup)"
+  },
+  "2105": {
+    "zhCN": "鸡肉拉面（方便面的品牌）",
+    "zhTW": "雞肉拉麵（方便麵的品牌）",
+    "enUS": "Chicken Ramen (brand of instant noodles)"
+  },
+  "2106": {
+    "zhCN": "世界最初",
+    "zhTW": "世界最初",
+    "enUS": "the world's first"
+  },
+  "2107": {
+    "zhCN": "安藤百福（日本实业家、发明家）",
+    "zhTW": "安藤百福（日本實業家、發明家）",
+    "enUS": "Ando Momofuku (Japanese entrepreneur, inventor)"
+  },
+  "2108": {
+    "zhCN": "由～、被～",
+    "zhTW": "由～、被～",
+    "enUS": "by ~, be ~"
+  },
+  "2109": {
+    "zhCN": "面条",
+    "zhTW": "麵條",
+    "enUS": "noodles"
+  },
+  "2110": {
+    "zhCN": "扩大、推广",
+    "zhTW": "擴大、推廣",
+    "enUS": "expand, promote"
+  },
+  "2111": {
+    "zhCN": "市场调查",
+    "zhTW": "市場調查",
+    "enUS": "market research"
+  },
+  "2112": {
+    "zhCN": "分、割、切",
+    "zhTW": "分、割、切",
+    "enUS": "divide, cut"
+  },
+  "2113": {
+    "zhCN": "注入、灌入、倒入",
+    "zhTW": "注入、灌入、倒入",
+    "enUS": "pour, inject"
+  },
+  "2114": {
+    "zhCN": "马上、现在就要（用于描写变化即将发生之前的状况）",
+    "zhTW": "馬上、現在就要（用於描寫變化即將發生之前的狀況）",
+    "enUS": "about to (describe a situation just before a change occurs)"
+  },
+  "2115": {
+    "zhCN": "脱落",
+    "zhTW": "脫落",
+    "enUS": "come off"
+  },
+  "2116": {
+    "zhCN": "纽扣脱落。",
+    "zhTW": "紐扣脫落。",
+    "enUS": "The button came off."
+  },
+  "2117": {
+    "zhCN": "哇",
+    "zhTW": "哇",
+    "enUS": "wow"
+  },
+  "2118": {
+    "zhCN": "轻松",
+    "zhTW": "輕鬆",
+    "enUS": "easy"
+  },
+  "2119": {
+    "zhCN": "掉下来",
+    "zhTW": "掉下來",
+    "enUS": "fall down"
+  },
+  "2120": {
+    "zhCN": "行李掉下来。",
+    "zhTW": "行李掉下來。",
+    "enUS": "The luggage fell down."
+  },
+  "2121": {
+    "zhCN": "减少",
+    "zhTW": "減少",
+    "enUS": "decrease"
+  },
+  "2122": {
+    "zhCN": "出口减少。",
+    "zhTW": "出口減少。",
+    "enUS": "Exports decrease."
+  },
+  "2123": {
+    "zhCN": "不好吃",
+    "zhTW": "不好吃",
+    "enUS": "not tasty"
+  },
+  "2124": {
+    "zhCN": "好吃",
+    "zhTW": "好吃",
+    "enUS": "delicious"
+  },
+  "2125": {
+    "zhCN": "带子、绳",
+    "zhTW": "帶子、繩",
+    "enUS": "strap, rope"
+  },
+  "2126": {
+    "zhCN": "断了",
+    "zhTW": "斷了",
+    "enUS": "broken"
+  },
+  "2127": {
+    "zhCN": "绳子断了。",
+    "zhTW": "繩子斷了。",
+    "enUS": "The rope is broken."
+  },
+  "2128": {
+    "zhCN": "上涨",
+    "zhTW": "上漲",
+    "enUS": "rise"
+  },
+  "2129": {
+    "zhCN": "价格上涨。",
+    "zhTW": "價格上漲。",
+    "enUS": "Prices rise."
+  },
+  "2130": {
+    "zhCN": "下降",
+    "zhTW": "下降",
+    "enUS": "fall"
+  },
+  "2131": {
+    "zhCN": "价格下降。",
+    "zhTW": "價格下降。",
+    "enUS": "Prices fall."
+  },
+  "2132": {
+    "zhCN": "增加",
+    "zhTW": "增加",
+    "enUS": "increase"
+  },
+  "2133": {
+    "zhCN": "出口增加。",
+    "zhTW": "出口增加。",
+    "enUS": "Exports increase."
+  },
+  "2134": {
+    "zhCN": "汽油",
+    "zhTW": "汽油",
+    "enUS": "gasoline"
+  },
+  "2135": {
+    "zhCN": "用光了、丢了",
+    "zhTW": "用光了、丟了",
+    "enUS": "used up, lost"
+  },
+  "2136": {
+    "zhCN": "汽油用光了。",
+    "zhTW": "汽油用光了。",
+    "enUS": "The gasoline is used up."
+  },
+  "2137": {
+    "zhCN": "没意思、微不足道、无聊",
+    "zhTW": "沒意思、微不足道、無聊",
+    "enUS": "boring, trivial, uninteresting"
+  },
+  "2138": {
+    "zhCN": "奇怪、不寻常",
+    "zhTW": "奇怪、不尋常",
+    "enUS": "strange, unusual"
+  },
+  "2139": {
+    "zhCN": "奇怪的味道",
+    "zhTW": "奇怪的味道",
+    "enUS": "strange smell"
+  },
+  "2140": {
+    "zhCN": "小册子",
+    "zhTW": "小冊子",
+    "enUS": "brochure"
+  },
+  "2141": {
+    "zhCN": "蔷薇、玫瑰",
+    "zhTW": "薔薇、玫瑰",
+    "enUS": "rose"
+  },
+  "2142": {
+    "zhCN": "兜风",
+    "zhTW": "兜風",
+    "enUS": "drive around"
+  },
+  "2143": {
+    "zhCN": "理由",
+    "zhTW": "理由",
+    "enUS": "reason"
+  },
+  "2144": {
+    "zhCN": "道歉",
+    "zhTW": "道歉",
+    "enUS": "apologize"
+  },
+  "2145": {
+    "zhCN": "认识",
+    "zhTW": "認識",
+    "enUS": "get to know"
+  },
+  "2146": {
+    "zhCN": "幸福",
+    "zhTW": "幸福",
+    "enUS": "happiness"
+  },
+  "2147": {
+    "zhCN": "哭",
+    "zhTW": "哭",
+    "enUS": "cry"
+  },
+  "2148": {
+    "zhCN": "笑",
+    "zhTW": "笑",
+    "enUS": "laugh"
+  },
+  "2149": {
+    "zhCN": "眼泪",
+    "zhTW": "眼淚",
+    "enUS": "tears"
+  },
+  "2150": {
+    "zhCN": "空气",
+    "zhTW": "空氣",
+    "enUS": "air"
+  },
+  "2151": {
+    "zhCN": "安全",
+    "zhTW": "安全",
+    "enUS": "safety"
+  },
+  "2152": {
+    "zhCN": "危险",
+    "zhTW": "危險",
+    "enUS": "danger"
+  },
+  "2153": {
+    "zhCN": "请做成像～的样子。",
+    "zhTW": "請做成像～的樣子。",
+    "enUS": "Please make it look like ~."
+  },
+  "2154": {
+    "zhCN": "您要怎么做？",
+    "zhTW": "您要怎麼做？",
+    "enUS": "What would you like to do?"
+  },
+  "2155": {
+    "zhCN": "剪发",
+    "zhTW": "剪髮",
+    "enUS": "haircut"
+  },
+  "2156": {
+    "zhCN": "洗发",
+    "zhTW": "洗髮",
+    "enUS": "shampoo"
+  },
+  "2157": {
+    "zhCN": "给您怎么剪呢？",
+    "zhTW": "給您怎麼剪呢？",
+    "enUS": "How would you like it cut?"
+  },
+  "2158": {
+    "zhCN": "短发",
+    "zhTW": "短髮",
+    "enUS": "short hair"
+  },
+  "2159": {
+    "zhCN": "这样可以吗？（礼貌的说法）",
+    "zhTW": "這樣可以嗎？（禮貌的說法）",
+    "enUS": "Is this okay? (polite)"
+  },
+  "2160": {
+    "zhCN": "您辛苦了。（在美容院，店员最后对顾客说的客气话）",
+    "zhTW": "您辛苦了。（在美容院，店員最後對顧客說的客氣話）",
+    "enUS": "Thank you for your hard work. (a polite phrase said by staff to customers at a beauty salon)"
+  },
+  "2161": {
+    "zhCN": "发生事故。",
+    "zhTW": "發生事故。",
+    "enUS": "An accident occurs."
+  },
+  "2162": {
+    "zhCN": "厚",
+    "zhTW": "厚",
+    "enUS": "thick"
+  },
+  "2163": {
+    "zhCN": "干了",
+    "zhTW": "乾了",
+    "enUS": "dried"
+  },
+  "2164": {
+    "zhCN": "衬衫干了。",
+    "zhTW": "襯衫乾了。",
+    "enUS": "The shirt is dry."
+  },
+  "2165": {
+    "zhCN": "湿了",
+    "zhTW": "濕了",
+    "enUS": "wet"
+  },
+  "2166": {
+    "zhCN": "衬衫湿了。",
+    "zhTW": "襯衫濕了。",
+    "enUS": "The shirt is wet."
+  },
+  "2167": {
+    "zhCN": "量",
+    "zhTW": "量",
+    "enUS": "amount"
+  },
+  "2168": {
+    "zhCN": "―倍",
+    "zhTW": "―倍",
+    "enUS": "-fold"
+  },
+  "2169": {
+    "zhCN": "（味道）浓、（颜色）深",
+    "zhTW": "（味道）濃、（顏色）深",
+    "enUS": "(taste) strong, (color) deep"
+  },
+  "2170": {
+    "zhCN": "DVD光盘",
+    "zhTW": "DVD光碟",
+    "enUS": "DVD disc"
+  },
+  "2171": {
+    "zhCN": "滑",
+    "zhTW": "滑",
+    "enUS": "to slide"
+  },
+  "2172": {
+    "zhCN": "洗的衣物等",
+    "zhTW": "洗的衣物等",
+    "enUS": "laundry"
+  },
+  "2173": {
+    "zhCN": "（味道）淡、（颜色）浅、薄",
+    "zhTW": "（味道）淡、（顏色）淺、薄",
+    "enUS": "thin (taste), light (color), thin"
+  },
+  "2174": {
+    "zhCN": "广岛宾馆（虚构的饭店）",
+    "zhTW": "廣島賓館（虛構的飯店）",
+    "enUS": "Hiroshima Hotel (fictional hotel)"
+  },
+  "2175": {
+    "zhCN": "单人间",
+    "zhTW": "單人房",
+    "enUS": "single room"
+  },
+  "2176": {
+    "zhCN": "双人间",
+    "zhTW": "雙人房",
+    "enUS": "twin room"
+  },
+  "2177": {
+    "zhCN": "日餐",
+    "zhTW": "和食",
+    "enUS": "Japanese cuisine"
+  },
+  "2178": {
+    "zhCN": "西餐",
+    "zhTW": "洋食",
+    "enUS": "Western cuisine"
+  },
+  "2179": {
+    "zhCN": "小菜",
+    "zhTW": "小菜",
+    "enUS": "side dish"
+  },
+  "2180": {
+    "zhCN": "调节",
+    "zhTW": "調節",
+    "enUS": "to adjust"
+  },
+  "2181": {
+    "zhCN": "粗",
+    "zhTW": "粗",
+    "enUS": "thick"
+  },
+  "2182": {
+    "zhCN": "细",
+    "zhTW": "細",
+    "enUS": "thin"
+  },
+  "2183": {
+    "zhCN": "讨厌、不受欢迎",
+    "zhTW": "討厭、不受歡迎",
+    "enUS": "to dislike, unpopular"
+  },
+  "2184": {
+    "zhCN": "讨厌扫地。",
+    "zhTW": "討厭掃地。",
+    "enUS": "dislikes cleaning."
+  },
+  "2185": {
+    "zhCN": "～得好",
+    "zhTW": "～得好",
+    "enUS": "to do well"
+  },
+  "2186": {
+    "zhCN": "顺序",
+    "zhTW": "順序",
+    "enUS": "order"
+  },
+  "2187": {
+    "zhCN": "安心、放心",
+    "zhTW": "安心、放心",
+    "enUS": "peace of mind"
+  },
+  "2188": {
+    "zhCN": "表达、表现",
+    "zhTW": "表達、表現",
+    "enUS": "expression"
+  },
+  "2189": {
+    "zhCN": "分别、分离",
+    "zhTW": "分開、分離",
+    "enUS": "to part, to separate"
+  },
+  "2190": {
+    "zhCN": "这些",
+    "zhTW": "這些",
+    "enUS": "these"
+  },
+  "2191": {
+    "zhCN": "不吉利",
+    "zhTW": "不吉利",
+    "enUS": "unlucky"
+  },
+  "2192": {
+    "zhCN": "～情况、～场合",
+    "zhTW": "～情況、～場合",
+    "enUS": "~ situation, ~ occasion"
+  },
+  "2193": {
+    "zhCN": "勉强地",
+    "zhTW": "勉強地",
+    "enUS": "forcibly"
+  },
+  "2194": {
+    "zhCN": "保证书",
+    "zhTW": "保證書",
+    "enUS": "guarantee certificate"
+  },
+  "2195": {
+    "zhCN": "收据",
+    "zhTW": "收據",
+    "enUS": "receipt"
+  },
+  "2196": {
+    "zhCN": "梅花",
+    "zhTW": "梅花",
+    "enUS": "plum blossom"
+  },
+  "2197": {
+    "zhCN": "路线",
+    "zhTW": "路線",
+    "enUS": "course"
+  },
+  "2198": {
+    "zhCN": "工作人员",
+    "zhTW": "工作人員",
+    "enUS": "staff member"
+  },
+  "2199": {
+    "zhCN": "出发、开始",
+    "zhTW": "出發、開始",
+    "enUS": "start"
+  },
+  "2200": {
+    "zhCN": "第―位",
+    "zhTW": "第―位",
+    "enUS": "-th place"
+  },
+  "2201": {
+    "zhCN": "获得冠军",
+    "zhTW": "獲得冠軍",
+    "enUS": "to win the championship"
+  },
+  "2202": {
+    "zhCN": "分数",
+    "zhTW": "分數",
+    "enUS": "score"
+  },
+  "2203": {
+    "zhCN": "119（消防局的电话号码）",
+    "zhTW": "119（消防局的電話號碼）",
+    "enUS": "119 (fire department phone number)"
+  },
+  "2204": {
+    "zhCN": "110（警察局的电话号码）",
+    "zhTW": "110（警察局的電話號碼）",
+    "enUS": "110 (police department phone number)"
+  },
+  "2205": {
+    "zhCN": "通知",
+    "zhTW": "通知",
+    "enUS": "to inform"
+  },
+  "2206": {
+    "zhCN": "取消",
+    "zhTW": "取消",
+    "enUS": "to cancel"
+  },
+  "2207": {
+    "zhCN": "中止",
+    "zhTW": "中止",
+    "enUS": "to suspend"
+  },
+  "2208": {
+    "zhCN": "野营",
+    "zhTW": "野營",
+    "enUS": "camping"
+  },
+  "2209": {
+    "zhCN": "到此结束。我的话讲完了。",
+    "zhTW": "到此結束。我的話講完了。",
+    "enUS": "That's all. I've finished speaking."
+  },
+  "2210": {
+    "zhCN": "相信",
+    "zhTW": "相信",
+    "enUS": "to believe"
+  },
+  "2211": {
+    "zhCN": "期待着、盼望着",
+    "zhTW": "期待著、盼望著",
+    "enUS": "looking forward to"
+  },
+  "2212": {
+    "zhCN": "烦恼",
+    "zhTW": "煩惱",
+    "enUS": "worry"
+  },
+  "2213": {
+    "zhCN": "闹钟",
+    "zhTW": "鬧鐘",
+    "enUS": "alarm clock"
+  },
+  "2214": {
+    "zhCN": "大学生",
+    "zhTW": "大學生",
+    "enUS": "university student"
+  },
+  "2215": {
+    "zhCN": "回答",
+    "zhTW": "回答",
+    "enUS": "answer"
+  },
+  "2216": {
+    "zhCN": "响",
+    "zhTW": "響",
+    "enUS": "to ring"
+  },
+  "2217": {
+    "zhCN": "铃响了",
+    "zhTW": "鈴響了",
+    "enUS": "the bell rang"
+  },
+  "2218": {
+    "zhCN": "上（闹钟）",
+    "zhTW": "設定（鬧鐘）",
+    "enUS": "to set (an alarm clock)"
+  },
+  "2219": {
+    "zhCN": "尽管如此",
+    "zhTW": "儘管如此",
+    "enUS": "nevertheless"
+  },
+  "2220": {
+    "zhCN": "现在可以吗？",
+    "zhTW": "現在可以嗎？",
+    "enUS": "Is it okay now?"
+  },
+  "2221": {
+    "zhCN": "这边（说话人方）",
+    "zhTW": "這邊（說話人方）",
+    "enUS": "This side (speaker's side)"
+  },
+  "2222": {
+    "zhCN": "原因",
+    "zhTW": "原因",
+    "enUS": "Reason"
+  },
+  "2223": {
+    "zhCN": "刚才、刚刚（和过去时一起使用，表示完了）",
+    "zhTW": "剛才、剛剛（和過去時一起使用，表示完了）",
+    "enUS": "Just now (used with past tense to indicate completion)"
+  },
+  "2224": {
+    "zhCN": "～那儿",
+    "zhTW": "～那兒",
+    "enUS": "~ over there"
+  },
+  "2225": {
+    "zhCN": "煤气服务中心",
+    "zhTW": "瓦斯服務中心",
+    "enUS": "Gas service center"
+  },
+  "2226": {
+    "zhCN": "煤气灶",
+    "zhTW": "瓦斯爐",
+    "enUS": "Gas stove"
+  },
+  "2227": {
+    "zhCN": "情况、状态",
+    "zhTW": "情況、狀態",
+    "enUS": "Condition, state"
+  },
+  "2228": {
+    "zhCN": "对不起。",
+    "zhTW": "對不起。",
+    "enUS": "I'm sorry."
+  },
+  "2229": {
+    "zhCN": "您是哪位？",
+    "zhTW": "您是哪位？",
+    "enUS": "Who are you?"
+  },
+  "2230": {
+    "zhCN": "让您久等了。",
+    "zhTW": "讓您久等了。",
+    "enUS": "Thank you for waiting."
+  },
+  "2231": {
+    "zhCN": "朝着～去",
+    "zhTW": "朝著～去",
+    "enUS": "Heading towards ~"
+  },
+  "2232": {
+    "zhCN": "正好、刚好",
+    "zhTW": "正好、剛好",
+    "enUS": "Just right, exactly"
+  },
+  "2233": {
+    "zhCN": "出发",
+    "zhTW": "出發",
+    "enUS": "Depart"
+  },
+  "2234": {
+    "zhCN": "公共汽车出发。",
+    "zhTW": "公車出發。",
+    "enUS": "The bus departs."
+  },
+  "2235": {
+    "zhCN": "回来",
+    "zhTW": "回來",
+    "enUS": "Come back"
+  },
+  "2236": {
+    "zhCN": "送达",
+    "zhTW": "送達",
+    "enUS": "Arrive"
+  },
+  "2237": {
+    "zhCN": "行李送达。",
+    "zhTW": "行李送達。",
+    "enUS": "Luggage has arrived."
+  },
+  "2238": {
+    "zhCN": "烧、烤",
+    "zhTW": "烤、烤",
+    "enUS": "Bake, grill"
+  },
+  "2239": {
+    "zhCN": "烤好了",
+    "zhTW": "烤好了",
+    "enUS": "It's baked."
+  },
+  "2240": {
+    "zhCN": "面包烤好了。",
+    "zhTW": "麵包烤好了。",
+    "enUS": "The bread is baked."
+  },
+  "2241": {
+    "zhCN": "肉烤熟了。",
+    "zhTW": "肉烤熟了。",
+    "enUS": "The meat is cooked."
+  },
+  "2242": {
+    "zhCN": "半年",
+    "zhTW": "半年",
+    "enUS": "Half a year"
+  },
+  "2243": {
+    "zhCN": "入学",
+    "zhTW": "入學",
+    "enUS": "Enroll"
+  },
+  "2244": {
+    "zhCN": "大学入学。",
+    "zhTW": "大學入學。",
+    "enUS": "Entering university."
+  },
+  "2245": {
+    "zhCN": "大学毕业。",
+    "zhTW": "大學畢業。",
+    "enUS": "Graduating from university."
+  },
+  "2246": {
+    "zhCN": "快递",
+    "zhTW": "宅配便",
+    "enUS": "Express delivery"
+  },
+  "2247": {
+    "zhCN": "不在",
+    "zhTW": "不在",
+    "enUS": "Not at home"
+  },
+  "2248": {
+    "zhCN": "交给、递交",
+    "zhTW": "交給、遞交",
+    "enUS": "Hand over, submit"
+  },
+  "2249": {
+    "zhCN": "交给小李地图。",
+    "zhTW": "交給小李地圖。",
+    "enUS": "Hand the map to Xiao Li."
+  },
+  "2250": {
+    "zhCN": "运气好",
+    "zhTW": "運氣好",
+    "enUS": "Good luck"
+  },
+  "2251": {
+    "zhCN": "地板",
+    "zhTW": "地板",
+    "enUS": "Floor"
+  },
+  "2252": {
+    "zhCN": "摔倒",
+    "zhTW": "摔倒",
+    "enUS": "Fall down"
+  },
+  "2253": {
+    "zhCN": "铃",
+    "zhTW": "鈴",
+    "enUS": "Bell"
+  },
+  "2254": {
+    "zhCN": "急忙、匆匆忙忙",
+    "zhTW": "急忙、匆匆忙忙",
+    "enUS": "Hastily, in a hurry"
+  },
+  "2255": {
+    "zhCN": "（按）顺序",
+    "zhTW": "（按）順序",
+    "enUS": "(in) order"
+  },
+  "2256": {
+    "zhCN": "发生的事情",
+    "zhTW": "發生的事情",
+    "enUS": "Events that occurred"
+  },
+  "2257": {
+    "zhCN": "根据～（表示信息的出处）",
+    "zhTW": "根據～（表示資訊的來源）",
+    "enUS": "According to ~ (indicating the source of information)"
+  },
+  "2258": {
+    "zhCN": "据报纸",
+    "zhTW": "據報紙",
+    "enUS": "According to the newspaper"
+  },
+  "2259": {
+    "zhCN": "听说～（表示传闻）",
+    "zhTW": "聽說～（表示傳聞）",
+    "enUS": "I heard that ~ (indicating hearsay)"
+  },
+  "2260": {
+    "zhCN": "好像～（表示推测）",
+    "zhTW": "好像～（表示推測）",
+    "enUS": "It seems that ~ (indicating conjecture)"
+  },
+  "2261": {
+    "zhCN": "严厉、严格",
+    "zhTW": "嚴厲、嚴格",
+    "enUS": "Strict, severe"
+  },
+  "2262": {
+    "zhCN": "有（声音、味道等）",
+    "zhTW": "有（聲音、味道等）",
+    "enUS": "Has (sound, taste, etc.)"
+  },
+  "2263": {
+    "zhCN": "有声音。",
+    "zhTW": "有聲音。",
+    "enUS": "There is a sound."
+  },
+  "2264": {
+    "zhCN": "有味道。",
+    "zhTW": "有味道。",
+    "enUS": "There is a taste."
+  },
+  "2265": {
+    "zhCN": "有气味。",
+    "zhTW": "有氣味。",
+    "enUS": "There is a smell."
+  },
+  "2266": {
+    "zhCN": "聚集",
+    "zhTW": "聚集",
+    "enUS": "Gather"
+  },
+  "2267": {
+    "zhCN": "聚集了好多人。",
+    "zhTW": "聚集了好多人。",
+    "enUS": "A lot of people have gathered."
+  },
+  "2268": {
+    "zhCN": "警车",
+    "zhTW": "警車",
+    "enUS": "Police car"
+  },
+  "2269": {
+    "zhCN": "急救车",
+    "zhTW": "救護車",
+    "enUS": "Ambulance"
+  },
+  "2270": {
+    "zhCN": "订婚",
+    "zhTW": "訂婚",
+    "enUS": "Engagement"
+  },
+  "2271": {
+    "zhCN": "有点儿、总觉得（在讲述自己的推测时使用）",
+    "zhTW": "有點兒、總覺得（在講述自己的推測時使用）",
+    "enUS": "Somehow, I feel like (used when expressing one's speculation)"
+  },
+  "2272": {
+    "zhCN": "总觉得好像～",
+    "zhTW": "總覺得好像～",
+    "enUS": "I somehow feel like ~"
+  },
+  "2273": {
+    "zhCN": "严重、厉害",
+    "zhTW": "嚴重、厲害",
+    "enUS": "Severe, intense"
+  },
+  "2274": {
+    "zhCN": "严重的事故",
+    "zhTW": "嚴重的事故",
+    "enUS": "Serious accident"
+  },
+  "2275": {
+    "zhCN": "人口",
+    "zhTW": "人口",
+    "enUS": "Population"
+  },
+  "2276": {
+    "zhCN": "科学",
+    "zhTW": "科學",
+    "enUS": "Science"
+  },
+  "2277": {
+    "zhCN": "医学",
+    "zhTW": "醫學",
+    "enUS": "Medicine"
+  },
+  "2278": {
+    "zhCN": "实验",
+    "zhTW": "實驗",
+    "enUS": "Experiment"
+  },
+  "2279": {
+    "zhCN": "数据",
+    "zhTW": "數據",
+    "enUS": "Data"
+  },
+  "2280": {
+    "zhCN": "总统",
+    "zhTW": "總統",
+    "enUS": "President"
+  },
+  "2281": {
+    "zhCN": "赞成",
+    "zhTW": "贊成",
+    "enUS": "Agree"
+  },
+  "2282": {
+    "zhCN": "反对",
+    "zhTW": "反對",
+    "enUS": "Oppose"
+  },
+  "2283": {
+    "zhCN": "文学",
+    "zhTW": "文學",
+    "enUS": "Literature"
+  },
+  "2284": {
+    "zhCN": "日本文学",
+    "zhTW": "日本文學",
+    "enUS": "Japanese literature"
+  },
+  "2285": {
+    "zhCN": "分手、分别",
+    "zhTW": "分手、分別",
+    "enUS": "Break up, parting"
+  },
+  "2286": {
+    "zhCN": "与人分手。",
+    "zhTW": "與人分手。",
+    "enUS": "Break up with someone."
+  },
+  "2287": {
+    "zhCN": "气味",
+    "zhTW": "氣味",
+    "enUS": "Smell"
+  },
+  "2288": {
+    "zhCN": "垃圾燃烧。",
+    "zhTW": "垃圾燃燒。",
+    "enUS": "The garbage burns."
+  },
+  "2289": {
+    "zhCN": "刮（风）",
+    "zhTW": "刮（風）",
+    "enUS": "Blow (wind)"
+  },
+  "2290": {
+    "zhCN": "刮风。",
+    "zhTW": "刮風。",
+    "enUS": "It's windy."
+  },
+  "2291": {
+    "zhCN": "去世（「しにます」的婉转说法）",
+    "zhTW": "去世（「しにます」的委婉說法）",
+    "enUS": "Pass away (a euphemism for 'shinishimasu')"
+  },
+  "2292": {
+    "zhCN": "化妆",
+    "zhTW": "化妝",
+    "enUS": "Makeup"
+  },
+  "2293": {
+    "zhCN": "女性",
+    "zhTW": "女性",
+    "enUS": "Female"
+  },
+  "2294": {
+    "zhCN": "男性",
+    "zhTW": "男性",
+    "enUS": "Male"
+  },
+  "2295": {
+    "zhCN": "长寿",
+    "zhTW": "長壽",
+    "enUS": "Longevity"
+  },
+  "2296": {
+    "zhCN": "学生（中小学生）",
+    "zhTW": "學生（中小學生）",
+    "enUS": "Student (elementary and middle school)"
+  },
+  "2297": {
+    "zhCN": "您忙吗？（在和上司、长辈打招呼时使用）",
+    "zhTW": "您忙嗎？（在和上司、長輩打招呼時使用）",
+    "enUS": "Are you busy? (used when greeting a superior or elder)"
+  },
+  "2298": {
+    "zhCN": "～期间",
+    "zhTW": "～期間",
+    "enUS": "During ~"
+  },
+  "2299": {
+    "zhCN": "营业",
+    "zhTW": "營業",
+    "enUS": "Business"
+  },
+  "2300": {
+    "zhCN": "到那时为止、在那之前",
+    "zhTW": "到那時為止、在那之前",
+    "enUS": "Until then, before that"
+  },
+  "2301": {
+    "zhCN": "没关系。",
+    "zhTW": "沒關係。",
+    "enUS": "It's okay."
+  },
+  "2302": {
+    "zhCN": "享受、享乐",
+    "zhTW": "享受、享樂",
+    "enUS": "Enjoy, pleasure"
+  },
+  "2303": {
+    "zhCN": "私塾、补习班",
+    "zhTW": "私塾、補習班",
+    "enUS": "Private school, tutoring class"
+  },
+  "2304": {
+    "zhCN": "文件夹",
+    "zhTW": "文件夾",
+    "enUS": "Folder"
+  },
+  "2305": {
+    "zhCN": "投递、递送",
+    "zhTW": "投遞、遞送",
+    "enUS": "Deliver, send"
+  },
+  "2306": {
+    "zhCN": "卸下来（从交通工具上下来，或从高处移到低处）",
+    "zhTW": "卸下來（從交通工具上下來，或從高處移到低處）",
+    "enUS": "Unload (get off from a vehicle or move from a high place to a low place)"
+  },
+  "2307": {
+    "zhCN": "卸下来（从上往下卸下来）",
+    "zhTW": "卸下來（從上往下卸下來）",
+    "enUS": "Unload (take down from above)"
+  },
+  "2308": {
+    "zhCN": "是件好事儿啊。",
+    "zhTW": "是件好事兒啊。",
+    "enUS": "That's a good thing."
+  },
+  "2309": {
+    "zhCN": "录音",
+    "zhTW": "錄音",
+    "enUS": "Record audio"
+  },
+  "2310": {
+    "zhCN": "父母",
+    "zhTW": "父母",
+    "enUS": "Parents"
+  },
+  "2311": {
+    "zhCN": "小学生",
+    "zhTW": "小學生",
+    "enUS": "Elementary school student"
+  },
+  "2312": {
+    "zhCN": "百分之―",
+    "zhTW": "百分之―",
+    "enUS": "Percent"
+  },
+  "2313": {
+    "zhCN": "其次",
+    "zhTW": "其次",
+    "enUS": "Next"
+  },
+  "2314": {
+    "zhCN": "习字、书法",
+    "zhTW": "習字、書法",
+    "enUS": "Calligraphy, writing practice"
+  },
+  "2315": {
+    "zhCN": "普通的",
+    "zhTW": "普通的",
+    "enUS": "Normal"
+  },
+  "2316": {
+    "zhCN": "做（「します」的尊敬语）",
+    "zhTW": "做（「します」的尊敬語）",
+    "enUS": "Do (respectful form of 'shimasu')"
+  },
+  "2317": {
+    "zhCN": "请等一下。",
+    "zhTW": "請等一下。",
+    "enUS": "Please wait a moment."
+  },
+  "2318": {
+    "zhCN": "看（「みます」的尊敬语）",
+    "zhTW": "看（「みます」的尊敬語）",
+    "enUS": "See (respectful form of 'mimasu')"
+  },
+  "2319": {
+    "zhCN": "偶尔",
+    "zhTW": "偶爾",
+    "enUS": "Occasionally"
+  },
+  "2320": {
+    "zhCN": "说、叫（「いいます」的尊敬语）",
+    "zhTW": "說、叫（「いいます」的尊敬語）",
+    "enUS": "Say, call (respectful form of 'iimasu')"
+  },
+  "2321": {
+    "zhCN": "工作",
+    "zhTW": "工作",
+    "enUS": "to work"
+  },
+  "2322": {
+    "zhCN": "在公司工作。",
+    "zhTW": "在公司工作。",
+    "enUS": "I work at a company."
+  },
+  "2323": {
+    "zhCN": "在、去、来（「います」「いきます」「きます」的尊敬语）",
+    "zhTW": "在、去、來（「います」「いきます」「きます」的尊敬語）",
+    "enUS": "to be, to go, to come (respectful form of 'います', 'いきます', 'きます')"
+  },
+  "2324": {
+    "zhCN": "向日葵小学（虚构的小学）",
+    "zhTW": "向日葵小學（虛構的小學）",
+    "enUS": "Sunflower Elementary School (a fictional elementary school)"
+  },
+  "2325": {
+    "zhCN": "―年级―班",
+    "zhTW": "―年級―班",
+    "enUS": "-th grade -th class"
+  },
+  "2326": {
+    "zhCN": "发（烧）",
+    "zhTW": "發（燒）",
+    "enUS": "to emit (fever)"
+  },
+  "2327": {
+    "zhCN": "发烧。",
+    "zhTW": "發燒。",
+    "enUS": "I have a fever."
+  },
+  "2328": {
+    "zhCN": "请代我问好。",
+    "zhTW": "請代我問好。",
+    "enUS": "Please give my regards."
+  },
+  "2329": {
+    "zhCN": "告辞了。（「しつれいします」的谦逊语）",
+    "zhTW": "告辭了。（「しつれいします」的謙遜語）",
+    "enUS": "Excuse me (humble form of 'しつれいします')."
+  },
+  "2330": {
+    "zhCN": "知道（「しっています」的尊敬语）",
+    "zhTW": "知道（「しっています」的尊敬語）",
+    "enUS": "to know (respectful form of 'しっています')"
+  },
+  "2331": {
+    "zhCN": "吃、喝（「たべます」「のみます」的尊敬语）",
+    "zhTW": "吃、喝（「たべます」「のみます」的尊敬語）",
+    "enUS": "to eat, to drink (respectful form of 'たべます', 'のみます')"
+  },
+  "2332": {
+    "zhCN": "坐",
+    "zhTW": "坐",
+    "enUS": "to sit"
+  },
+  "2333": {
+    "zhCN": "坐在椅子上。",
+    "zhTW": "坐在椅子上。",
+    "enUS": "I sit on the chair."
+  },
+  "2334": {
+    "zhCN": "（别人的）夫人（「おくさん」的尊敬语）",
+    "zhTW": "（別人的）夫人（「おくさん」的尊敬語）",
+    "enUS": "(someone else's) wife (respectful form of 'おくさん')"
+  },
+  "2335": {
+    "zhCN": "公共汽车站",
+    "zhTW": "公共汽車站",
+    "enUS": "bus stop"
+  },
+  "2336": {
+    "zhCN": "旅馆",
+    "zhTW": "旅館",
+    "enUS": "inn"
+  },
+  "2337": {
+    "zhCN": "叫～",
+    "zhTW": "叫～",
+    "enUS": "to be called ~"
+  },
+  "2338": {
+    "zhCN": "过、度过",
+    "zhTW": "過、度過",
+    "enUS": "to spend, to pass"
+  },
+  "2339": {
+    "zhCN": "任何一位都（「だれでも」的尊敬语）",
+    "zhTW": "任何一位都（「だれでも」的尊敬語）",
+    "enUS": "anyone (respectful form of 'だれでも')"
+  },
+  "2340": {
+    "zhCN": "山中伸弥（日本医学家）",
+    "zhTW": "山中伸彌（日本醫學家）",
+    "enUS": "Shinya Yamanaka (Japanese medical scientist)"
+  },
+  "2341": {
+    "zhCN": "经历",
+    "zhTW": "經歷",
+    "enUS": "career"
+  },
+  "2342": {
+    "zhCN": "医学部",
+    "zhTW": "醫學部",
+    "enUS": "medical department"
+  },
+  "2343": {
+    "zhCN": "以～为目标",
+    "zhTW": "以～為目標",
+    "enUS": "to aim for ~"
+  },
+  "2344": {
+    "zhCN": "升（学）",
+    "zhTW": "升（學）",
+    "enUS": "to advance (in education)"
+  },
+  "2345": {
+    "zhCN": "iPS细胞（诱导多功能干细胞）",
+    "zhTW": "iPS細胞（誘導多功能幹細胞）",
+    "enUS": "iPS cells (induced pluripotent stem cells)"
+  },
+  "2346": {
+    "zhCN": "开发研制",
+    "zhTW": "開發研製",
+    "enUS": "to develop and manufacture"
+  },
+  "2347": {
+    "zhCN": "老鼠",
+    "zhTW": "老鼠",
+    "enUS": "mouse"
+  },
+  "2348": {
+    "zhCN": "人",
+    "zhTW": "人",
+    "enUS": "person"
+  },
+  "2349": {
+    "zhCN": "诺贝尔奖",
+    "zhTW": "諾貝爾獎",
+    "enUS": "Nobel Prize"
+  },
+  "2350": {
+    "zhCN": "获奖",
+    "zhTW": "獲獎",
+    "enUS": "to receive an award"
+  },
+  "2351": {
+    "zhCN": "演讲会",
+    "zhTW": "演講會",
+    "enUS": "lecture"
+  },
+  "2352": {
+    "zhCN": "日程",
+    "zhTW": "日程",
+    "enUS": "schedule"
+  },
+  "2353": {
+    "zhCN": "寻找、听、访问（「ききます」「いきます」的谦逊语）",
+    "zhTW": "尋找、聽、訪問（「ききます」「いきます」的謙遜語）",
+    "enUS": "to inquire, to listen, to visit (humble form of 'ききます', 'いきます')"
+  },
+  "2354": {
+    "zhCN": "我（「わたし」的谦逊语）",
+    "zhTW": "我（「わたし」的謙遜語）",
+    "enUS": "I (humble form of 'わたし')"
+  },
+  "2355": {
+    "zhCN": "去、来（「いきます」「きます」的谦逊语）",
+    "zhTW": "去、來（「いきます」「きます」的謙遜語）",
+    "enUS": "to go, to come (humble form of 'いきます', 'きます')"
+  },
+  "2356": {
+    "zhCN": "向导",
+    "zhTW": "向導",
+    "enUS": "guide"
+  },
+  "2357": {
+    "zhCN": "江户东京博物馆",
+    "zhTW": "江戶東京博物館",
+    "enUS": "Edo-Tokyo Museum"
+  },
+  "2358": {
+    "zhCN": "在（「います」的谦逊语）",
+    "zhTW": "在（「います」的謙遜語）",
+    "enUS": "to be (humble form of 'います')"
+  },
+  "2359": {
+    "zhCN": "衷心",
+    "zhTW": "衷心",
+    "enUS": "from the heart"
+  },
+  "2360": {
+    "zhCN": "感谢",
+    "zhTW": "感謝",
+    "enUS": "to thank"
+  },
+  "2361": {
+    "zhCN": "紧张",
+    "zhTW": "緊張",
+    "enUS": "to be nervous"
+  },
+  "2362": {
+    "zhCN": "奖金",
+    "zhTW": "獎金",
+    "enUS": "prize money"
+  },
+  "2363": {
+    "zhCN": "长颈鹿",
+    "zhTW": "長頸鹿",
+    "enUS": "giraffe"
+  },
+  "2364": {
+    "zhCN": "时候",
+    "zhTW": "時候",
+    "enUS": "time"
+  },
+  "2365": {
+    "zhCN": "实现",
+    "zhTW": "實現",
+    "enUS": "to realize"
+  },
+  "2366": {
+    "zhCN": "实现梦想。",
+    "zhTW": "實現夢想。",
+    "enUS": "to realize a dream."
+  },
+  "2367": {
+    "zhCN": "声援、支持",
+    "zhTW": "聲援、支持",
+    "enUS": "to support"
+  },
+  "2368": {
+    "zhCN": "吃、喝、得到（「たべます」「のみます」「もらいます」的谦逊语）",
+    "zhTW": "吃、喝、得到（「たべます」「のみます」「もらいます」的謙遜語）",
+    "enUS": "to eat, to drink, to receive (humble form of 'たべます', 'のみます', 'もらいます')"
+  },
+  "2369": {
+    "zhCN": "说、叫（「いいます」的谦逊语）",
+    "zhTW": "說、叫（「いいます」的謙遜語）",
+    "enUS": "to say, to be called (humble form of 'いいます')"
+  },
+  "2370": {
+    "zhCN": "做（「します」的谦逊语）",
+    "zhTW": "做（「します」的謙遜語）",
+    "enUS": "to do (humble form of 'します')}}}]}"
+  },
+  "2371": {
+    "zhCN": "知道（「しります」的谦逊语）",
+    "zhTW": "知道（「しります」的謙遜語）",
+    "enUS": "to know (humble form of 'しります')"
+  },
+  "2372": {
+    "zhCN": "看（「みます」的谦逊语）",
+    "zhTW": "看（「みます」的謙遜語）",
+    "enUS": "to see (humble form of 'みます')"
+  },
+  "2373": {
+    "zhCN": "见面（「あいます」的谦逊语）",
+    "zhTW": "見面（「あいます」的謙遜語）",
+    "enUS": "to meet (humble form of 'あいます')"
+  },
+  "2374": {
+    "zhCN": "首先",
+    "zhTW": "首先",
+    "enUS": "first"
+  },
+  "2375": {
+    "zhCN": "沏、泡",
+    "zhTW": "沖、泡",
+    "enUS": "to brew"
+  },
+  "2376": {
+    "zhCN": "泡咖啡",
+    "zhTW": "泡咖啡",
+    "enUS": "to brew coffee"
+  },
+  "2377": {
+    "zhCN": "准备",
+    "zhTW": "準備",
+    "enUS": "to prepare"
+  },
+  "2378": {
+    "zhCN": "电子邮箱地址",
+    "zhTW": "電子郵件地址",
+    "enUS": "email address"
+  },
+  "2379": {
+    "zhCN": "下下个月",
+    "zhTW": "下下個月",
+    "enUS": "the month after next"
+  },
+  "2380": {
+    "zhCN": "下下个星期",
+    "zhTW": "下下個星期",
+    "enUS": "the week after next"
+  },
+  "2381": {
+    "zhCN": "后年",
+    "zhTW": "後年",
+    "enUS": "the year after next"
+  },
+  "2382": {
+    "zhCN": "致谢、感谢（表达谢意的寒暄语）",
+    "zhTW": "致謝、感謝（表達謝意的寒暄語）",
+    "enUS": "thank you (a polite expression of gratitude)"
+  },
+  "2383": {
+    "zhCN": "（您）身体好吗？（「おげんきですか」的尊敬语）",
+    "zhTW": "（您）身體好嗎？（「おげんきですか」的尊敬語）",
+    "enUS": "How are you? (respectful form of 'おげんきですか')"
+  },
+  "2384": {
+    "zhCN": "添麻烦",
+    "zhTW": "添麻煩",
+    "enUS": "to cause trouble"
+  },
+  "2385": {
+    "zhCN": "慕尼黑（德国）",
+    "zhTW": "慕尼黑（德國）",
+    "enUS": "Munich (Germany)"
+  },
+  "2386": {
+    "zhCN": "发挥、有效地利用",
+    "zhTW": "發揮、有效地利用",
+    "enUS": "to utilize effectively"
+  },
+  "2387": {
+    "zhCN": "法隆寺（公元7世纪初，圣德太子下令修建的位于奈良的寺庙）",
+    "zhTW": "法隆寺（公元7世紀初，聖德太子下令修建的位於奈良的寺廟）",
+    "enUS": "Hōryū-ji (a temple in Nara built in the early 7th century under Prince Shōtoku)"
   }
 }

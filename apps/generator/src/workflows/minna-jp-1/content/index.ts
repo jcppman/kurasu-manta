@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import grammarData from './grammar.json'
-import vocData from './vocs.json'
-import vocTranslationsRaw from './translations/vocs-translations.json'
 import grammarTranslationsRaw from './translations/grammar-translations.json'
+import vocTranslationsRaw from './translations/vocs-translations.json'
+import vocData from './vocs.json'
 
 // Translation schemas
 const translationSchema = z.object({
   zhCN: z.string(),
-  zhTW: z.string(), 
+  zhTW: z.string(),
   enUS: z.string(),
 })
 
@@ -75,37 +75,37 @@ export type MinaGrammar = z.infer<typeof minaGrammarSchema>
 
 export function getVocData(): MinaVocabulary[] {
   const vocTranslations = vocTranslationsSchema.parse(vocTranslationsRaw)
-  
+
   return vocData.map((item, index) => {
     const baseItem = minaVocabularyBaseSchema.parse(item)
     const translations = vocTranslations[baseItem.id.toString()]
-    
+
     return minaVocabularySchema.parse({
       ...baseItem,
       translation: translations || {
         zhCN: baseItem.translation,
         zhTW: baseItem.translation, // Fallback to original
-        enUS: baseItem.translation // Fallback to original
-      }
+        enUS: baseItem.translation, // Fallback to original
+      },
     })
   })
 }
 
 export function getGrammarData(): MinaGrammar[] {
   const grammarTranslations = grammarTranslationsSchema.parse(grammarTranslationsRaw)
-  
+
   return grammarData.map((item, index) => {
     const baseItem = minaGrammarBaseSchema.parse(item)
     const grammarId = (index + 1).toString() // Grammar uses 1-based indexing
     const translations = grammarTranslations[grammarId]
-    
+
     return minaGrammarSchema.parse({
       ...baseItem,
       explanation: translations || {
         zhCN: baseItem.explanation,
         zhTW: baseItem.explanation, // Fallback to original
-        enUS: baseItem.explanation // Fallback to original
-      }
+        enUS: baseItem.explanation, // Fallback to original
+      },
     })
   })
 }
