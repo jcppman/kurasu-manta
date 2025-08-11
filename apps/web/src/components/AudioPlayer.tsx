@@ -6,44 +6,16 @@ import { useEffect, useRef, useState } from 'react'
 interface AudioPlayerProps {
   audioHash: string
   className?: string
+  preload?: boolean
 }
 
-export function AudioPlayer({ audioHash, className = '' }: AudioPlayerProps) {
+export function AudioPlayer({ audioHash, className = '', preload = false }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const audioUrl = `/api/audio/${audioHash}`
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    const handleLoadStart = () => setIsLoading(true)
-    const handleCanPlay = () => {
-      setIsLoading(false)
-      setHasError(false)
-    }
-    const handleError = () => {
-      setIsLoading(false)
-      setHasError(true)
-      setIsPlaying(false)
-    }
-    const handleEnded = () => setIsPlaying(false)
-
-    audio.addEventListener('loadstart', handleLoadStart)
-    audio.addEventListener('canplay', handleCanPlay)
-    audio.addEventListener('error', handleError)
-    audio.addEventListener('ended', handleEnded)
-
-    return () => {
-      audio.removeEventListener('loadstart', handleLoadStart)
-      audio.removeEventListener('canplay', handleCanPlay)
-      audio.removeEventListener('error', handleError)
-      audio.removeEventListener('ended', handleEnded)
-    }
-  }, [])
 
   const togglePlayback = async () => {
     const audio = audioRef.current
@@ -52,15 +24,15 @@ export function AudioPlayer({ audioHash, className = '' }: AudioPlayerProps) {
     try {
       if (isPlaying) {
         audio.pause()
-        setIsPlaying(false)
       } else {
+        setIsLoading(true)
         await audio.play()
-        setIsPlaying(true)
       }
     } catch (error) {
       console.error('Audio playback error:', error)
       setHasError(true)
       setIsPlaying(false)
+      setIsLoading(false)
     }
   }
 
@@ -93,7 +65,36 @@ export function AudioPlayer({ audioHash, className = '' }: AudioPlayerProps) {
       </button>
 
       {/* biome-ignore lint/a11y/useMediaCaption: Pronunciation audio doesn't need captions */}
-      <audio ref={audioRef} src={audioUrl} preload="none" aria-label="Pronunciation audio" />
+      <audio
+        ref={audioRef}
+        src={audioUrl}
+        preload={preload ? 'auto' : 'none'}
+        aria-label="Pronunciation audio"
+        onLoadStart={() => {
+          setIsLoading(true)
+        }}
+        onCanPlay={() => {
+          setIsLoading(false)
+        }}
+        onPlaying={() => {
+          setIsPlaying(true)
+          setIsLoading(false)
+        }}
+        onPause={() => {
+          setIsPlaying(false)
+        }}
+        onEnded={() => {
+          setIsPlaying(false)
+        }}
+        onError={(e) => {
+          setHasError(true)
+          setIsLoading(false)
+        }}
+        onSuspend={() => {
+          setIsPlaying(false)
+          setIsLoading(false)
+        }}
+      />
     </div>
   )
 }

@@ -1,4 +1,8 @@
-import type { Annotation } from '@kurasu-manta/content-schema/zod'
+import {
+  type Annotation,
+  type KnowledgePoint,
+  isVocabulary,
+} from '@kurasu-manta/content-schema/zod'
 
 /**
  * Check if an annotation is a furigana annotation
@@ -11,7 +15,7 @@ export function isFuriganaAnnotation(annotation: Annotation): boolean {
  * Filter annotations to only include furigana annotations
  */
 export function getFuriganaAnnotations(annotations: Annotation[]): Annotation[] {
-  return annotations.filter(isFuriganaAnnotation)
+  return annotations.filter(isFuriganaAnnotation).sort((a, b) => a.loc - b.loc)
 }
 
 /**
@@ -48,4 +52,36 @@ export function getAnnotationColor(
     default:
       return 'bg-gray-100 border-gray-300 text-gray-800'
   }
+}
+
+export function getSegments(
+  knowledgePoint: KnowledgePoint
+): Array<{ text: string; furigana?: string }> {
+  if (!isVocabulary(knowledgePoint)) {
+    return [{ text: knowledgePoint.content }]
+  }
+  const segments: Array<{ text: string; furigana?: string }> = []
+
+  const furiganaAnnotations = getFuriganaAnnotations(knowledgePoint.annotations)
+  let index = 0
+  for (const annotation of furiganaAnnotations) {
+    // all content AFTER the furigana annotation to a { text } segment
+    const textBeforeFurigana = knowledgePoint.content.slice(index, annotation.loc)
+    if (textBeforeFurigana) {
+      segments.push({ text: textBeforeFurigana })
+    }
+    // add the furigana annotation as a segment
+    segments.push({
+      text: knowledgePoint.content.slice(annotation.loc, annotation.loc + annotation.len),
+      furigana: annotation.content,
+    })
+    index = annotation.loc + annotation.len
+  }
+  // the rest
+  const textAfterAllAnnotations = knowledgePoint.content.slice(index)
+  if (textAfterAllAnnotations) {
+    segments.push({ text: textAfterAllAnnotations })
+  }
+
+  return segments
 }

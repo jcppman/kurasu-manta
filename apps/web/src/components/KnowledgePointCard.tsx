@@ -1,8 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { getSegments } from '@/lib/annotations'
 import { KNOWLEDGE_POINT_TYPES } from '@kurasu-manta/content-schema/common'
-import type { KnowledgePoint } from '@kurasu-manta/content-schema/zod'
+import { type KnowledgePoint, isVocabulary } from '@kurasu-manta/content-schema/zod'
 import type { Lesson } from '@kurasu-manta/content-schema/zod'
 import { useRouter } from 'next/navigation'
 import { AudioPlayer } from './AudioPlayer'
@@ -31,32 +32,19 @@ export function KnowledgePointCard({
     router.push(`/sentences?${params.toString()}`)
   }
 
+  const kpIsVocabulary = isVocabulary(knowledgePoint)
+
   return (
     <div className="p-8 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left w-full">
       <h3 className="font-semibold mb-2 flex items-center gap-2">
         <span>
-          {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY &&
-          knowledgePoint.annotations ? (
-            <FuriganaText
-              segments={
-                knowledgePoint.annotations.filter((ann) => ann.type.toLowerCase() === 'furigana')
-                  .length > 0
-                  ? [
-                      {
-                        text: knowledgePoint.content,
-                        furigana: knowledgePoint.annotations.find(
-                          (ann) => ann.type.toLowerCase() === 'furigana'
-                        )?.content,
-                      },
-                    ]
-                  : [{ text: knowledgePoint.content }]
-              }
-            />
+          {kpIsVocabulary ? (
+            <FuriganaText segments={getSegments(knowledgePoint)} />
           ) : (
-            knowledgePoint.content
+            <>{knowledgePoint.content}</>
           )}
         </span>
-        {knowledgePoint.type === KNOWLEDGE_POINT_TYPES.VOCABULARY && knowledgePoint.audio && (
+        {'audio' in knowledgePoint && knowledgePoint.audio && (
           <AudioPlayer audioHash={knowledgePoint.audio} />
         )}
       </h3>
