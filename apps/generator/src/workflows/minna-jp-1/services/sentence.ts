@@ -34,6 +34,47 @@ export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowled
   return `<${parentTagName} id="${input.id}">${result}</${parentTagName}>`
 }
 
+async function repairAnnotatedSentence(
+  annotatedSentence: string,
+  originalSentence: string,
+  error: string
+): Promise<string> {
+  const prompt = `
+You are a Japanese annotation expert fixing malformed furigana annotations.
+
+CORRECT ANNOTATION FORMAT:
+1. Each kanji gets individual furigana: kanji[hiragana]
+2. For compound words with okurigana, only annotate the kanji reading portion:
+   - CORRECT: お願[ねが]い (only the kanji 願 gets [ねが])
+   - WRONG: お願[おねが]い (includes okurigana in annotation)
+3. No spaces, no extra punctuation in brackets
+4. Keep all other characters exactly as they are
+
+EXAMPLES OF CORRECT REPAIRS:
+- "お名[な]前[まえ]は何[なん]ですか" ✓
+- "中[ちゅう]国[こく]人[じん]です" ✓
+- "お願[ねが]いします" ✓
+- "学[がく]校[こう]に行[い]きます" ✓
+
+PROBLEM: The annotation parsing failed with this error: "${error}"
+
+ORIGINAL SENTENCE: "${originalSentence}"
+MALFORMED ANNOTATION: "${annotatedSentence}"
+
+Fix the malformed annotation and return ONLY the corrected annotated sentence.
+  `
+
+  const { object } = await generateObject({
+    model: openai('gpt-4o-mini'),
+    prompt,
+    schema: z.object({
+      repairedSentence: z.string(),
+    }),
+  })
+
+  return object.repairedSentence.trim()
+}
+
 export async function generateFuriganaAnnotations(sentence: string): Promise<Annotation[]> {
   const prompt = `
 You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
@@ -41,9 +82,14 @@ You are a Japanese language annotation expert. Your task is to add furigana anno
 ANNOTATION RULES:
 1. Add furigana for ALL kanji characters using the format: kanji[hiragana]
 2. IMPORTANT: Annotate EACH kanji individually, even in compound words (e.g., 家[か]族[ぞく], NOT 家族[かぞく])
-3. Do NOT add furigana to hiragana, katakana, or punctuation
-4. Keep all other characters exactly as they are
-5. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
+3. CRITICAL: For compound words with okurigana (trailing hiragana), only annotate the kanji reading portion:
+   - CORRECT: お願[ねが]い (kanji 願 gets [ねが], okurigana い stays separate)
+   - WRONG: お願[おねが]い (includes okurigana お and い in the reading)
+   - CORRECT: 買[か]い (kanji 買 gets [か], okurigana い stays separate)
+   - WRONG: 買い[かい] (includes okurigana い in the reading)
+4. Do NOT add furigana to hiragana, katakana, or punctuation
+5. Keep all other characters exactly as they are
+6. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
 
 CONTEXT-DEPENDENT READING EXAMPLES:
 - 何 as "what" in questions: なん (何ですか → 何[なん]ですか)
@@ -53,9 +99,6 @@ CONTEXT-DEPENDENT READING EXAMPLES:
 - 一 in compound words: いっ (一番 → 一[いち]番[ばん])
 - 人 after numbers: にん (三人 → 三[さん]人[にん])
 - 人 as "person": ひと (人が → 人[ひと]が)
-
-SENTENCE TO ANNOTATE:
-"${sentence}"
 
 OUTPUT FORMAT:
 Return the sentence with furigana annotations in brackets. Do NOT provide JSON or any other format.
@@ -76,7 +119,13 @@ Output: "何[なん]人[にん]いますか"
 Input: "中国人です"
 Output: "中[ちゅう]国[こく]人[じん]です"
 
+Input: どうぞよろしくお願いします。
+Output: どうぞよろしくお願[ねが]いします。
+
 Return only the annotated sentence with no additional text.
+
+SENTENCE TO ANNOTATE:
+"${sentence}"
   `
 
   const { object } = await generateObject({
@@ -88,7 +137,38 @@ Return only the annotated sentence with no additional text.
   })
 
   // Parse the annotated sentence to generate position-based annotations
-  return parseAnnotatedSentenceToAnnotations(object.annotatedSentence, sentence)
+  const maxRepairAttempts = 3
+  let annotatedSentence = object.annotatedSentence
+
+  for (let attempt = 0; attempt <= maxRepairAttempts; attempt++) {
+    try {
+      return parseAnnotatedSentenceToAnnotations(annotatedSentence, sentence)
+    } catch (error) {
+      if (attempt === maxRepairAttempts) {
+        // Final attempt failed, throw the original error
+        logger.error(
+          `Annotation parsing failed after ${maxRepairAttempts} repair attempts for sentence: "${sentence}"`
+        )
+        throw error
+      }
+
+      // Try to repair the annotation
+      logger.warn(`Annotation parsing failed (attempt ${attempt + 1}), trying to repair: ${error}`)
+      try {
+        annotatedSentence = await repairAnnotatedSentence(
+          annotatedSentence,
+          sentence,
+          error instanceof Error ? error.message : String(error)
+        )
+        logger.info(`Repaired annotation: "${annotatedSentence}"`)
+      } catch (repairError) {
+        logger.error(`Annotation repair failed: ${repairError}`)
+        throw error // Throw original parsing error if repair fails
+      }
+    }
+  }
+
+  throw new Error('Unexpected end of repair loop')
 }
 
 export function parseAnnotatedSentenceToAnnotations(
@@ -170,11 +250,6 @@ async function generateTranslationsForSentences(
   const prompt = `
 You are a professional translator providing accurate translations of Japanese sentences.
 
-Your task is to translate each Japanese sentence into Chinese (Simplified) and English.
-
-SENTENCES TO TRANSLATE:
-${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
-
 TRANSLATION GUIDELINES:
 - Provide natural, accurate translations that convey the original meaning
 - Chinese translations should use Simplified Chinese characters
@@ -185,6 +260,9 @@ TRANSLATION GUIDELINES:
 
 OUTPUT FORMAT:
 Return translations in the same order as the input sentences.
+
+SENTENCES TO TRANSLATE:
+${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
   `
 
   const { object } = await generateObject({
@@ -201,7 +279,7 @@ Return translations in the same order as the input sentences.
   })
 
   // Validate all translations
-  const validatedTranslations = object.translations.map((translation, index) => {
+  return object.translations.map((translation, index) => {
     if (!translation?.zhCN?.trim() || !translation?.enUS?.trim()) {
       throw new Error(`Empty translation generated for sentence: ${sentences[index]}`)
     }
@@ -210,8 +288,6 @@ Return translations in the same order as the input sentences.
       enUS: translation.enUS.trim(),
     }
   })
-
-  return validatedTranslations
 }
 
 export async function generateSentenceExplanations(
@@ -298,12 +374,6 @@ async function rateSentences(
   const prompt = `
 You are a Japanese language expert rating sentences for educational use. You must be critical and selective - most sentences should receive scores below 8.
 
-TARGET KNOWLEDGE POINT TO DEMONSTRATE:
-${knowledgeDetails(targetKnowledge)}
-
-SENTENCES TO RATE:
-${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
-
 RATING CRITERIA (1-10 scale, be strict):
 
 **HIGH SCORES (8-10)**: Reserve for exceptional sentences that are:
@@ -329,6 +399,12 @@ EXAMPLES OF WHAT TO PREFER:
 Be critical - only give high scores to truly excellent, natural sentences that students would benefit from learning.
 
 Rate each sentence with a score (1-10) and brief reasoning.
+
+TARGET KNOWLEDGE POINT TO DEMONSTRATE:
+${knowledgeDetails(targetKnowledge)}
+
+SENTENCES TO RATE:
+${sentences.map((sentence, index) => `${index + 1}. ${sentence}`).join('\n')}
   `
 
   const { object } = await generateObject({
@@ -380,169 +456,6 @@ interface ValidationResult {
   }>
 }
 
-async function validatePronunciationConsistency(
-  sentenceContent: string,
-  targetVocabularies: Vocabulary[]
-): Promise<boolean> {
-  if (targetVocabularies.length === 0) {
-    return true
-  }
-
-  // Build vocabulary context with expected pronunciations
-  const vocabularyContext = targetVocabularies
-    .filter((vocab) => vocab.annotations.some((ann) => ann.type === 'furigana'))
-    .map((vocab) => {
-      const furiganaAnnotation = vocab.annotations.find((ann) => ann.type === 'furigana')
-      return `${vocab.content}[${furiganaAnnotation?.content}]`
-    })
-    .join(', ')
-
-  if (!vocabularyContext) {
-    return true // No furigana to validate
-  }
-
-  const prompt = `
-You are a Japanese pronunciation expert. Check if target vocabulary maintains consistent pronunciation in the given sentence context.
-
-SENTENCE: ${sentenceContent}
-
-TARGET VOCABULARY WITH EXPECTED PRONUNCIATIONS:
-${vocabularyContext}
-
-TASK:
-For each target vocabulary item that appears in the sentence, verify that it maintains its expected pronunciation in the sentence context.
-
-VALIDATION RULES:
-- If vocabulary appears in a context where its pronunciation would change from the expected reading, mark as INVALID
-- Common pronunciation changes to watch for:
-  - Numbers with counters (e.g., 九 changes from 'きゅう' to 'ここの' in 九つ)
-  - Kanji with multiple readings in different contexts
-  - Words that change reading based on grammatical position
-- Only mark as INVALID if the pronunciation definitively changes from the stored reading
-
-OUTPUT:
-Return true if all target vocabulary maintains expected pronunciation.
-Return false if any target vocabulary would be pronounced differently than expected.`
-
-  const { object } = await generateObject({
-    model: openai('gpt-4o-mini'),
-    prompt,
-    schema: z.object({
-      valid: z.boolean(),
-      reason: z.string().optional(),
-    }),
-  })
-
-  if (!object.valid) {
-    logger.warn(
-      `Pronunciation inconsistency detected in sentence: ${sentenceContent}, reason: ${object.reason}`
-    )
-  }
-
-  return object.valid
-}
-
-export async function validateSentence(
-  sentence: Omit<GeneratedSentence, 'annotations' | 'explanation'>,
-  availableVocabularies: Vocabulary[]
-): Promise<boolean> {
-  // evaluate if the sentence is valid and is not too similar to existing sentences
-  // get existing sentences from ALL related knowledge points (both vocabulary and grammar)
-
-  // Get all knowledge point IDs (both vocabulary and grammar)
-  const allKnowledgePointIds = [...sentence.vocabularyIds, ...sentence.grammarIds]
-
-  if (allKnowledgePointIds.length > 0) {
-    // Use CourseContentService to query sentences related to these knowledge points
-    const courseContentService = new CourseContentService(db)
-    const existingSentences =
-      await courseContentService.getSentencesByKnowledgePointIds(allKnowledgePointIds)
-
-    // Normalize function to remove punctuation and whitespace
-    const normalizeContent = (content: string) => content.replace(/[、。！？\s]/g, '').trim()
-    const newSentenceNormalized = normalizeContent(sentence.content)
-
-    // Check for duplicates
-    const isDuplicate = existingSentences.some(
-      (s) => normalizeContent(s.content) === newSentenceNormalized
-    )
-
-    if (isDuplicate) {
-      logger.warn(`Duplicate sentence found: ${sentence.content}`)
-      return false
-    }
-  }
-
-  // Get vocabulary details for context from provided vocabularies
-  const targetVocabularies = availableVocabularies.filter((v) =>
-    sentence.vocabularyIds.includes(v.id)
-  )
-
-  const targetWords = targetVocabularies.map((v) => v.content).join(', ')
-
-  // First check pronunciation consistency for target vocabularies
-  const pronunciationValid = await validatePronunciationConsistency(
-    sentence.content,
-    targetVocabularies
-  )
-  if (!pronunciationValid) {
-    return false
-  }
-
-  // check if the sentence is correct
-  const prompt = `
-You are a Japanese language expert evaluating sentences for a Japanese textbook.
-
-SENTENCE TO EVALUATE:
-${sentence.content}
-
-TARGET VOCABULARY BEING DEMONSTRATED:
-${targetWords}
-
-EVALUATION CRITERIA:
-This sentence demonstrates target vocabulary for language learners. Balance educational goals with natural language patterns.
-
-ACCEPT sentences that are:
-- Grammatically correct and naturally flowing
-- Logically consistent and realistic
-- Appropriate for educational contexts
-- Using target vocabulary in natural, believable situations
-
-REJECT IF:
-1. **Grammar Violations**: Incorrect particles, verb conjugations, or structural patterns
-2. **Honorific Misuse**: Using respectful language incorrectly about oneself or impossible contexts
-3. **Logical Issues**: Tense-time mismatches or contradictory information
-4. **Unnatural Constructions**: Awkward stacking of modifiers, overly complex descriptions, or artificial-sounding combinations that native speakers wouldn't use
-5. **Unrealistic Scenarios**: Situations that feel contrived or wouldn't occur in real life
-
-EDUCATIONAL BALANCE:
-- Target vocabulary should be used in natural, believable contexts
-- Prefer simple, clear sentences over complex constructions
-- Formal vocabulary (like '貴方') is acceptable when used appropriately, but avoid artificially forcing multiple target words into unnatural combinations
-- Sentences should sound like something a native speaker might actually say or encounter
-
-EVALUATION:
-Output true if grammatically correct, natural-sounding, and suitable for educational use.
-Output false for sentences that would confuse students due to grammar errors, unnatural constructions, or overly artificial combinations.
-`
-  const {
-    object: { valid, reason },
-  } = await generateObject({
-    model: openai('gpt-4o-mini'),
-    prompt,
-    schema: z.object({
-      valid: z.boolean(),
-      reason: z.string().optional(),
-    }),
-  })
-
-  if (!valid) {
-    logger.warn(`Invalid sentence found: ${sentence.content}, reason: ${reason}`)
-  }
-
-  return valid
-}
-
 export async function validateSentences(
   sentences: Omit<GeneratedSentence, 'annotations' | 'explanation'>[],
   availableVocabularies: Vocabulary[]
@@ -586,17 +499,6 @@ export async function validateSentences(
   const prompt = `
 You are a Japanese language expert evaluating multiple sentences for a Japanese textbook.
 
-SENTENCES TO EVALUATE:
-${sentences
-  .map((s, i) => `${i + 1}. "${s.content}" (Uses vocabulary IDs: ${s.vocabularyIds.join(', ')})`)
-  .join('\n')}
-
-TARGET VOCABULARY WITH EXPECTED PRONUNCIATIONS:
-${vocabularyContext || 'None with furigana'}
-
-EXISTING SENTENCES (avoid duplicates):
-${existingSentencesContext}
-
 EVALUATION CRITERIA:
 Each sentence must pass ALL these checks to be valid:
 
@@ -624,6 +526,17 @@ For each sentence, provide:
 - pronunciationValid: true/false
 - overallValid: true only if BOTH grammar and pronunciation are valid AND not duplicate
 - reason: Brief explanation if invalid
+
+SENTENCES TO EVALUATE:
+${sentences
+  .map((s, i) => `${i + 1}. "${s.content}" (Uses vocabulary IDs: ${s.vocabularyIds.join(', ')})`)
+  .join('\n')}
+
+TARGET VOCABULARY WITH EXPECTED PRONUNCIATIONS:
+${vocabularyContext || 'None with furigana'}
+
+EXISTING SENTENCES (avoid duplicates):
+${existingSentencesContext}
 `
 
   const { object } = await generateObject({
@@ -696,31 +609,6 @@ export async function generateSentencesFromPrioritizedBuckets({
   const prompt = `
 You are a Japanese language teacher creating example sentences for students learning Japanese.
 
-Generate exactly ${batchSize} simple, natural Japanese sentences.
-
-PRIMARY TARGET (MUST demonstrate clearly):
-${knowledgeDetails(target, isVocabulary(target) ? 'vocabulary' : 'grammar')}
-
-EXISTING SENTENCES FOR TARGET KNOWLEDGE (avoid generating similar ones):
-${existingSentencesSection}
-
-SUPPORTING KNOWLEDGE (use naturally when appropriate):
-=== HIGH PRIORITY ===
-<vocabulary>
-${high.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
-</vocabulary>
-<grammar>
-${high.grammar.map((g) => knowledgeDetails(g)).join('\n')}
-</grammar>
-
-=== LOW PRIORITY (background knowledge) ===
-<vocabulary>
-${low.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
-</vocabulary>
-<grammar>
-${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
-</grammar>
-
 CRITICAL REQUIREMENTS:
 1. PRIMARY FOCUS: Each sentence MUST clearly demonstrate the target knowledge point
 2. PRONUNCIATION CONSISTENCY: Use target vocabulary ONLY in contexts where it maintains its stored pronunciation
@@ -753,6 +641,31 @@ EXAMPLES:
 - Sentence: "今、三時五分です" → Tokens: ["今", "、", "三時五分", "です"]
 
 Create clear, simple sentences that help students understand the target knowledge point.
+
+Generate exactly ${batchSize} simple, natural Japanese sentences.
+
+PRIMARY TARGET (MUST demonstrate clearly):
+${knowledgeDetails(target, isVocabulary(target) ? 'vocabulary' : 'grammar')}
+
+EXISTING SENTENCES FOR TARGET KNOWLEDGE (avoid generating similar ones):
+${existingSentencesSection}
+
+SUPPORTING KNOWLEDGE (use naturally when appropriate):
+=== HIGH PRIORITY ===
+<vocabulary>
+${high.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
+</vocabulary>
+<grammar>
+${high.grammar.map((g) => knowledgeDetails(g)).join('\n')}
+</grammar>
+
+=== LOW PRIORITY (background knowledge) ===
+<vocabulary>
+${low.vocabularies.map((v) => knowledgeDetails(v)).join('\n')}
+</vocabulary>
+<grammar>
+${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
+</grammar>
   `
 
   const allVocabularies = [
@@ -882,10 +795,17 @@ Create clear, simple sentences that help students understand the target knowledg
     logger.warn(`${failedCount} sentences failed to generate annotations`)
   }
 
+  // Early exit if no sentences were successfully generated
+  if (generated.length === 0) {
+    throw new Error(
+      `No sentences were successfully generated for target knowledge point: ${target.content}. All sentences failed annotation parsing. This prevents infinite loops.`
+    )
+  }
+
   return generated
 }
 
-async function getPrioritizedKnowledgePointsByLessonNumber(
+export async function getPrioritizedKnowledgePointsByLessonNumber(
   lessonNumber: number
 ): Promise<PrioritizedBuckets> {
   const courseContentService = new CourseContentService(db)
@@ -924,11 +844,13 @@ async function getPrioritizedKnowledgePointsByLessonNumber(
       return { knowledgePoint: kp, deficit, currentCount, targetCount }
     })
     .sort((a, b) => {
+      const diff = b.deficit - a.deficit
+      if (diff !== 0) return diff // sort by deficit first
+
       // grammar has higher priority than vocabulary
       if (isGrammar(a.knowledgePoint) && isVocabulary(b.knowledgePoint)) return -1
       if (isVocabulary(a.knowledgePoint) && isGrammar(b.knowledgePoint)) return 1
-      // sort by deficit
-      return b.deficit - a.deficit
+      return 0
     })
 
   // Select the knowledge point with highest deficit as target
