@@ -1,21 +1,12 @@
 import { KnowledgePointCard } from '@/components/KnowledgePointCard'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { getLessonById } from '@/server/lessons'
 import Link from 'next/link'
-
-interface Lesson {
-  id: number
-  title?: string
-  description?: string
-}
-
-interface KnowledgePoint {
-  id: number
-  content: string
-  explanation: { en?: string }
-  type: string
-  lessonId: number
-  sentenceCount?: number
-}
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   try {
@@ -27,6 +18,9 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
     }
 
     const { lesson, knowledgePoints } = data
+
+    const grammarPoints = knowledgePoints.filter((kp) => kp.type === 'grammar')
+    const vocabularyPoints = knowledgePoints.filter((kp) => kp.type === 'vocabulary')
 
     return (
       <div className="container mx-auto p-8">
@@ -40,23 +34,49 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
         {lesson.description && <p className="text-gray-700 mb-6">{lesson.description}</p>}
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Knowledge Points</h2>
+        {knowledgePoints.length === 0 ? (
+          <p className="text-gray-500">No knowledge points found for this lesson.</p>
+        ) : (
+          <Accordion type="multiple" className="w-full">
+            {grammarPoints.length > 0 && (
+              <AccordionItem value="grammar">
+                <AccordionTrigger className="text-xl font-semibold">
+                  Grammar ({grammarPoints.length})
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                    {grammarPoints.map((kp) => (
+                      <KnowledgePointCard
+                        key={kp.id}
+                        knowledgePoint={kp}
+                        sentenceCount={kp.sentenceCount}
+                      />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
 
-          {knowledgePoints.length === 0 ? (
-            <p className="text-gray-500">No knowledge points found for this lesson.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {knowledgePoints.map((kp) => (
-                <KnowledgePointCard
-                  key={kp.id}
-                  knowledgePoint={kp}
-                  sentenceCount={kp.sentenceCount}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+            {vocabularyPoints.length > 0 && (
+              <AccordionItem value="vocabulary">
+                <AccordionTrigger className="text-xl font-semibold">
+                  Vocabulary ({vocabularyPoints.length})
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                    {vocabularyPoints.map((kp) => (
+                      <KnowledgePointCard
+                        key={kp.id}
+                        knowledgePoint={kp}
+                        sentenceCount={kp.sentenceCount}
+                      />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
+          </Accordion>
+        )}
       </div>
     )
   } catch (error) {
