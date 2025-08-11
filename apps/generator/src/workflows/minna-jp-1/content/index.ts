@@ -30,7 +30,13 @@ export type MinaVocabulary = z.infer<typeof minaVocabularySchema>
 export type MinaGrammar = z.infer<typeof minaGrammarSchema>
 
 export function getVocData(): MinaVocabulary[] {
-  return vocData.map((item) => minaVocabularySchema.parse(item))
+  return vocData
+    .map((item) => minaVocabularySchema.parse(item))
+    .map((item) => ({
+      ...item,
+      // in source data the verb accent is the accent of the normal form, which is not what we want
+      accent: item.pos.startsWith('動') ? undefined : item.accent,
+    }))
 }
 export function getGrammarData(): MinaGrammar[] {
   return grammarData.map((item) => minaGrammarSchema.parse(item))
