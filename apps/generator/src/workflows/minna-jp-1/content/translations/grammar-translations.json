@@ -1,0 +1,362 @@
+{
+  "1": {
+    "zhCN": "表示肯定，~是~（人名、國籍、職業、年齡）",
+    "zhTW": "表示肯定，~是~（人名、國籍、職業、年齡）",
+    "enUS": "Affirmative statement: ~ is ~ (name, nationality, occupation, age)"
+  },
+  "2": {
+    "zhCN": "表示否定，~不是~ e.g: 田中さんは学生じゃありません。",
+    "zhTW": "表示否定，~不是~ 例：田中さんは学生じゃありません。",
+    "enUS": "Negative statement: ~ is not ~. e.g: Tanaka-san is not a student."
+  },
+  "3": {
+    "zhCN": "~是~嗎？",
+    "zhTW": "~是~嗎？",
+    "enUS": "Question form: Is ~ ~?"
+  },
+  "4": {
+    "zhCN": "名詞 1 表示名詞 2 的屬性。e.g: IMCの会社員",
+    "zhTW": "名詞1表示名詞2的屬性。例：IMCの会社員",
+    "enUS": "Noun 1 describes an attribute of Noun 2. e.g: IMC company employee"
+  },
+  "5": {
+    "zhCN": "表示同前，也",
+    "zhTW": "表示同前，也",
+    "enUS": "Also, too (indicates something is the same as mentioned before)"
+  },
+  "6": {
+    "zhCN": "年齡的說法",
+    "zhTW": "年齡的說法",
+    "enUS": "Expression for age"
+  },
+  "7": {
+    "zhCN": "這個／那個／那個（遠處）",
+    "zhTW": "這個／那個／那個（遠處）",
+    "enUS": "Demonstrative pronouns: this/that (near listener)/that (far from both)"
+  },
+  "8": {
+    "zhCN": "~是~，或是~",
+    "zhTW": "~是~，還是~",
+    "enUS": "Alternative question: Is it ~ or ~?"
+  },
+  "9": {
+    "zhCN": "詢問內容、種類",
+    "zhTW": "詢問內容、種類",
+    "enUS": "Asking about content or type: what kind of ~"
+  },
+  "10": {
+    "zhCN": "詢問物品所有者，是誰的呢？",
+    "zhTW": "詢問物品所有者，是誰的呢？",
+    "enUS": "Asking about ownership: whose ~ is it?"
+  },
+  "11": {
+    "zhCN": "答語中，代替問句中出現的名詞使用。e.g: 佐藤さんのです。",
+    "zhTW": "答語中，代替問句中出現的名詞使用。例：佐藤さんのです。",
+    "enUS": "Substituting noun in answers with の. e.g: It's Sato-san's."
+  },
+  "12": {
+    "zhCN": "這個／那個／那個（遠處）+ 名詞",
+    "zhTW": "這個／那個／那個（遠處）+ 名詞",
+    "enUS": "Demonstrative adjectives: this/that/that (far) + noun"
+  },
+  "13": {
+    "zhCN": "這裡／那裡／那裡（遠處）",
+    "zhTW": "這裡／那裡／那裡（遠處）",
+    "enUS": "Location words: here/there (near listener)/over there (far from both)"
+  },
+  "14": {
+    "zhCN": "用於詢問所在的場所",
+    "zhTW": "用於詢問所在的場所",
+    "enUS": "Asking about location: Where is ~?"
+  },
+  "15": {
+    "zhCN": "表示人、物所在的場所",
+    "zhTW": "表示人、物所在的場所",
+    "enUS": "Indicating the location where people or things are"
+  },
+  "16": {
+    "zhCN": "這邊／那邊／那邊（遠處）",
+    "zhTW": "這邊／那邊／那邊（遠處）",
+    "enUS": "Polite direction words: this way/that way/that way (over there)"
+  },
+  "17": {
+    "zhCN": "問國家名、公司名、學校名時用「どちら」更有禮貌",
+    "zhTW": "問國家名、公司名、學校名時用「どちら」更有禮貌",
+    "enUS": "Polite way to ask about countries, companies, or schools using どちら"
+  },
+  "18": {
+    "zhCN": "製造生產國或生產公司（品牌）",
+    "zhTW": "製造生產國或生產公司（品牌）",
+    "enUS": "Asking about country of manufacture or company/brand"
+  },
+  "19": {
+    "zhCN": "價錢的講法",
+    "zhTW": "價錢的說法",
+    "enUS": "Asking about price: How much is it?"
+  },
+  "20": {
+    "zhCN": "現在~點~分",
+    "zhTW": "現在~點~分",
+    "enUS": "Current time: It's ~ o'clock ~ minutes now"
+  },
+  "21": {
+    "zhCN": "從~到~",
+    "zhTW": "從~到~",
+    "enUS": "From ~ to ~ (time/place range)"
+  },
+  "22": {
+    "zhCN": "在~時間做~",
+    "zhTW": "在~時間做~",
+    "enUS": "Doing something at a specific time"
+  },
+  "23": {
+    "zhCN": "從~到~",
+    "zhTW": "從~到~",
+    "enUS": "From (time) to (time)"
+  },
+  "24": {
+    "zhCN": "動詞的現在肯定、現在否定、過去肯定、過去否定形",
+    "zhTW": "動詞的現在肯定、現在否定、過去肯定、過去否定形",
+    "enUS": "Verb forms: present affirmative/negative, past affirmative/negative"
+  },
+  "25": {
+    "zhCN": "「へ」表示動作動作移動的方向，往~，朝~",
+    "zhTW": "「へ」表示動作移動的方向，往~，朝~",
+    "enUS": "Particle へ indicates direction of movement: going to/toward ~"
+  },
+  "26": {
+    "zhCN": "移動交通工具的助詞「で」，使用～",
+    "zhTW": "移動交通工具的助詞「で」，使用～",
+    "enUS": "Particle で for transportation method: going by ~"
+  },
+  "27": {
+    "zhCN": "「と」表示行為動作的共同者，和~",
+    "zhTW": "「と」表示行為動作的共同者，和~",
+    "enUS": "Particle と indicates companion: going with ~"
+  },
+  "28": {
+    "zhCN": "日期、月份等表現",
+    "zhTW": "日期、月份等表現",
+    "enUS": "Going on specific dates, months, etc."
+  },
+  "29": {
+    "zhCN": "助詞「を」的用法。e.g: 音楽を聞きます（聽音樂）",
+    "zhTW": "助詞「を」的用法。例：音楽を聞きます（聽音樂）",
+    "enUS": "Direct object particle を. e.g: listening to music"
+  },
+  "30": {
+    "zhCN": "做~",
+    "zhTW": "做~",
+    "enUS": "Doing ~ (with noun + します)"
+  },
+  "31": {
+    "zhCN": "在（場所）~做~",
+    "zhTW": "在（場所）~做~",
+    "enUS": "Doing something at a place (location + で)"
+  },
+  "32": {
+    "zhCN": "連接兩個動作的「それから」",
+    "zhTW": "連接兩個動作的「それから」",
+    "enUS": "Connecting two actions with それから (and then)"
+  },
+  "33": {
+    "zhCN": "表示邀請，要不要（一起）~呢？",
+    "zhTW": "表示邀請，要不要（一起）~呢？",
+    "enUS": "Invitation form: Won't you ~ (with me)?"
+  },
+  "34": {
+    "zhCN": "表示積極的提議、邀請",
+    "zhTW": "表示積極的提議、邀請",
+    "enUS": "Active suggestion or invitation: Let's ~"
+  },
+  "35": {
+    "zhCN": "用~工具",
+    "zhTW": "用~工具",
+    "enUS": "Using a tool/instrument with で"
+  },
+  "36": {
+    "zhCN": "用~語言",
+    "zhTW": "用~語言",
+    "enUS": "Using a language with で"
+  },
+  "37": {
+    "zhCN": "~用~叫做~，要詢問個詞或句子用其他語言怎麼說時使用。e.g: 「ありがとう」は英語で何ですか？",
+    "zhTW": "~用~叫做~，要詢問某個詞或句子用其他語言怎麼說時使用。例：「ありがとう」は英語で何ですか？",
+    "enUS": "What is ~ called in ~ language? Used to ask how to say words in other languages."
+  },
+  "38": {
+    "zhCN": "給某人某物",
+    "zhTW": "給某人某物",
+    "enUS": "Giving something to someone (giver's perspective)"
+  },
+  "39": {
+    "zhCN": "從某人那裡得到某物",
+    "zhTW": "從某人那裡得到某物",
+    "enUS": "Receiving something from someone (receiver's perspective)"
+  },
+  "40": {
+    "zhCN": "已經~了",
+    "zhTW": "已經~了",
+    "enUS": "Already ~ (completed action)"
+  },
+  "41": {
+    "zhCN": "い形容詞、な形容詞",
+    "zhTW": "い形容詞、な形容詞",
+    "enUS": "i-adjectives and na-adjectives"
+  },
+  "42": {
+    "zhCN": "形容詞的肯定句",
+    "zhTW": "形容詞的肯定句",
+    "enUS": "Affirmative sentences with adjectives"
+  },
+  "43": {
+    "zhCN": "形容詞的否定句",
+    "zhTW": "形容詞的否定句",
+    "enUS": "Negative sentences with adjectives"
+  },
+  "44": {
+    "zhCN": "程度副詞：很、不太",
+    "zhTW": "程度副詞：很、不太",
+    "enUS": "Degree adverbs: very, not very"
+  },
+  "45": {
+    "zhCN": "不僅~，而且~／雖然，但是",
+    "zhTW": "不僅~，而且~／雖然，但是",
+    "enUS": "Not only ~ but also ~ / Although ~ but ~"
+  },
+  "46": {
+    "zhCN": "什麼樣的（名詞）呢？",
+    "zhTW": "什麼樣的（名詞）呢？",
+    "enUS": "What kind of (noun) is it?"
+  },
+  "47": {
+    "zhCN": "表示同意或思考，是呢／讓我想想",
+    "zhTW": "表示同意或思考，是呢／讓我想想",
+    "enUS": "Expressing agreement or thinking: Yes, that's right / Let me think"
+  },
+  "48": {
+    "zhCN": "我喜歡~/不喜歡~",
+    "zhTW": "我喜歡~/不喜歡~",
+    "enUS": "Like/dislike ~ (using が particle)"
+  },
+  "49": {
+    "zhCN": "對xxx拿手/不拿手",
+    "zhTW": "對xxx拿手/不拿手",
+    "enUS": "Good at/bad at ~ (skill level)"
+  },
+  "50": {
+    "zhCN": "懂",
+    "zhTW": "懂",
+    "enUS": "Understanding/knowing ~ (comprehension)"
+  },
+  "51": {
+    "zhCN": "有~",
+    "zhTW": "有~",
+    "enUS": "Having ~ (possession)"
+  },
+  "52": {
+    "zhCN": "因為所以",
+    "zhTW": "因為所以",
+    "enUS": "Because ~ (reason and result)"
+  },
+  "53": {
+    "zhCN": "頻率副詞：經常／大致／很多／一點／不太／完全不",
+    "zhTW": "頻率副詞：經常／大致／很多／一點／不太／完全不",
+    "enUS": "Frequency adverbs: often/generally/a lot/a little/not much/not at all"
+  },
+  "54": {
+    "zhCN": "在某處有某物",
+    "zhTW": "在某處有某物",
+    "enUS": "There is something at a place (existence of objects)"
+  },
+  "55": {
+    "zhCN": "在某處有人、動物",
+    "zhTW": "在某處有人、動物",
+    "enUS": "There is someone/animal at a place (existence of living beings)"
+  },
+  "56": {
+    "zhCN": "方向、位置",
+    "zhTW": "方向、位置",
+    "enUS": "Directions and positions: up/down/front/back/right/left/inside/outside/next to/near/between"
+  },
+  "57": {
+    "zhCN": "某物在某處",
+    "zhTW": "某物在某處",
+    "enUS": "Something is at a place (location of objects)"
+  },
+  "58": {
+    "zhCN": "人・動物在某處",
+    "zhTW": "人・動物在某處",
+    "enUS": "People/animals are at a place (location of living beings)"
+  },
+  "59": {
+    "zhCN": "有有等等",
+    "zhTW": "有~有~等等",
+    "enUS": "And ~ and ~ etc. (partial listing)"
+  },
+  "60": {
+    "zhCN": "表示存在的句型",
+    "zhTW": "表示存在的句型",
+    "enUS": "Existence sentence patterns (あります/います)"
+  },
+  "61": {
+    "zhCN": "數量的說法",
+    "zhTW": "數量的說法",
+    "enUS": "Expressing quantities and numbers"
+  },
+  "62": {
+    "zhCN": "扁平、薄的東西的計數",
+    "zhTW": "扁平、薄的東西的計數",
+    "enUS": "Counter for flat, thin objects (sheets, papers, etc.)"
+  },
+  "63": {
+    "zhCN": "人數的計數",
+    "zhTW": "人數的計數",
+    "enUS": "Counting people"
+  },
+  "64": {
+    "zhCN": "動作的頻率",
+    "zhTW": "動作的頻率",
+    "enUS": "Frequency of actions"
+  },
+  "65": {
+    "zhCN": "詢問時間的長度",
+    "zhTW": "詢問時間的長度",
+    "enUS": "Asking about duration: How long?"
+  },
+  "66": {
+    "zhCN": "花費（時間、金錢）",
+    "zhTW": "花費（時間、金錢）",
+    "enUS": "Taking/costing (time, money)"
+  },
+  "67": {
+    "zhCN": "動詞、形容詞、名詞的各種形態",
+    "zhTW": "動詞、形容詞、名詞的各種形態",
+    "enUS": "Various forms of verbs, adjectives, and nouns"
+  },
+  "68": {
+    "zhCN": "な形容詞／名詞的過去形、過去否定形",
+    "zhTW": "な形容詞／名詞的過去形、過去否定形",
+    "enUS": "Past and past negative forms of na-adjectives and nouns"
+  },
+  "69": {
+    "zhCN": "い形容詞的過去形、過去否定形",
+    "zhTW": "い形容詞的過去形、過去否定形",
+    "enUS": "Past and past negative forms of i-adjectives"
+  },
+  "70": {
+    "zhCN": "比較",
+    "zhTW": "比較",
+    "enUS": "Comparison: A is more ~ than B"
+  },
+  "71": {
+    "zhCN": "二個的選擇、～和～哪一個比較～",
+    "zhTW": "二個的選擇、～和～哪一個比較～",
+    "enUS": "Choosing between two: Which is more ~ between ~ and ~?"
+  },
+  "72": {
+    "zhCN": "範圍內的選擇",
+    "zhTW": "範圍內的選擇",
+    "enUS": "Superlative within a range: ~ is the most ~ among/in ~"
+  }
+}
