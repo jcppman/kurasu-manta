@@ -283,6 +283,19 @@ export class CourseContentService {
   }
 
   /**
+   * Update a knowledge point
+   * @param id The knowledge point ID to update
+   * @param knowledgePoint The updated knowledge point data
+   * @returns The updated knowledge point, or null if not found
+   */
+  async updateKnowledgePoint(
+    id: number,
+    knowledgePoint: KnowledgePoint
+  ): Promise<KnowledgePoint | null> {
+    return this.knowledgeRepository.update(id, knowledgePoint)
+  }
+
+  /**
    * Get all sentences with optional filtering and pagination
    * @param filters Filtering conditions
    * @param pagination Pagination parameters (supports both page-based and offset-based)

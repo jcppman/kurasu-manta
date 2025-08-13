@@ -261,7 +261,7 @@ describe('SentenceRepository', () => {
       await sentenceRepo.associateWithKnowledgePoint(sentence3.id, kp1.id)
 
       // Filter by minLessonNumber = 2 (should include lessons 1 and 2)
-      const result = await sentenceRepo.getMany({ minLessonNumber: 2 })
+      const result = await sentenceRepo.getMany({ maxLessonNumber: 2 })
       const sentenceIds = result.items.map((s) => s.id)
 
       expect(result.items.length).toBe(2)
@@ -310,7 +310,7 @@ describe('SentenceRepository', () => {
       // Should return sentences 1 and 2 (both associated with kp1 and have minLessonNumber <= 2)
       const result = await sentenceRepo.getMany({
         knowledgePointId: kp1.id,
-        minLessonNumber: 2,
+        maxLessonNumber: 2,
       })
       const sentenceIds = result.items.map((s) => s.id)
 
@@ -392,11 +392,11 @@ describe('SentenceRepository', () => {
 
       // Associate first 3 sentences with kp1 (and also with kp2 to test duplicates)
       for (let i = 0; i < 3; i++) {
-        await sentenceRepo.associateWithKnowledgePoint(sentences[i].id, kp1.id)
-        await sentenceRepo.associateWithKnowledgePoint(sentences[i].id, kp2.id)
+        await sentenceRepo.associateWithKnowledgePoint(sentences[i]?.id ?? 0, kp1.id)
+        await sentenceRepo.associateWithKnowledgePoint(sentences[i]?.id ?? 0, kp2.id)
       }
       // Last sentence only with kp2
-      await sentenceRepo.associateWithKnowledgePoint(sentences[3].id, kp2.id)
+      await sentenceRepo.associateWithKnowledgePoint(sentences[3]?.id ?? 0, kp2.id)
 
       // Test pagination with knowledgePointId filter
       const page1 = await sentenceRepo.getMany({ knowledgePointId: kp1.id }, { page: 1, limit: 2 })
@@ -416,7 +416,7 @@ describe('SentenceRepository', () => {
       // Ensure no duplicates and correct filtering
       expect(new Set(allIds).size).toBe(allIds.length)
       expect(allIds.length).toBe(3)
-      expect(allIds).not.toContain(sentences[3].id) // Last sentence should be excluded
+      expect(allIds).not.toContain(sentences[3]?.id) // Last sentence should be excluded
     })
   })
 

@@ -26,7 +26,7 @@ export class SentenceRepository {
   async getMany(
     conditions: {
       knowledgePointId?: number
-      minLessonNumber?: number
+      maxLessonNumber?: number
     } = {},
     pagination?: PaginationParams
   ): Promise<PaginatedResult<Sentence>> {
@@ -40,8 +40,8 @@ export class SentenceRepository {
 
       filters.push(inArray(sentencesTable.id, subquery))
     }
-    if (conditions.minLessonNumber !== undefined) {
-      filters.push(lte(sentencesTable.minLessonNumber, conditions.minLessonNumber))
+    if (conditions.maxLessonNumber !== undefined) {
+      filters.push(lte(sentencesTable.minLessonNumber, conditions.maxLessonNumber))
     }
 
     // If no pagination provided, return all results
