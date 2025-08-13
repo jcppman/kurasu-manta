@@ -5,22 +5,33 @@ import {
   cleanSentences,
   cleanVocabularies,
   createGrammarLessons,
-  createSentencesForLesson,
   createSentencesForLessons,
   createVocabularies,
+  updateExplanationsFromDataSource,
 } from './services/data'
 
-export async function execute() {
-  // await cleanGrammar()
-  // await createGrammarLessons()
-  //await cleanVocabularies()
-  //await createVocabularies()
+export async function execute({
+  untilLessonNumber,
+  clean = false,
+}: { untilLessonNumber: number; clean: boolean }) {
+  if (clean) {
+    await cleanGrammar()
+    await cleanVocabularies()
+    await cleanSentences()
+  }
+
+  await createGrammarLessons(untilLessonNumber)
+  await createVocabularies(untilLessonNumber)
+  await createSentencesForLessons(untilLessonNumber)
+
   await generateVocabularyAudioClips()
-  //await cleanSentences()
-  await createSentencesForLessons(5)
+  // await updateExplanationsFromDataSource()
 }
 
-execute()
+execute({
+  untilLessonNumber: 10,
+  clean: false,
+})
   .then(() => {
     logger.info('Workflow completed successfully')
     process.exit(0)

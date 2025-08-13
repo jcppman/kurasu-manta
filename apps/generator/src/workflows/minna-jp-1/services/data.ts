@@ -2,12 +2,8 @@ import db from '@/db'
 import { knowledgePointsTable, sentenceKnowledgePointsTable, sentencesTable } from '@/db/schema'
 import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
-import {
-  generateSentencesForLessonNumber,
-  getTargetSentenceCount,
-} from '@/workflows/minna-jp-1/services/sentence'
-import { findPosOfVocabulary } from '@/workflows/minna-jp-1/services/vocabulary'
 import { CourseContentService } from '@kurasu-manta/content-schema/service'
+import type { CreateKnowledgePoint } from '@kurasu-manta/content-schema/zod'
 import { eq } from 'drizzle-orm'
 import {
   type MinaGrammar,
@@ -15,6 +11,8 @@ import {
   getGrammarData,
   getVocData,
 } from 'src/workflows/minna-jp-1/content'
+import { findPosOfVocabulary } from './knowledge-point'
+import { generateSentencesForLessonNumber, getTargetSentenceCount } from './sentence'
 
 export async function cleanVocabularies() {
   logger.info('Resetting database - dropping vocabulary knowledge points...')
@@ -98,15 +96,34 @@ async function createLesson(lessonNumber: number, vocabularies: MinaVocabulary[]
     })
   }
 
-  // 2. Process vocabularies (POS lookup)
-  const noPos = vocabularies.filter((v) => !v.pos)
+  // 2. Filter out vocabularies that already exist as knowledge points
+  const vocabulariesToCreate = []
+  for (const v of vocabularies) {
+    const existingKnowledgePoint = await findExistingKnowledgePoint(
+      courseContentService,
+      v.content,
+      'vocabulary',
+      lesson.id
+    )
+
+    if (!existingKnowledgePoint) {
+      vocabulariesToCreate.push(v)
+    }
+  }
+
+  if (vocabulariesToCreate.length === 0) {
+    return // Nothing to create
+  }
+
+  // 3. Process vocabularies that need to be created (POS lookup)
+  const noPos = vocabulariesToCreate.filter((v) => !v.pos)
   for (const voc of noPos) {
     voc.pos = await findPosOfVocabulary(voc)
   }
 
-  // 3. Create knowledge points with proper lesson ID
+  // 4. Create knowledge points with proper lesson ID
   await courseContentService.createKnowledgePoints(
-    vocabularies.map((v) => ({
+    vocabulariesToCreate.map((v) => ({
       lessonId: lesson.id, // Real database ID
       type: 'vocabulary',
       content: v.content,
@@ -130,37 +147,50 @@ async function createGrammarLesson(lessonNumber: number, grammarItems: MinaGramm
     })
   }
 
-  // 2. Create grammar knowledge points with proper lesson ID
-  return courseContentService.createKnowledgePoints(
-    grammarItems.map((g) => ({
-      lessonId: lesson.id, // Real database ID
-      type: 'grammar',
-      content: g.content,
-      annotations: [],
-      explanation: g.explanation, // Now multilingual object
-    }))
-  )
+  // 2. Create grammar knowledge points with proper lesson ID, but only if they don't already exist
+  const grammarToCreate: CreateKnowledgePoint[] = []
+  for (const g of grammarItems) {
+    const existingKnowledgePoint = await findExistingKnowledgePoint(
+      courseContentService,
+      g.content,
+      'grammar',
+      lesson.id
+    )
+
+    if (!existingKnowledgePoint) {
+      grammarToCreate.push({
+        lessonId: lesson.id, // Real database ID
+        type: 'grammar',
+        content: g.content,
+        explanation: g.explanation, // Now multilingual object
+      })
+    }
+  }
+
+  if (grammarToCreate.length > 0) {
+    return courseContentService.createKnowledgePoints(grammarToCreate)
+  }
+
+  return []
 }
 
-export async function createVocabularies() {
+export async function createVocabularies(untilLessonNumber: number = Number.POSITIVE_INFINITY) {
   logger.info('Creating lessons...')
   const data = getVocData()
 
   // Group by lesson
-  const groupedData = data.reduce((acc, item) => {
-    const lesson = item.lesson
-    acc.set(lesson, acc.get(lesson) ?? [])
-    acc.get(lesson)?.push(item)
-    return acc
-  }, new Map<number, MinaVocabulary[]>())
+  const groupedData = data
+    .filter((d) => d.lesson <= untilLessonNumber)
+    .reduce((acc, item) => {
+      const lesson = item.lesson
+      acc.set(lesson, acc.get(lesson) ?? [])
+      acc.get(lesson)?.push(item)
+      return acc
+    }, new Map<number, MinaVocabulary[]>())
 
   let completedLessons = 0
 
   for (const [lessonNumber, lessonVocabularies] of groupedData.entries()) {
-    if (lessonNumber > 25) {
-      continue // skip lesson 26 and above
-    }
-
     logger.info(`Processing lesson ${lessonNumber}...`)
     await createLesson(lessonNumber, lessonVocabularies)
 
@@ -170,17 +200,19 @@ export async function createVocabularies() {
   logger.info('All lessons created successfully')
 }
 
-export async function createGrammarLessons() {
+export async function createGrammarLessons(untilLessonNumber: number = Number.POSITIVE_INFINITY) {
   logger.info('Creating grammar lessons...')
   const data = getGrammarData()
 
   // Group by lesson
-  const groupedData = data.reduce((acc, item) => {
-    const lesson = item.lesson
-    acc.set(lesson, acc.get(lesson) ?? [])
-    acc.get(lesson)?.push(item)
-    return acc
-  }, new Map<number, MinaGrammar[]>())
+  const groupedData = data
+    .filter((d) => d.lesson <= untilLessonNumber)
+    .reduce((acc, item) => {
+      const lesson = item.lesson
+      acc.set(lesson, acc.get(lesson) ?? [])
+      acc.get(lesson)?.push(item)
+      return acc
+    }, new Map<number, MinaGrammar[]>())
 
   let completedLessons = 0
 
@@ -264,4 +296,139 @@ export async function createSentencesForLessons(
   }
 
   logger.info('All sentences created successfully for lessons up to', untilLessonNumber)
+}
+async function findExistingKnowledgePoint(
+  courseContentService: CourseContentService,
+  content: string,
+  type: 'vocabulary' | 'grammar',
+  lessonId: number
+) {
+  // Get knowledge points filtered by lessonId and type
+  const { items: knowledgePoints } = await courseContentService.getKnowledgePointsByConditions({
+    lessonId,
+    type,
+  })
+
+  // Find the one with matching content
+  return knowledgePoints.find((kp) => kp.content === content)
+}
+
+async function findKnowledgePointByContentTypeAndLesson(
+  courseContentService: CourseContentService,
+  content: string,
+  type: 'vocabulary' | 'grammar',
+  lessonNumber: number
+) {
+  // Get lesson ID from lesson number
+  const lesson = await courseContentService.getLessonByNumber(lessonNumber)
+  if (!lesson) {
+    return null
+  }
+
+  // Get knowledge points filtered by lessonId and type
+  const { items: knowledgePoints } = await courseContentService.getKnowledgePointsByConditions({
+    lessonId: lesson.id,
+    type,
+  })
+
+  // Find the one with matching content
+  return knowledgePoints.find((kp) => kp.content === content)
+}
+
+export async function updateExplanationsFromDataSource() {
+  logger.info('Updating explanation fields from data source...')
+  const courseContentService = new CourseContentService(db)
+
+  let vocSuccessCount = 0
+  let vocFailCount = 0
+  let grammarSuccessCount = 0
+  let grammarFailCount = 0
+
+  // Update vocabulary explanations
+  logger.info('Updating vocabulary explanations...')
+  const vocData = getVocData()
+
+  for (const voc of vocData) {
+    try {
+      const existingKnowledgePoint = await findKnowledgePointByContentTypeAndLesson(
+        courseContentService,
+        voc.content,
+        'vocabulary',
+        voc.lesson
+      )
+
+      if (!existingKnowledgePoint) {
+        logger.warn(
+          `Vocabulary knowledge point not found for content: ${voc.content} in lesson ${voc.lesson}`
+        )
+        vocFailCount++
+        continue
+      }
+
+      // Update the explanation field with the multilingual translation
+      const updatedKnowledgePoint = {
+        ...existingKnowledgePoint,
+        explanation: voc.translation,
+      }
+
+      await courseContentService.updateKnowledgePoint(
+        existingKnowledgePoint.id,
+        updatedKnowledgePoint
+      )
+
+      logger.info(`Updated vocabulary explanation for: ${voc.content} in lesson ${voc.lesson}`)
+      vocSuccessCount++
+    } catch (error) {
+      logger.error(`Failed to update vocabulary explanation for ${voc.content}:`, error)
+      vocFailCount++
+    }
+  }
+
+  // Update grammar explanations
+  logger.info('Updating grammar explanations...')
+  const grammarData = getGrammarData()
+
+  for (const grammar of grammarData) {
+    try {
+      const existingKnowledgePoint = await findKnowledgePointByContentTypeAndLesson(
+        courseContentService,
+        grammar.content,
+        'grammar',
+        grammar.lesson
+      )
+
+      if (!existingKnowledgePoint) {
+        logger.warn(
+          `Grammar knowledge point not found for content: ${grammar.content} in lesson ${grammar.lesson}`
+        )
+        grammarFailCount++
+        continue
+      }
+
+      // Update the explanation field with the multilingual explanation
+      const updatedKnowledgePoint = {
+        ...existingKnowledgePoint,
+        explanation: grammar.explanation,
+      }
+
+      await courseContentService.updateKnowledgePoint(
+        existingKnowledgePoint.id,
+        updatedKnowledgePoint
+      )
+
+      logger.info(`Updated grammar explanation for: ${grammar.content} in lesson ${grammar.lesson}`)
+      grammarSuccessCount++
+    } catch (error) {
+      logger.error(`Failed to update grammar explanation for ${grammar.content}:`, error)
+      grammarFailCount++
+    }
+  }
+
+  // Summary
+  logger.info('Update completed!')
+  logger.info(`Vocabulary - Success: ${vocSuccessCount}, Failed: ${vocFailCount}`)
+  logger.info(`Grammar - Success: ${grammarSuccessCount}, Failed: ${grammarFailCount}`)
+  logger.info(
+    `Total - Success: ${vocSuccessCount + grammarSuccessCount}, Failed: ${vocFailCount + grammarFailCount}`
+  )
 }

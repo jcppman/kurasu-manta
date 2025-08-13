@@ -44,6 +44,8 @@ async function repairAnnotatedSentence(
   originalSentence: string,
   error: string
 ): Promise<string> {
+  logger.debug(`correcting furigana annotations for ${annotatedSentence}`)
+  logger.debug(`original sentence: ${originalSentence}`)
   const prompt = `
 You are a Japanese annotation expert fixing malformed furigana annotations.
 
@@ -54,17 +56,24 @@ CORRECT ANNOTATION FORMAT:
    - WRONG: お願[おねが]い (includes okurigana in annotation)
 3. No spaces, no extra punctuation in brackets
 4. Keep all other characters exactly as they are
+5. NEVER annotate non-kanji characters (hiragana, katakana, punctuation, etc.)
+6. NEVER change hiragana words to kanji - if the original sentence uses hiragana, keep it as hiragana
 
 EXAMPLES OF CORRECT REPAIRS:
 - "お名[な]前[まえ]は何[なん]ですか" ✓
 - "中[ちゅう]国[こく]人[じん]です" ✓
 - "お願[ねが]いします" ✓
 - "学[がく]校[こう]に行[い]きます" ✓
+- "これ[これ]はコーヒーですか" => "これはコーヒーですか"
+- "それはコンピュータ[こんぴゅーた]ですか" => "それはコンピュータですか"
+- "ひらがな[ひらがな]" => "ひらがな"
+- "カタカナ[かたかな]" => "カタカナ"
+- "雑誌をくださって、どうも有[あ]難[が]とうございます" => "雑誌をくださって、どうもありがとうございます"
 
 PROBLEM: The annotation parsing failed with this error: "${error}"
 
 ORIGINAL SENTENCE: "${originalSentence}"
-MALFORMED ANNOTATION: "${annotatedSentence}"
+MALFORMED ANNOTATED SENTENCE: "${annotatedSentence}"
 
 Fix the malformed annotation and return ONLY the corrected annotated sentence.
   `
@@ -95,6 +104,8 @@ ANNOTATION RULES:
 4. Do NOT add furigana to hiragana, katakana, or punctuation
 5. Keep all other characters exactly as they are
 6. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
+7. NEVER annotate katakana words (e.g., keep "コンピュータ" as is, not "コンピュータ[こんぴゅーた]")
+8. NEVER change hiragana words to kanji (e.g., keep "ありがとう" as is, not "有[あ]難[が]とう")
 
 CONTEXT-DEPENDENT READING EXAMPLES:
 - 何 as "what" in questions: なん (何ですか → 何[なん]ですか)
@@ -474,9 +485,32 @@ export async function validateSentences(
     return { results: [] }
   }
 
+  // First, remove duplicates within the input batch
+  const seenContent = new Set<string>()
+  const deduplicatedSentences = sentences.filter((sentence, index) => {
+    const normalizedContent = sentence.content.trim()
+    if (seenContent.has(normalizedContent)) {
+      logger.warn(`Duplicate sentence found in batch at index ${index}: "${sentence.content}"`)
+      return false
+    }
+    seenContent.add(normalizedContent)
+    return true
+  })
+
+  if (deduplicatedSentences.length < sentences.length) {
+    logger.info(
+      `Removed ${sentences.length - deduplicatedSentences.length} duplicate sentences from batch`
+    )
+  }
+
+  // If all sentences were duplicates, return empty results
+  if (deduplicatedSentences.length === 0) {
+    return { results: [] }
+  }
+
   // Get existing sentences from ALL related knowledge points to check for duplicates
   const allKnowledgePointIds = [
-    ...new Set(sentences.flatMap((s) => [...s.vocabularyIds, ...s.grammarIds])),
+    ...new Set(deduplicatedSentences.flatMap((s) => [...s.vocabularyIds, ...s.grammarIds])),
   ]
 
   let existingSentences: { content: string }[] = []
@@ -487,7 +521,7 @@ export async function validateSentences(
   }
 
   // Build vocabulary context for pronunciation validation
-  const allTargetVocabularyIds = [...new Set(sentences.flatMap((s) => s.vocabularyIds))]
+  const allTargetVocabularyIds = [...new Set(deduplicatedSentences.flatMap((s) => s.vocabularyIds))]
   const targetVocabularies = availableVocabularies.filter((v) =>
     allTargetVocabularyIds.includes(v.id)
   )
@@ -538,7 +572,7 @@ For each sentence, provide:
 - reason: Brief explanation if invalid
 
 SENTENCES TO EVALUATE:
-${sentences
+${deduplicatedSentences
   .map((s, i) => `${i + 1}. "${s.content}" (Uses vocabulary IDs: ${s.vocabularyIds.join(', ')})`)
   .join('\n')}
 
