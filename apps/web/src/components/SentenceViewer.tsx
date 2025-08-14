@@ -1,12 +1,9 @@
 'use client'
 
-import {
-  getAnnotationColor,
-  getNonFuriganaAnnotations,
-  isFuriganaAnnotation,
-} from '@/lib/annotations'
+import { getNonFuriganaAnnotations, isFuriganaAnnotation } from '@/lib/annotations'
 import type { Annotation } from '@kurasu-manta/content-schema/zod'
 import { useState } from 'react'
+import { AudioPlayer } from './AudioPlayer'
 import { FuriganaText } from './FuriganaText'
 
 interface SentenceViewerProps {
@@ -14,6 +11,7 @@ interface SentenceViewerProps {
   annotations: Annotation[]
   explanation?: { [languageCode: string]: string } | null
   highlightKnowledgePointId?: number
+  audioHash?: string
 }
 
 export function SentenceViewer({
@@ -21,6 +19,7 @@ export function SentenceViewer({
   annotations,
   explanation,
   highlightKnowledgePointId,
+  audioHash,
 }: SentenceViewerProps) {
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -166,7 +165,7 @@ export function SentenceViewer({
     return (
       <span
         key={`vocab-${groupIndex}-${group.startIndex}-${group.vocabularyAnnotation.id}`}
-        className={`relative px-1 py-0.5 rounded border cursor-help ${getAnnotationColor(group.vocabularyAnnotation.type, group.vocabularyAnnotation, highlightKnowledgePointId)}`}
+        className="relative px-1 py-0.5 cursor-help border-b-2"
         onMouseEnter={(e) => {
           setHoveredAnnotation(group.vocabularyAnnotation || null)
           setMousePosition({ x: e.clientX, y: e.clientY })
@@ -185,8 +184,11 @@ export function SentenceViewer({
 
   return (
     <div className="relative">
-      <div className="text-lg leading-relaxed mb-4" style={{ lineHeight: '2.5' }}>
-        {groups.map((group, index) => renderGroup(group, index))}
+      <div className="flex items-center gap-2 mb-2">
+        <div className="text-lg leading-relaxed" style={{ lineHeight: '2.5' }}>
+          {groups.map((group, index) => renderGroup(group, index))}
+        </div>
+        {audioHash && <AudioPlayer audioHash={audioHash} />}
       </div>
 
       {/* Explanation section */}

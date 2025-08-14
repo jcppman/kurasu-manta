@@ -64,6 +64,7 @@ export default async function SentencesPage({ searchParams }: SentencesPageProps
               annotations={sentence.annotations || []}
               explanation={sentence.explanation}
               highlightKnowledgePointId={knowledgePointId}
+              audioHash={sentence.audio}
             />
 
             <div className="flex justify-between items-center mt-4 text-sm text-gray-500">

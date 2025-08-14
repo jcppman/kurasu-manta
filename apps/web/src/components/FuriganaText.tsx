@@ -15,13 +15,10 @@ export function FuriganaText({ segments, className = '' }: FuriganaTextProps) {
     <span className={className}>
       {segments.map((segment, index) =>
         segment.furigana ? (
-          // Furigana annotation - display reading above kanji
-          <span key={`furigana-${index}-${segment.text}`} className="relative inline-block">
-            <span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full text-xs text-gray-600 whitespace-nowrap">
-              {segment.furigana}
-            </span>
+          <ruby key={`furigana-${index}-${segment.text}`}>
             {segment.text}
-          </span>
+            <rt>{segment.furigana}</rt>
+          </ruby>
         ) : (
           <span key={`text-${index}-${segment.text.substring(0, 10)}`}>{segment.text}</span>
         )
