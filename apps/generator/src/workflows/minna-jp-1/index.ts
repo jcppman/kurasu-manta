@@ -30,7 +30,7 @@ export async function execute({
 }
 
 execute({
-  untilLessonNumber: 10,
+  untilLessonNumber: 5,
   clean: false,
 })
   .then(() => {

@@ -36,6 +36,9 @@ export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowled
         : input.explanation.zhCN || input.explanation.zhTW || input.explanation.enUS
     result += `<explain>${explanation}</explain>`
   }
+  if (isVocabulary(input) && input.pos) {
+    result += `<pos>${input.pos}</pos>`
+  }
   return `<${parentTagName} id="${input.id}">${result}</${parentTagName}>`
 }
 
@@ -89,7 +92,19 @@ Fix the malformed annotation and return ONLY the corrected annotated sentence.
   return object.repairedSentence.trim()
 }
 
-export async function generateFuriganaAnnotations(sentence: string): Promise<Annotation[]> {
+export async function generateFuriganaAnnotations(
+  sentence: string,
+  vocabularies: Vocabulary[]
+): Promise<Annotation[]> {
+  // Build vocabulary pronunciation context from provided vocabularies
+  const vocabularyContext = vocabularies
+    .filter((vocab) => vocab.annotations.some((ann) => ann.type === 'furigana'))
+    .map((vocab) => {
+      const furiganaAnnotation = vocab.annotations.find((ann) => ann.type === 'furigana')
+      return `${vocab.content}[${furiganaAnnotation?.content}]`
+    })
+    .join('\n')
+
   const prompt = `
 You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
 
@@ -106,6 +121,7 @@ ANNOTATION RULES:
 6. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
 7. NEVER annotate katakana words (e.g., keep "コンピュータ" as is, not "コンピュータ[こんぴゅーた]")
 8. NEVER change hiragana words to kanji (e.g., keep "ありがとう" as is, not "有[あ]難[が]とう")
+9. IMPORTANT: Refer to the provided pronunciations for vocabularies appear in the sentence
 
 CONTEXT-DEPENDENT READING EXAMPLES:
 - 何 as "what" in questions: なん (何ですか → 何[なん]ですか)
@@ -139,6 +155,10 @@ Input: どうぞよろしくお願いします。
 Output: どうぞよろしくお願[ねが]いします。
 
 Return only the annotated sentence with no additional text.
+
+VOCABULARY PRONUNCIATIONS:
+${vocabularyContext || 'None provided'}
+
 
 SENTENCE TO ANNOTATE:
 "${sentence}"
@@ -817,7 +837,13 @@ ${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
   logger.info(`Generating annotations for ${sentencesWithExplanations.length} sentences`)
   const results = await Promise.allSettled(
     sentencesWithExplanations.map(async (sentence) => {
-      const furiganaAnnotations = await generateFuriganaAnnotations(sentence.content)
+      const relatedVocabularies = allVocabularies.filter((v) =>
+        sentence.vocabularyIds.includes(v.id)
+      )
+      const furiganaAnnotations = await generateFuriganaAnnotations(
+        sentence.content,
+        relatedVocabularies
+      )
       const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(
         sentence.tokens,
         allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
