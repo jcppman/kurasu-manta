@@ -206,3 +206,37 @@ export async function generateVocabularyAudioClips() {
     }
   }
 }
+
+export async function generateSentenceAudioClips() {
+  const courseContentService = new CourseContentService(db)
+
+  while (true) {
+    // get sentences that have no audio clips
+    const { items } = await courseContentService.getSentencesWithoutAudio({
+      page: 1,
+      limit: 100,
+    })
+
+    if (items.length === 0) {
+      logger.info('No more sentences to process')
+      break
+    }
+
+    for (const sentence of items) {
+      logger.info(`Generating audio for sentence: "${sentence.content}"`)
+
+      const { content } = await generateAudio({
+        content: sentence.content,
+        annotations: sentence.annotations,
+        // sentences don't have accent data, so this will use risk assessment
+      })
+
+      // save audio via API and get back the calculated hash
+      const hash = await storeAudioViaAPI(content)
+
+      // update database with audio hash
+      await courseContentService.updateSentenceAudio(sentence.id, hash)
+      logger.info(`Updated sentence ${sentence.id} with audio hash: ${hash}`)
+    }
+  }
+}

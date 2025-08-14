@@ -199,6 +199,35 @@ export class CourseContentService {
   }
 
   /**
+   * Get sentences that don't have audio clips
+   */
+  async getSentencesWithoutAudio(
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<Sentence>> {
+    return this.sentenceRepository.getMany({ hasAudio: false }, pagination)
+  }
+
+  /**
+   * Update sentence with audio hash
+   */
+  async updateSentenceAudio(sentenceId: number, audioHash: string): Promise<Sentence> {
+    const existingSentence = await this.sentenceRepository.getById(sentenceId)
+    if (!existingSentence) {
+      throw new Error(`Sentence with ID ${sentenceId} not found`)
+    }
+
+    const updatedSentence = await this.sentenceRepository.updateById(sentenceId, {
+      audio: audioHash,
+    })
+
+    if (!updatedSentence) {
+      throw new Error(`Failed to update sentence with ID ${sentenceId}`)
+    }
+
+    return updatedSentence
+  }
+
+  /**
    * Create a sentence and associate it with knowledge points
    */
   async createSentenceWithKnowledgePoints(

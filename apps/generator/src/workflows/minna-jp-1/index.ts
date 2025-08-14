@@ -1,5 +1,5 @@
 import { logger } from '@/lib/utils'
-import { generateVocabularyAudioClips } from './services/audio'
+import { generateSentenceAudioClips, generateVocabularyAudioClips } from './services/audio'
 import {
   cleanGrammar,
   cleanSentences,
@@ -25,6 +25,7 @@ export async function execute({
   await createSentencesForLessons(untilLessonNumber)
 
   await generateVocabularyAudioClips()
+  await generateSentenceAudioClips()
   // await updateExplanationsFromDataSource()
 }
 

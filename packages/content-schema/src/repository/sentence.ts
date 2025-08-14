@@ -11,7 +11,7 @@ import { mapDrizzleToKnowledgePoint } from '@/mapper/knowledge'
 import { mapCreateSentenceToDrizzle, mapDrizzleToSentence } from '@/mapper/sentence'
 import type { KnowledgePoint } from '@/zod/knowledge'
 import type { CreateSentence, Sentence } from '@/zod/sentence'
-import { type SQL, and, count, eq, gte, inArray, lte, or } from 'drizzle-orm'
+import { type SQL, and, count, eq, gte, inArray, isNotNull, isNull, lte, ne, or } from 'drizzle-orm'
 
 /**
  * Repository for sentences
@@ -27,10 +27,11 @@ export class SentenceRepository {
     conditions: {
       knowledgePointId?: number
       maxLessonNumber?: number
+      hasAudio?: boolean
     } = {},
     pagination?: PaginationParams
   ): Promise<PaginatedResult<Sentence>> {
-    const filters: SQL[] = []
+    const filters: Array<SQL | undefined> = []
 
     if (conditions.knowledgePointId) {
       const subquery = this.db
@@ -42,6 +43,13 @@ export class SentenceRepository {
     }
     if (conditions.maxLessonNumber !== undefined) {
       filters.push(lte(sentencesTable.minLessonNumber, conditions.maxLessonNumber))
+    }
+    if (conditions.hasAudio !== undefined) {
+      if (conditions.hasAudio) {
+        filters.push(and(isNotNull(sentencesTable.audio), ne(sentencesTable.audio, '')))
+      } else {
+        filters.push(or(isNull(sentencesTable.audio), eq(sentencesTable.audio, '')))
+      }
     }
 
     // If no pagination provided, return all results
@@ -197,6 +205,28 @@ export class SentenceRepository {
         updatedAt: new Date(),
       })
       .where(eq(sentencesTable.id, sentence.id))
+      .returning()
+
+    return requireResult(updated, mapDrizzleToSentence, 'Failed to update sentence')
+  }
+
+  /**
+   * Partially update a sentence by ID
+   */
+  async updateById(
+    id: number,
+    updates: Partial<Pick<CreateSentence, 'content' | 'explanation' | 'audio'>>
+  ): Promise<Sentence> {
+    // Add a small delay to ensure timestamp changes
+    await new Promise<void>((resolve) => setTimeout(resolve, 1))
+
+    const updated = await this.db
+      .update(sentencesTable)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(sentencesTable.id, id))
       .returning()
 
     return requireResult(updated, mapDrizzleToSentence, 'Failed to update sentence')
