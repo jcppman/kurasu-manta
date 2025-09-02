@@ -21,7 +21,6 @@ export function SentenceViewer({
   highlightKnowledgePointId,
   audioHash,
 }: SentenceViewerProps) {
-  console.log('annotations', annotations)
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
