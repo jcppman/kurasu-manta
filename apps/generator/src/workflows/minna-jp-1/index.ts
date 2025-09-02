@@ -7,6 +7,7 @@ import {
   createGrammarLessons,
   createSentencesForLessons,
   createVocabularies,
+  generateSentenceAnnotations,
   updateExplanationsFromDataSource,
 } from './services/data'
 
@@ -23,9 +24,10 @@ export async function execute({
   await createGrammarLessons(untilLessonNumber)
   await createVocabularies(untilLessonNumber)
   await createSentencesForLessons(untilLessonNumber)
+  await generateSentenceAnnotations()
 
-  await generateVocabularyAudioClips()
-  await generateSentenceAudioClips()
+  // await generateVocabularyAudioClips()
+  // await generateSentenceAudioClips()
   // await updateExplanationsFromDataSource()
 }
 

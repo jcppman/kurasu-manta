@@ -2,17 +2,27 @@ import db from '@/db'
 import { knowledgePointsTable, sentenceKnowledgePointsTable, sentencesTable } from '@/db/schema'
 import { withRetry } from '@/lib/async'
 import { logger } from '@/lib/utils'
+import { SentenceRepository } from '@kurasu-manta/content-schema/repository'
 import { CourseContentService } from '@kurasu-manta/content-schema/service'
-import type { CreateKnowledgePoint } from '@kurasu-manta/content-schema/zod'
-import { eq } from 'drizzle-orm'
+import type {
+  Annotation,
+  CreateKnowledgePoint,
+  KnowledgePoint,
+} from '@kurasu-manta/content-schema/zod'
+import { eq, isNull, or } from 'drizzle-orm'
 import {
   type MinaGrammar,
   type MinaVocabulary,
   getGrammarData,
   getVocData,
 } from 'src/workflows/minna-jp-1/content'
+import { isKanji } from 'wanakana'
 import { findPosOfVocabulary } from './knowledge-point'
-import { generateSentencesForLessonNumber, getTargetSentenceCount } from './sentence'
+import {
+  generateFuriganaAnnotations,
+  generateSentencesForLessonNumber,
+  getTargetSentenceCount,
+} from './sentence'
 
 export async function cleanVocabularies() {
   logger.info('Resetting database - dropping vocabulary knowledge points...')
@@ -431,4 +441,134 @@ export async function updateExplanationsFromDataSource() {
   logger.info(
     `Total - Success: ${vocSuccessCount + grammarSuccessCount}, Failed: ${vocFailCount + grammarFailCount}`
   )
+}
+
+/**
+ * Detects if a sentence contains kanji characters
+ */
+function sentenceContainsKanji(content: string): boolean {
+  return Array.from(content).some((char) => isKanji(char))
+}
+
+/**
+ * Detects if a sentence needs furigana annotations
+ */
+function sentenceNeedsFuriganaAnnotations(sentence: {
+  content: string
+  annotations: Annotation[] | null
+}): boolean {
+  // Check if sentence contains kanji
+  if (!sentenceContainsKanji(sentence.content)) {
+    return false
+  }
+
+  // Check if annotations exist and contain furigana
+  if (!sentence.annotations || sentence.annotations.length === 0) {
+    return true
+  }
+
+  // Check if there are any furigana annotations
+  const hasFuriganaAnnotations = sentence.annotations.some(
+    (annotation) => annotation.type === 'furigana'
+  )
+  return !hasFuriganaAnnotations
+}
+
+/**
+ * Generates annotations for sentences that need them
+ */
+export async function generateSentenceAnnotations() {
+  logger.info('Starting sentence annotation generation...')
+
+  const sentenceRepository = new SentenceRepository(db)
+
+  // Query all sentences that need annotations
+  const sentencesNeedingAnnotations = await db
+    .select({
+      id: sentencesTable.id,
+      content: sentencesTable.content,
+      annotations: sentencesTable.annotations,
+      minLessonNumber: sentencesTable.minLessonNumber,
+    })
+    .from(sentencesTable)
+    .where(or(isNull(sentencesTable.annotations), eq(sentencesTable.annotations, [])))
+
+  // Filter sentences that contain kanji and need furigana annotations
+  const sentencesToProcess = sentencesNeedingAnnotations.filter(sentenceNeedsFuriganaAnnotations)
+
+  if (sentencesToProcess.length === 0) {
+    logger.info('No sentences found that need furigana annotations')
+    return
+  }
+
+  logger.info(`Found ${sentencesToProcess.length} sentences that need furigana annotations`)
+
+  let successCount = 0
+  let failureCount = 0
+
+  // Process sentences in batches
+  const batchSize = 10
+  for (let i = 0; i < sentencesToProcess.length; i += batchSize) {
+    const batch = sentencesToProcess.slice(i, i + batchSize)
+    logger.info(
+      `Processing annotation batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(sentencesToProcess.length / batchSize)}`
+    )
+
+    const results = await Promise.allSettled(
+      batch.map(async (sentence) => {
+        try {
+          // Get related knowledge points for this sentence
+          const relatedKnowledgePoints = await sentenceRepository.getKnowledgePointsBySentenceId(
+            sentence.id
+          )
+
+          // Filter to get vocabularies only (for furigana context)
+          const relatedVocabularies = relatedKnowledgePoints.filter(
+            (kp: KnowledgePoint) => kp.type === 'vocabulary'
+          )
+
+          // Generate furigana annotations
+          const furiganaAnnotations = await generateFuriganaAnnotations(
+            sentence.content,
+            relatedVocabularies
+          )
+
+          // For now, we don't have tokens in the database, so we'll skip vocabulary annotations
+          // const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(tokens, relatedVocabularies)
+          const vocabularyAnnotations: Annotation[] = []
+
+          const allAnnotations = [...furiganaAnnotations, ...vocabularyAnnotations]
+
+          // Update the sentence with new annotations
+          await db
+            .update(sentencesTable)
+            .set({ annotations: allAnnotations })
+            .where(eq(sentencesTable.id, sentence.id))
+
+          logger.info(
+            `Generated ${allAnnotations.length} annotations for sentence: "${sentence.content}"`
+          )
+          return { success: true, sentenceId: sentence.id }
+        } catch (error) {
+          logger.error(
+            `Failed to generate annotations for sentence ${sentence.id}: "${sentence.content}"`,
+            error
+          )
+          return { success: false, sentenceId: sentence.id, error }
+        }
+      })
+    )
+
+    // Count successes and failures
+    for (const result of results) {
+      if (result.status === 'fulfilled' && result.value.success) {
+        successCount++
+      } else {
+        failureCount++
+      }
+    }
+  }
+
+  logger.info('Sentence annotation generation completed!')
+  logger.info(`Success: ${successCount}, Failed: ${failureCount}`)
 }

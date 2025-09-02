@@ -11,6 +11,7 @@ import {
   SENTENCE_GENERATION_BATCH_SIZE,
 } from '@/workflows/minna-jp-1/constants'
 import { sanitizeVocabularyContent } from '@/workflows/minna-jp-1/utils'
+import { anthropic } from '@ai-sdk/anthropic'
 import { openai } from '@ai-sdk/openai'
 import { CourseContentService } from '@kurasu-manta/content-schema/service'
 import type { Annotation } from '@kurasu-manta/content-schema/zod'
@@ -44,36 +45,62 @@ export function knowledgeDetails(input: KnowledgePoint, parentTagName = 'knowled
 
 async function repairAnnotatedSentence(
   annotatedSentence: string,
-  originalSentence: string,
-  error: string
+  originalSentence: string
 ): Promise<string> {
   logger.debug(`correcting furigana annotations for ${annotatedSentence}`)
   logger.debug(`original sentence: ${originalSentence}`)
   const prompt = `
-You are a Japanese annotation expert fixing malformed furigana annotations.
+You are a Japanese annotation expert tasked with fixing malformed furigana annotations in sentences. Your job is to produce a perfectly annotated version following these strict rules:
 
-CORRECT ANNOTATION FORMAT:
-1. Each kanji gets individual furigana: kanji[hiragana]
-2. For compound words with okurigana, only annotate the kanji reading portion:
-   - CORRECT: お願[ねが]い (only the kanji 願 gets [ねが])
-   - WRONG: お願[おねが]い (includes okurigana in annotation)
-3. No spaces, no extra punctuation in brackets
-4. Keep all other characters exactly as they are
-5. NEVER annotate non-kanji characters (hiragana, katakana, punctuation, etc.)
-6. NEVER change hiragana words to kanji - if the original sentence uses hiragana, keep it as hiragana
+- Only annotate kanji with their proper reading in [brackets] (furigana).
+- For compound words (kanji compounds), annotate as a single unit with the complete reading (e.g., 今日[きょう], 学校[がっこう]).
+- For words containing kanji followed by okurigana or kana (e.g. ごはん or 晩ごはん), annotate only the kanji portion, giving the reading for just the kanji, not the entire word. (e.g., 晩[ばん]ごはん—not 晩ごはん[ばんごはん]).
+- Annotate kanji individually if not part of a compound (e.g., 古[ふる]い).
+- Do not add annotations to non-kanji characters (hiragana, katakana, punctuation, etc.).
+- Do not change hiragana words to kanji or correct spelling—preserve the sentence structure entirely.
+- Do not add spaces or extra punctuation in or around furigana brackets.
+- Annotate each eligible kanji in the sentence exactly once, in accordance with natural Japanese reading standards.
 
-EXAMPLES OF CORRECT REPAIRS:
-- "お名[な]前[まえ]は何[なん]ですか" ✓
-- "中[ちゅう]国[こく]人[じん]です" ✓
-- "お願[ねが]いします" ✓
-- "学[がく]校[こう]に行[い]きます" ✓
-- "これ[これ]はコーヒーですか" => "これはコーヒーですか"
-- "それはコンピュータ[こんぴゅーた]ですか" => "それはコンピュータですか"
-- "ひらがな[ひらがな]" => "ひらがな"
-- "カタカナ[かたかな]" => "カタカナ"
-- "雑誌をくださって、どうも有[あ]難[が]とうございます" => "雑誌をくださって、どうもありがとうございます"
+Fix the malformed annotation in the given sentence and return ONLY the correctly annotated sentence.
 
-PROBLEM: The annotation parsing failed with this error: "${error}"
+---
+
+# Steps
+
+1. Check each annotated word for adherence to the rules above, especially:
+    - For words with kanji followed by hiragana or multiple kanji in a compound, confirm only the kanji portion is annotated, not the whole word or compound unless specifying a full compound reading.
+2. Remove or adjust any over-annotations (e.g., annotating non-kanji or the full word including okurigana).
+3. Ensure all formatting standards (no spaces or extra punctuation) are maintained.
+4. Preserve all other sentence elements and formatting—only change the annotation.
+
+# Output Format
+
+- Output the corrected annotated sentence as one line, no extra comments or formatting.
+
+# Examples
+
+**Original:**
+音楽を聞いています。
+**Malformed Annotated:**
+音[おん]楽[がく]を聞[き]いています。
+**Corrected:**
+音楽[おんがく]を聞[き]いています。
+
+**Original:**
+「お願いします」と言いました。
+**Malformed Annotated:**
+「お願い[おねがい]します」と言[い]いました。
+**Corrected:**
+「お願い[ねが]します」と言[い]いました。
+
+(For brevity, real examples may include longer sentences with multiple compound and okurigana cases. Use the above pattern and guidelines.)
+
+# Notes
+
+- Pay special attention to compound words with attached hiragana (e.g., 面白い: only 面白 gets annotation, not the whole word).
+- Do not introduce errors by omitting required annotations for eligible kanji or by annotating hiragana/katakana.
+
+**Reminder:** Fix malformed annotation by precisely applying the kanji annotation guidelines, especially for compounds and words with okurigana. Return only the properly annotated sentence.
 
 ORIGINAL SENTENCE: "${originalSentence}"
 MALFORMED ANNOTATED SENTENCE: "${annotatedSentence}"
@@ -82,7 +109,7 @@ Fix the malformed annotation and return ONLY the corrected annotated sentence.
   `
 
   const { object } = await generateObject({
-    model: openai('gpt-4o-mini'),
+    model: anthropic('claude-sonnet-4-20250514'),
     prompt,
     schema: z.object({
       repairedSentence: z.string(),
@@ -100,65 +127,109 @@ export async function generateFuriganaAnnotations(
   const vocabularyContext = vocabularies
     .filter((vocab) => vocab.annotations.some((ann) => ann.type === 'furigana'))
     .map((vocab) => {
-      const furiganaAnnotation = vocab.annotations.find((ann) => ann.type === 'furigana')
-      return `${vocab.content}[${furiganaAnnotation?.content}]`
+      const furiganaAnnotations = vocab.annotations
+        .filter((ann) => ann.type === 'furigana')
+        .sort((a, b) => b.loc - a.loc)
+      let content = vocab.content
+      for (const ann of furiganaAnnotations) {
+        content = `${content.slice(0, ann.loc + ann.len)}[${ann.content}]${content.slice(ann.loc + ann.len)}`
+      }
+      return content
     })
     .join('\n')
 
   const prompt = `
-You are a Japanese language annotation expert. Your task is to add furigana annotations for ALL kanji characters in a Japanese sentence.
+# Japanese Furigana Annotation Prompt
 
-ANNOTATION RULES:
-1. Add furigana for ALL kanji characters using the format: kanji[hiragana]
-2. IMPORTANT: Annotate EACH kanji individually, even in compound words (e.g., 家[か]族[ぞく], NOT 家族[かぞく])
-3. CRITICAL: For compound words with okurigana (trailing hiragana), only annotate the kanji reading portion:
-   - CORRECT: お願[ねが]い (kanji 願 gets [ねが], okurigana い stays separate)
-   - WRONG: お願[おねが]い (includes okurigana お and い in the reading)
-   - CORRECT: 買[か]い (kanji 買 gets [か], okurigana い stays separate)
-   - WRONG: 買い[かい] (includes okurigana い in the reading)
-4. Do NOT add furigana to hiragana, katakana, or punctuation
-5. Keep all other characters exactly as they are
-6. CRITICAL: Use context-appropriate readings - consider the grammatical position and meaning in the sentence
-7. NEVER annotate katakana words (e.g., keep "コンピュータ" as is, not "コンピュータ[こんぴゅーた]")
-8. NEVER change hiragana words to kanji (e.g., keep "ありがとう" as is, not "有[あ]難[が]とう")
-9. IMPORTANT: Refer to the provided pronunciations for vocabularies appear in the sentence
+You are a Japanese language annotation expert.
+Your task is to **add furigana ONLY to existing kanji characters** in a Japanese sentence.
 
-CONTEXT-DEPENDENT READING EXAMPLES:
-- 何 as "what" in questions: なん (何ですか → 何[なん]ですか)
-- 何 as "how many" with counters: なん (何人 → 何[なん]人[にん])
-- 何 as indefinite "something": なに (何か → 何[なに]か)
-- 一 as number "one": いち (一つ → 一[ひと]つ)
-- 一 in compound words: いっ (一番 → 一[いち]番[ばん])
-- 人 after numbers: にん (三人 → 三[さん]人[にん])
-- 人 as "person": ひと (人が → 人[ひと]が)
+**CRITICAL CONSTRAINTS**:
+- **NEVER change, replace, or rewrite any part of the sentence.**
+- **Hiragana, katakana, punctuation, and words already written in kana MUST remain untouched.**
+- If the input contains no kanji, the output must be identical to the input.
+- Do NOT convert kana into kanji (e.g., "あなた" must never become "貴方").
 
-OUTPUT FORMAT:
-Return the sentence with furigana annotations in brackets. Do NOT provide JSON or any other format.
+---
 
-EXAMPLES:
-Input: "古い傘を買いました"
-Output: "古[ふる]い傘[かさ]を買[か]いました"
+## ANNOTATION RULES
+1. **Format**: Use \`kanji[hiragana]\` for each kanji or compound word.
+   - Example: \`学校[がっこう]\`, \`食[た]べます\`.
+   - Kana outside of the brackets must remain exactly where it is.
+2. **Compound Words**: Annotate as a single unit when it is a standard compound (学校, 病院, 図書館, 日本, etc.).
+   - Example: \`晩ごはん → 晩[ばん]ごはん\`.
+3. **Okurigana**: Annotate only the kanji stem.
+   - Correct: \`買[か]いました\`
+   - Incorrect: \`買い[かい]ました\`
+4. **Kana Preservation**:
+   - NEVER wrap kana inside brackets.
+   - NEVER replace kana with kanji or kanji with kana.
+5. **Vocabulary Priority**: Always use readings from the vocabulary list when available.
+6. **Katakana**: Do not annotate katakana words.
 
-Input: "私は学校に行きます"
-Output: "私[わたし]は学[がく]校[こう]に行[い]きます"
+---
 
-Input: "お名前は何ですか"
-Output: "お名[な]前[まえ]は何[なん]ですか"
+## VOCABULARY PRONUNCIATIONS
+- 晩[ばん]ごはん
+- 食[た]べます
 
-Input: "何人いますか"
-Output: "何[なん]人[にん]いますか"
+---
 
-Input: "中国人です"
-Output: "中[ちゅう]国[こく]人[じん]です"
+## CONTEXT READING RULES
+- 何ですか → 何[なん]ですか
+- 三人 → 三[さん]人[にん]
+- 人が → 人[ひと]が
+- 一つ → 一[ひと]つ
+- 一番 → 一[いち]番[ばん]
 
-Input: どうぞよろしくお願いします。
-Output: どうぞよろしくお願[ねが]いします。
+---
 
-Return only the annotated sentence with no additional text.
+## OUTPUT FORMAT
+- Return ONLY the fully annotated Japanese sentence.
+- Do NOT provide explanations, JSON, or lists.
+- If no kanji are present, return the sentence unchanged.
+
+---
+
+## Examples
+
+**Input:** 古い傘を買いました
+**Output:** 古[ふる]い傘[かさ]を買[か]いました
+
+**Input:** 私は学校に行きます
+**Output:** 私[わたし]は学校[がっこう]に行[い]きます
+
+**Input:** 今日は何時ですか
+**Output:** 今日[きょう]は何[なん]時[じ]ですか
+
+**Input:** あなたは学生ですか。
+**Output:** あなたは学生[がくせい]ですか。 (no rewriting of あなた)
+
+**Input:** コンピュータを使います
+**Output:** コンピュータを使[つか]います
+
+---
+
+## Negative Examples (Do NOT produce these)
+
+- Input: あなたは学生ですか。
+  Wrong Output: 貴方[あなた]は学生[がくせい]ですか。
+  (**Never replace hiragana-only words with kanji**)
+
+- Input: 晩ごはんを食べます。
+  Wrong Output: 晩ごはん[ばんごはん]を食[た]べます。
+  (**Do not extend brackets over kana—晩[ばん]ごはん is correct**)
+
+- Input: 買いました
+  Wrong Output: 買い[かい]ました
+  (**Never bracket okurigana; only annotate the kanji stem**)
+
+---
 
 VOCABULARY PRONUNCIATIONS:
 ${vocabularyContext || 'None provided'}
 
+IMPORTANT: If any words in the sentence appear in the vocabulary list above, use EXACTLY those pronunciations as compound words. For example, if the vocabulary shows "今日[きょう]", then annotate 今日 as a single compound: 今日[きょう].
 
 SENTENCE TO ANNOTATE:
 "${sentence}"
@@ -191,11 +262,7 @@ SENTENCE TO ANNOTATE:
       // Try to repair the annotation
       logger.warn(`Annotation parsing failed (attempt ${attempt + 1}), trying to repair: ${error}`)
       try {
-        annotatedSentence = await repairAnnotatedSentence(
-          annotatedSentence,
-          sentence,
-          error instanceof Error ? error.message : String(error)
-        )
+        annotatedSentence = await repairAnnotatedSentence(annotatedSentence, sentence)
         logger.info(`Repaired annotation: "${annotatedSentence}"`)
       } catch (repairError) {
         logger.error(`Annotation repair failed: ${repairError}`)
@@ -214,6 +281,7 @@ export function parseAnnotatedSentenceToAnnotations(
   const annotations: Annotation[] = []
   let originalPos = 0
   let annotatedPos = 0
+  let lastKanjiStart = -1 // Track the start of the current kanji sequence
 
   while (annotatedPos < annotatedSentence.length) {
     const char = annotatedSentence[annotatedPos]
@@ -230,29 +298,56 @@ export function parseAnnotatedSentenceToAnnotations(
       // Extract furigana content
       const furigana = annotatedSentence.slice(annotatedPos + 1, closingBracket)
 
-      // Since we now generate individual kanji annotations, the furigana applies to the previous character
       if (originalPos === 0) {
         throw new Error(
           'Furigana annotation found at beginning of sentence with no preceding kanji'
         )
       }
 
-      const kanjiPos = originalPos - 1
-      const kanjiChar = originalSentence[kanjiPos]
+      // Find the start and end of the kanji sequence that this furigana applies to
+      const kanjiStart = lastKanjiStart >= 0 ? lastKanjiStart : originalPos - 1
+      const kanjiEnd = originalPos - 1
 
-      // Verify the previous character is actually a kanji
-      if (!isKanji(kanjiChar)) {
-        throw new Error(
-          `Furigana annotation "${furigana}" found after non-kanji character "${kanjiChar}" at position ${kanjiPos}`
-        )
+      // Ensure we have a valid kanji sequence
+      if (kanjiStart > kanjiEnd) {
+        throw new Error(`Invalid kanji sequence: start ${kanjiStart} > end ${kanjiEnd}`)
       }
 
-      annotations.push({
-        loc: kanjiPos,
-        len: 1, // Always 1 for individual kanji
-        type: 'furigana',
-        content: furigana.trim(),
-      })
+      // Verify that the sequence contains at least one kanji
+      let allKanji = true
+      for (let i = kanjiStart; i <= kanjiEnd; i++) {
+        if (!isKanji(originalSentence[i])) {
+          allKanji = false
+          break
+        }
+      }
+
+      let drop = false
+      if (!allKanji) {
+        if (originalSentence.slice(kanjiEnd + 1 - furigana.length, kanjiEnd + 1) === furigana) {
+          drop = true
+          logger.info(
+            `Dropping unnecessary furigana annotation "${furigana}" after non-kanji sequence "${originalSentence.slice(kanjiStart, kanjiEnd + 1)}" at position ${kanjiStart}`
+          )
+        } else {
+          throw new Error(
+            `Furigana annotation "${furigana}" found after sequence containing non-kanji "${originalSentence.slice(kanjiStart, kanjiEnd + 1)}" at position ${kanjiStart}`
+          )
+        }
+      }
+
+      const kanjiLength = kanjiEnd - kanjiStart + 1
+      if (!drop) {
+        annotations.push({
+          loc: kanjiStart,
+          len: kanjiLength,
+          type: 'furigana',
+          content: furigana.trim(),
+        })
+      }
+
+      // Reset kanji tracking
+      lastKanjiStart = -1
 
       // Move past the furigana annotation
       annotatedPos = closingBracket + 1
@@ -267,6 +362,18 @@ export function parseAnnotatedSentenceToAnnotations(
           `Character mismatch at position ${originalPos}: expected '${originalSentence[originalPos]}', got '${char}'`
         )
       }
+
+      // Track kanji sequences for compound word detection
+      if (isKanji(char)) {
+        if (lastKanjiStart === -1) {
+          lastKanjiStart = originalPos
+        }
+        // Continue the current kanji sequence
+      } else {
+        // Non-kanji character breaks the sequence
+        lastKanjiStart = -1
+      }
+
       annotatedPos++
       originalPos++
     }
@@ -831,48 +938,17 @@ ${low.grammar.map((g) => knowledgeDetails(g)).join('\n')}
   const sentencesWithExplanations = selectedSentences.map((sentence, index) => ({
     ...sentence,
     explanation: translations[index],
+    annotations: calculateVocabularyAnnotationsFromTokens(sentence.tokens, allVocabularies),
   }))
 
-  // Generate annotations
-  logger.info(`Generating annotations for ${sentencesWithExplanations.length} sentences`)
-  const results = await Promise.allSettled(
-    sentencesWithExplanations.map(async (sentence) => {
-      const relatedVocabularies = allVocabularies.filter((v) =>
-        sentence.vocabularyIds.includes(v.id)
-      )
-      const furiganaAnnotations = await generateFuriganaAnnotations(
-        sentence.content,
-        relatedVocabularies
-      )
-      const vocabularyAnnotations = calculateVocabularyAnnotationsFromTokens(
-        sentence.tokens,
-        allVocabularies.filter((v) => sentence.vocabularyIds.includes(v.id))
-      )
-
-      return {
-        ...sentence,
-        annotations: furiganaAnnotations.concat(vocabularyAnnotations),
-      }
-    })
+  // Return sentences without annotations (annotations will be generated in a separate step)
+  logger.info(
+    `Generated ${sentencesWithExplanations.length} sentences (annotations will be generated separately)`
   )
 
-  const generated = results
-    .filter((result) => result.status === 'fulfilled')
-    .map((result) => result.value)
-
-  const failedCount = results.length - generated.length
-  if (failedCount > 0) {
-    logger.warn(`${failedCount} sentences failed to generate annotations`)
-  }
-
-  // Early exit if no sentences were successfully generated
-  if (generated.length === 0) {
-    throw new Error(
-      `No sentences were successfully generated for target knowledge point: ${target.content}. All sentences failed annotation parsing. This prevents infinite loops.`
-    )
-  }
-
-  return generated
+  return sentencesWithExplanations.map((sentence) => ({
+    ...sentence,
+  }))
 }
 
 export async function getPrioritizedKnowledgePointsByLessonNumber(

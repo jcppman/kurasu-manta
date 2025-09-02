@@ -1,8 +1,14 @@
+import { Readable } from 'node:stream'
 import db from '@/db'
 import { logger } from '@/lib/utils'
 import { buildYomiganaPhoneme, toFullFurigana } from '@/workflows/minna-jp-1/utils'
 import { openai } from '@ai-sdk/openai'
-import textToSpeech from '@google-cloud/text-to-speech'
+import {
+  PollyClient,
+  SynthesizeSpeechCommand,
+  type SynthesizeSpeechCommandOutput,
+} from '@aws-sdk/client-polly'
+import { fromSSO } from '@aws-sdk/credential-providers'
 import {
   isAudioStoreSuccessResponse,
   safeValidateAudioStoreResponse,
@@ -14,7 +20,9 @@ import { isVocabulary } from '@kurasu-manta/content-schema/zod'
 import { generateObject } from 'ai'
 import { z } from 'zod'
 
-const client = new textToSpeech.TextToSpeechClient()
+const pollyClient = new PollyClient({
+  credentials: fromSSO({ profile: 'default' }),
+})
 interface GenerateAudioParams {
   content: string
   annotations?: Annotation[]
@@ -84,48 +92,6 @@ export async function generateAudio({
   const fullReading = toFullFurigana(content, annotations ?? [])
   const hasAccentData = accent !== undefined && accent !== null
 
-  // estimate mispronouncing risk (skip if we have accent data for more reliable pronunciation)
-  let risk = 0
-  let reason = ''
-
-  if (!hasAccentData) {
-    const result = await generateObject({
-      model: openai('gpt-4o-mini'),
-      prompt: `
-You are a Japanese TTS assistant. Given a Japanese phrase and its expected reading (kana), return a numeric confidence score between 0.0 and 1.0.
-
-The score reflects how likely a TTS engine would misread or mispronounce the phrase if spoken **in complete isolation**, compared to the expected reading. Consider risks such as:
-- Incorrect kanji reading
-- Fragmented pitch accent due to per-character synthesis
-- Ambiguous homographs
-
-Examples of phrases at high risk:
-- 「私」 → expected: わたし, risk of し
-- 「大人」 → expected: おとな, risk of だいにん
-- 「失礼」 → expected: しつれい, risk of unnatural pitch if split
-
-A score of:
-- 0.0 means no risk (TTS will read it perfectly)
-- 1.0 means very high risk of misreading or accent error
-
-Respond with a single number (e.g., \`0.75\`) and the reason. If the risk is lower than ${TTS_PRONOUNCE_ERROR_RISK_THRESHOLD / 2}, no need to provide reason.
-
-### Phrase to evaluate
-Text: 「${content}」
-Expected reading: 「${fullReading}」
-`,
-      schema: z.object({
-        risk: z.number(),
-        reason: z.string(),
-      }),
-    })
-    risk = result.object.risk
-    reason = result.object.reason
-    logger.debug(`Risk of mispronouncing: ${risk} (${reason})`)
-  } else {
-    logger.debug('Skipping risk assessment - using accent data')
-  }
-
   let ssml: string
 
   if (hasAccentData) {
@@ -133,35 +99,58 @@ Expected reading: 「${fullReading}」
     const phonemeTag = buildYomiganaPhoneme(content, fullReading, accent)
     ssml = `<speak>${phonemeTag}</speak>`
     logger.info('Using yomigana phoneme with accent data')
-  } else if (risk > TTS_PRONOUNCE_ERROR_RISK_THRESHOLD) {
-    logger.info(`threshold exceeded (${risk}), using full reading`)
-    logger.info(`reason: ${reason}`)
-    // use full reading fallback
-    ssml = `<speak><sub alias="${fullReading}">${content}</sub></speak>`
   } else {
     ssml = `<speak>${content}</speak>`
   }
 
   logger.debug(`SSML: ${ssml}`)
-  const [res] = await client.synthesizeSpeech({
-    input: {
-      ssml,
-    },
-    voice: {
-      languageCode: 'ja-JP',
-      name: 'ja-JP-Neural2-C',
-    },
-    audioConfig: {
-      audioEncoding: 'MP3',
-    },
+  const command = new SynthesizeSpeechCommand({
+    Text: ssml,
+    TextType: 'ssml',
+    OutputFormat: 'mp3',
+    Engine: 'neural',
+    VoiceId: 'Kazuha',
+    LanguageCode: 'ja-JP',
   })
-  const audio = res.audioContent
-  if (!(audio instanceof Uint8Array)) {
-    throw new Error('Audio content is not a Uint8Array')
+
+  let response: SynthesizeSpeechCommandOutput
+  try {
+    response = await pollyClient.send(command)
+  } catch (error) {
+    logger.error('Polly synthesis failed:', error)
+    if (error instanceof Error) {
+      throw new Error(`AWS Polly synthesis failed: ${error.message}`)
+    }
+    throw new Error('AWS Polly synthesis failed with unknown error')
+  }
+  const audio = response.AudioStream
+  if (!audio) {
+    throw new Error('No audio stream received from Polly')
+  }
+
+  // Convert AWS SDK stream to Uint8Array
+  const chunks: Uint8Array[] = []
+
+  if (audio instanceof Readable) {
+    for await (const chunk of audio) {
+      chunks.push(new Uint8Array(chunk))
+    }
+  } else {
+    // Handle as Uint8Array directly - convert unknown type
+    chunks.push(new Uint8Array(audio as unknown as ArrayBuffer))
+  }
+
+  // Combine all chunks
+  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0)
+  const audioBuffer = new Uint8Array(totalLength)
+  let offset = 0
+  for (const chunk of chunks) {
+    audioBuffer.set(chunk, offset)
+    offset += chunk.length
   }
 
   return {
-    content: audio,
+    content: audioBuffer,
   }
 }
 

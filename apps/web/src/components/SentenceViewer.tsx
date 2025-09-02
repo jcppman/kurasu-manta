@@ -21,6 +21,7 @@ export function SentenceViewer({
   highlightKnowledgePointId,
   audioHash,
 }: SentenceViewerProps) {
+  console.log('annotations', annotations)
   const [hoveredAnnotation, setHoveredAnnotation] = useState<Annotation | null>(null)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
@@ -30,13 +31,14 @@ export function SentenceViewer({
     (a, b) => a.loc - b.loc
   )
 
-  // Create furigana map for quick lookup (individual kanji annotations)
-  const furiganaMap = new Map<number, string>()
-  for (const annotation of furiganaAnnotations) {
-    furiganaMap.set(annotation.loc, annotation.content)
+  // Helper function to find furigana annotation that covers a specific position
+  const findFuriganaAnnotation = (position: number): Annotation | undefined => {
+    return furiganaAnnotations.find(
+      (annotation) => annotation.loc <= position && position < annotation.loc + annotation.len
+    )
   }
 
-  // Create segments with simplified logic for individual kanji furigana
+  // Create segments handling multi-character furigana annotations
   const createSegments = () => {
     const segments: Array<{
       text: string
@@ -46,25 +48,49 @@ export function SentenceViewer({
       end: number
     }> = []
 
-    const currentIndex = 0
+    let i = 0
+    while (i < text.length) {
+      const furiganaAnnotation = findFuriganaAnnotation(i)
 
-    // Process each character individually
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i]
-      const furigana = furiganaMap.get(i)
+      if (furiganaAnnotation) {
+        // Handle multi-character furigana annotation
+        const start = furiganaAnnotation.loc
+        const end = furiganaAnnotation.loc + furiganaAnnotation.len
+        const segmentText = text.slice(start, end)
 
-      // Find vocabulary annotations that include this position
-      const vocabularyAnnotations = nonFuriganaAnnotations.filter(
-        (ann) => ann.loc <= i && i < ann.loc + ann.len
-      )
+        // Find vocabulary annotations that overlap with this furigana segment
+        const vocabularyAnnotations = nonFuriganaAnnotations.filter(
+          (ann) => ann.loc < end && start < ann.loc + ann.len
+        )
 
-      segments.push({
-        text: char,
-        furigana,
-        vocabularyAnnotations,
-        start: i,
-        end: i + 1,
-      })
+        segments.push({
+          text: segmentText,
+          furigana: furiganaAnnotation.content,
+          vocabularyAnnotations,
+          start,
+          end,
+        })
+
+        // Skip to the end of this furigana annotation
+        i = end
+      } else {
+        // Handle single character without furigana
+        const char = text[i]
+
+        // Find vocabulary annotations that include this position
+        const vocabularyAnnotations = nonFuriganaAnnotations.filter(
+          (ann) => ann.loc <= i && i < ann.loc + ann.len
+        )
+
+        segments.push({
+          text: char,
+          vocabularyAnnotations,
+          start: i,
+          end: i + 1,
+        })
+
+        i++
+      }
     }
 
     return segments
@@ -143,16 +169,10 @@ export function SentenceViewer({
   }
 
   const renderGroup = (group: ReturnType<typeof groupSegments>[0], groupIndex: number) => {
-    // Create furigana segments for FuriganaText component
-    const furiganaSegments = group.segments.map((seg) => ({
-      text: seg.text,
-      furigana: seg.furigana,
-    }))
-
     const content = (
       <FuriganaText
         key={`group-${groupIndex}-${group.startIndex}`}
-        segments={furiganaSegments}
+        segments={group.segments}
         className="inline-block"
       />
     )
@@ -162,10 +182,16 @@ export function SentenceViewer({
     }
 
     // Wrap with vocabulary annotation styling
+    const isHighlighted = group.vocabularyAnnotation?.id === highlightKnowledgePointId
+
     return (
       <span
         key={`vocab-${groupIndex}-${group.startIndex}-${group.vocabularyAnnotation.id}`}
-        className="relative px-1 py-0.5 cursor-help border-b-2"
+        className={`relative px-1 py-0.5 cursor-help border-b-2 ${
+          isHighlighted
+            ? 'bg-yellow-200 border-yellow-400'
+            : 'border-blue-300 hover:border-blue-500'
+        }`}
         onMouseEnter={(e) => {
           setHoveredAnnotation(group.vocabularyAnnotation || null)
           setMousePosition({ x: e.clientX, y: e.clientY })
